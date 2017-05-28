@@ -1,13 +1,18 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (onInput, onClick)
-import Regex
+import Html.Events exposing (..)
+import WebSocket
 
 
+main : Program Never Model Msg
 main =
-    Html.beginnerProgram { model = model, view = view, update = update }
+    Html.program
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 
 
 
@@ -15,22 +20,14 @@ main =
 
 
 type alias Model =
-    { name : String
-    , password : String
-    , passwordAgain : String
-    , age : String
-    , showValidationResults : Bool
+    { input : String
+    , messages : List String
     }
 
 
-model : Model
-model =
-    { name = ""
-    , password = ""
-    , passwordAgain = ""
-    , age = ""
-    , showValidationResults = False
-    }
+init : ( Model, Cmd Msg )
+init =
+    ( Model "" [], Cmd.none )
 
 
 
@@ -38,30 +35,31 @@ model =
 
 
 type Msg
-    = Name String
-    | Password String
-    | PasswordAgain String
-    | Age String
-    | Check
+    = Input String
+    | Send
+    | NewMessage String
 
 
-update : Msg -> Model -> Model
-update msg model =
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg { input, messages } =
     case msg of
-        Name name ->
-            { model | showValidationResults = False, name = name }
+        Input newInput ->
+            ( Model newInput messages, Cmd.none )
 
-        Password password ->
-            { model | showValidationResults = False, password = password }
+        Send ->
+            ( Model "" messages, WebSocket.send "ws://echo.websocket.org" input )
 
-        PasswordAgain password ->
-            { model | showValidationResults = False, passwordAgain = password }
+        NewMessage str ->
+            ( Model input (str :: messages), Cmd.none )
 
-        Age age ->
-            { model | showValidationResults = False, age = age }
 
-        Check ->
-            { model | showValidationResults = True }
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    WebSocket.listen "ws://echo.websocket.org" NewMessage
 
 
 
@@ -71,49 +69,12 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ input [ type_ "text", placeholder "Name", onInput Name ] []
-        , input [ type_ "password", placeholder "Password", onInput Password ] []
-        , input [ type_ "password", placeholder "Re-enter Password", onInput PasswordAgain ] []
-        , input [ type_ "text", placeholder "How old are you?", onInput Age ] []
-        , button [ onClick Check ] [ text "Check!" ]
-        , if model.showValidationResults then
-            viewValidation model
-          else
-            div [] []
+        [ div [] (List.map viewMessage model.messages)
+        , input [ onInput Input ] []
+        , button [ onClick Send ] [ text "Send" ]
         ]
 
 
-viewValidation : Model -> Html msg
-viewValidation model =
-    let
-        hasAge =
-            String.length model.age > 0
-
-        hasPassword =
-            String.length model.password > 0 || String.length model.passwordAgain > 0
-
-        ( color, message ) =
-            if hasAge && not (isNumber model.age) then
-                ( "tomato", "Age should be a whole positive number" )
-            else if hasPassword && not (isComplexEnough model.password) then
-                ( "tomato", "Password is too simple" )
-            else if hasPassword && String.length model.password < 8 then
-                ( "brown", "Password too short!" )
-            else if hasPassword && model.password /= model.passwordAgain then
-                ( "red", "Passwords do not match!" )
-            else
-                ( "green", "OK" )
-    in
-        div [ style [ ( "color", color ) ] ] [ text message ]
-
-
-isComplexEnough : String -> Bool
-isComplexEnough string =
-    Regex.contains (Regex.regex "[A-Z]") string
-        && Regex.contains (Regex.regex "[a-z]") string
-        && Regex.contains (Regex.regex "[0-9]") string
-
-
-isNumber : String -> Bool
-isNumber string =
-    Regex.contains (Regex.regex "[0-9]") string
+viewMessage : String -> Html msg
+viewMessage msg =
+    div [] [ text msg ]

@@ -1,5 +1,5 @@
 compile:
-	elm-make --warn src/Main.elm --output=index.html
+	elm-make --warn src/Main.elm
 
 open:
 	open http://localhost:8000

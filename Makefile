@@ -1,3 +1,6 @@
+test:
+	elm-test
+
 compile:
 	elm-make --warn src/Main.elm
 

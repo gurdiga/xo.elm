@@ -2,7 +2,6 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (..)
-import WebSocket
 
 
 main : Program Never Model Msg
@@ -20,14 +19,27 @@ main =
 
 
 type alias Model =
-    { input : String
-    , messages : List String
+    { folders : List Folder
+    , openedFolder : Maybe Folder
+    }
+
+
+type alias Folder =
+    { id : String
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model "" [], Cmd.none )
+    let
+        initialModel =
+            { folders = []
+            , openedFolder = Nothing
+            }
+    in
+        ( initialModel
+        , Cmd.none
+        )
 
 
 
@@ -35,31 +47,14 @@ init =
 
 
 type Msg
-    = Input String
-    | Send
-    | NewMessage String
+    = None
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg { input, messages } =
+update msg model =
     case msg of
-        Input newInput ->
-            ( Model newInput messages, Cmd.none )
-
-        Send ->
-            ( Model "" messages, WebSocket.send "ws://echo.websocket.org" input )
-
-        NewMessage str ->
-            ( Model input (str :: messages), Cmd.none )
-
-
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    WebSocket.listen "ws://echo.websocket.org" NewMessage
+        None ->
+            ( model, Cmd.none )
 
 
 
@@ -69,12 +64,15 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div []
-        [ div [] (List.map viewMessage model.messages)
-        , input [ onInput Input ] []
-        , button [ onClick Send ] [ text "Send" ]
+        [ h1 [] [ text "Hello World!" ]
+        , pre [] [ text (toString model) ]
         ]
 
 
-viewMessage : String -> Html msg
-viewMessage msg =
-    div [] [ text msg ]
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch []

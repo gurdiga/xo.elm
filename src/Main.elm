@@ -24,22 +24,47 @@ type alias Model =
     }
 
 
-type alias Folder =
-    { id : String
-    }
+type Folder
+    = Folder ID Grounds
+
+
+type alias ID =
+    String
+
+
+type Grounds
+    = Grounds String
 
 
 init : ( Model, Cmd Msg )
 init =
-    let
-        initialModel =
-            { folders = []
-            , openedFolder = Nothing
-            }
-    in
-        ( initialModel
-        , Cmd.none
+    ( initialModel
+    , Cmd.none
+    )
+
+
+initialModel : Model
+initialModel =
+    { folders = []
+    , openedFolder =
+        Just (updatedFolder (Folder "I" (Grounds "YES")))
+    }
+
+
+newFolder : Maybe Folder
+newFolder =
+    Just
+        (Folder
+            "001"
+            (Grounds "Something")
         )
+
+
+updatedFolder : Folder -> Folder
+updatedFolder folder =
+    case folder of
+        Folder id grounds ->
+            Folder (id ++ "-updated") grounds
 
 
 

@@ -38,6 +38,39 @@ type alias Grounds =
     String
 
 
+
+-- type Grounds
+--     = CreditorPetition
+--     | CourtRequest
+--     | Takeover
+
+
+type alias CreditorPetition =
+    { creditor : Person
+    , petition : Petition
+    }
+
+
+type Person
+    = Person
+
+
+type Petition
+    = Petition
+
+
+type alias CourtRequest =
+    { cause : Cause }
+
+
+type Cause
+    = Cause
+
+
+type alias Takeover =
+    {}
+
+
 init : ( Model, Cmd Msg )
 init =
     ( initialModel

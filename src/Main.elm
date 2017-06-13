@@ -34,18 +34,18 @@ type alias ID =
     String
 
 
-type alias Grounds =
-    String
+
+-- type alias Grounds =
+--     String
 
 
+type Grounds
+    = CreditorPetition CreditorPetitionValue
+    | CourtRequest CourtRequestValue
+    | Takeover TakeoverValue
 
--- type Grounds
---     = CreditorPetition
---     | CourtRequest
---     | Takeover
 
-
-type alias CreditorPetition =
+type alias CreditorPetitionValue =
     { creditor : Person
     , petition : Petition
     }
@@ -59,15 +59,16 @@ type Petition
     = Petition
 
 
-type alias CourtRequest =
-    { cause : Cause }
+type alias CourtRequestValue =
+    { cause : Cause
+    }
 
 
 type Cause
     = Cause
 
 
-type alias Takeover =
+type alias TakeoverValue =
     {}
 
 
@@ -89,7 +90,7 @@ initialModel =
 newFolder : Folder
 newFolder =
     { id = "001"
-    , grounds = "Something"
+    , grounds = Takeover {}
     }
 
 

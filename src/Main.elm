@@ -37,7 +37,7 @@ type alias ID =
 type Grounds
     = CreditorPetition CreditorPetitionValue
     | MortgageCreditorPetition MortgageCreditorPetitionValue
-    | CourtRequest CourtRequestValue
+    | CourtDecision CourtDecisionValue -- public policy, public interest
     | Takeover TakeoverValue
 
 
@@ -72,7 +72,7 @@ type Petition
     = Petition
 
 
-type alias CourtRequestValue =
+type alias CourtDecisionValue =
     { cause : Cause
     }
 

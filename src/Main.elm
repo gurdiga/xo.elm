@@ -19,12 +19,12 @@ main =
 
 
 type alias Model =
-    { folders : List Folder
-    , openedFolder : Maybe Folder
+    { processs : List Process
+    , openedProcess : Maybe Process
     }
 
 
-type alias Folder =
+type alias Process =
     { id : ID
     , grounds : Grounds
     }
@@ -128,22 +128,22 @@ init =
 
 initialModel : Model
 initialModel =
-    { folders = []
-    , openedFolder =
-        Just (updatedFolder newFolder)
+    { processs = []
+    , openedProcess =
+        Just (updatedProcess newProcess)
     }
 
 
-newFolder : Folder
-newFolder =
+newProcess : Process
+newProcess =
     { id = "001"
     , grounds = Takeover {}
     }
 
 
-updatedFolder : Folder -> Folder
-updatedFolder ({ id, grounds } as folder) =
-    { folder | id = id ++ "-updated" }
+updatedProcess : Process -> Process
+updatedProcess ({ id, grounds } as process) =
+    { process | id = id ++ "-updated" }
 
 
 

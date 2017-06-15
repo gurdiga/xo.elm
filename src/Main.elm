@@ -35,9 +35,9 @@ type alias ID =
 
 
 type Grounds
-    = CreditorPetition CreditorPetitionValue
+    = CourtDecision CourtDecisionValue -- public policy, public interest
+    | CreditorPetition CreditorPetitionValue
     | MortgageCreditorPetition MortgageCreditorPetitionValue
-    | CourtDecision CourtDecisionValue -- public policy, public interest
     | Takeover TakeoverValue
 
 
@@ -49,19 +49,39 @@ type alias CreditorPetitionValue =
 
 type alias MortgageCreditorPetitionValue =
     { -- • originalul contractului de ipotecă învestit cu formulă executorie⁺
-      mortgageContract : MortgageContract MortgageContractValue
+      mortgageContract : MortgageContractValue
     , -- • copia contractului de credit bancar sau de împrumut⁺
-      creditAgreement : CreditAgreement CreditAgreementValue
+      creditAgreement : CreditAgreementValue
     , -- • extrasele de evidenţă financiară⁺
-      financialRecords : FinancialRecords FinancialRecordsValue
+      financialRecords : FinancialRecordsValue
     , -- • copiile notificării şi preavizului expediate pe adresa debitorului
-      notice : ScannedImage
-    , intimation : ScannedImage
+      notice : ScannedImageValue
+    , intimation : ScannedImageValue
     , -- • declaraţia pe propria răspundere a creditorului că nu există un
       -- litigiu judiciar în legătură cu contractul dat de ipotecă
       -- (ăf′ĭ-dā′vĭt)
-      affidavit : MortgageCreditorNoLitigationAffidavit
+      affidavit : MortgageCreditorNoLitigationAffidavitValue
     }
+
+
+type alias MortgageContractValue =
+    {}
+
+
+type alias CreditAgreementValue =
+    {}
+
+
+type alias FinancialRecordsValue =
+    {}
+
+
+type alias ScannedImageValue =
+    {}
+
+
+type alias MortgageCreditorNoLitigationAffidavitValue =
+    {}
 
 
 type Person

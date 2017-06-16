@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Html exposing (..)
+import Html.Attributes exposing (value)
 import Html.Events exposing (..)
 
 
@@ -172,11 +173,16 @@ updatedProcess ({ id, grounds } as process) =
 
 type Msg
     = None
+    | ChangeGrounds String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        ChangeGrounds newGrounds ->
+            -- TODO: Figure out how to deep update
+            ( { model | grounds = newGrounds }, Cmd.none )
+
         None ->
             ( model, Cmd.none )
 
@@ -188,9 +194,34 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ text "Hello World!" ]
+        [ h1 [] [ text "Procedură nouă" ]
+        , label []
+            [ text "Temeiul:"
+            , select [ onInput (\v -> ChangeGrounds (groundsFromString v)) ]
+                [ option [ value "a" ] [ text "cerere a creditorului" ]
+                , option [ value "b" ] [ text "cerere a creditorului în temeiul contractului de ipotecă" ]
+                , option [ value "c" ] [ text "demersul instanţei de judecată" ]
+                , option [ value "d" ] [ text "preluarea unui document executoriu strămutat" ]
+                ]
+            ]
         , pre [] [ text (toString model) ]
         ]
+
+
+groundsFromString : String -> Grounds
+groundsFromString s =
+    case s of
+        "a" ->
+            CreditorPetition {}
+
+        "b" ->
+            MortgageCreditorPetition {}
+
+        "c" ->
+            CourtDecision {}
+
+        "d" ->
+            Takeover {}
 
 
 

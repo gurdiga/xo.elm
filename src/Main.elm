@@ -20,7 +20,7 @@ main =
 
 
 type alias Model =
-    { processs : List Process
+    { processes : List Process
     , openedProcess : Maybe Process
     }
 
@@ -48,6 +48,13 @@ type alias CreditorPetitionValue =
     }
 
 
+newCreditorPetitionValue : CreditorPetitionValue
+newCreditorPetitionValue =
+    { creditor = newPerson
+    , petition = newPetition
+    }
+
+
 type alias MortgageCreditorPetitionValue =
     { -- • originalul contractului de ipotecă învestit cu formulă executorie⁺
       mortgageContract : MortgageContractValue
@@ -65,7 +72,23 @@ type alias MortgageCreditorPetitionValue =
     }
 
 
+newMortgageCreditorPetitionValue : MortgageCreditorPetitionValue
+newMortgageCreditorPetitionValue =
+    { mortgageContract = newMortgageContractValue
+    , creditAgreement = newCreditAgreementValue
+    , financialRecords = newFinancialRecordsValue
+    , notice = newScannedImageValue
+    , intimation = newScannedImageValue
+    , affidavit = newMortgageCreditorNoLitigationAffidavitValue
+    }
+
+
 type alias MortgageContractValue =
+    {}
+
+
+newMortgageContractValue : MortgageContractValue
+newMortgageContractValue =
     {}
 
 
@@ -73,7 +96,17 @@ type alias CreditAgreementValue =
     {}
 
 
+newCreditAgreementValue : CreditAgreementValue
+newCreditAgreementValue =
+    {}
+
+
 type alias FinancialRecordsValue =
+    {}
+
+
+newFinancialRecordsValue : FinancialRecordsValue
+newFinancialRecordsValue =
     {}
 
 
@@ -81,7 +114,17 @@ type alias ScannedImageValue =
     {}
 
 
+newScannedImageValue : ScannedImageValue
+newScannedImageValue =
+    {}
+
+
 type alias MortgageCreditorNoLitigationAffidavitValue =
+    {}
+
+
+newMortgageCreditorNoLitigationAffidavitValue : MortgageCreditorNoLitigationAffidavitValue
+newMortgageCreditorNoLitigationAffidavitValue =
     {}
 
 
@@ -89,12 +132,28 @@ type Person
     = Person
 
 
+newPerson : Person
+newPerson =
+    Person
+
+
 type Petition
     = Petition
 
 
+newPetition : Petition
+newPetition =
+    Petition
+
+
 type alias CourtDecisionValue =
     { cause : Cause
+    }
+
+
+newCourtDecisionValue : CourtDecisionValue
+newCourtDecisionValue =
+    { cause = AssetConfiscation
     }
 
 
@@ -149,7 +208,7 @@ init =
 
 initialModel : Model
 initialModel =
-    { processs = []
+    { processes = []
     , openedProcess =
         Just (updatedProcess newProcess)
     }
@@ -173,15 +232,18 @@ updatedProcess ({ id, grounds } as process) =
 
 type Msg
     = None
-    | ChangeGrounds String
+    | ChangeGrounds Grounds
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ChangeGrounds newGrounds ->
-            -- TODO: Figure out how to deep update
-            ( { model | grounds = newGrounds }, Cmd.none )
+            let
+                newOpenedProcess =
+                    Maybe.map (\openedProcess -> { openedProcess | grounds = newGrounds }) model.openedProcess
+            in
+                ( { model | openedProcess = newOpenedProcess }, Cmd.none )
 
         None ->
             ( model, Cmd.none )
@@ -210,18 +272,14 @@ view model =
 
 groundsFromString : String -> Grounds
 groundsFromString s =
-    case s of
-        "a" ->
-            CreditorPetition {}
-
-        "b" ->
-            MortgageCreditorPetition {}
-
-        "c" ->
-            CourtDecision {}
-
-        "d" ->
-            Takeover {}
+    if s == "a" then
+        CreditorPetition newCreditorPetitionValue
+    else if s == "b" then
+        MortgageCreditorPetition newMortgageCreditorPetitionValue
+    else if s == "c" then
+        CourtDecision newCourtDecisionValue
+    else
+        Takeover {}
 
 
 

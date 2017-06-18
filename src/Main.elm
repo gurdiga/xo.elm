@@ -1,8 +1,9 @@
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (value)
+import Html.Attributes exposing (value, selected)
 import Html.Events exposing (..)
+import Select
 
 
 main : Program Never Model Msg
@@ -210,20 +211,15 @@ initialModel : Model
 initialModel =
     { processes = []
     , openedProcess =
-        Just (updatedProcess newProcess)
+        Just newProcess
     }
 
 
 newProcess : Process
 newProcess =
     { id = "001"
-    , grounds = Takeover {}
+    , grounds = CreditorPetition newCreditorPetitionValue
     }
-
-
-updatedProcess : Process -> Process
-updatedProcess ({ id, grounds } as process) =
-    { process | id = id ++ "-updated" }
 
 
 
@@ -259,27 +255,37 @@ view model =
         [ h1 [] [ text "Procedură nouă" ]
         , label []
             [ text "Temeiul:"
-            , select [ onInput (\v -> ChangeGrounds (groundsFromString v)) ]
-                [ option [ value "a" ] [ text "cerere a creditorului" ]
-                , option [ value "b" ] [ text "cerere a creditorului în temeiul contractului de ipotecă" ]
-                , option [ value "c" ] [ text "demersul instanţei de judecată" ]
-                , option [ value "d" ] [ text "preluarea unui document executoriu strămutat" ]
-                ]
+            , Select.fromValuesWithLabels groundsWithLabels ChangeGrounds (currentGrounds model)
             ]
         , pre [] [ text (toString model) ]
         ]
 
 
-groundsFromString : String -> Grounds
-groundsFromString s =
-    if s == "a" then
-        CreditorPetition newCreditorPetitionValue
-    else if s == "b" then
-        MortgageCreditorPetition newMortgageCreditorPetitionValue
-    else if s == "c" then
-        CourtDecision newCourtDecisionValue
-    else
-        Takeover {}
+currentGrounds : Model -> Grounds
+currentGrounds model =
+    case model.openedProcess of
+        Nothing ->
+            CourtDecision newCourtDecisionValue
+
+        Just openedProcess ->
+            openedProcess.grounds
+
+
+groundsWithLabels : List ( Grounds, String )
+groundsWithLabels =
+    [ ( CreditorPetition newCreditorPetitionValue
+      , "cerere a creditorului"
+      )
+    , ( MortgageCreditorPetition newMortgageCreditorPetitionValue
+      , "cerere a creditorului în temeiul contractului de ipotecă"
+      )
+    , ( CourtDecision newCourtDecisionValue
+      , "demersul instanţei de judecată"
+      )
+    , ( Takeover {}
+      , "preluarea unui document executoriu strămutat"
+      )
+    ]
 
 
 

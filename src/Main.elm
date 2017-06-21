@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (value, selected, style)
 import Html.Events exposing (..)
 import Date exposing (Date)
+import CourtDecision exposing (..)
 import Select
 
 
@@ -152,7 +153,7 @@ type alias ID =
 
 type Grounds
     = CreditorPetition CreditorPetitionValue
-    | CourtDecision CourtDecisionValue -- public policy, public interest
+    | CourtDecision CourtDecision.Value -- public policy, public interest
     | MortgageCreditorPetition MortgageCreditorPetitionValue
     | Takeover TakeoverValue
 
@@ -261,55 +262,6 @@ newPetition =
     Petition
 
 
-type alias CourtDecisionValue =
-    { cause : CourtDecisionCause
-    }
-
-
-newCourtDecisionValue : CourtDecisionValue
-newCourtDecisionValue =
-    { cause = AssetConfiscation
-    }
-
-
-type
-    -- (2) Instanţa de judecată prezintă din oficiu titlul executoriu spre
-    -- executare în pricinile ce ţin:
-    CourtDecisionCause
-    = -- a) de confiscarea bunurilor;
-      AssetConfiscation
-    | -- b) de urmărirea sumelor ce urmează a fi făcute venit la stat;
-      MoneyCollectionForGovernment
-    | -- c) urmărirea sumelor încasate din contul statului, din contul
-      -- întreprinderilor de stat şi al celor municipale, al societăţilor
-      -- comerciale cu capital majoritar de stat;
-      MoneyCollectionFromGovernment
-    | -- d) de urmărirea pensiei de întreţinere;
-      AlimonyCollection
-    | -- e) de încasarea sumelor pentru repararea prejudiciilor cauzate prin
-      -- vătămarea integrităţii corporale, prin o altă vătămare a sănătăţii sau
-      -- prin deces, dacă repararea s-a efectuat sub formă de prestaţii băneşti
-      -- periodice;
-      DamagePaymentCollection
-    | -- e1) de repararea prejudiciului cauzat prin încălcarea dreptului la
-      -- judecarea în termen rezonabil a cauzei sau a dreptului la executarea în
-      -- termen rezonabil a hotărîrii judecătoreşti;
-      RightInfringementRepair
-    | -- e2) de repararea prejudiciului cauzat prin acţiunile ilicite ale
-      -- organelor de urmărire penală, ale procuraturii şi ale instanţelor
-      -- judecătoreşti;
-      IllicitActionRepair
-    | -- f) de restabilirea la locul de muncă şi de încasarea salariului mediu
-      -- pentru întreaga perioadă de absenţă forţată de la muncă;
-      JobRestoration
-    | -- g) încasarea indemnizaţiilor pentru incapacitate temporară de muncă şi
-      -- altor prestaţii de asigurări sociale prevăzute de lege;
-      SocialInsuranceCompensation
-    | -- h) de încasarea cheltuielilor pentru acordarea asistenţei juridice
-      -- garantate de stat.
-      LegalAssistancePaymentCollection
-
-
 type alias TakeoverValue =
     {}
 
@@ -331,7 +283,7 @@ initialModel =
 newProcess : Process
 newProcess =
     { id = "001"
-    , grounds = CreditorPetition newCreditorPetitionValue
+    , grounds = CourtDecision CourtDecision.newValue
     , order = newOrder
     }
 
@@ -369,7 +321,7 @@ view model =
         currentGrounds =
             case model.openedProcess of
                 Nothing ->
-                    CourtDecision newCourtDecisionValue
+                    CourtDecision CourtDecision.newValue
 
                 Just process ->
                     process.grounds
@@ -389,7 +341,7 @@ groundsFields : Grounds -> Html Msg
 groundsFields grounds =
     case grounds of
         CourtDecision decision ->
-            courtDecisionFields decision
+            CourtDecision.fields decision None
 
         CreditorPetition creditorPetition ->
             creditorPetitionFields creditorPetition
@@ -399,11 +351,6 @@ groundsFields grounds =
 
         Takeover takeover ->
             takeoverFields takeover
-
-
-courtDecisionFields : CourtDecisionValue -> Html Msg
-courtDecisionFields decision =
-    div [] [ text <| "CourtDecision" ++ (toString decision) ]
 
 
 creditorPetitionFields : CreditorPetitionValue -> Html Msg
@@ -429,7 +376,7 @@ groundsWithLabels =
     , ( MortgageCreditorPetition newMortgageCreditorPetitionValue
       , "cerere a creditorului în temeiul contractului de ipotecă"
       )
-    , ( CourtDecision newCourtDecisionValue
+    , ( CourtDecision CourtDecision.newValue
       , "demersul instanţei de judecată"
       )
     , ( Takeover {}

@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (value, selected, style)
 import Html.Events exposing (..)
 import Date exposing (Date)
-import CourtDecision exposing (..)
+import CourtDecision
 import Select
 
 
@@ -295,6 +295,7 @@ newProcess =
 type Msg
     = None
     | ChangeGrounds Grounds
+    | ChangeCourtDecision CourtDecision.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -341,7 +342,7 @@ groundsFields : Grounds -> Html Msg
 groundsFields grounds =
     case grounds of
         CourtDecision decision ->
-            CourtDecision.fields decision None
+            CourtDecision.fields decision ChangeCourtDecision
 
         CreditorPetition creditorPetition ->
             creditorPetitionFields creditorPetition

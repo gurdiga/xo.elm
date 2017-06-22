@@ -57,8 +57,8 @@ type alias AssetConfiscationValue =
     {}
 
 
-courtDecisionCausesWithLabels : List ( CourtDecisionCause, String )
-courtDecisionCausesWithLabels =
+valuesWithLabels : List ( CourtDecisionCause, String )
+valuesWithLabels =
     [ ( AssetConfiscation newAssetConfiscationValue
       , "confiscarea bunurilor"
       )
@@ -73,11 +73,11 @@ courtDecisionCausesWithLabels =
         """
       )
     , ( AlimonyCollection
-      , "de urmărirea pensiei de întreţinere"
+      , "urmărirea pensiei de întreţinere"
       )
     , ( HealthDamagePaymentCollection
       , """
-        de încasarea sumelor pentru repararea prejudiciilor cauzate prin
+        încasarea sumelor pentru repararea prejudiciilor cauzate prin
         vătămarea integrităţii corporale, prin o altă vătămare a sănătăţii sau
         prin deces, dacă repararea s-a efectuat sub formă de prestaţii băneşti
         periodice
@@ -85,25 +85,36 @@ courtDecisionCausesWithLabels =
       )
     , ( RightInfringementRepair
       , """
-        de repararea prejudiciului cauzat prin încălcarea dreptului la
+        repararea prejudiciului cauzat prin încălcarea dreptului la
         judecarea în termen rezonabil a cauzei sau a dreptului la executarea în
-        termen rezonabil a hotărîrii judecătoreşti;
+        termen rezonabil a hotărîrii judecătoreşti
         """
       )
-
-    -- | -- e2) de repararea prejudiciului cauzat prin acţiunile ilicite ale
-    --   -- organelor de urmărire penală, ale procuraturii şi ale instanţelor
-    --   -- judecătoreşti;
-    --   IllicitActionRepair
-    -- | -- f) de restabilirea la locul de muncă şi de încasarea salariului mediu
-    --   -- pentru întreaga perioadă de absenţă forţată de la muncă;
-    --   JobRestoration
-    -- | -- g) încasarea indemnizaţiilor pentru incapacitate temporară de muncă şi
-    --   -- altor prestaţii de asigurări sociale prevăzute de lege;
-    --   SocialInsuranceCompensation
-    -- | -- h) de încasarea cheltuielilor pentru acordarea asistenţei juridice
-    --   -- garantate de stat.
-    --   LegalAssistancePaymentCollection
+    , ( IllicitActionRepair
+      , """
+        repararea prejudiciului cauzat prin acţiunile ilicite ale
+        organelor de urmărire penală, ale procuraturii şi ale instanţelor
+        judecătoreşti
+        """
+      )
+    , ( JobRestoration
+      , """
+        restabilirea la locul de muncă şi de încasarea salariului mediu
+        pentru întreaga perioadă de absenţă forţată de la muncă
+        """
+      )
+    , ( SocialInsuranceCompensation
+      , """
+        încasarea indemnizaţiilor pentru incapacitate temporară de muncă şi
+        altor prestaţii de asigurări sociale prevăzute de lege
+        """
+      )
+    , ( LegalAssistancePaymentCollection
+      , """
+        încasarea cheltuielilor pentru acordarea asistenţei juridice
+        garantate de stat
+        """
+      )
     ]
 
 
@@ -122,7 +133,7 @@ fields decision msg =
     div []
         [ text <| "CourtDecision" ++ (toString decision)
         , Select.fromValuesWithLabels
-            courtDecisionCausesWithLabels
-            (\courtDecisionCause -> msg)
+            valuesWithLabels
+            (always msg)
             defaultCourtDecisionCause
         ]

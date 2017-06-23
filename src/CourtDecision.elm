@@ -7,7 +7,7 @@ import Select
 
 
 type Msg
-    = Change Cause.Msg
+    = CauseChange Cause.Type
 
 
 type alias Value =
@@ -21,9 +21,9 @@ newValue =
     }
 
 
-fields : Value -> (Msg -> msg) -> Html msg
+fields : Value -> (Value -> msg) -> Html msg
 fields value msgConstructor =
     fieldset [ title <| toString value ]
         [ legend [] [ text "CourtDecision" ]
-        , Cause.field value.cause (msgConstructor Change)
+        , Cause.field value.cause (\v -> msgConstructor (Value v))
         ]

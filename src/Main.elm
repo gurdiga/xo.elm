@@ -295,7 +295,7 @@ newProcess =
 type Msg
     = None
     | ChangeGrounds Grounds
-    | ChangeCourtDecision CourtDecision.Msg
+    | ChangeCourtDecision CourtDecision.Value
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -305,6 +305,13 @@ update msg model =
             let
                 newOpenedProcess =
                     Maybe.map (\openedProcess -> { openedProcess | grounds = newGrounds }) model.openedProcess
+            in
+                ( { model | openedProcess = newOpenedProcess }, Cmd.none )
+
+        ChangeCourtDecision decision ->
+            let
+                newOpenedProcess =
+                    Maybe.map (\openedProcess -> { openedProcess | grounds = CourtDecision decision }) model.openedProcess
             in
                 ( { model | openedProcess = newOpenedProcess }, Cmd.none )
 
@@ -342,7 +349,7 @@ groundsFields : Grounds -> Html Msg
 groundsFields grounds =
     case grounds of
         CourtDecision decision ->
-            CourtDecision.fields decision ChangeCourtDecision
+            CourtDecision.fields decision (\v -> ChangeCourtDecision v)
 
         CreditorPetition creditorPetition ->
             creditorPetitionFields creditorPetition

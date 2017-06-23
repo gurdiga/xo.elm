@@ -117,11 +117,6 @@ newValue =
     AssetConfiscation newAssetConfiscationValue
 
 
-defaultValue : Type
-defaultValue =
-    AssetConfiscation newAssetConfiscationValue
-
-
 newAssetConfiscationValue : AssetConfiscationValue
 newAssetConfiscationValue =
     {}

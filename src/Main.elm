@@ -153,7 +153,7 @@ type alias ID =
 
 type Grounds
     = CreditorPetition CreditorPetitionValue
-    | CourtDecision CourtDecision.Value -- public policy, public interest
+    | CourtDecision CourtDecision.Type
     | MortgageCreditorPetition MortgageCreditorPetitionValue
     | Takeover TakeoverValue
 
@@ -295,7 +295,7 @@ newProcess =
 type Msg
     = None
     | ChangeGrounds Grounds
-    | ChangeCourtDecision CourtDecision.Value
+    | ChangeCourtDecision CourtDecision.Type
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -349,7 +349,7 @@ groundsFields : Grounds -> Html Msg
 groundsFields grounds =
     case grounds of
         CourtDecision decision ->
-            CourtDecision.fields decision (\v -> ChangeCourtDecision v)
+            CourtDecision.fields decision ChangeCourtDecision
 
         CreditorPetition creditorPetition ->
             creditorPetitionFields creditorPetition

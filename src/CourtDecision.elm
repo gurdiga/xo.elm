@@ -1,4 +1,4 @@
-module CourtDecision exposing (Value, Msg, newValue, fields)
+module CourtDecision exposing (Type, Msg, newValue, fields)
 
 import Html exposing (Html, div, fieldset, legend, text)
 import Html.Attributes exposing (title)
@@ -10,23 +10,23 @@ type Msg
     = CauseChange Cause.Type
 
 
-type alias Value =
+type alias Type =
     { cause : Cause.Type
     }
 
 
-newValue : Value
+newValue : Type
 newValue =
     { cause = Cause.newValue
     }
 
 
-changeCause : Value -> Cause.Type -> Value
+changeCause : Type -> Cause.Type -> Type
 changeCause decision newCause =
     { decision | cause = newCause }
 
 
-fields : Value -> (Value -> msg) -> Html msg
+fields : Type -> (Type -> msg) -> Html msg
 fields decision msgConstructor =
     fieldset []
         [ legend [] [ text "CourtDecision" ]

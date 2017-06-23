@@ -2,7 +2,7 @@ module CourtDecision exposing (Value, Msg, newValue, fields)
 
 import Html exposing (Html, div, fieldset, legend, text)
 import Html.Attributes exposing (title)
-import CourtDecisionCause as Cause
+import CourtDecision.Cause as Cause
 import Select
 
 

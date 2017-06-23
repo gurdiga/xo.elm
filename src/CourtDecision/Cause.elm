@@ -128,8 +128,8 @@ newAssetConfiscationValue =
 
 
 field : Type -> (Type -> msg) -> Html msg
-field value msgConstructor =
-    label [ title <| toString value ]
+field cause msgConstructor =
+    label []
         [ text "Decision cause:"
-        , Select.fromValuesWithLabels valuesWithLabels (\v -> msgConstructor v) defaultValue
+        , Select.fromValuesWithLabels valuesWithLabels msgConstructor cause
         ]

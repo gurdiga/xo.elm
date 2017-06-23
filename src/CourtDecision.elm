@@ -21,9 +21,14 @@ newValue =
     }
 
 
+changeCause : Value -> Cause.Type -> Value
+changeCause decision newCause =
+    { decision | cause = newCause }
+
+
 fields : Value -> (Value -> msg) -> Html msg
-fields value msgConstructor =
-    fieldset [ title <| toString value ]
+fields decision msgConstructor =
+    fieldset []
         [ legend [] [ text "CourtDecision" ]
-        , Cause.field value.cause (\v -> msgConstructor (Value v))
+        , Cause.field decision.cause <| msgConstructor << changeCause decision
         ]

@@ -12,7 +12,7 @@ import Select
 
 type alias Dosar =
     { id : ID
-    , grounds : Grounds
+    , temei : Temei
     , order : Order.Type
     }
 
@@ -21,7 +21,7 @@ type alias ID =
     String
 
 
-type Grounds
+type Temei
     = CreditorPetition CreditorPetitionValue
     | CourtDecision CourtDecision.Type
     | MortgageCreditorPetition MortgageCreditorPetitionValue
@@ -31,7 +31,7 @@ type Grounds
 newValue : Dosar
 newValue =
     { id = "001"
-    , grounds = CourtDecision CourtDecision.newValue
+    , temei = CourtDecision CourtDecision.newValue
     , order = Order.newValue
     }
 
@@ -139,28 +139,23 @@ type Msg
     = ChangeCourtDecision CourtDecision.Type
 
 
-changeGrounds : Dosar -> Grounds -> Dosar
-changeGrounds procedure newGrounds =
-    { procedure | grounds = newGrounds }
-
-
 view : Dosar -> (Dosar -> msg) -> Html msg
 view procedure msgConstructor =
     div []
-        [ h1 [] [ text "Procedură nouă" ]
+        [ h1 [] [ text "Dosar nou" ]
         , label []
             [ text "Temeiul:"
             , Select.fromValuesWithLabels groundsWithLabels
-                (\newGrounds -> msgConstructor { procedure | grounds = newGrounds })
-                procedure.grounds
-            , groundsFields procedure.grounds
+                (\newTemei -> msgConstructor { procedure | temei = newTemei })
+                procedure.temei
+            , groundsFields procedure.temei
             ]
         ]
 
 
-groundsFields : Grounds -> Html msg
-groundsFields grounds =
-    case grounds of
+groundsFields : Temei -> Html msg
+groundsFields temei =
+    case temei of
         CourtDecision decision ->
             text "CourtDecision.fields decision ChangeCourtDecision"
 
@@ -189,7 +184,7 @@ takeoverFields takeover =
     text <| "Takeover" ++ (toString takeover)
 
 
-groundsWithLabels : List ( Grounds, String )
+groundsWithLabels : List ( Temei, String )
 groundsWithLabels =
     [ ( CreditorPetition newCreditorPetitionValue
       , "cerere a creditorului"

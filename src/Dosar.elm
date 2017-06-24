@@ -1,11 +1,11 @@
-module Procedure exposing (Type, newValue, view)
+module Dosar exposing (Type, newValue, view)
 
 import Html exposing (Html, h1, div, pre, label, text)
 import Html.Attributes exposing (style)
-import Procedure.Order as Order
+import Dosar.Order as Order
 import CourtDecision
-import Procedure.Person as Person
-import Procedure.Cause as Cause
+import Dosar.Person as Person
+import Dosar.Cause as Cause
 import Warrant
 import Select
 

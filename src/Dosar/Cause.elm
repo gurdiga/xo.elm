@@ -1,4 +1,4 @@
-module Procedure.Cause exposing (Type, newValue)
+module Dosar.Cause exposing (Type, newValue)
 
 
 type Type

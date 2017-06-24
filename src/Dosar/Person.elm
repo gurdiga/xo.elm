@@ -1,4 +1,4 @@
-module Procedure.Person exposing (Type, newValue)
+module Dosar.Person exposing (Type, newValue)
 
 
 type Type

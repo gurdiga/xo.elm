@@ -3,7 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (value, selected, style)
 import Html.Events exposing (..)
-import Procedure
+import Dosar
 import Select
 
 
@@ -22,8 +22,8 @@ main =
 
 
 type alias Model =
-    { processes : List Procedure.Type
-    , openedProcedure : Maybe Procedure.Type
+    { dosare : List Dosar.Type
+    , dosarDeschis : Maybe Dosar.Type
     }
 
 
@@ -36,8 +36,8 @@ init =
 
 initialModel : Model
 initialModel =
-    { processes = []
-    , openedProcedure = Just Procedure.newValue
+    { dosare = []
+    , dosarDeschis = Just Dosar.newValue
     }
 
 
@@ -46,14 +46,14 @@ initialModel =
 
 
 type Msg
-    = ChangeOpenedProcedure Procedure.Type
+    = UpdateDosar Dosar.Type
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ChangeOpenedProcedure newOpenedProcedure ->
-            ( { model | openedProcedure = Just newOpenedProcedure }, Cmd.none )
+        UpdateDosar newOpenedProcedure ->
+            ( { model | dosarDeschis = Just newOpenedProcedure }, Cmd.none )
 
 
 
@@ -63,19 +63,19 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ procedureFields model.openedProcedure
+        [ dosarView model.dosarDeschis
         , pre [ style [ ( "white-space", "normal" ) ] ] [ text (toString model) ]
         ]
 
 
-procedureFields : Maybe Procedure.Type -> Html Msg
-procedureFields maybeProcedure =
-    case maybeProcedure of
+dosarView : Maybe Dosar.Type -> Html Msg
+dosarView maybeDosar =
+    case maybeDosar of
         Nothing ->
             text ""
 
-        Just procedure ->
-            Procedure.view procedure ChangeOpenedProcedure
+        Just dosar ->
+            Dosar.view dosar UpdateDosar
 
 
 

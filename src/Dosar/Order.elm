@@ -1,8 +1,8 @@
-module Procedure.Order exposing (Type, newValue)
+module Dosar.Order exposing (Type, newValue)
 
 import Date exposing (Date)
-import Procedure.Person as Person
-import Procedure.Cause as Cause
+import Dosar.Person as Person
+import Dosar.Cause as Cause
 import Warrant
 
 

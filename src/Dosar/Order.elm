@@ -1,7 +1,7 @@
 module Dosar.Order exposing (Type, newValue)
 
 import Date exposing (Date)
-import Dosar.Person as Person
+import Dosar.Persoană as Persoană
 import Dosar.Cause as Cause
 import Warrant
 
@@ -22,8 +22,8 @@ type alias
     , -- • data rămînerii definitive a hotărîrii — https://workflowy.com/#/a3557fcba688
       finalDate : Maybe Date
     , -- • date despre debitor(i) și creditor — https://workflowy.com/#/62b772bb8008
-      creditor : Person.Type
-    , debtors : List Person.Type
+      creditor : Persoană.Type
+    , debtors : List Persoană.Type
     , -- • data eliberării titlului executoriu
       releaseDate : Maybe Date
     , -- • dacă sunt, documentele executorii eliberate de instanţa de judecată
@@ -54,8 +54,8 @@ newValue =
     , orderDate = Nothing
     , text = "You shall do this and that."
     , finalDate = Nothing
-    , creditor = Person.newValue
-    , debtors = [ Person.newValue ]
+    , creditor = Persoană.newValue
+    , debtors = [ Persoană.newValue ]
     , releaseDate = Nothing
     , warrants = [ Warrant.newValue ]
     , addressForKeepingSeizedAssets = ""

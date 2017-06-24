@@ -1,15 +1,15 @@
-module Dosar.Person exposing (Type, newValue, view)
+module Dosar.Persoană exposing (Type, newValue, view)
 
 import Html exposing (Html, fieldset, legend, text)
 
 
 type Type
-    = Person
+    = Persoană
 
 
 newValue : Type
 newValue =
-    Person
+    Persoană
 
 
 view : Type -> (Type -> msg) -> Html msg

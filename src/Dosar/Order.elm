@@ -1,7 +1,7 @@
 module Dosar.Order exposing (Type, newValue)
 
 import Date exposing (Date)
-import Dosar.Persoană as Persoană
+import Dosar.Persoană as Persoană exposing (Persoană)
 import Dosar.Cause as Cause
 import Warrant
 
@@ -22,8 +22,8 @@ type alias
     , -- • data rămînerii definitive a hotărîrii — https://workflowy.com/#/a3557fcba688
       finalDate : Maybe Date
     , -- • date despre debitor(i) și creditor — https://workflowy.com/#/62b772bb8008
-      creditor : Persoană.Type
-    , debtors : List Persoană.Type
+      creditor : Persoană
+    , debtors : List Persoană
     , -- • data eliberării titlului executoriu
       releaseDate : Maybe Date
     , -- • dacă sunt, documentele executorii eliberate de instanţa de judecată

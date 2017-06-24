@@ -1,20 +1,33 @@
-module Dosar.Persoană exposing (Type, newValue, view)
+module Dosar.Persoană exposing (Persoană, newValue, view)
 
 import Html exposing (Html, fieldset, legend, text)
+import Dosar.Persoană.PersoanăFizică as PersoanăFizică exposing (PersoanăFizică)
+import Dosar.Persoană.PersoanăJuridică as PersoanăJuridică exposing (PersoanăJuridică)
 
 
-type Type
-    = Persoană
+type Persoană
+    = PersoanăFizică PersoanăFizică
+    | PersoanăJuridică PersoanăJuridică
 
 
-newValue : Type
+newValue : Persoană
 newValue =
-    Persoană
+    PersoanăFizică PersoanăFizică.newValue
 
 
-view : Type -> (Type -> msg) -> Html msg
-view person callback =
+view : Persoană -> (Persoană -> msg) -> Html msg
+view persoană callback =
     fieldset []
         [ legend [] [ text "Persoană" ]
-        , text ("TODO" ++ (toString person))
+        , fields persoană callback
         ]
+
+
+fields : Persoană -> (Persoană -> msg) -> Html msg
+fields persoană callback =
+    case persoană of
+        PersoanăFizică p ->
+            PersoanăFizică.view p (\v -> callback (PersoanăFizică v))
+
+        PersoanăJuridică p ->
+            PersoanăJuridică.view p (\v -> callback (PersoanăJuridică v))

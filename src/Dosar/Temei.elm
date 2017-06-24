@@ -3,19 +3,19 @@ module Dosar.Temei exposing (..)
 import Html exposing (Html, fieldset, legend, label, text)
 import Select
 import Dosar.Person as Person
-import CourtDecision
+import Dosar.DemersInstanță as DemersInstanță
 
 
 type Temei
     = CreditorPetition CreditorPetitionValue
-    | CourtDecision CourtDecision.Type
+    | DemersInstanță DemersInstanță.Type
     | MortgageCreditorPetition MortgageCreditorPetitionValue
     | Takeover TakeoverValue
 
 
 newValue : Temei
 newValue =
-    CourtDecision CourtDecision.newValue
+    DemersInstanță DemersInstanță.newValue
 
 
 type alias MortgageCreditorPetitionValue =
@@ -36,39 +36,44 @@ type alias MortgageCreditorPetitionValue =
 
 
 view : Temei -> (Temei -> msg) -> Html msg
-view temei msgConstructor =
+view temei callback =
     fieldset []
-        [ legend [] [ text "Temeiul:" ]
-        , Select.fromValuesWithLabels labels msgConstructor temei
-        , fields temei
+        [ legend [] [ text "Temei:" ]
+        , dropdown temei callback
+        , fields temei callback
         ]
 
 
-fields : Temei -> Html msg
-fields temei =
-    case temei of
-        CourtDecision decision ->
-            text "CourtDecision.fields decision ChangeCourtDecision"
+dropdown : Temei -> (Temei -> msg) -> Html msg
+dropdown defaultValue callback =
+    Select.fromValuesWithLabels valuesWithLabels callback defaultValue
 
+
+fields : Temei -> (Temei -> msg) -> Html msg
+fields temei callback =
+    case temei of
         CreditorPetition creditorPetition ->
             creditorPetitionFields creditorPetition
 
         MortgageCreditorPetition mortgageCreditorPetition ->
             mortgageCreditorPetitionFields mortgageCreditorPetition
 
+        DemersInstanță decision ->
+            DemersInstanță.view decision (\v -> callback (DemersInstanță v))
+
         Takeover takeover ->
             takeoverFields takeover
 
 
-labels : List ( Temei, String )
-labels =
+valuesWithLabels : List ( Temei, String )
+valuesWithLabels =
     [ ( CreditorPetition newCreditorPetitionValue
       , "cerere a creditorului"
       )
     , ( MortgageCreditorPetition newMortgageCreditorPetitionValue
       , "cerere a creditorului în temeiul contractului de ipotecă"
       )
-    , ( CourtDecision CourtDecision.newValue
+    , ( DemersInstanță DemersInstanță.newValue
       , "demersul instanţei de judecată"
       )
     , ( Takeover {}

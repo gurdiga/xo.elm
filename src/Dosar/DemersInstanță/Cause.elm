@@ -1,4 +1,4 @@
-module CourtDecision.Cause exposing (Type, Msg, newValue, field)
+module Dosar.DemersInstanță.Cause exposing (Type, Msg, newValue, field)
 
 import Html exposing (Html, label, text)
 import Html.Attributes exposing (title)

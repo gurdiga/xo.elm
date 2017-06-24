@@ -1,10 +1,10 @@
-module Procedure.Person exposing (..)
+module Procedure.Person exposing (Type, newValue)
 
 
 type Type
     = Person
 
 
-newPerson : Type
-newPerson =
+newValue : Type
+newValue =
     Person

@@ -46,30 +46,14 @@ initialModel =
 
 
 type Msg
-    = None
-    | ChangeGrounds Grounds
-    | ChangeCourtDecision CourtDecision.Type
+    = ChangeOpenedProcedure Procedure.Type
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ChangeGrounds newGrounds ->
-            let
-                newOpenedProcedure =
-                    Maybe.map (\openedProcedure -> { openedProcedure | grounds = newGrounds }) model.openedProcedure
-            in
-                ( { model | openedProcedure = newOpenedProcedure }, Cmd.none )
-
-        ChangeCourtDecision decision ->
-            let
-                newOpenedProcedure =
-                    Maybe.map (\openedProcedure -> { openedProcedure | grounds = CourtDecision decision }) model.openedProcedure
-            in
-                ( { model | openedProcedure = newOpenedProcedure }, Cmd.none )
-
-        None ->
-            ( model, Cmd.none )
+        ChangeOpenedProcedure newOpenedProcedure ->
+            ( { model | openedProcedure = Just newOpenedProcedure }, Cmd.none )
 
 
 
@@ -78,72 +62,20 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    let
-        currentGrounds =
-            case model.openedProcedure of
-                Nothing ->
-                    CourtDecision CourtDecision.newValue
-
-                Just process ->
-                    process.grounds
-    in
-        div []
-            [ h1 [] [ text "Procedură nouă" ]
-            , label []
-                [ text "Temeiul:"
-                , Select.fromValuesWithLabels groundsWithLabels ChangeGrounds currentGrounds
-                , groundsFields currentGrounds
-                ]
-            , pre [ style [ ( "white-space", "normal" ) ] ] [ text (toString model) ]
-            ]
+    div []
+        [ procedureFields model.openedProcedure
+        , pre [ style [ ( "white-space", "normal" ) ] ] [ text (toString model) ]
+        ]
 
 
-groundsFields : Grounds -> Html Msg
-groundsFields grounds =
-    case grounds of
-        CourtDecision decision ->
-            CourtDecision.fields decision ChangeCourtDecision
+procedureFields : Maybe Procedure.Type -> Html Msg
+procedureFields maybeProcedure =
+    case maybeProcedure of
+        Nothing ->
+            text ""
 
-        CreditorPetition creditorPetition ->
-            creditorPetitionFields creditorPetition
-
-        MortgageCreditorPetition mortgageCreditorPetition ->
-            mortgageCreditorPetitionFields mortgageCreditorPetition
-
-        Takeover takeover ->
-            takeoverFields takeover
-
-
-creditorPetitionFields : CreditorPetitionValue -> Html Msg
-creditorPetitionFields creditorPetition =
-    div [] [ text <| "CreditorPetition" ++ (toString creditorPetition) ]
-
-
-mortgageCreditorPetitionFields : MortgageCreditorPetitionValue -> Html Msg
-mortgageCreditorPetitionFields mortgageCreditorPetition =
-    div [] [ text <| "MortgageCreditorPetition" ++ (toString mortgageCreditorPetition) ]
-
-
-takeoverFields : TakeoverValue -> Html Msg
-takeoverFields takeover =
-    div [] [ text <| "Takeover" ++ (toString takeover) ]
-
-
-groundsWithLabels : List ( Grounds, String )
-groundsWithLabels =
-    [ ( CreditorPetition newCreditorPetitionValue
-      , "cerere a creditorului"
-      )
-    , ( MortgageCreditorPetition newMortgageCreditorPetitionValue
-      , "cerere a creditorului în temeiul contractului de ipotecă"
-      )
-    , ( CourtDecision CourtDecision.newValue
-      , "demersul instanţei de judecată"
-      )
-    , ( Takeover {}
-      , "preluarea unui document executoriu strămutat"
-      )
-    ]
+        Just procedure ->
+            Procedure.view procedure ChangeOpenedProcedure
 
 
 

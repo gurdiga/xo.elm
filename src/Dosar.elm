@@ -1,4 +1,4 @@
-module Dosar exposing (Type, newValue, view)
+module Dosar exposing (Dosar, newValue, view)
 
 import Html exposing (Html, h1, div, pre, label, text)
 import Html.Attributes exposing (style)
@@ -10,7 +10,7 @@ import Warrant
 import Select
 
 
-type alias Type =
+type alias Dosar =
     { id : ID
     , grounds : Grounds
     , order : Order.Type
@@ -28,7 +28,7 @@ type Grounds
     | Takeover TakeoverValue
 
 
-newValue : Type
+newValue : Dosar
 newValue =
     { id = "001"
     , grounds = CourtDecision CourtDecision.newValue
@@ -139,12 +139,12 @@ type Msg
     = ChangeCourtDecision CourtDecision.Type
 
 
-changeGrounds : Type -> Grounds -> Type
+changeGrounds : Dosar -> Grounds -> Dosar
 changeGrounds procedure newGrounds =
     { procedure | grounds = newGrounds }
 
 
-view : Type -> (Type -> msg) -> Html msg
+view : Dosar -> (Dosar -> msg) -> Html msg
 view procedure msgConstructor =
     div []
         [ h1 [] [ text "Procedură nouă" ]

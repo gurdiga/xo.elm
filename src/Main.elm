@@ -3,7 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (value, selected, style)
 import Html.Events exposing (..)
-import Dosar
+import Dosar exposing (Dosar)
 import Select
 
 
@@ -22,8 +22,8 @@ main =
 
 
 type alias Model =
-    { dosare : List Dosar.Type
-    , dosarDeschis : Maybe Dosar.Type
+    { dosare : List Dosar
+    , dosarDeschis : Maybe Dosar
     }
 
 
@@ -46,14 +46,14 @@ initialModel =
 
 
 type Msg
-    = UpdateDosar Dosar.Type
+    = UpdateDosar Dosar
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateDosar newOpenedProcedure ->
-            ( { model | dosarDeschis = Just newOpenedProcedure }, Cmd.none )
+        UpdateDosar dosar ->
+            ( { model | dosarDeschis = Just dosar }, Cmd.none )
 
 
 
@@ -68,7 +68,7 @@ view model =
         ]
 
 
-dosarView : Maybe Dosar.Type -> Html Msg
+dosarView : Maybe Dosar -> Html Msg
 dosarView maybeDosar =
     case maybeDosar of
         Nothing ->

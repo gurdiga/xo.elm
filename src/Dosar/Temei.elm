@@ -4,18 +4,19 @@ import Html exposing (Html, fieldset, legend, label, text)
 import Select
 import Dosar.Person as Person
 import Dosar.DemersInstanță as DemersInstanță
+import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 
 
 type Temei
-    = CreditorPetition CreditorPetitionValue
-    | DemersInstanță DemersInstanță.Type
+    = CerereCreditor CerereCreditor
     | MortgageCreditorPetition MortgageCreditorPetitionValue
+    | DemersInstanță DemersInstanță.Type
     | Takeover TakeoverValue
 
 
 newValue : Temei
 newValue =
-    DemersInstanță DemersInstanță.newValue
+    CerereCreditor CerereCreditor.newValue
 
 
 type alias MortgageCreditorPetitionValue =
@@ -52,8 +53,8 @@ dropdown defaultValue callback =
 fields : Temei -> (Temei -> msg) -> Html msg
 fields temei callback =
     case temei of
-        CreditorPetition creditorPetition ->
-            creditorPetitionFields creditorPetition
+        CerereCreditor cerere ->
+            CerereCreditor.view cerere (\v -> callback (CerereCreditor v))
 
         MortgageCreditorPetition mortgageCreditorPetition ->
             mortgageCreditorPetitionFields mortgageCreditorPetition
@@ -67,7 +68,7 @@ fields temei callback =
 
 valuesWithLabels : List ( Temei, String )
 valuesWithLabels =
-    [ ( CreditorPetition newCreditorPetitionValue
+    [ ( CerereCreditor CerereCreditor.newValue
       , "cerere a creditorului"
       )
     , ( MortgageCreditorPetition newMortgageCreditorPetitionValue
@@ -80,18 +81,6 @@ valuesWithLabels =
       , "preluarea unui document executoriu strămutat"
       )
     ]
-
-
-newCreditorPetitionValue : CreditorPetitionValue
-newCreditorPetitionValue =
-    { creditor = Person.newValue
-    , petition = newPetition
-    }
-
-
-creditorPetitionFields : CreditorPetitionValue -> Html msg
-creditorPetitionFields creditorPetition =
-    text <| "CreditorPetition" ++ (toString creditorPetition)
 
 
 mortgageCreditorPetitionFields : MortgageCreditorPetitionValue -> Html msg
@@ -160,20 +149,5 @@ newMortgageCreditorNoLitigationAffidavitValue =
     {}
 
 
-type Petition
-    = Petition
-
-
-newPetition : Petition
-newPetition =
-    Petition
-
-
 type alias TakeoverValue =
     {}
-
-
-type alias CreditorPetitionValue =
-    { creditor : Person.Type
-    , petition : Petition
-    }

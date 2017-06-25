@@ -13,6 +13,18 @@ suite =
             [ test "handles invalid strings" <|
                 \_ ->
                     Expect.equal (MyDate.parse "magic") (Err "Data trebuie să aibă formatul DD.LL.AAAA")
+            , test "handles clearly invalid date days" <|
+                \_ ->
+                    Expect.equal (MyDate.parse "42.07.2007") (Err "Ziua datei este incorectă: 42")
+            , test "handles subtly invalid date days" <|
+                \_ ->
+                    Expect.equal (MyDate.parse "29.02.2007") (Err "Luna februarie are 28 de zile în 2007")
+            , test "handles invalid date months" <|
+                \_ ->
+                    Expect.equal (MyDate.parse "29.42.2007") (Err "Luna datei este incorectă: 42")
+            , test "years up to 9999 are considered valid" <|
+                \_ ->
+                    Expect.equal (MyDate.parse "01.01.9999") (Date.fromString "9999-01-01")
             , test "handles valid strings" <|
                 \_ ->
                     Expect.equal (MyDate.parse "24.07.2007") (Date.fromString "2007-07-24")

@@ -3,13 +3,13 @@ module Dosar.Persoană.PersoanăFizică exposing (PersoanăFizică, newValue, vi
 import Html exposing (Html, fieldset, legend, ul, li, label, input, textarea, text)
 import Html.Attributes exposing (value)
 import Html.Events exposing (onInput)
-import Date exposing (Date)
+import MyDate exposing (MyDate)
 
 
 type alias PersoanăFizică =
     { nume : String
     , prenume : String
-    , dataNașterii : Result String Date
+    , dataNașterii : MyDate
     , cnp : String
     , adresa : String -- Address?
     , note : String
@@ -66,67 +66,22 @@ largeTextField labelText defaultValue callback =
         ]
 
 
-dateField : String -> Result String Date -> (Result String Date -> msg) -> Html msg
+dateField : String -> MyDate -> (MyDate -> msg) -> Html msg
 dateField labelText defaultValue callback =
     let
         ( inputText, validationMessage ) =
             case defaultValue of
                 Ok date ->
-                    ( formatDate date, "OK" )
+                    ( MyDate.format (Ok date), "OK" )
 
                 Err errorMessage ->
                     ( "", errorMessage )
-
-        formatDate date =
-            (toString (Date.day date))
-                ++ "."
-                ++ (toString (monthNumber date))
-                ++ "."
-                ++ (toString (Date.year date))
-
-        monthNumber date =
-            case Date.month date of
-                Date.Jan ->
-                    1
-
-                Date.Feb ->
-                    2
-
-                Date.Mar ->
-                    3
-
-                Date.Apr ->
-                    4
-
-                Date.May ->
-                    5
-
-                Date.Jun ->
-                    6
-
-                Date.Jul ->
-                    7
-
-                Date.Aug ->
-                    8
-
-                Date.Sep ->
-                    9
-
-                Date.Oct ->
-                    10
-
-                Date.Nov ->
-                    11
-
-                Date.Dec ->
-                    12
     in
         label []
             [ text labelText
             , input
                 [ value inputText
-                , onInput (\v -> callback (Date.fromString v))
+                , onInput (\v -> callback (MyDate.parse v))
                 ]
                 []
             , text validationMessage

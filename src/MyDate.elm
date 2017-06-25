@@ -1,10 +1,31 @@
-module MyDate exposing (MyDate, format, parse)
+module MyDate exposing (MyDate, parse, format)
 
 import Date exposing (Date)
 
 
 type alias MyDate =
     Result String Date
+
+
+parse : String -> MyDate
+parse dateString =
+    if String.length dateString /= 10 then
+        Err "Data trebuie să aibă formatul DD.LL.AAAA"
+    else
+        let
+            day =
+                String.slice 0 2 dateString
+
+            month =
+                String.slice 3 5 dateString
+
+            year =
+                String.slice 6 10 dateString
+
+            isoString =
+                year ++ "-" ++ month ++ "-" ++ day
+        in
+            Date.fromString isoString
 
 
 format : MyDate -> String
@@ -18,12 +39,7 @@ format myDate =
                 ++ (toString (Date.year date))
 
         Err errorMessage ->
-            errorMessage
-
-
-parse : String -> MyDate
-parse date =
-    Date.fromString date
+            ""
 
 
 monthNumber : Date -> Int

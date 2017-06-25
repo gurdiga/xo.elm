@@ -20,7 +20,7 @@ newValue : PersoanăFizică
 newValue =
     { nume = ""
     , prenume = ""
-    , dataNașterii = Err ""
+    , dataNașterii = MyDate.newValue
     , cnp = ""
     , adresa = ""
     , note = ""
@@ -70,12 +70,12 @@ dateField : String -> MyDate -> (MyDate -> msg) -> Html msg
 dateField labelText defaultValue callback =
     let
         ( inputText, validationMessage ) =
-            case defaultValue of
-                Ok date ->
-                    ( MyDate.format (Ok date), "OK" )
+            case MyDate.format defaultValue of
+                Ok dateString ->
+                    ( dateString, "OK" )
 
                 Err errorMessage ->
-                    ( "", errorMessage )
+                    ( defaultValue.string, errorMessage )
     in
         label []
             [ text labelText

@@ -1,8 +1,9 @@
 module Dosar.Persoană exposing (Persoană, newValue, view)
 
-import Html exposing (Html, fieldset, legend, text)
+import Html exposing (Html, fieldset, legend, label, text)
 import Dosar.Persoană.PersoanăFizică as PersoanăFizică exposing (PersoanăFizică)
 import Dosar.Persoană.PersoanăJuridică as PersoanăJuridică exposing (PersoanăJuridică)
+import Select
 
 
 type Persoană
@@ -19,8 +20,19 @@ view : Persoană -> (Persoană -> msg) -> Html msg
 view persoană callback =
     fieldset []
         [ legend [] [ text "Persoană" ]
+        , label []
+            [ text "Gen persoană:"
+            , Select.fromValuesWithLabels valuesWithLabels callback persoană
+            ]
         , fields persoană callback
         ]
+
+
+valuesWithLabels : List ( Persoană, String )
+valuesWithLabels =
+    [ ( PersoanăFizică PersoanăFizică.newValue, "fizică" )
+    , ( PersoanăJuridică PersoanăJuridică.newValue, "juridică" )
+    ]
 
 
 fields : Persoană -> (Persoană -> msg) -> Html msg

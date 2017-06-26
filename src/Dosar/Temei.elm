@@ -1,7 +1,7 @@
 module Dosar.Temei exposing (..)
 
 import Html exposing (Html, fieldset, legend, label, text)
-import Select
+import Widgets.Select as Select
 import Dosar.Persoană as Persoană
 import Dosar.DemersInstanță as DemersInstanță
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)

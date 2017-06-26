@@ -3,7 +3,7 @@ module Dosar.Persoană exposing (Persoană, newValue, view)
 import Html exposing (Html, fieldset, legend, label, text)
 import Dosar.Persoană.PersoanăFizică as PersoanăFizică exposing (PersoanăFizică)
 import Dosar.Persoană.PersoanăJuridică as PersoanăJuridică exposing (PersoanăJuridică)
-import Select
+import Widgets.Select as Select
 
 
 type Persoană

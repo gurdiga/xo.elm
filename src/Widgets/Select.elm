@@ -1,4 +1,4 @@
-module Select exposing (fromValuesWithLabels)
+module Widgets.Select exposing (fromValuesWithLabels)
 
 import Html exposing (Html, select, option, text)
 import Html.Attributes exposing (selected)

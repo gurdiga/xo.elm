@@ -7,7 +7,7 @@ import Dosar.Order as Order
 import Dosar.Persoană as Persoană
 import Dosar.Cause as Cause
 import Warrant
-import Select
+import Widgets.Select as Select
 
 
 type alias Dosar =

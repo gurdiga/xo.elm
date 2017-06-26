@@ -3,7 +3,7 @@ module Dosar.DemersInstanță exposing (Type, Msg, newValue, view)
 import Html exposing (Html, div, fieldset, legend, text)
 import Html.Attributes exposing (title)
 import Dosar.DemersInstanță.Cause as Cause
-import Select
+import Widgets.Select as Select
 
 
 type Msg

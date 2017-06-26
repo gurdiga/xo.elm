@@ -6,8 +6,12 @@ elm-test: /usr/local/bin/elm-test
 /usr/local/bin/elm-test:
 	npm install -g elm-test
 
-compile:
+c: compile
+compile: clean
 	elm-make --warn src/Main.elm
+
+clean:
+	rm -rf elm-stuff/build-artifacts/0.18.0/user/project
 
 open:
 	open http://localhost:8000

@@ -2,9 +2,7 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (value, selected, style)
-import Html.Events exposing (..)
 import Dosar exposing (Dosar)
-import Select
 
 
 main : Program Never Model Msg

@@ -17,3 +17,18 @@ start:
 
 stop:
 	pkill elm-reactor
+
+pre-commit: compile test
+
+.EXPORT_ALL_VARIABLES:
+
+git-hook:
+	cat <<< "$$SETUP_GIT_HOOK" > .git/hooks/pre-commit
+	chmod u+x .git/hooks/pre-commit
+	ls -la .git/hooks/pre-commit
+
+define SETUP_GIT_HOOK
+#!/bin/sh
+
+make pre-commit
+endef

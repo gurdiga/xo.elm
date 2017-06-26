@@ -3,6 +3,7 @@ module Dosar.Temei.CerereCreditor exposing (CerereCreditor, newValue, view)
 import Html exposing (Html, fieldset, legend, label, textarea, text)
 import Html.Events exposing (onInput)
 import Dosar.Persoană as Persoană exposing (Persoană)
+import Widgets.Fields exposing (largeTextField)
 
 
 type alias CerereCreditor =
@@ -19,12 +20,9 @@ newValue =
 
 
 view : CerereCreditor -> (CerereCreditor -> msg) -> Html msg
-view cerere callback =
+view cerereCreditor callback =
     fieldset []
         [ legend [] [ text "CerereCreditor" ]
-        , Persoană.view cerere.creditor (\v -> callback { cerere | creditor = v })
-        , label []
-            [ text "Text cerere:"
-            , textarea [ onInput (\v -> callback { cerere | text = v }) ] []
-            ]
+        , Persoană.view cerereCreditor.creditor (\v -> callback { cerereCreditor | creditor = v })
+        , largeTextField "Text cerere:" cerereCreditor.text (\v -> callback { cerereCreditor | text = v })
         ]

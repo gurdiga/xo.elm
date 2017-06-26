@@ -5,35 +5,19 @@ import Widgets.Select as Select
 import Dosar.Persoană as Persoană
 import Dosar.DemersInstanță as DemersInstanță
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
+import Dosar.Temei.CerereCreditorIpotecă as CerereCreditorIpotecă exposing (CerereCreditorIpotecă)
 
 
 type Temei
     = CerereCreditor CerereCreditor
-    | MortgageCreditorPetition MortgageCreditorPetitionValue
+    | CerereCreditorIpotecă CerereCreditorIpotecă
     | DemersInstanță DemersInstanță.Type
     | Takeover TakeoverValue
 
 
 newValue : Temei
 newValue =
-    CerereCreditor CerereCreditor.newValue
-
-
-type alias MortgageCreditorPetitionValue =
-    { -- • originalul contractului de ipotecă învestit cu formulă executorie⁺
-      mortgageContract : MortgageContractValue
-    , -- • copia contractului de credit bancar sau de împrumut⁺
-      creditAgreement : CreditAgreementValue
-    , -- • extrasele de evidenţă financiară⁺
-      financialRecords : FinancialRecordsValue
-    , -- • copiile notificării şi preavizului expediate pe adresa debitorului
-      notice : ScannedImageValue
-    , intimation : ScannedImageValue
-    , -- • declaraţia pe propria răspundere a creditorului că nu există un
-      -- litigiu judiciar în legătură cu contractul dat de ipotecă
-      -- (ăf′ĭ-dā′vĭt)
-      affidavit : MortgageCreditorNoLitigationAffidavitValue
-    }
+    CerereCreditorIpotecă CerereCreditorIpotecă.newValue
 
 
 view : Temei -> (Temei -> msg) -> Html msg
@@ -53,11 +37,11 @@ dropdown defaultValue callback =
 fields : Temei -> (Temei -> msg) -> Html msg
 fields temei callback =
     case temei of
-        CerereCreditor cerere ->
-            CerereCreditor.view cerere (\v -> callback (CerereCreditor v))
+        CerereCreditor cerereCreditor ->
+            CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v))
 
-        MortgageCreditorPetition mortgageCreditorPetition ->
-            mortgageCreditorPetitionFields mortgageCreditorPetition
+        CerereCreditorIpotecă cerereCreditorIpotecă ->
+            CerereCreditorIpotecă.view cerereCreditorIpotecă (\v -> callback (CerereCreditorIpotecă v))
 
         DemersInstanță decision ->
             DemersInstanță.view decision (\v -> callback (DemersInstanță v))
@@ -71,7 +55,7 @@ valuesWithLabels =
     [ ( CerereCreditor CerereCreditor.newValue
       , "cerere a creditorului"
       )
-    , ( MortgageCreditorPetition newMortgageCreditorPetitionValue
+    , ( CerereCreditorIpotecă CerereCreditorIpotecă.newValue
       , "cerere a creditorului în temeiul contractului de ipotecă"
       )
     , ( DemersInstanță DemersInstanță.newValue
@@ -83,70 +67,9 @@ valuesWithLabels =
     ]
 
 
-mortgageCreditorPetitionFields : MortgageCreditorPetitionValue -> Html msg
-mortgageCreditorPetitionFields mortgageCreditorPetition =
-    text <| "MortgageCreditorPetition" ++ (toString mortgageCreditorPetition)
-
-
 takeoverFields : TakeoverValue -> Html msg
 takeoverFields takeover =
     text <| "Takeover" ++ (toString takeover)
-
-
-newMortgageCreditorPetitionValue : MortgageCreditorPetitionValue
-newMortgageCreditorPetitionValue =
-    { mortgageContract = newMortgageContractValue
-    , creditAgreement = newCreditAgreementValue
-    , financialRecords = newFinancialRecordsValue
-    , notice = newScannedImageValue
-    , intimation = newScannedImageValue
-    , affidavit = newMortgageCreditorNoLitigationAffidavitValue
-    }
-
-
-type alias MortgageContractValue =
-    {}
-
-
-newMortgageContractValue : MortgageContractValue
-newMortgageContractValue =
-    {}
-
-
-type alias CreditAgreementValue =
-    {}
-
-
-newCreditAgreementValue : CreditAgreementValue
-newCreditAgreementValue =
-    {}
-
-
-type alias FinancialRecordsValue =
-    {}
-
-
-newFinancialRecordsValue : FinancialRecordsValue
-newFinancialRecordsValue =
-    {}
-
-
-type alias ScannedImageValue =
-    {}
-
-
-newScannedImageValue : ScannedImageValue
-newScannedImageValue =
-    {}
-
-
-type alias MortgageCreditorNoLitigationAffidavitValue =
-    {}
-
-
-newMortgageCreditorNoLitigationAffidavitValue : MortgageCreditorNoLitigationAffidavitValue
-newMortgageCreditorNoLitigationAffidavitValue =
-    {}
 
 
 type alias TakeoverValue =

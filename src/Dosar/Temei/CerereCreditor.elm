@@ -1,7 +1,6 @@
 module Dosar.Temei.CerereCreditor exposing (CerereCreditor, newValue, view)
 
 import Html exposing (Html, fieldset, legend, label, textarea, text)
-import Html.Events exposing (onInput)
 import Dosar.Persoană as Persoană exposing (Persoană)
 import Widgets.Fields exposing (largeTextField)
 

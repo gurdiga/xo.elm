@@ -1,8 +1,6 @@
 module Dosar.Persoană.PersoanăJuridică exposing (PersoanăJuridică, newValue, view)
 
 import Html exposing (Html, ul, li, label, input, textarea, text)
-import Html.Attributes exposing (value)
-import Html.Events exposing (onInput)
 import Widgets.Fields exposing (textField, largeTextField, dateField)
 
 

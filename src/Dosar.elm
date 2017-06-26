@@ -1,13 +1,8 @@
 module Dosar exposing (Dosar, newValue, view)
 
 import Html exposing (Html, h1, div, pre, label, text)
-import Html.Attributes exposing (style)
 import Dosar.Temei as Temei exposing (Temei)
 import Dosar.Order as Order
-import Dosar.Persoană as Persoană
-import Dosar.Cause as Cause
-import Warrant
-import Widgets.Select as Select
 
 
 type alias Dosar =

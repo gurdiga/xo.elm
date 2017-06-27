@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditorIpotecă.DeclarațieContractNonLitigios exposing (DeclarațieContractNonLitigios, newValue)
+module Dosar.Temei.CerereCreditor.DeclarațieContractNonLitigios exposing (DeclarațieContractNonLitigios, newValue)
 
 
 type DeclarațieContractNonLitigios a

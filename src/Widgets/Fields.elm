@@ -1,7 +1,7 @@
-module Widgets.Fields exposing (textField, largeTextField, dateField)
+module Widgets.Fields exposing (textField, largeTextField, dateField, checkboxField)
 
 import Html exposing (Html, label, input, textarea, text)
-import Html.Attributes exposing (value)
+import Html.Attributes exposing (value, type_)
 import Html.Events exposing (onInput)
 import MyDate exposing (MyDate)
 
@@ -50,3 +50,11 @@ dateField labelText defaultValue callback =
                 []
             , text validationMessage
             ]
+
+
+checkboxField : String -> Maybe a -> (Bool -> msg) -> Html msg
+checkboxField labelText maybeValue callback =
+    label []
+        [ input [ type_ "checkbox", onInput (\v -> callback (Debug.log "onInput" v == "What?")) ] []
+        , text labelText
+        ]

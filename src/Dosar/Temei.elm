@@ -4,20 +4,17 @@ import Html exposing (Html, fieldset, legend, label, text)
 import Widgets.Select as Select
 import Dosar.DemersInstanță as DemersInstanță
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
-import Dosar.Temei.CerereCreditorIpotecă as CerereCreditorIpotecă exposing (CerereCreditorIpotecă)
-import Dosar.Temei.CerereCreditorIpotecă.ContractIpotecă as ContractIpotecă exposing (ContractIpotecă)
 
 
 type Temei
     = CerereCreditor CerereCreditor
-    | CerereCreditorIpotecă CerereCreditorIpotecă
     | DemersInstanță DemersInstanță.Type
     | Takeover TakeoverValue
 
 
 newValue : Temei
 newValue =
-    CerereCreditorIpotecă (CerereCreditorIpotecă.newValue ContractIpotecă.newValue)
+    CerereCreditor CerereCreditor.newValue
 
 
 view : Temei -> (Temei -> msg) -> Html msg
@@ -40,9 +37,6 @@ fields temei callback =
         CerereCreditor cerereCreditor ->
             CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v))
 
-        CerereCreditorIpotecă cerereCreditorIpotecă ->
-            CerereCreditorIpotecă.view cerereCreditorIpotecă (\v -> callback (CerereCreditorIpotecă v))
-
         DemersInstanță decision ->
             DemersInstanță.view decision (\v -> callback (DemersInstanță v))
 
@@ -54,9 +48,6 @@ valuesWithLabels : List ( Temei, String )
 valuesWithLabels =
     [ ( CerereCreditor CerereCreditor.newValue
       , "cerere a creditorului"
-      )
-    , ( CerereCreditorIpotecă (CerereCreditorIpotecă.newValue ContractIpotecă.newValue)
-      , "cerere a creditorului în temeiul contractului de ipotecă"
       )
     , ( DemersInstanță DemersInstanță.newValue
       , "demersul instanţei de judecată"

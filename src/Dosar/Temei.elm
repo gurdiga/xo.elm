@@ -5,6 +5,7 @@ import Widgets.Select as Select
 import Dosar.DemersInstanță as DemersInstanță
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 import Dosar.Temei.CerereCreditorIpotecă as CerereCreditorIpotecă exposing (CerereCreditorIpotecă)
+import Dosar.Temei.CerereCreditorIpotecă.ContractIpotecă as ContractIpotecă exposing (ContractIpotecă)
 
 
 type Temei
@@ -16,7 +17,7 @@ type Temei
 
 newValue : Temei
 newValue =
-    CerereCreditorIpotecă CerereCreditorIpotecă.newValue
+    CerereCreditorIpotecă (CerereCreditorIpotecă.newValue ContractIpotecă.newValue)
 
 
 view : Temei -> (Temei -> msg) -> Html msg
@@ -54,7 +55,7 @@ valuesWithLabels =
     [ ( CerereCreditor CerereCreditor.newValue
       , "cerere a creditorului"
       )
-    , ( CerereCreditorIpotecă CerereCreditorIpotecă.newValue
+    , ( CerereCreditorIpotecă (CerereCreditorIpotecă.newValue ContractIpotecă.newValue)
       , "cerere a creditorului în temeiul contractului de ipotecă"
       )
     , ( DemersInstanță DemersInstanță.newValue

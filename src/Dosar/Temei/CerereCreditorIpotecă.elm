@@ -1,34 +1,39 @@
 module Dosar.Temei.CerereCreditorIpotecă exposing (CerereCreditorIpotecă, newValue, view)
 
 import Html exposing (Html, fieldset, legend, label, text)
+import Dosar.Temei.CerereCreditorIpotecă.ContractIpotecă as ContractIpotecă exposing (ContractIpotecă)
+import Dosar.Temei.CerereCreditorIpotecă.ContractCreditBancar as ContractCreditBancar exposing (ContractCreditBancar)
+import Dosar.Temei.CerereCreditorIpotecă.ExtraseEvidențăFinanciară as ExtraseEvidențăFinanciară exposing (ExtraseEvidențăFinanciară)
+import Dosar.Temei.CerereCreditorIpotecă.DeclarațieContractNonLitigios as DeclarațieContractNonLitigios exposing (DeclarațieContractNonLitigios)
+import DocumentScanat exposing (DocumentScanat)
 
 
-type alias CerereCreditorIpotecă =
-    { -- • originalul contractului de ipotecă învestit cu formulă executorie⁺
-      mortgageContract : MortgageContractValue
-    , -- • copia contractului de credit bancar sau de împrumut⁺
-      creditAgreement : CreditAgreementValue
-    , -- • extrasele de evidenţă financiară⁺
-      financialRecords : FinancialRecordsValue
-    , -- • copiile notificării şi preavizului expediate pe adresa debitorului
-      notice : ScannedImageValue
-    , intimation : ScannedImageValue
-    , -- • declaraţia pe propria răspundere a creditorului că nu există un
-      -- litigiu judiciar în legătură cu contractul dat de ipotecă
-      -- (ăf′ĭ-dā′vĭt)
-      affidavit : MortgageCreditorNoLitigationAffidavitValue
-    }
+type CerereCreditorIpotecă
+    = CerereCreditorIpotecă
+        -- originalul contractului de ipotecă învestit cu formulă executorie⁺
+        ContractIpotecă
+        { -- copia contractului de credit bancar sau de împrumut⁺
+          contractCreditBancar : ContractCreditBancar
+        , -- extrasele de evidenţă financiară⁺
+          extraseEvidențăFinanciară : ExtraseEvidențăFinanciară
+        , -- copiile notificării şi preavizului expediate pe adresa debitorului
+          notificare : DocumentScanat
+        , preaviz : DocumentScanat
+        , -- declaraţia pe propria răspundere a creditorului că nu există un
+          -- litigiu judiciar în legătură cu contractul dat de ipotecă
+          declarație : DeclarațieContractNonLitigios ContractIpotecă
+        }
 
 
-newValue : CerereCreditorIpotecă
-newValue =
-    { mortgageContract = newMortgageContractValue
-    , creditAgreement = newCreditAgreementValue
-    , financialRecords = newFinancialRecordsValue
-    , notice = newScannedImageValue
-    , intimation = newScannedImageValue
-    , affidavit = newMortgageCreditorNoLitigationAffidavitValue
-    }
+newValue : ContractIpotecă -> CerereCreditorIpotecă
+newValue contractIpotecă =
+    CerereCreditorIpotecă contractIpotecă
+        { contractCreditBancar = ContractCreditBancar.newValue
+        , extraseEvidențăFinanciară = ExtraseEvidențăFinanciară.newValue
+        , notificare = DocumentScanat.newValue
+        , preaviz = DocumentScanat.newValue
+        , declarație = DeclarațieContractNonLitigios.newValue contractIpotecă
+        }
 
 
 view : CerereCreditorIpotecă -> (CerereCreditorIpotecă -> msg) -> Html msg
@@ -37,48 +42,3 @@ view cerereCreditorIpotecă callback =
         [ legend [] [ text "CerereCreditorIpotecă" ]
         , text "TODO: add fields"
         ]
-
-
-type alias MortgageContractValue =
-    {}
-
-
-newMortgageContractValue : MortgageContractValue
-newMortgageContractValue =
-    {}
-
-
-type alias CreditAgreementValue =
-    {}
-
-
-newCreditAgreementValue : CreditAgreementValue
-newCreditAgreementValue =
-    {}
-
-
-type alias FinancialRecordsValue =
-    {}
-
-
-newFinancialRecordsValue : FinancialRecordsValue
-newFinancialRecordsValue =
-    {}
-
-
-type alias ScannedImageValue =
-    {}
-
-
-newScannedImageValue : ScannedImageValue
-newScannedImageValue =
-    {}
-
-
-type alias MortgageCreditorNoLitigationAffidavitValue =
-    {}
-
-
-newMortgageCreditorNoLitigationAffidavitValue : MortgageCreditorNoLitigationAffidavitValue
-newMortgageCreditorNoLitigationAffidavitValue =
-    {}

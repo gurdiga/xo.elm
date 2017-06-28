@@ -2,14 +2,14 @@ module Dosar.Temei.CerereCreditor exposing (CerereCreditor, newValue, view)
 
 import Html exposing (Html, fieldset, legend, ul, li, label, textarea, text)
 import Dosar.Persoană as Persoană exposing (Persoană)
-import Dosar.Temei.CerereCreditor.ContractIpotecă as ContractIpotecă exposing (ContractIpotecă)
+import Dosar.Temei.CerereCreditor.DocumenteContractIpotecă as DocumenteContractIpotecă exposing (DocumenteContractIpotecă)
 import Widgets.Fields exposing (largeTextField, checkboxField)
 
 
 type alias CerereCreditor =
     { creditor : Persoană
     , text : String
-    , contractIpotecă : Maybe ContractIpotecă
+    , documenteContractIpotecă : Maybe DocumenteContractIpotecă
     }
 
 
@@ -17,7 +17,7 @@ newValue : CerereCreditor
 newValue =
     { creditor = Persoană.newValue
     , text = ""
-    , contractIpotecă = Nothing
+    , documenteContractIpotecă = Nothing
     }
 
 
@@ -29,40 +29,8 @@ view cerereCreditor callback =
         , ul []
             [ li [] [ largeTextField "Text cerere:" cerereCreditor.text (\v -> callback { cerereCreditor | text = v }) ]
             , li []
-                [ checkboxField "în temeiul contractului de ipotecă"
-                    (hasContractIpotecă cerereCreditor)
-                    (\v -> callback { cerereCreditor | contractIpotecă = contractIpotecăFromBool v })
+                [ DocumenteContractIpotecă.view cerereCreditor.documenteContractIpotecă
+                    (\v -> callback { cerereCreditor | documenteContractIpotecă = v })
                 ]
-            , li [] (contractIpotecăFields cerereCreditor callback)
             ]
         ]
-
-
-contractIpotecăFields : CerereCreditor -> (CerereCreditor -> msg) -> List (Html msg)
-contractIpotecăFields cerereCreditor callback =
-    case cerereCreditor.contractIpotecă of
-        Nothing ->
-            []
-
-        Just c ->
-            [ ContractIpotecă.view c (\v -> callback { cerereCreditor | contractIpotecă = Just v }) ]
-
-
-hasContractIpotecă : CerereCreditor -> Bool
-hasContractIpotecă cerereCreditor =
-    case cerereCreditor.contractIpotecă of
-        Nothing ->
-            False
-
-        Just _ ->
-            True
-
-
-contractIpotecăFromBool : Bool -> Maybe ContractIpotecă
-contractIpotecăFromBool has =
-    case has of
-        True ->
-            Just ContractIpotecă.newValue
-
-        False ->
-            Nothing

@@ -23,33 +23,35 @@ newValue =
 
 view : CerereCreditor -> (CerereCreditor -> msg) -> Html msg
 view cerereCreditor callback =
-    let
-        hasContractIpotecă =
-            case cerereCreditor.contractIpotecă of
-                Nothing ->
-                    False
-
-                Just _ ->
-                    True
-    in
-        fieldset []
-            [ legend [] [ text "CerereCreditor" ]
-            , Persoană.view cerereCreditor.creditor (\v -> callback { cerereCreditor | creditor = v })
-            , ul []
-                [ li [] [ largeTextField "Text cerere:" cerereCreditor.text (\v -> callback { cerereCreditor | text = v }) ]
-                , li []
-                    [ checkboxField "în temeiul contractului de ipotecă"
-                        hasContractIpotecă
-                        (\v ->
-                            callback
-                                { cerereCreditor
-                                    | contractIpotecă =
-                                        if v == True then
-                                            Just ContractIpotecă.newValue
-                                        else
-                                            Nothing
-                                }
-                        )
-                    ]
+    fieldset []
+        [ legend [] [ text "CerereCreditor" ]
+        , Persoană.view cerereCreditor.creditor (\v -> callback { cerereCreditor | creditor = v })
+        , ul []
+            [ li [] [ largeTextField "Text cerere:" cerereCreditor.text (\v -> callback { cerereCreditor | text = v }) ]
+            , li []
+                [ checkboxField "în temeiul contractului de ipotecă"
+                    (hasContractIpotecă cerereCreditor)
+                    (\v -> callback { cerereCreditor | contractIpotecă = contractIpotecăFromBool v })
                 ]
             ]
+        ]
+
+
+hasContractIpotecă : CerereCreditor -> Bool
+hasContractIpotecă cerereCreditor =
+    case cerereCreditor.contractIpotecă of
+        Nothing ->
+            False
+
+        Just _ ->
+            True
+
+
+contractIpotecăFromBool : Bool -> Maybe ContractIpotecă
+contractIpotecăFromBool has =
+    case has of
+        True ->
+            Just ContractIpotecă.newValue
+
+        False ->
+            Nothing

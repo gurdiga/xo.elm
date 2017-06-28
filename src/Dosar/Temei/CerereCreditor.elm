@@ -33,8 +33,19 @@ view cerereCreditor callback =
                     (hasContractIpotecă cerereCreditor)
                     (\v -> callback { cerereCreditor | contractIpotecă = contractIpotecăFromBool v })
                 ]
+            , li [] (contractIpotecăFields cerereCreditor callback)
             ]
         ]
+
+
+contractIpotecăFields : CerereCreditor -> (CerereCreditor -> msg) -> List (Html msg)
+contractIpotecăFields cerereCreditor callback =
+    case cerereCreditor.contractIpotecă of
+        Nothing ->
+            []
+
+        Just c ->
+            [ ContractIpotecă.view c (\v -> callback { cerereCreditor | contractIpotecă = Just v }) ]
 
 
 hasContractIpotecă : CerereCreditor -> Bool

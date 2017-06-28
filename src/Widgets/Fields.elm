@@ -1,8 +1,8 @@
 module Widgets.Fields exposing (textField, largeTextField, dateField, checkboxField)
 
 import Html exposing (Html, label, input, textarea, text)
-import Html.Attributes exposing (value, type_)
-import Html.Events exposing (onInput)
+import Html.Attributes exposing (value, checked, type_)
+import Html.Events exposing (onInput, onCheck)
 import MyDate exposing (MyDate)
 
 
@@ -52,9 +52,14 @@ dateField labelText defaultValue callback =
             ]
 
 
-checkboxField : String -> Maybe a -> (Bool -> msg) -> Html msg
-checkboxField labelText maybeValue callback =
+checkboxField : String -> Bool -> (Bool -> msg) -> Html msg
+checkboxField labelText isChecked callback =
     label []
-        [ input [ type_ "checkbox", onInput (\v -> callback (Debug.log "onInput" v == "What?")) ] []
+        [ input
+            [ type_ "checkbox"
+            , checked isChecked
+            , onCheck callback
+            ]
+            []
         , text labelText
         ]

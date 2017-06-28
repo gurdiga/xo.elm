@@ -23,15 +23,33 @@ newValue =
 
 view : CerereCreditor -> (CerereCreditor -> msg) -> Html msg
 view cerereCreditor callback =
-    fieldset []
-        [ legend [] [ text "CerereCreditor" ]
-        , Persoană.view cerereCreditor.creditor (\v -> callback { cerereCreditor | creditor = v })
-        , ul []
-            [ li [] [ largeTextField "Text cerere:" cerereCreditor.text (\v -> callback { cerereCreditor | text = v }) ]
-            , li []
-                [ checkboxField "în temeiul contractului de ipotecă"
-                    cerereCreditor.contractIpotecă
-                    (\v -> callback { cerereCreditor | contractIpotecă = Just ContractIpotecă.newValue })
+    let
+        hasContractIpotecă =
+            case cerereCreditor.contractIpotecă of
+                Nothing ->
+                    False
+
+                Just _ ->
+                    True
+    in
+        fieldset []
+            [ legend [] [ text "CerereCreditor" ]
+            , Persoană.view cerereCreditor.creditor (\v -> callback { cerereCreditor | creditor = v })
+            , ul []
+                [ li [] [ largeTextField "Text cerere:" cerereCreditor.text (\v -> callback { cerereCreditor | text = v }) ]
+                , li []
+                    [ checkboxField "în temeiul contractului de ipotecă"
+                        hasContractIpotecă
+                        (\v ->
+                            callback
+                                { cerereCreditor
+                                    | contractIpotecă =
+                                        if v == True then
+                                            Just ContractIpotecă.newValue
+                                        else
+                                            Nothing
+                                }
+                        )
+                    ]
                 ]
             ]
-        ]

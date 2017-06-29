@@ -6,7 +6,7 @@ import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar e
 import Dosar.Temei.CerereCreditor.ExtraseEvidențăFinanciară as ExtraseEvidențăFinanciară exposing (ExtraseEvidențăFinanciară)
 import Dosar.Temei.CerereCreditor.DeclarațieContractNonLitigios as DeclarațieContractNonLitigios exposing (DeclarațieContractNonLitigios)
 import DocumentScanat exposing (DocumentScanat)
-import Widgets.Fields exposing (largeTextField, checkboxField)
+import Widgets.Fields exposing (checkboxField)
 
 
 type DocumenteContractIpotecă
@@ -31,10 +31,7 @@ newValue contractIpotecă =
         }
 
 
-view :
-    Maybe DocumenteContractIpotecă
-    -> (Maybe DocumenteContractIpotecă -> msg)
-    -> Html msg
+view : Maybe DocumenteContractIpotecă -> (Maybe DocumenteContractIpotecă -> msg) -> Html msg
 view maybeDocumenteContractIpotecă callback =
     div []
         [ checkboxField "în temeiul contractului de ipotecă"
@@ -44,15 +41,16 @@ view maybeDocumenteContractIpotecă callback =
         ]
 
 
-fields :
-    Maybe DocumenteContractIpotecă
-    -> (Maybe DocumenteContractIpotecă -> msg)
-    -> Html msg
+fields : Maybe DocumenteContractIpotecă -> (Maybe DocumenteContractIpotecă -> msg) -> Html msg
 fields maybeDocumenteContractIpotecă callback =
     case maybeDocumenteContractIpotecă of
-        Just documenteContractIpotecă ->
+        Just (DocumenteContractIpotecă contractIpotecă documenteContractIpotecă) ->
             div []
-                [ text "DocumenteContractIpotecă" ]
+                [ text "DocumenteContractIpotecă"
+                , ContractIpotecă.view
+                    contractIpotecă
+                    (\v -> callback (Just (DocumenteContractIpotecă v documenteContractIpotecă)))
+                ]
 
         Nothing ->
             text ""

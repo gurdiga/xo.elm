@@ -1,4 +1,4 @@
-module Widgets.Fields exposing (textField, largeTextField, dateField, checkboxField)
+module Widgets.Fields exposing (textField, largeTextField, dateField, checkboxField, moneyField)
 
 import Html exposing (Html, label, input, textarea, text)
 import Html.Attributes exposing (value, checked, type_)
@@ -62,4 +62,18 @@ checkboxField labelText isChecked callback =
             ]
             []
         , text labelText
+        ]
+
+
+moneyField : String -> Float -> (Float -> msg) -> Html msg
+moneyField labelText defaultValue callback =
+    label []
+        [ text labelText
+        , input
+            [ type_ "number"
+            , value (toString defaultValue)
+            , onInput (\v -> callback (Result.withDefault 0 (String.toFloat v)))
+            ]
+            []
+        , text "MDL"
         ]

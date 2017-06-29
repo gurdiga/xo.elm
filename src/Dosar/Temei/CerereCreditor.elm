@@ -3,6 +3,7 @@ module Dosar.Temei.CerereCreditor exposing (CerereCreditor, newValue, view)
 import Html exposing (Html, fieldset, legend, ul, li, label, textarea, text)
 import Dosar.Persoană as Persoană exposing (Persoană)
 import Dosar.Temei.CerereCreditor.DocumenteContractIpotecă as DocumenteContractIpotecă exposing (DocumenteContractIpotecă)
+import Dosar.Temei.CerereCreditor.ContractIpotecă as ContractIpotecă exposing (ContractIpotecă)
 import Widgets.Fields exposing (largeTextField, checkboxField)
 
 
@@ -17,7 +18,7 @@ newValue : CerereCreditor
 newValue =
     { creditor = Persoană.newValue
     , text = ""
-    , documenteContractIpotecă = Nothing
+    , documenteContractIpotecă = Just (DocumenteContractIpotecă.newValue ContractIpotecă.newValue)
     }
 
 

@@ -2,11 +2,12 @@ module Dosar.Temei.CerereCreditor.ContractIpotecă exposing (ContractIpotecă, n
 
 import Html exposing (Html, fieldset, ul, li, legend, text)
 import Widgets.Fields exposing (textField, largeTextField, moneyField)
+import Money exposing (Money(..), Currency(..))
 
 
 type alias ContractIpotecă =
     { obiect : String
-    , valoareBunDePiață : Float
+    , valoareBunDePiață : Money
     , valoareBunDeÎnlocuire : Float
     , valoareDeBazăCreanță : Float
     , note : String
@@ -16,7 +17,7 @@ type alias ContractIpotecă =
 newValue : ContractIpotecă
 newValue =
     { obiect = ""
-    , valoareBunDePiață = 0
+    , valoareBunDePiață = Money.newValue
     , valoareBunDeÎnlocuire = 0
     , valoareDeBazăCreanță = 0
     , note = ""
@@ -31,8 +32,8 @@ view contractIpotecă callback =
             [ li [] [ largeTextField "Obiectul ipotecii:" contractIpotecă.obiect (\v -> callback { contractIpotecă | obiect = v }) ]
             , li []
                 [ moneyField "Valoarea de piaţă a bunului:"
-                    contractIpotecă.valoareBunDePiață
-                    (\v -> callback { contractIpotecă | valoareBunDePiață = v })
+                    (Money.amount contractIpotecă.valoareBunDePiață)
+                    (\v -> callback { contractIpotecă | valoareBunDePiață = (Money v MDL) })
                 ]
             , li []
                 [ moneyField "Valoarea de înlocuire a bunului:"

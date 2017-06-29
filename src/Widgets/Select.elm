@@ -5,8 +5,8 @@ import Html.Attributes exposing (selected)
 import Html.Events exposing (onInput)
 
 
-fromValuesWithLabels : List ( a, String ) -> (a -> msg) -> a -> Html msg
-fromValuesWithLabels valuesWithLabels msgConstructor defaultValue =
+fromValuesWithLabels : List ( a, String ) -> a -> (a -> msg) -> Html msg
+fromValuesWithLabels valuesWithLabels defaultValue msgConstructor =
     let
         optionForTuple ( value, label ) =
             option [ selected (defaultValue == value) ] [ text label ]

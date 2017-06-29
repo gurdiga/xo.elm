@@ -28,7 +28,7 @@ view temei callback =
 
 dropdown : Temei -> (Temei -> msg) -> Html msg
 dropdown defaultValue callback =
-    Select.fromValuesWithLabels valuesWithLabels callback defaultValue
+    Select.fromValuesWithLabels valuesWithLabels defaultValue callback
 
 
 fields : Temei -> (Temei -> msg) -> Html msg

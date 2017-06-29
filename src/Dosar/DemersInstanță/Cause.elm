@@ -122,8 +122,8 @@ newAssetConfiscationValue =
 
 
 field : Type -> (Type -> msg) -> Html msg
-field cause msgConstructor =
+field cause callback =
     label []
         [ text "Decision cause:"
-        , Select.fromValuesWithLabels valuesWithLabels msgConstructor cause
+        , Select.fromValuesWithLabels valuesWithLabels cause callback
         ]

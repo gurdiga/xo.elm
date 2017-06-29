@@ -22,7 +22,7 @@ view persoană callback =
         [ legend [] [ text "Persoană" ]
         , label []
             [ text "Gen persoană:"
-            , Select.fromValuesWithLabels valuesWithLabels callback persoană
+            , Select.fromValuesWithLabels valuesWithLabels persoană callback
             ]
         , fields persoană callback
         ]

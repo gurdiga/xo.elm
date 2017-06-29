@@ -1,4 +1,4 @@
-module Money exposing (Money(..), Currency(..), newValue, amount)
+module Money exposing (Money(..), Currency(..))
 
 
 type alias Amount =
@@ -13,15 +13,3 @@ type Currency
 
 type Money
     = Money Amount Currency
-
-
-newValue : Money
-newValue =
-    Money 0 MDL
-
-
-amount : Money -> Float
-amount money =
-    case money of
-        Money amount currency ->
-            amount

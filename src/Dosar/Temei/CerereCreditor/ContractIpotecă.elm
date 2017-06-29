@@ -8,8 +8,8 @@ import Money exposing (Money(..), Currency(..))
 type alias ContractIpotecă =
     { obiect : String
     , valoareBunDePiață : Money
-    , valoareBunDeÎnlocuire : Float
-    , valoareDeBazăCreanță : Float
+    , valoareBunDeÎnlocuire : Money
+    , valoareDeBazăCreanță : Money
     , note : String
     }
 
@@ -17,9 +17,9 @@ type alias ContractIpotecă =
 newValue : ContractIpotecă
 newValue =
     { obiect = ""
-    , valoareBunDePiață = Money.newValue
-    , valoareBunDeÎnlocuire = 0
-    , valoareDeBazăCreanță = 0
+    , valoareBunDePiață = Money 0 MDL
+    , valoareBunDeÎnlocuire = Money 0 MDL
+    , valoareDeBazăCreanță = Money 0 MDL
     , note = ""
     }
 
@@ -32,8 +32,8 @@ view contractIpotecă callback =
             [ li [] [ largeTextField "Obiectul ipotecii:" contractIpotecă.obiect (\v -> callback { contractIpotecă | obiect = v }) ]
             , li []
                 [ moneyField "Valoarea de piaţă a bunului:"
-                    (Money.amount contractIpotecă.valoareBunDePiață)
-                    (\v -> callback { contractIpotecă | valoareBunDePiață = (Money v MDL) })
+                    contractIpotecă.valoareBunDePiață
+                    (\v -> callback { contractIpotecă | valoareBunDePiață = v })
                 ]
             , li []
                 [ moneyField "Valoarea de înlocuire a bunului:"

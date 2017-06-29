@@ -4,6 +4,7 @@ import Html exposing (Html, label, input, textarea, text)
 import Html.Attributes exposing (value, checked, type_)
 import Html.Events exposing (onInput, onCheck)
 import MyDate exposing (MyDate)
+import Money exposing (Money(..))
 
 
 textField : String -> String -> (String -> msg) -> Html msg
@@ -65,15 +66,15 @@ checkboxField labelText isChecked callback =
         ]
 
 
-moneyField : String -> Float -> (Float -> msg) -> Html msg
-moneyField labelText defaultValue callback =
+moneyField : String -> Money -> (Money -> msg) -> Html msg
+moneyField labelText (Money amount currency) callback =
     label []
         [ text labelText
         , input
             [ type_ "number"
-            , value (toString defaultValue)
-            , onInput (\v -> callback (Result.withDefault 0 (String.toFloat v)))
+            , value (toString amount)
+            , onInput (\v -> callback (Money (Result.withDefault 0 (String.toFloat v)) currency))
             ]
             []
-        , text "MDL"
+        , text (toString currency)
         ]

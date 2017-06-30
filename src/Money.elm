@@ -1,4 +1,4 @@
-module Money exposing (Money(..), Currency(..))
+module Money exposing (Money(..), Currency(..), currenciesWithLabels)
 
 
 type alias Amount =
@@ -13,3 +13,11 @@ type Currency
 
 type Money
     = Money Amount Currency
+
+
+currenciesWithLabels : List ( Currency, String )
+currenciesWithLabels =
+    [ ( MDL, "MDL" )
+    , ( EUR, "EUR" )
+    , ( USD, "USD" )
+    ]

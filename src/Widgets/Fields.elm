@@ -5,6 +5,7 @@ import Html.Attributes exposing (value, checked, type_)
 import Html.Events exposing (onInput, onCheck)
 import MyDate exposing (MyDate)
 import Money exposing (Money(..))
+import Widgets.Select as Select
 
 
 textField : String -> String -> (String -> msg) -> Html msg
@@ -76,5 +77,7 @@ moneyField labelText (Money amount currency) callback =
             , onInput (\v -> callback (Money (Result.withDefault 0 (String.toFloat v)) currency))
             ]
             []
-        , text (toString currency)
+        , Select.fromValuesWithLabels Money.currenciesWithLabels
+            currency
+            (\v -> callback (Money amount v))
         ]

@@ -45,6 +45,6 @@ view contractIpotecă callback =
                     contractIpotecă.valoareDeBazăCreanță
                     (\v -> callback { contractIpotecă | valoareDeBazăCreanță = v })
                 ]
-            , li [] [ largeTextField "Note" contractIpotecă.note (\v -> callback { contractIpotecă | note = v }) ]
+            , li [] [ largeTextField "Note:" contractIpotecă.note (\v -> callback { contractIpotecă | note = v }) ]
             ]
         ]

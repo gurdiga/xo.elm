@@ -1,6 +1,6 @@
 module Dosar.Temei.CerereCreditor.DocumenteContractIpotecă exposing (DocumenteContractIpotecă, newValue, view)
 
-import Html exposing (Html, div, text)
+import Html exposing (Html, fieldset, legend, div, text)
 import Dosar.Temei.CerereCreditor.ContractIpotecă as ContractIpotecă exposing (ContractIpotecă)
 import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar exposing (ContractCreditBancar)
 import Dosar.Temei.CerereCreditor.ExtraseEvidențăFinanciară as ExtraseEvidențăFinanciară exposing (ExtraseEvidențăFinanciară)
@@ -45,12 +45,18 @@ fields : Maybe DocumenteContractIpotecă -> (Maybe DocumenteContractIpotecă -> 
 fields maybeDocumenteContractIpotecă callback =
     case maybeDocumenteContractIpotecă of
         Just (DocumenteContractIpotecă contractIpotecă documenteContractIpotecă) ->
-            div []
-                [ text "DocumenteContractIpotecă"
-                , ContractIpotecă.view
-                    contractIpotecă
-                    (\v -> callback (Just (DocumenteContractIpotecă v documenteContractIpotecă)))
-                ]
+            let
+                just c d =
+                    Just (DocumenteContractIpotecă c d)
+            in
+                fieldset []
+                    [ legend [] [ text "DocumenteContractIpotecă" ]
+                    , ContractIpotecă.view
+                        contractIpotecă
+                        (\v -> callback (just v documenteContractIpotecă))
+                    , ContractCreditBancar.view documenteContractIpotecă.contractCreditBancar
+                        (\v -> callback (just contractIpotecă { documenteContractIpotecă | contractCreditBancar = v }))
+                    ]
 
         Nothing ->
             text ""

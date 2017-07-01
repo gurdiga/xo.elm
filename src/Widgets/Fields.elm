@@ -1,8 +1,9 @@
-module Widgets.Fields exposing (textField, largeTextField, dateField, checkboxField, moneyField)
+module Widgets.Fields exposing (textField, largeTextField, dateField, checkboxField, moneyField, fileField)
 
 import Html exposing (Html, label, input, textarea, text)
 import Html.Attributes exposing (value, checked, type_)
-import Html.Events exposing (onInput, onCheck)
+import Html.Events exposing (on, onInput, onCheck)
+import Json.Decode as Json
 import MyDate exposing (MyDate)
 import Money exposing (Money(..))
 import Widgets.Select as Select
@@ -81,3 +82,25 @@ moneyField labelText (Money amount currency) callback =
             currency
             (\v -> callback (Money amount v))
         ]
+
+
+fileField : String -> (String -> msg) -> Html msg
+fileField labelText callback =
+    label []
+        [ text labelText
+        , input
+            [ type_ "file"
+            , onFileSelect callback
+            ]
+            []
+        ]
+
+
+onFileSelect : (String -> msg) -> Html.Attribute msg
+onFileSelect callback =
+    on "change" (Json.map (\v -> callback (Debug.log "calling back with" v)) filePath)
+
+
+filePath : Json.Decoder String
+filePath =
+    Json.at [ "target", "value" ] Json.string

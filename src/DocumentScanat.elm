@@ -1,9 +1,7 @@
 module DocumentScanat exposing (DocumentScanat, newValue, view)
 
 import Html exposing (Html, label, input, text)
-import Html.Attributes exposing (type_)
-import Html.Events exposing (on, onInput)
-import Json.Decode as Json
+import Widgets.Fields exposing (fileField)
 
 
 type alias DocumentScanat =
@@ -17,16 +15,4 @@ newValue =
 
 view : String -> DocumentScanat -> (DocumentScanat -> msg) -> Html msg
 view labelText documentScanat callback =
-    label []
-        [ text labelText
-        , input
-            [ type_ "file"
-            , onFile (\v -> callback { documentScanat | file = v })
-            ]
-            []
-        ]
-
-
-onFile : (String -> msg) -> Html.Attribute msg
-onFile callback =
-    on "change" (Json.map callback Html.Events.targetValue)
+    fileField labelText (\v -> callback { documentScanat | file = (Debug.log "file" v) })

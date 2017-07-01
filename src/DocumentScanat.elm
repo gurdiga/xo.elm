@@ -16,4 +16,4 @@ newValue =
 
 view : String -> DocumentScanat -> (DocumentScanat -> msg) -> Html msg
 view labelText documentScanat callback =
-    fileField labelText (\v -> callback { documentScanat | file = (Debug.log "file" v) })
+    fileField labelText (\v -> callback { documentScanat | file = v })

@@ -1,16 +1,17 @@
 module DocumentScanat exposing (DocumentScanat, newValue, view)
 
 import Html exposing (Html, label, input, text)
+import File exposing (File)
 import Widgets.Fields exposing (fileField)
 
 
 type alias DocumentScanat =
-    { file : String }
+    { file : File }
 
 
 newValue : DocumentScanat
 newValue =
-    { file = "DocumentScanat TODO" }
+    { file = File.newValue }
 
 
 view : String -> DocumentScanat -> (DocumentScanat -> msg) -> Html msg

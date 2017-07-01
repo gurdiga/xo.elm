@@ -6,6 +6,7 @@ import Html.Events exposing (on, onInput, onCheck)
 import Json.Decode as Json
 import MyDate exposing (MyDate)
 import Money exposing (Money(..))
+import File exposing (File)
 import Widgets.Select as Select
 
 
@@ -84,7 +85,7 @@ moneyField labelText (Money amount currency) callback =
         ]
 
 
-fileField : String -> (String -> msg) -> Html msg
+fileField : String -> (File -> msg) -> Html msg
 fileField labelText callback =
     label []
         [ text labelText
@@ -96,11 +97,13 @@ fileField labelText callback =
         ]
 
 
-onFileSelect : (String -> msg) -> Html.Attribute msg
+onFileSelect : (File -> msg) -> Html.Attribute msg
 onFileSelect callback =
-    on "change" (Json.map (\v -> callback (Debug.log "calling back with" v)) filePath)
-
-
-filePath : Json.Decoder String
-filePath =
-    Json.at [ "target", "value" ] Json.string
+    let
+        eventDecoder : Json.Decoder msg
+        eventDecoder =
+            Json.map
+                (\targetValue -> callback (File targetValue))
+                (Json.at [ "target", "value" ] Json.string)
+    in
+        on "change" eventDecoder

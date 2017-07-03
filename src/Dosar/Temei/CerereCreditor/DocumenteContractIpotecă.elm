@@ -54,8 +54,12 @@ fields maybeDocumenteContractIpotecă callback =
                     , ContractIpotecă.view
                         contractIpotecă
                         (\v -> callback (just v documenteContractIpotecă))
-                    , ContractCreditBancar.view documenteContractIpotecă.contractCreditBancar
+                    , ContractCreditBancar.view
+                        documenteContractIpotecă.contractCreditBancar
                         (\v -> callback (just contractIpotecă { documenteContractIpotecă | contractCreditBancar = v }))
+                    , ExtraseEvidențăFinanciară.view
+                        documenteContractIpotecă.extraseEvidențăFinanciară
+                        (\v -> callback (just contractIpotecă { documenteContractIpotecă | extraseEvidențăFinanciară = v }))
                     ]
 
         Nothing ->

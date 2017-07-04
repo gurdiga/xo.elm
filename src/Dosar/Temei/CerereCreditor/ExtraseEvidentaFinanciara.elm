@@ -1,6 +1,6 @@
 module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara, newValue, view)
 
-import Html exposing (Html, fieldset, legend, text)
+import Html exposing (Html, fieldset, legend, ul, li, text)
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara)
 
 
@@ -14,8 +14,32 @@ newValue =
 
 
 view : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
-view extraseEvidentaFinanciara callback =
+view (ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara) callback =
     fieldset []
         [ legend [] [ text "ExtraseEvidentaFinanciara" ]
-        , text (toString extraseEvidentaFinanciara)
+        , ul []
+            (List.indexedMap
+                (\i v ->
+                    li []
+                        [ InregistrareEvidentaFinanciara.view v
+                            (\newV ->
+                                let
+                                    replace index newValue =
+                                        ExtraseEvidentaFinanciara
+                                            (List.indexedMap
+                                                (\i v ->
+                                                    if i == index then
+                                                        newValue
+                                                    else
+                                                        v
+                                                )
+                                                inregistrariEvidentaFinanciara
+                                            )
+                                in
+                                    callback (replace i newV)
+                            )
+                        ]
+                )
+                inregistrariEvidentaFinanciara
+            )
         ]

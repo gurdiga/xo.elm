@@ -14,36 +14,36 @@ type DebtCategory
 type
     -- Articolul 145. Categoriile de creanţe
     -- (1) Se stabilesc 3 categorii de creanţe.
-    -- (2) La categoria întîi de creanţe sînt atribuite creanţele privind:
+    -- (2) La categoria intii de creanţe sint atribuite creanţele privind:
     Debt
-    = -- a) plata pensiei de întreţinere;
+    = -- a) plata pensiei de intreţinere;
       ChildSupportDebt
-    | -- b) plăţile ce decurg din raporturile de muncă;
+    | -- b) plaţile ce decurg din raporturile de munca;
       EmploymentRelatedDebt
-    | -- c) reparaţia prejudiciilor cauzate prin schilodire sau prin o altă
-      -- vătămare a sănătăţii, precum şi în legătură cu pierderea
-      -- întreţinătorului;
+    | -- c) reparaţia prejudiciilor cauzate prin schilodire sau prin o alta
+      -- vatamare a sanataţii, precum şi in legatura cu pierderea
+      -- intreţinatorului;
       HealthDamageDebt
     | -- d) reparaţia prejudiciilor cauzate persoanelor fizice prin infracţiune
       -- sau contravenţie;
       PersonalDamageDebt
-    | -- e) contribuţiile obligatorii de asigurări sociale de stat.
+    | -- e) contribuţiile obligatorii de asigurari sociale de stat.
       SocialSecurityDebt
-      -- (3) La categoria a doua de creanţe sînt atribuite creanţele privind:
-    | -- a) impozitele, taxele şi alte plăţi aferente bugetului public naţional;
+      -- (3) La categoria a doua de creanţe sint atribuite creanţele privind:
+    | -- a) impozitele, taxele şi alte plaţi aferente bugetului public naţional;
       TaxDebt
-    | -- b) taxele de stat, amenzile şi penalităţile aferente bugetului public
+    | -- b) taxele de stat, amenzile şi penalitaţile aferente bugetului public
       -- naţional;
       PenaltiesDebt
     | -- c) reparaţia prejudiciilor cauzate prin infracţiune sau contravenţie
-      -- persoanelor juridice, precum şi asociaţiilor şi societăţilor care nu au
-      -- personalitate juridică, dar care dispun de organe de conducere proprii;
+      -- persoanelor juridice, precum şi asociaţiilor şi societaţilor care nu au
+      -- personalitate juridica, dar care dispun de organe de conducere proprii;
       CorporationDamageDebt
-    | -- d) plăţile pentru drepturile de autor şi drepturile conexe;
+    | -- d) plaţile pentru drepturile de autor şi drepturile conexe;
       CopyrightPenaltiesDebt
-    | -- e) cheltuielile de asistenţă juridică.
+    | -- e) cheltuielile de asistenţa juridica.
       JudicialAssistanceDebt
-    | -- (4) La categoria a treia de creanţe sînt atribuite celelalte creanţe.
+    | -- (4) La categoria a treia de creanţe sint atribuite celelalte creanţe.
       OtherDebt
 
 

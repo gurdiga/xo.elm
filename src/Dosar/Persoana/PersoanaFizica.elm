@@ -1,37 +1,37 @@
-module Dosar.Persoană.PersoanăFizică exposing (PersoanăFizică, newValue, view)
+module Dosar.Persoana.PersoanaFizica exposing (PersoanaFizica, newValue, view)
 
 import Html exposing (Html, ul, li, label, input, textarea, text)
 import MyDate exposing (MyDate)
 import Widgets.Fields exposing (textField, largeTextField, dateField)
 
 
-type alias PersoanăFizică =
+type alias PersoanaFizica =
     { nume : String
     , prenume : String
-    , dataNașterii : MyDate
+    , dataNasterii : MyDate
     , cnp : String
     , adresa : String
     , note : String
     }
 
 
-newValue : PersoanăFizică
+newValue : PersoanaFizica
 newValue =
     { nume = ""
     , prenume = ""
-    , dataNașterii = MyDate.newValue
+    , dataNasterii = MyDate.newValue
     , cnp = ""
     , adresa = ""
     , note = ""
     }
 
 
-view : PersoanăFizică -> (PersoanăFizică -> msg) -> Html msg
+view : PersoanaFizica -> (PersoanaFizica -> msg) -> Html msg
 view p callback =
     ul []
         [ li [] [ textField "Nume:" p.nume (\v -> callback { p | nume = v }) ]
         , li [] [ textField "Prenume:" p.prenume (\v -> callback { p | prenume = v }) ]
-        , li [] [ dateField "Data nașterii:" p.dataNașterii (\v -> callback { p | dataNașterii = v }) ]
+        , li [] [ dateField "Data nasterii:" p.dataNasterii (\v -> callback { p | dataNasterii = v }) ]
         , li [] [ textField "CNP:" p.cnp (\v -> callback { p | cnp = v }) ]
         , li [] [ largeTextField "Adresa:" p.adresa (\v -> callback { p | adresa = v }) ]
         , li [] [ largeTextField "Note:" p.note (\v -> callback { p | note = v }) ]

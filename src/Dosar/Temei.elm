@@ -2,13 +2,13 @@ module Dosar.Temei exposing (..)
 
 import Html exposing (Html, fieldset, legend, label, text)
 import Widgets.Select as Select
-import Dosar.DemersInstanță as DemersInstanță
+import Dosar.DemersInstanta as DemersInstanta
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 
 
 type Temei
     = CerereCreditor CerereCreditor
-    | DemersInstanță DemersInstanță.Type
+    | DemersInstanta DemersInstanta.Type
     | Takeover TakeoverValue
 
 
@@ -37,8 +37,8 @@ fields temei callback =
         CerereCreditor cerereCreditor ->
             CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v))
 
-        DemersInstanță decision ->
-            DemersInstanță.view decision (\v -> callback (DemersInstanță v))
+        DemersInstanta decision ->
+            DemersInstanta.view decision (\v -> callback (DemersInstanta v))
 
         Takeover takeover ->
             takeoverFields takeover
@@ -49,11 +49,11 @@ valuesWithLabels =
     [ ( CerereCreditor CerereCreditor.newValue
       , "cerere a creditorului"
       )
-    , ( DemersInstanță DemersInstanță.newValue
-      , "demersul instanţei de judecată"
+    , ( DemersInstanta DemersInstanta.newValue
+      , "demersul instanţei de judecata"
       )
     , ( Takeover {}
-      , "preluarea unui document executoriu strămutat"
+      , "preluarea unui document executoriu stramutat"
       )
     ]
 

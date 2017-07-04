@@ -12,16 +12,16 @@ suite =
         [ describe "parse"
             [ test "handles invalid strings" <|
                 \_ ->
-                    Expect.equal (MyDate.parse "magic").validationMessage "Data trebuie să aibă formatul DD.LL.AAAA"
+                    Expect.equal (MyDate.parse "magic").validationMessage "Data trebuie sa aiba formatul DD.LL.AAAA"
             , test "handles clearly invalid date days" <|
                 \_ ->
-                    Expect.equal (MyDate.parse "42.07.2007").validationMessage "Ziua datei este incorectă: 42"
+                    Expect.equal (MyDate.parse "42.07.2007").validationMessage "Ziua datei este incorecta: 42"
             , test "handles subtly invalid date days" <|
                 \_ ->
-                    Expect.equal (MyDate.parse "29.02.2007").validationMessage "Luna februarie are 28 de zile în 2007"
+                    Expect.equal (MyDate.parse "29.02.2007").validationMessage "Luna februarie are 28 de zile in 2007"
             , test "handles invalid date months" <|
                 \_ ->
-                    Expect.equal (MyDate.parse "29.42.2007").validationMessage "Luna datei este incorectă: 42"
+                    Expect.equal (MyDate.parse "29.42.2007").validationMessage "Luna datei este incorecta: 42"
             , test "years up to 9999 are considered valid" <|
                 \_ ->
                     Expect.equal (MyDate.parse "01.01.9999").date (Result.toMaybe (Date.fromString "9999-01-01"))
@@ -35,6 +35,6 @@ suite =
                     Expect.equal (MyDate.format (MyDate.parse "24.07.2007")) (Ok "24.07.2007")
             , test "returns an empty string when the date is not valid" <|
                 \_ ->
-                    Expect.equal (MyDate.format (MyDate.parse "magic")) (Err "Data trebuie să aibă formatul DD.LL.AAAA")
+                    Expect.equal (MyDate.format (MyDate.parse "magic")) (Err "Data trebuie sa aiba formatul DD.LL.AAAA")
             ]
         ]

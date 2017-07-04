@@ -1,7 +1,7 @@
 module Dosar.Order exposing (Type, newValue)
 
 import Date exposing (Date)
-import Dosar.Persoană as Persoană exposing (Persoană)
+import Dosar.Persoana as Persoana exposing (Persoana)
 import Dosar.Cause as Cause
 import Warrant
 
@@ -10,34 +10,34 @@ type alias
     -- https://workflowy.com/#/07d4c20e89a4
     Type
     =
-    { -- • denumirea instanţei de judecată care l-a eliberat
+    { -- • denumirea instanţei de judecata care l-a eliberat
       court : CourtValue
-    , -- • pricina în a cărei bază a fost eliberat, categoria de creanță —
+    , -- • pricina in a carei baza a fost eliberat, categoria de creanta —
       -- https://workflowy.com/#/6e5a4774a675
       cause : Cause.Type
-    , -- • data pronunţării hotărîrii
+    , -- • data pronunţarii hotaririi
       orderDate : Maybe Date
     , -- • dispozitivul (textual)
       text : String
-    , -- • data rămînerii definitive a hotărîrii — https://workflowy.com/#/a3557fcba688
+    , -- • data raminerii definitive a hotaririi — https://workflowy.com/#/a3557fcba688
       finalDate : Maybe Date
-    , -- • date despre debitor(i) și creditor — https://workflowy.com/#/62b772bb8008
-      creditor : Persoană
-    , debtors : List Persoană
-    , -- • data eliberării titlului executoriu
+    , -- • date despre debitor(i) si creditor — https://workflowy.com/#/62b772bb8008
+      creditor : Persoana
+    , debtors : List Persoana
+    , -- • data eliberarii titlului executoriu
       releaseDate : Maybe Date
-    , -- • dacă sunt, documentele executorii eliberate de instanţa de judecată
-      -- prin care s-a dispus aplicarea măsurilor de asigurare a acţiunii sau de
+    , -- • daca sunt, documentele executorii eliberate de instanţa de judecata
+      -- prin care s-a dispus aplicarea masurilor de asigurare a acţiunii sau de
       -- asigurare a probelor, sau de anulare a lor¹
-      -- • dacă sunt, menţiunea privind autorizarea pătrunderii forţate a
-      -- executorului judecătoresc în încăperile aflate în posesia sau în
-      -- proprietatea debitorului, inclusiv în cele în care se află bunurile
+      -- • daca sunt, menţiunea privind autorizarea patrunderii forţate a
+      -- executorului judecatoresc in incaperile aflate in posesia sau in
+      -- proprietatea debitorului, inclusiv in cele in care se afla bunurile
       -- debitorului
-      -- • dacă sunt, copia scanată a documentelor menționate la punctul
+      -- • daca sunt, copia scanata a documentelor mentionate la punctul
       -- precedent
       warrants : List Warrant.Type
-    , -- • dacă e menționat, locul de păstrare [a bunurilor sechestrate] indicat
-      -- de instanța de judecată — Articolul 27. (4¹)
+    , -- • daca e mentionat, locul de pastrare [a bunurilor sechestrate] indicat
+      -- de instanta de judecata — Articolul 27. (4¹)
       addressForKeepingSeizedAssets : String
     , notes : String
     }
@@ -54,8 +54,8 @@ newValue =
     , orderDate = Nothing
     , text = "You shall do this and that."
     , finalDate = Nothing
-    , creditor = Persoană.newValue
-    , debtors = [ Persoană.newValue ]
+    , creditor = Persoana.newValue
+    , debtors = [ Persoana.newValue ]
     , releaseDate = Nothing
     , warrants = [ Warrant.newValue ]
     , addressForKeepingSeizedAssets = ""

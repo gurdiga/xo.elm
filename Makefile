@@ -22,6 +22,7 @@ start:
 stop:
 	pkill elm-reactor
 
+pc: pre-commit
 pre-commit: compile test
 
 .EXPORT_ALL_VARIABLES:

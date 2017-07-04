@@ -1,10 +1,10 @@
-module Dosar.Persoană.PersoanăJuridică exposing (PersoanăJuridică, newValue, view)
+module Dosar.Persoana.PersoanaJuridica exposing (PersoanaJuridica, newValue, view)
 
 import Html exposing (Html, ul, li, label, input, textarea, text)
 import Widgets.Fields exposing (textField, largeTextField, dateField)
 
 
-type alias PersoanăJuridică =
+type alias PersoanaJuridica =
     { denumire : String
     , codFiscal : String
     , dateBancare : String
@@ -13,7 +13,7 @@ type alias PersoanăJuridică =
     }
 
 
-newValue : PersoanăJuridică
+newValue : PersoanaJuridica
 newValue =
     { denumire = ""
     , codFiscal = ""
@@ -23,7 +23,7 @@ newValue =
     }
 
 
-view : PersoanăJuridică -> (PersoanăJuridică -> msg) -> Html msg
+view : PersoanaJuridica -> (PersoanaJuridica -> msg) -> Html msg
 view p callback =
     ul []
         [ li [] [ textField "Denumire:" p.denumire (\v -> callback { p | denumire = v }) ]

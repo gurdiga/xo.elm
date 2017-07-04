@@ -29,7 +29,7 @@ parse dateString =
             }
     in
         if not (Regex.contains (regex "^\\d{2}\\.\\d{2}\\.\\d{4}$") dateString) then
-            { myDate | validationMessage = "Data trebuie să aibă formatul DD.LL.AAAA" }
+            { myDate | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
         else
             let
                 dayString =
@@ -54,10 +54,10 @@ parse dateString =
                     )
                 of
                     ( Err e, _, _ ) ->
-                        { myDate | validationMessage = "Ziua datei este incorectă: " ++ dayString }
+                        { myDate | validationMessage = "Ziua datei este incorecta: " ++ dayString }
 
                     ( Ok _, Err e, _ ) ->
-                        { myDate | validationMessage = ("Luna datei este incorectă: " ++ monthString) }
+                        { myDate | validationMessage = ("Luna datei este incorecta: " ++ monthString) }
 
                     ( Ok _, Ok _, Err e ) ->
                         { myDate | validationMessage = ("Anul datei este incorect: " ++ yearString) }
@@ -143,11 +143,11 @@ validateDayForMonthAndYear day month year =
             if day < 30 then
                 Ok day
             else
-                Err ("Luna februarie are 29 de zile în " ++ (toString year))
+                Err ("Luna februarie are 29 de zile in " ++ (toString year))
         else if day < 29 then
             Ok day
         else
-            Err ("Luna februarie are 28 de zile în " ++ (toString year))
+            Err ("Luna februarie are 28 de zile in " ++ (toString year))
 
 
 isLeapYear : Int -> Bool
@@ -176,7 +176,7 @@ format myDate =
 
         Nothing ->
             if myDate.validationMessage == "" then
-                Err ("Dată invalidă: " ++ myDate.string)
+                Err ("Data invalida: " ++ myDate.string)
             else
                 Err myDate.validationMessage
 

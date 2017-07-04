@@ -1,6 +1,6 @@
 module Dosar.DemersInstanta exposing (Type, newValue, view)
 
-import Html exposing (Html, div, fieldset, legend, text)
+import Html exposing (Html, fieldset, legend, text)
 import Dosar.DemersInstanta.Pricina as Pricina
 
 

@@ -1,6 +1,6 @@
 module Dosar.Persoana.PersoanaFizica exposing (PersoanaFizica, newValue, view)
 
-import Html exposing (Html, ul, li, label, input, textarea, text)
+import Html exposing (Html, ul, li)
 import MyDate exposing (MyDate)
 import Widgets.Fields exposing (textField, largeTextField, dateField)
 

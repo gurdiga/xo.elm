@@ -1,6 +1,6 @@
 module Dosar exposing (Dosar, newValue, view)
 
-import Html exposing (Html, h1, div, pre, label, text)
+import Html exposing (Html, h1, div, text)
 import Dosar.Temei as Temei exposing (Temei)
 import Dosar.Pricina as Pricina
 

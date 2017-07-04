@@ -1,6 +1,6 @@
 module DocumentScanat exposing (DocumentScanat, newValue, view)
 
-import Html exposing (Html, label, input, text)
+import Html exposing (Html)
 import File exposing (File)
 import Widgets.Fields exposing (fileField)
 

@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (..)
+import Html exposing (Html, div, pre, text)
 import Html.Attributes exposing (value, selected, style)
 import Dosar exposing (Dosar)
 

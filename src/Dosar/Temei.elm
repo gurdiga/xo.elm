@@ -1,6 +1,6 @@
 module Dosar.Temei exposing (..)
 
-import Html exposing (Html, fieldset, legend, label, text)
+import Html exposing (Html, fieldset, legend, text)
 import Widgets.Select as Select
 import Dosar.DemersInstanta as DemersInstanta
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)

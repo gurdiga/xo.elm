@@ -1,6 +1,6 @@
 module Dosar.Temei.CerereCreditor exposing (CerereCreditor, newValue, view)
 
-import Html exposing (Html, fieldset, legend, ul, li, label, textarea, text)
+import Html exposing (Html, fieldset, legend, ul, li, text)
 import Dosar.Persoana as Persoana exposing (Persoana)
 import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (ContractIpoteca)

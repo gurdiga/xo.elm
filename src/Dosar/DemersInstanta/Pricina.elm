@@ -1,11 +1,7 @@
-module Dosar.DemersInstanta.Cause exposing (Type, Msg, newValue, field)
+module Dosar.DemersInstanta.Pricina exposing (Type, newValue, field)
 
 import Html exposing (Html, label, text)
 import Widgets.Select as Select
-
-
-type Msg
-    = Change
 
 
 type
@@ -13,62 +9,58 @@ type
     -- executare in pricinile ce ţin:
     Type
     = -- a) de confiscarea bunurilor;
-      AssetConfiscation AssetConfiscationValue
+      ConfiscareBunuri
     | -- b) de urmarirea sumelor ce urmeaza a fi facute venit la stat;
-      MoneyCollectionForGovernment
+      UrmarireSumeVenitLaStat
     | -- c) urmarirea sumelor incasate din contul statului, din contul
       -- intreprinderilor de stat şi al celor municipale, al societaţilor
       -- comerciale cu capital majoritar de stat;
-      MoneyCollectionFromGovernment
+      UrmarireSumeDeLaStat
     | -- d) de urmarirea pensiei de intreţinere;
-      AlimonyCollection
+      UrmarirePensieIntretinere
     | -- e) de incasarea sumelor pentru repararea prejudiciilor cauzate prin
       -- vatamarea integritaţii corporale, prin o alta vatamare a sanataţii sau
       -- prin deces, daca repararea s-a efectuat sub forma de prestaţii baneşti
       -- periodice;
-      HealthDamagePaymentCollection
+      PrejudiciiSanatate
     | -- e1) de repararea prejudiciului cauzat prin incalcarea dreptului la
       -- judecarea in termen rezonabil a cauzei sau a dreptului la executarea in
       -- termen rezonabil a hotaririi judecatoreşti;
-      RightInfringementRepair
+      IncalcareDrepturi
     | -- e2) de repararea prejudiciului cauzat prin acţiunile ilicite ale
       -- organelor de urmarire penala, ale procuraturii şi ale instanţelor
       -- judecatoreşti;
-      IllicitActionRepair
+      ActiuniIliciteOrganePenale
     | -- f) de restabilirea la locul de munca şi de incasarea salariului mediu
       -- pentru intreaga perioada de absenţa forţata de la munca;
-      JobRestoration
+      RestabilireLocMunca
     | -- g) incasarea indemnizaţiilor pentru incapacitate temporara de munca şi
       -- altor prestaţii de asigurari sociale prevazute de lege;
-      SocialInsuranceCompensation
+      IncasareAsigurariSociale
     | -- h) de incasarea cheltuielilor pentru acordarea asistenţei juridice
       -- garantate de stat.
-      LegalAssistancePaymentCollection
-
-
-type alias AssetConfiscationValue =
-    {}
+      IncasareCheltuieliAsistentaJuridica
 
 
 valuesWithLabels : List ( Type, String )
 valuesWithLabels =
-    [ ( AssetConfiscation newAssetConfiscationValue
+    [ ( ConfiscareBunuri
       , "confiscarea bunurilor"
       )
-    , ( MoneyCollectionForGovernment
+    , ( UrmarireSumeVenitLaStat
       , "urmarirea sumelor ce urmeaza a fi facute venit la stat"
       )
-    , ( MoneyCollectionFromGovernment
+    , ( UrmarireSumeDeLaStat
       , """
         urmarirea sumelor incasate din contul statului, din contul
         intreprinderilor de stat şi al celor municipale, al societaţilor
         comerciale cu capital majoritar de stat
         """
       )
-    , ( AlimonyCollection
+    , ( UrmarirePensieIntretinere
       , "urmarirea pensiei de intreţinere"
       )
-    , ( HealthDamagePaymentCollection
+    , ( PrejudiciiSanatate
       , """
         incasarea sumelor pentru repararea prejudiciilor cauzate prin
         vatamarea integritaţii corporale, prin o alta vatamare a sanataţii sau
@@ -76,33 +68,33 @@ valuesWithLabels =
         periodice
         """
       )
-    , ( RightInfringementRepair
+    , ( IncalcareDrepturi
       , """
         repararea prejudiciului cauzat prin incalcarea dreptului la
         judecarea in termen rezonabil a cauzei sau a dreptului la executarea in
         termen rezonabil a hotaririi judecatoreşti
         """
       )
-    , ( IllicitActionRepair
+    , ( ActiuniIliciteOrganePenale
       , """
         repararea prejudiciului cauzat prin acţiunile ilicite ale
         organelor de urmarire penala, ale procuraturii şi ale instanţelor
         judecatoreşti
         """
       )
-    , ( JobRestoration
+    , ( RestabilireLocMunca
       , """
         restabilirea la locul de munca şi de incasarea salariului mediu
         pentru intreaga perioada de absenţa forţata de la munca
         """
       )
-    , ( SocialInsuranceCompensation
+    , ( IncasareAsigurariSociale
       , """
         incasarea indemnizaţiilor pentru incapacitate temporara de munca şi
         altor prestaţii de asigurari sociale prevazute de lege
         """
       )
-    , ( LegalAssistancePaymentCollection
+    , ( IncasareCheltuieliAsistentaJuridica
       , """
         incasarea cheltuielilor pentru acordarea asistenţei juridice
         garantate de stat
@@ -113,12 +105,7 @@ valuesWithLabels =
 
 newValue : Type
 newValue =
-    AssetConfiscation newAssetConfiscationValue
-
-
-newAssetConfiscationValue : AssetConfiscationValue
-newAssetConfiscationValue =
-    {}
+    ConfiscareBunuri
 
 
 field : Type -> (Type -> msg) -> Html msg

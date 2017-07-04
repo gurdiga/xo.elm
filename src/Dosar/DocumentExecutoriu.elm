@@ -1,31 +1,31 @@
-module Dosar.Order exposing (Type, newValue)
+module Dosar.DocumentExecutoriu exposing (DocumentExecutoriu, newValue)
 
 import Date exposing (Date)
 import Dosar.Persoana as Persoana exposing (Persoana)
-import Dosar.Cause as Cause
+import Dosar.Pricina as Pricina
 import Warrant
 
 
 type alias
     -- https://workflowy.com/#/07d4c20e89a4
-    Type
+    DocumentExecutoriu
     =
     { -- • denumirea instanţei de judecata care l-a eliberat
-      court : CourtValue
+      instantaJudecata : InstantaJudecata
     , -- • pricina in a carei baza a fost eliberat, categoria de creanta —
       -- https://workflowy.com/#/6e5a4774a675
-      cause : Cause.Type
+      pricina : Pricina.DocumentExecutoriu
     , -- • data pronunţarii hotaririi
-      orderDate : Maybe Date
+      dataPronuntarii : Maybe Date
     , -- • dispozitivul (textual)
-      text : String
+      dispozitivul : String
     , -- • data raminerii definitive a hotaririi — https://workflowy.com/#/a3557fcba688
-      finalDate : Maybe Date
+      dataRamineriiDefinitive : Maybe Date
     , -- • date despre debitor(i) si creditor — https://workflowy.com/#/62b772bb8008
       creditor : Persoana
-    , debtors : List Persoana
+    , debitori : List Persoana
     , -- • data eliberarii titlului executoriu
-      releaseDate : Maybe Date
+      dataEliberarii : Maybe Date
     , -- • daca sunt, documentele executorii eliberate de instanţa de judecata
       -- prin care s-a dispus aplicarea masurilor de asigurare a acţiunii sau de
       -- asigurare a probelor, sau de anulare a lor¹
@@ -35,29 +35,31 @@ type alias
       -- debitorului
       -- • daca sunt, copia scanata a documentelor mentionate la punctul
       -- precedent
-      warrants : List Warrant.Type
+      documenteAplicareMasuriAsigurare : List Warrant.DocumentExecutoriu
     , -- • daca e mentionat, locul de pastrare [a bunurilor sechestrate] indicat
       -- de instanta de judecata — Articolul 27. (4¹)
-      addressForKeepingSeizedAssets : String
-    , notes : String
+      locPastrareBunuriSechestrate : String
+    , autorizariPatrudereFortata : List String
+    , note : String
     }
 
 
-type alias CourtValue =
+type alias InstantaJudecata =
     String
 
 
-newValue : Type
+newValue : DocumentExecutoriu
 newValue =
-    { court = "The Court"
-    , cause = Cause.newValue
-    , orderDate = Nothing
-    , text = "You shall do this and that."
-    , finalDate = Nothing
+    { instantaJudecata = "The Court"
+    , pricina = Pricina.newValue
+    , dataPronuntarii = Nothing
+    , dispozitivul = "You shall do this and that."
+    , dataRamineriiDefinitive = Nothing
     , creditor = Persoana.newValue
-    , debtors = [ Persoana.newValue ]
-    , releaseDate = Nothing
-    , warrants = [ Warrant.newValue ]
-    , addressForKeepingSeizedAssets = ""
-    , notes = ""
+    , debitori = [ Persoana.newValue ]
+    , dataEliberarii = Nothing
+    , documenteAplicareMasuriAsigurare = []
+    , locPastrareBunuriSechestrate = ""
+    , autorizariPatrudereFortata = []
+    , note = ""
     }

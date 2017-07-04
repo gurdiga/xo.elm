@@ -1,52 +1,52 @@
-module Dosar.Cause exposing (Type, newValue)
+module Dosar.Pricina exposing (Type, newValue)
 
 
 type Type
-    = Cause DebtCategory Debt
+    = Pricina CategorieCreanta Creanta
 
 
-type DebtCategory
-    = DebtCategory1
-    | DebtCategory2
-    | DebtCategory3
+type CategorieCreanta
+    = CategorieCreanta1
+    | CategorieCreanta2
+    | CategorieCreanta3
 
 
 type
     -- Articolul 145. Categoriile de creanţe
     -- (1) Se stabilesc 3 categorii de creanţe.
     -- (2) La categoria intii de creanţe sint atribuite creanţele privind:
-    Debt
+    Creanta
     = -- a) plata pensiei de intreţinere;
-      ChildSupportDebt
+      PensieIntretinere
     | -- b) plaţile ce decurg din raporturile de munca;
-      EmploymentRelatedDebt
+      PlatiRaporturiMunca
     | -- c) reparaţia prejudiciilor cauzate prin schilodire sau prin o alta
       -- vatamare a sanataţii, precum şi in legatura cu pierderea
       -- intreţinatorului;
-      HealthDamageDebt
+      PrejudiciiSanatate
     | -- d) reparaţia prejudiciilor cauzate persoanelor fizice prin infracţiune
       -- sau contravenţie;
-      PersonalDamageDebt
+      PrejudiciiPersonale
     | -- e) contribuţiile obligatorii de asigurari sociale de stat.
-      SocialSecurityDebt
+      AsigurariSociale
       -- (3) La categoria a doua de creanţe sint atribuite creanţele privind:
     | -- a) impozitele, taxele şi alte plaţi aferente bugetului public naţional;
-      TaxDebt
+      PlatiBugetPublic
     | -- b) taxele de stat, amenzile şi penalitaţile aferente bugetului public
       -- naţional;
-      PenaltiesDebt
+      PenalitatiBugetPublic
     | -- c) reparaţia prejudiciilor cauzate prin infracţiune sau contravenţie
       -- persoanelor juridice, precum şi asociaţiilor şi societaţilor care nu au
       -- personalitate juridica, dar care dispun de organe de conducere proprii;
-      CorporationDamageDebt
+      PrejudiciiOrganizatii
     | -- d) plaţile pentru drepturile de autor şi drepturile conexe;
-      CopyrightPenaltiesDebt
+      DrepturiAutor
     | -- e) cheltuielile de asistenţa juridica.
-      JudicialAssistanceDebt
+      AsistentaJuridica
     | -- (4) La categoria a treia de creanţe sint atribuite celelalte creanţe.
-      OtherDebt
+      Alte
 
 
 newValue : Type
 newValue =
-    Cause DebtCategory1 ChildSupportDebt
+    Pricina CategorieCreanta1 PensieIntretinere

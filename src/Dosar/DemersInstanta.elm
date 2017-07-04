@@ -1,21 +1,17 @@
-module Dosar.DemersInstanta exposing (Type, Msg, newValue, view)
+module Dosar.DemersInstanta exposing (Type, newValue, view)
 
 import Html exposing (Html, div, fieldset, legend, text)
-import Dosar.DemersInstanta.Cause as Cause
-
-
-type Msg
-    = CauseChange Cause.Type
+import Dosar.DemersInstanta.Pricina as Pricina
 
 
 type alias Type =
-    { cause : Cause.Type
+    { cause : Pricina.Type
     }
 
 
 newValue : Type
 newValue =
-    { cause = Cause.newValue
+    { cause = Pricina.newValue
     }
 
 
@@ -23,5 +19,5 @@ view : Type -> (Type -> msg) -> Html msg
 view decision callback =
     fieldset []
         [ legend [] [ text "Demers al instantei de judecata:" ]
-        , Cause.field decision.cause (\v -> callback { decision | cause = v })
+        , Pricina.field decision.cause (\v -> callback { decision | cause = v })
         ]

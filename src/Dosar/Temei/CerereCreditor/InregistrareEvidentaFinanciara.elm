@@ -1,6 +1,7 @@
 module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara, newValue, view)
 
-import Html exposing (Html, text)
+import Html exposing (Html, tr, td, text)
+import Html.Attributes exposing (style)
 import Money exposing (Money(Money), Currency(MDL))
 import MyDate exposing (MyDate)
 
@@ -21,5 +22,13 @@ newValue =
 
 
 view : InregistrareEvidentaFinanciara -> (InregistrareEvidentaFinanciara -> msg) -> Html msg
-view inregistrareEvidentaFinanciara callback =
-    text ("InregistrareEvidentaFinanciara" ++ (toString inregistrareEvidentaFinanciara))
+view { data, suma, note } callback =
+    let
+        tdStyle =
+            style [ ( "border", "1px solid silver" ) ]
+    in
+        tr []
+            [ td [ tdStyle ] [ text (Result.withDefault "-" (MyDate.format data)) ]
+            , td [ tdStyle ] [ text (toString suma) ]
+            , td [ tdStyle ] [ text note ]
+            ]

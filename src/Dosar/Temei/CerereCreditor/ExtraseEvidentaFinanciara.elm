@@ -66,10 +66,7 @@ appendView : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> 
 appendView extraseEvidentaFinanciara callback =
     button
         [ title "Adaugă înregistrare"
-        , onClick
-            (\_ ->
-                callback (append extraseEvidentaFinanciara InregistrareEvidentaFinanciara.newValue)
-            )
+        , onClick (callback (append extraseEvidentaFinanciara InregistrareEvidentaFinanciara.newValue))
         ]
         [ text "+" ]
 

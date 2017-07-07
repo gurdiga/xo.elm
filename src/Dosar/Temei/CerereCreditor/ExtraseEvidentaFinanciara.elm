@@ -17,16 +17,18 @@ newValue =
 
 view : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
 view extraseEvidentaFinanciara callback =
-    case extraseEvidentaFinanciara of
-        ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara ->
-            fieldset []
-                [ legend [] [ text "ExtraseEvidentaFinanciara" ]
-                , if List.isEmpty inregistrariEvidentaFinanciara then
-                    emptyView
-                  else
-                    list extraseEvidentaFinanciara callback
-                , appendView extraseEvidentaFinanciara callback
-                ]
+    let
+        (ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara) =
+            extraseEvidentaFinanciara
+    in
+        fieldset []
+            [ legend [] [ text "ExtraseEvidentaFinanciara" ]
+            , if List.isEmpty inregistrariEvidentaFinanciara then
+                emptyView
+              else
+                listView extraseEvidentaFinanciara callback
+            , appendView extraseEvidentaFinanciara callback
+            ]
 
 
 emptyView : Html msg
@@ -34,8 +36,8 @@ emptyView =
     p [] [ text "Nu sunt înregistrări." ]
 
 
-list : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
-list extraseEvidentaFinanciara callback =
+listView : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
+listView extraseEvidentaFinanciara callback =
     case extraseEvidentaFinanciara of
         ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara ->
             table [ style [ ( "border", "1px solid silver" ), ( "border-collapse", "collapse" ) ] ]

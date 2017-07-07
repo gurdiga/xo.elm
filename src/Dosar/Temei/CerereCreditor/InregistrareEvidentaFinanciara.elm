@@ -4,7 +4,7 @@ import Html exposing (Html, tr, td, text)
 import Html.Attributes exposing (style)
 import Money exposing (Money(Money), Currency(MDL))
 import MyDate exposing (MyDate)
-import Widgets.Fields exposing (unlabeledDateField)
+import Widgets.Fields exposing (unlabeledDateField, unlabeledMoneyField)
 
 
 type alias InregistrareEvidentaFinanciara =
@@ -30,9 +30,12 @@ view i callback =
 
         dateField =
             unlabeledDateField i.data (\v -> callback { i | data = v })
+
+        moneyField =
+            unlabeledMoneyField i.suma (\v -> callback { i | suma = v })
     in
         tr []
             [ td [ tdStyle ] [ dateField.fieldElement, dateField.errorMessageElement ]
-            , td [ tdStyle ] [ text (toString i.suma) ]
+            , td [ tdStyle ] [ moneyField.amountFieldElement, moneyField.currencyFieldElement ]
             , td [ tdStyle ] [ text i.note ]
             ]

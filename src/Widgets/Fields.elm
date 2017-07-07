@@ -6,6 +6,7 @@ module Widgets.Fields
         , unlabeledDateField
         , checkboxField
         , moneyField
+        , unlabeledMoneyField
         , fileField
         )
 
@@ -91,19 +92,36 @@ checkboxField labelText isChecked callback =
 
 
 moneyField : String -> Money -> (Money -> msg) -> Html msg
-moneyField labelText (Money amount currency) callback =
-    label []
-        [ text labelText
-        , input
+moneyField labelText money callback =
+    let
+        (Money amount currency) =
+            money
+
+        { amountFieldElement, currencyFieldElement } =
+            unlabeledMoneyField money callback
+    in
+        label []
+            [ text labelText
+            , amountFieldElement
+            , currencyFieldElement
+            ]
+
+
+unlabeledMoneyField : Money -> (Money -> msg) -> { amountFieldElement : Html msg, currencyFieldElement : Html msg }
+unlabeledMoneyField (Money amount currency) callback =
+    { amountFieldElement =
+        input
             [ type_ "number"
             , value (toString amount)
             , onInput (\v -> callback (Money (Result.withDefault 0 (String.toFloat v)) currency))
             ]
             []
-        , Select.fromValuesWithLabels Money.currenciesWithLabels
+    , currencyFieldElement =
+        Select.fromValuesWithLabels
+            Money.currenciesWithLabels
             currency
             (\v -> callback (Money amount v))
-        ]
+    }
 
 
 fileField : String -> (File -> msg) -> Html msg

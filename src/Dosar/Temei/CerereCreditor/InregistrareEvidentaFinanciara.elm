@@ -4,6 +4,7 @@ import Html exposing (Html, tr, td, text)
 import Html.Attributes exposing (style)
 import Money exposing (Money(Money), Currency(MDL))
 import MyDate exposing (MyDate)
+import Widgets.Fields exposing (unlabeledDateField)
 
 
 type alias InregistrareEvidentaFinanciara =
@@ -22,13 +23,16 @@ newValue =
 
 
 view : InregistrareEvidentaFinanciara -> (InregistrareEvidentaFinanciara -> msg) -> Html msg
-view { data, suma, note } callback =
+view i callback =
     let
         tdStyle =
             style [ ( "border", "1px solid silver" ) ]
+
+        dateField =
+            unlabeledDateField i.data (\v -> callback { i | data = v })
     in
         tr []
-            [ td [ tdStyle ] [ text (Result.withDefault "-" (MyDate.format data)) ]
-            , td [ tdStyle ] [ text (toString suma) ]
-            , td [ tdStyle ] [ text note ]
+            [ td [ tdStyle ] [ dateField.fieldElement, dateField.errorMessageElement ]
+            , td [ tdStyle ] [ text (toString i.suma) ]
+            , td [ tdStyle ] [ text i.note ]
             ]

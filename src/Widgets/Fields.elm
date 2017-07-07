@@ -1,4 +1,13 @@
-module Widgets.Fields exposing (textField, largeTextField, dateField, checkboxField, moneyField, fileField)
+module Widgets.Fields
+    exposing
+        ( textField
+        , largeTextField
+        , dateField
+        , unlabeledDateField
+        , checkboxField
+        , moneyField
+        , fileField
+        )
 
 import Html exposing (Html, label, input, textarea, text)
 import Html.Attributes exposing (value, checked, type_)
@@ -37,6 +46,19 @@ largeTextField labelText defaultValue callback =
 dateField : String -> MyDate -> (MyDate -> msg) -> Html msg
 dateField labelText defaultValue callback =
     let
+        { fieldElement, errorMessageElement } =
+            unlabeledDateField defaultValue callback
+    in
+        label []
+            [ text labelText
+            , fieldElement
+            , errorMessageElement
+            ]
+
+
+unlabeledDateField : MyDate -> (MyDate -> msg) -> { fieldElement : Html msg, errorMessageElement : Html msg }
+unlabeledDateField defaultValue callback =
+    let
         ( inputText, validationMessage ) =
             case MyDate.format defaultValue of
                 Ok dateString ->
@@ -45,15 +67,14 @@ dateField labelText defaultValue callback =
                 Err errorMessage ->
                     ( defaultValue.string, errorMessage )
     in
-        label []
-            [ text labelText
-            , input
+        { fieldElement =
+            input
                 [ value inputText
                 , onInput (\v -> callback (MyDate.parse v))
                 ]
                 []
-            , text validationMessage
-            ]
+        , errorMessageElement = text validationMessage
+        }
 
 
 checkboxField : String -> Bool -> (Bool -> msg) -> Html msg

@@ -1,7 +1,7 @@
-module Dosar.Pricina exposing (Type, newValue)
+module Dosar.Pricina exposing (Pricina, newValue)
 
 
-type Type
+type Pricina
     = Pricina CategorieCreanta Creanta
 
 
@@ -47,6 +47,6 @@ type
       Alte
 
 
-newValue : Type
+newValue : Pricina
 newValue =
     Pricina CategorieCreanta1 PensieIntretinere

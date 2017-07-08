@@ -1,23 +1,29 @@
-module Dosar.DemersInstanta exposing (Type, newValue, view)
+module Dosar.DemersInstanta exposing (DemersInstanta, newValue, view)
 
-import Html exposing (Html, fieldset, legend, text)
-import Dosar.DemersInstanta.Pricina as Pricina
+import Html exposing (Html, fieldset, legend, ul, li, text)
+import Dosar.DemersInstanta.Pricina as Pricina exposing (Pricina)
+import DocumentScanat exposing (DocumentScanat)
 
 
-type alias Type =
-    { cause : Pricina.Type
+type alias DemersInstanta =
+    { pricina : Pricina
+    , copia : DocumentScanat
     }
 
 
-newValue : Type
+newValue : DemersInstanta
 newValue =
-    { cause = Pricina.newValue
+    { pricina = Pricina.newValue
+    , copia = DocumentScanat.newValue
     }
 
 
-view : Type -> (Type -> msg) -> Html msg
+view : DemersInstanta -> (DemersInstanta -> msg) -> Html msg
 view decision callback =
     fieldset []
-        [ legend [] [ text "Demers al instantei de judecata:" ]
-        , Pricina.field decision.cause (\v -> callback { decision | cause = v })
+        [ legend [] [ text "DemersInstanta" ]
+        , ul []
+            [ li [] [ Pricina.view decision.pricina (\v -> callback { decision | pricina = v }) ]
+            , li [] [ DocumentScanat.view "Copia scanată:" decision.copia (\v -> callback { decision | copia = v }) ]
+            ]
         ]

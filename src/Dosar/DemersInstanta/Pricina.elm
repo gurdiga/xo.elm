@@ -1,4 +1,4 @@
-module Dosar.DemersInstanta.Pricina exposing (Type, newValue, field)
+module Dosar.DemersInstanta.Pricina exposing (Pricina, newValue, view)
 
 import Html exposing (Html, label, text)
 import Widgets.Select as Select
@@ -7,7 +7,7 @@ import Widgets.Select as Select
 type
     -- (2) Instanţa de judecata prezinta din oficiu titlul executoriu spre
     -- executare in pricinile ce ţin:
-    Type
+    Pricina
     = -- a) de confiscarea bunurilor;
       ConfiscareBunuri
     | -- b) de urmarirea sumelor ce urmeaza a fi facute venit la stat;
@@ -42,7 +42,7 @@ type
       IncasareCheltuieliAsistentaJuridica
 
 
-valuesWithLabels : List ( Type, String )
+valuesWithLabels : List ( Pricina, String )
 valuesWithLabels =
     [ ( ConfiscareBunuri
       , "confiscarea bunurilor"
@@ -103,14 +103,14 @@ valuesWithLabels =
     ]
 
 
-newValue : Type
+newValue : Pricina
 newValue =
     ConfiscareBunuri
 
 
-field : Type -> (Type -> msg) -> Html msg
-field cause callback =
+view : Pricina -> (Pricina -> msg) -> Html msg
+view pricina callback =
     label []
-        [ text "Decision cause:"
-        , Select.fromValuesWithLabels valuesWithLabels cause callback
+        [ text "Pricina:"
+        , Select.fromValuesWithLabels valuesWithLabels pricina callback
         ]

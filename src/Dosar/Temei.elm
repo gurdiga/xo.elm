@@ -2,19 +2,19 @@ module Dosar.Temei exposing (..)
 
 import Html exposing (Html, fieldset, legend, text)
 import Widgets.Select as Select
-import Dosar.DemersInstanta as DemersInstanta
+import Dosar.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 
 
 type Temei
     = CerereCreditor CerereCreditor
-    | DemersInstanta DemersInstanta.Type
+    | DemersInstanta DemersInstanta
     | Takeover TakeoverValue
 
 
 newValue : Temei
 newValue =
-    CerereCreditor CerereCreditor.newValue
+    DemersInstanta DemersInstanta.newValue
 
 
 view : Temei -> (Temei -> msg) -> Html msg

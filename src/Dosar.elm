@@ -2,13 +2,13 @@ module Dosar exposing (Dosar, newValue, view)
 
 import Html exposing (Html, h1, div, text)
 import Dosar.Temei as Temei exposing (Temei)
-import Dosar.Pricina as Pricina
+import Dosar.Pricina as Pricina exposing (Pricina)
 
 
 type alias Dosar =
     { id : ID
     , temei : Temei
-    , order : Pricina.Type
+    , order : Pricina
     }
 
 

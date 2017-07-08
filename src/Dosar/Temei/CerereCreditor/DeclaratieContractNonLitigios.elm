@@ -17,6 +17,6 @@ view : DeclaratieContractNonLitigios -> (DeclaratieContractNonLitigios -> msg) -
 view declaratieContractNonLitigios callback =
     fieldset []
         [ legend [] [ text "DeclaratieContractNonLitigios" ]
-        , p [] [ text "TODO: probably open an editable filled template" ]
+        , p [] [ text "TODO: probably open an pre-filled editable template" ]
         , text (toString declaratieContractNonLitigios)
         ]

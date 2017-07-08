@@ -1,6 +1,6 @@
 module Dosar.Temei exposing (..)
 
-import Html exposing (Html, fieldset, legend, text)
+import Html exposing (Html, div, label, text)
 import Widgets.Select as Select
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
@@ -20,16 +20,18 @@ newValue =
 
 view : Temei -> (Temei -> msg) -> Html msg
 view temei callback =
-    fieldset []
-        [ legend [] [ text "Temei:" ]
-        , dropdown temei callback
+    div []
+        [ dropdown temei callback
         , fields temei callback
         ]
 
 
 dropdown : Temei -> (Temei -> msg) -> Html msg
 dropdown temei callback =
-    Select.fromValuesWithLabels valuesWithLabels (defaultValue temei) callback
+    label []
+        [ text "Temei:"
+        , Select.fromValuesWithLabels valuesWithLabels (defaultValue temei) callback
+        ]
 
 
 fields : Temei -> (Temei -> msg) -> Html msg

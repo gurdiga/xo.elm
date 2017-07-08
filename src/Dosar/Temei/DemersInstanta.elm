@@ -1,4 +1,4 @@
-module Dosar.DemersInstanta exposing (DemersInstanta, newValue, view)
+module Dosar.Temei.DemersInstanta exposing (DemersInstanta, newValue, view)
 
 import Html exposing (Html, fieldset, legend, ul, li, text)
 import Dosar.DemersInstanta.Pricina as Pricina exposing (Pricina)

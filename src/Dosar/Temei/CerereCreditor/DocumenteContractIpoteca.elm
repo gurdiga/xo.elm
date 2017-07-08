@@ -36,7 +36,7 @@ view maybeDocumenteContractIpoteca callback =
     div []
         [ checkboxField "in temeiul contractului de ipoteca"
             (maybeToBool maybeDocumenteContractIpoteca)
-            (\v -> callback (maybeFromBool v))
+            (\v -> callback (boolToMaybe v))
         , fields maybeDocumenteContractIpoteca callback
         ]
 
@@ -66,8 +66,8 @@ fields maybeDocumenteContractIpoteca callback =
             text ""
 
 
-maybeFromBool : Bool -> Maybe DocumenteContractIpoteca
-maybeFromBool v =
+boolToMaybe : Bool -> Maybe DocumenteContractIpoteca
+boolToMaybe v =
     case v of
         True ->
             Just (newValue ContractIpoteca.newValue)

@@ -1,6 +1,7 @@
 module Widgets.Fields
     exposing
         ( textField
+        , unlabeledTextField
         , largeTextField
         , dateField
         , unlabeledDateField
@@ -24,12 +25,17 @@ textField : String -> String -> (String -> msg) -> Html msg
 textField labelText defaultValue callback =
     label []
         [ text labelText
-        , input
-            [ value defaultValue
-            , onInput callback
-            ]
-            []
+        , unlabeledTextField defaultValue callback
         ]
+
+
+unlabeledTextField : String -> (String -> msg) -> Html msg
+unlabeledTextField defaultValue callback =
+    input
+        [ value defaultValue
+        , onInput callback
+        ]
+        []
 
 
 largeTextField : String -> String -> (String -> msg) -> Html msg

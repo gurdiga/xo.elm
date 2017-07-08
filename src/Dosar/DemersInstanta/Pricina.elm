@@ -26,7 +26,7 @@ type
     | -- e1) de repararea prejudiciului cauzat prin incalcarea dreptului la
       -- judecarea in termen rezonabil a cauzei sau a dreptului la executarea in
       -- termen rezonabil a hotaririi judecatoreşti;
-      IncalcareDrepturi
+      IncalcareDrepturiJudecata
     | -- e2) de repararea prejudiciului cauzat prin acţiunile ilicite ale
       -- organelor de urmarire penala, ale procuraturii şi ale instanţelor
       -- judecatoreşti;
@@ -51,7 +51,7 @@ valuesWithLabels =
       , "urmarirea sumelor ce urmeaza a fi facute venit la stat"
       )
     , ( UrmarireSumeDeLaStat
-      , """
+      , asOneLine """
         urmarirea sumelor incasate din contul statului, din contul
         intreprinderilor de stat şi al celor municipale, al societaţilor
         comerciale cu capital majoritar de stat
@@ -61,41 +61,41 @@ valuesWithLabels =
       , "urmarirea pensiei de intreţinere"
       )
     , ( PrejudiciiSanatate
-      , """
+      , asOneLine """
         incasarea sumelor pentru repararea prejudiciilor cauzate prin
         vatamarea integritaţii corporale, prin o alta vatamare a sanataţii sau
         prin deces, daca repararea s-a efectuat sub forma de prestaţii baneşti
         periodice
         """
       )
-    , ( IncalcareDrepturi
-      , """
+    , ( IncalcareDrepturiJudecata
+      , asOneLine """
         repararea prejudiciului cauzat prin incalcarea dreptului la
         judecarea in termen rezonabil a cauzei sau a dreptului la executarea in
         termen rezonabil a hotaririi judecatoreşti
         """
       )
     , ( ActiuniIliciteOrganePenale
-      , """
+      , asOneLine """
         repararea prejudiciului cauzat prin acţiunile ilicite ale
         organelor de urmarire penala, ale procuraturii şi ale instanţelor
         judecatoreşti
         """
       )
     , ( RestabilireLocMunca
-      , """
+      , asOneLine """
         restabilirea la locul de munca şi de incasarea salariului mediu
         pentru intreaga perioada de absenţa forţata de la munca
         """
       )
     , ( IncasareAsigurariSociale
-      , """
+      , asOneLine """
         incasarea indemnizaţiilor pentru incapacitate temporara de munca şi
         altor prestaţii de asigurari sociale prevazute de lege
         """
       )
     , ( IncasareCheltuieliAsistentaJuridica
-      , """
+      , asOneLine """
         incasarea cheltuielilor pentru acordarea asistenţei juridice
         garantate de stat
         """
@@ -114,3 +114,8 @@ view pricina callback =
         [ text "Pricina:"
         , Select.fromValuesWithLabels valuesWithLabels pricina callback
         ]
+
+
+asOneLine : String -> String
+asOneLine =
+    String.join " " << String.words

@@ -19,11 +19,11 @@ newValue =
 
 
 view : DemersInstanta -> (DemersInstanta -> msg) -> Html msg
-view decision callback =
+view demersInstanta callback =
     fieldset []
         [ legend [] [ text "DemersInstanta" ]
         , ul []
-            [ li [] [ Pricina.view decision.pricina (\v -> callback { decision | pricina = v }) ]
-            , li [] [ DocumentScanat.view "Copia scanată:" decision.copia (\v -> callback { decision | copia = v }) ]
+            [ li [] [ Pricina.view demersInstanta.pricina (\v -> callback { demersInstanta | pricina = v }) ]
+            , li [] [ DocumentScanat.view "Copia scanată:" demersInstanta.copia (\v -> callback { demersInstanta | copia = v }) ]
             ]
         ]

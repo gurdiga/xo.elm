@@ -37,8 +37,8 @@ fields temei callback =
         CerereCreditor cerereCreditor ->
             CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v))
 
-        DemersInstanta decision ->
-            DemersInstanta.view decision (\v -> callback (DemersInstanta v))
+        DemersInstanta demersInstanta ->
+            DemersInstanta.view demersInstanta (\v -> callback (DemersInstanta v))
 
         Takeover takeover ->
             takeoverFields takeover

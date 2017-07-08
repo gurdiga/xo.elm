@@ -15,7 +15,7 @@ type Temei
 
 newValue : Temei
 newValue =
-    DemersInstanta DemersInstanta.newValue
+    PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.newValue
 
 
 view : Temei -> (Temei -> msg) -> Html msg

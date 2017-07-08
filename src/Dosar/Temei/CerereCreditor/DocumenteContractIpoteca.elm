@@ -1,6 +1,6 @@
 module Dosar.Temei.CerereCreditor.DocumenteContractIpoteca exposing (DocumenteContractIpoteca, newValue, view)
 
-import Html exposing (Html, fieldset, legend, div, text)
+import Html exposing (Html, fieldset, legend, div, ul, li, text)
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (ContractIpoteca)
 import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar exposing (ContractCreditBancar)
 import Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara as ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara)
@@ -16,7 +16,7 @@ type DocumenteContractIpoteca
         , extraseEvidentaFinanciara : ExtraseEvidentaFinanciara
         , notificare : DocumentScanat
         , preaviz : DocumentScanat
-        , declaratieContractNonLitigios : DeclaratieContractNonLitigios ContractIpoteca
+        , declaratieContractNonLitigios : DeclaratieContractNonLitigios
         }
 
 
@@ -60,6 +60,21 @@ fields maybeDocumenteContractIpoteca callback =
                     , ExtraseEvidentaFinanciara.view
                         documenteContractIpoteca.extraseEvidentaFinanciara
                         (\v -> callback (just contractIpoteca { documenteContractIpoteca | extraseEvidentaFinanciara = v }))
+                    , ul []
+                        [ li []
+                            [ DocumentScanat.view "Notificare:"
+                                documenteContractIpoteca.notificare
+                                (\v -> callback (just contractIpoteca { documenteContractIpoteca | notificare = v }))
+                            ]
+                        , li []
+                            [ DocumentScanat.view "Preaviz:"
+                                documenteContractIpoteca.preaviz
+                                (\v -> callback (just contractIpoteca { documenteContractIpoteca | preaviz = v }))
+                            ]
+                        ]
+                    , DeclaratieContractNonLitigios.view
+                        documenteContractIpoteca.declaratieContractNonLitigios
+                        (\v -> callback (just contractIpoteca { documenteContractIpoteca | declaratieContractNonLitigios = v }))
                     ]
 
         Nothing ->

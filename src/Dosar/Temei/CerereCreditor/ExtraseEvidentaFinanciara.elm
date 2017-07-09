@@ -4,6 +4,7 @@ import Html exposing (Html, fieldset, legend, div, p, table, thead, tr, th, butt
 import Html.Attributes exposing (style, title)
 import Html.Events exposing (onClick)
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara)
+import Utils.List as ListUtils
 
 
 type ExtraseEvidentaFinanciara
@@ -75,14 +76,7 @@ appendView extraseEvidentaFinanciara callback =
 
 replace : ExtraseEvidentaFinanciara -> Int -> InregistrareEvidentaFinanciara -> ExtraseEvidentaFinanciara
 replace (ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara) index newValue =
-    let
-        mapper i v =
-            if i == index then
-                newValue
-            else
-                v
-    in
-        ExtraseEvidentaFinanciara (List.indexedMap mapper inregistrariEvidentaFinanciara)
+    ExtraseEvidentaFinanciara (ListUtils.replace inregistrariEvidentaFinanciara index newValue)
 
 
 append : ExtraseEvidentaFinanciara -> InregistrareEvidentaFinanciara -> ExtraseEvidentaFinanciara

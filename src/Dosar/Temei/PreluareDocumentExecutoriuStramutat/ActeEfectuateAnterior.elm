@@ -4,6 +4,7 @@ import Html exposing (Html, fieldset, legend, table, thead, tr, th, p, button, t
 import Html.Attributes exposing (style, title)
 import Html.Events exposing (onClick)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior exposing (ActEfectuatAnterior)
+import Utils.List as ListUtils
 
 
 type ActeEfectuateAnterior
@@ -47,7 +48,7 @@ listView list callback =
             ]
             :: (let
                     mapper i v =
-                        ActEfectuatAnterior.view v (\newV -> callback (replace list i newV))
+                        ActEfectuatAnterior.view v (\newV -> callback (ListUtils.replace list i newV))
                 in
                     List.indexedMap mapper list
                )
@@ -66,15 +67,3 @@ appendView list callback =
         , onClick (callback (List.append list [ ActEfectuatAnterior.newValue ]))
         ]
         [ text "+" ]
-
-
-replace : List ActEfectuatAnterior -> Int -> ActEfectuatAnterior -> List ActEfectuatAnterior
-replace list index newValue =
-    let
-        mapper i v =
-            if i == index then
-                newValue
-            else
-                v
-    in
-        List.indexedMap mapper list

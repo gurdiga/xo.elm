@@ -1,4 +1,4 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (ActEfectuatAnterior, newValue, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (ActEfectuatAnterior(ActEfectuatAnterior), newValue, data, view)
 
 import Html exposing (Html, tr, td, text)
 import Html.Attributes exposing (style)
@@ -7,10 +7,13 @@ import Widgets.Fields exposing (unlabeledLargeTextField)
 
 
 type ActEfectuatAnterior
-    = ActEfectuatAnterior
-        { copie : DocumentScanat
-        , note : String
-        }
+    = ActEfectuatAnterior Data
+
+
+type alias Data =
+    { copie : DocumentScanat
+    , note : String
+    }
 
 
 newValue : ActEfectuatAnterior
@@ -19,6 +22,11 @@ newValue =
         { copie = DocumentScanat.newValue
         , note = ""
         }
+
+
+data : ActEfectuatAnterior -> Data
+data (ActEfectuatAnterior v) =
+    v
 
 
 view : ActEfectuatAnterior -> (ActEfectuatAnterior -> msg) -> Html msg

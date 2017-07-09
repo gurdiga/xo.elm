@@ -3,8 +3,11 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exp
 import Html exposing (Html, fieldset, legend, table, thead, tr, th, p, button, text)
 import Html.Attributes exposing (style, title)
 import Html.Events exposing (onClick)
-import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior exposing (ActEfectuatAnterior)
+import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior exposing (ActEfectuatAnterior(ActEfectuatAnterior))
 import Utils.List as ListUtils
+import Widgets.Table as Table
+import Widgets.Fields exposing (unlabeledLargeTextField)
+import DocumentScanat
 
 
 type ActeEfectuateAnterior
@@ -29,6 +32,16 @@ view acteEfectuatAnterior callback =
               else
                 listView list (\v -> callback (ActeEfectuateAnterior v))
             , appendView list (\v -> callback (ActeEfectuateAnterior v))
+            , Table.view
+                (List.map ActEfectuatAnterior.data list)
+                (\newRecords -> callback <| ActeEfectuateAnterior <| List.map ActEfectuatAnterior newRecords)
+                [ ( "Copia scanată"
+                  , (\record c -> DocumentScanat.unlabeledView record.copie (\v -> c { record | copie = v }))
+                  )
+                , ( "Note"
+                  , (\record c -> unlabeledLargeTextField record.note (\v -> c { record | note = v }))
+                  )
+                ]
             ]
 
 

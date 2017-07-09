@@ -40,7 +40,10 @@ listView list callback =
                 thStyle =
                     style [ ( "border", "1px solid silver" ) ]
               in
-                tr [] [ th [ thStyle ] [ text "Act" ] ]
+                tr []
+                    [ th [ thStyle ] [ text "Copia scanată" ]
+                    , th [ thStyle ] [ text "Note" ]
+                    ]
             ]
             :: (let
                     mapper i v =

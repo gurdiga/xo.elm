@@ -3,21 +3,19 @@ module Widgets.Fields
         ( textField
         , unlabeledTextField
         , largeTextField
+        , unlabeledLargeTextField
         , dateField
         , unlabeledDateField
         , checkboxField
         , moneyField
         , unlabeledMoneyField
-        , fileField
         )
 
 import Html exposing (Html, label, input, textarea, text)
 import Html.Attributes exposing (value, checked, type_)
-import Html.Events exposing (on, onInput, onCheck)
-import Json.Decode as Json
+import Html.Events exposing (onInput, onCheck)
 import MyDate exposing (MyDate)
 import Money exposing (Money(..))
-import File exposing (File)
 import Widgets.Select as Select
 
 
@@ -42,12 +40,17 @@ largeTextField : String -> String -> (String -> msg) -> Html msg
 largeTextField labelText defaultValue callback =
     label []
         [ text labelText
-        , textarea
-            [ value defaultValue
-            , onInput callback
-            ]
-            []
+        , unlabeledLargeTextField defaultValue callback
         ]
+
+
+unlabeledLargeTextField : String -> (String -> msg) -> Html msg
+unlabeledLargeTextField defaultValue callback =
+    textarea
+        [ value defaultValue
+        , onInput callback
+        ]
+        []
 
 
 dateField : String -> MyDate -> (MyDate -> msg) -> Html msg
@@ -128,27 +131,3 @@ unlabeledMoneyField (Money amount currency) callback =
             currency
             (\v -> callback (Money amount v))
     }
-
-
-fileField : String -> (File -> msg) -> Html msg
-fileField labelText callback =
-    label []
-        [ text labelText
-        , input
-            [ type_ "file"
-            , onFileSelect callback
-            ]
-            []
-        ]
-
-
-onFileSelect : (File -> msg) -> Html.Attribute msg
-onFileSelect callback =
-    let
-        eventDecoder : Json.Decoder msg
-        eventDecoder =
-            Json.map
-                (\targetValue -> callback (File targetValue))
-                (Json.at [ "target", "value" ] Json.string)
-    in
-        on "change" eventDecoder

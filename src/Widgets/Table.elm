@@ -8,6 +8,7 @@ type alias Input record msg =
     { data : List record
     , callback : ListCallback record msg
     , columns : Columns record msg
+    , emptyView : Html msg
     }
 
 
@@ -32,11 +33,14 @@ type alias ListCallback record msg =
 
 
 view : Input record msg -> Html msg
-view { data, callback, columns } =
-    table []
-        [ thead [] (headRows columns)
-        , tbody [] (dataRows data callback columns)
-        ]
+view { data, callback, columns, emptyView } =
+    if List.isEmpty data then
+        emptyView
+    else
+        table []
+            [ thead [] (headRows columns)
+            , tbody [] (dataRows data callback columns)
+            ]
 
 
 headRows : Columns record msg -> List (Html msg)

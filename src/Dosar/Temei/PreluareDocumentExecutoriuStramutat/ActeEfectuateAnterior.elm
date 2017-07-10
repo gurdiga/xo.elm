@@ -27,17 +27,9 @@ view : ActeEfectuateAnterior -> Callback msg -> Html msg
 view acteEfectuatAnterior callback =
     fieldset []
         [ legend [] [ text "ActeEfectuateAnterior" ]
-        , if isEmpty acteEfectuatAnterior then
-            emptyView
-          else
-            tableView acteEfectuatAnterior callback
+        , tableView acteEfectuatAnterior callback
         , appendView acteEfectuatAnterior callback
         ]
-
-
-isEmpty : ActeEfectuateAnterior -> Bool
-isEmpty (ActeEfectuateAnterior list) =
-    List.isEmpty list
 
 
 tableView : ActeEfectuateAnterior -> Callback msg -> Html msg
@@ -53,6 +45,7 @@ tableView acteEfectuatAnterior callback =
               , (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }))
               )
             ]
+        , emptyView = emptyView
         }
 
 

@@ -1,4 +1,4 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (ActEfectuatAnterior(ActEfectuatAnterior), newValue, data, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (ActEfectuatAnterior(ActEfectuatAnterior), Data, newValue, data, view)
 
 import Html exposing (Html, tr, td, text)
 import Html.Attributes exposing (style)

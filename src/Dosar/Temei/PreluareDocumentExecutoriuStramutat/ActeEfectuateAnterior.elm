@@ -14,35 +14,56 @@ type ActeEfectuateAnterior
     = ActeEfectuateAnterior (List ActEfectuatAnterior)
 
 
+type alias Callback msg =
+    ActeEfectuateAnterior -> msg
+
+
 newValue : ActeEfectuateAnterior
 newValue =
     ActeEfectuateAnterior [ ActEfectuatAnterior.newValue ]
 
 
-view : ActeEfectuateAnterior -> (ActeEfectuateAnterior -> msg) -> Html msg
+view : ActeEfectuateAnterior -> Callback msg -> Html msg
 view acteEfectuatAnterior callback =
-    let
-        (ActeEfectuateAnterior list) =
-            acteEfectuatAnterior
-    in
-        fieldset []
-            [ legend [] [ text "ActeEfectuateAnterior" ]
-            , if List.isEmpty list then
-                emptyView
-              else
-                listView list (\v -> callback (ActeEfectuateAnterior v))
-            , appendView list (\v -> callback (ActeEfectuateAnterior v))
-            , Table.view
-                (List.map ActEfectuatAnterior.data list)
-                (\newRecords -> callback <| ActeEfectuateAnterior <| List.map ActEfectuatAnterior newRecords)
-                [ ( "Copia scanată"
-                  , (\record c -> DocumentScanat.unlabeledView record.copie (\v -> c { record | copie = v }))
-                  )
-                , ( "Note"
-                  , (\record c -> unlabeledLargeTextField record.note (\v -> c { record | note = v }))
-                  )
-                ]
+    fieldset []
+        [ legend [] [ text "ActeEfectuateAnterior" ]
+        , if isEmpty acteEfectuatAnterior then
+            emptyView
+          else
+            tableView acteEfectuatAnterior callback
+        , appendView acteEfectuatAnterior callback
+        ]
+
+
+isEmpty : ActeEfectuateAnterior -> Bool
+isEmpty (ActeEfectuateAnterior list) =
+    List.isEmpty list
+
+
+tableView : ActeEfectuateAnterior -> Callback msg -> Html msg
+tableView acteEfectuatAnterior callback =
+    Table.view
+        { data = data acteEfectuatAnterior
+        , callback = callback << fromData
+        , columns =
+            [ ( "Copia scanată"
+              , (\r c -> DocumentScanat.unlabeledView r.copie (\v -> c { r | copie = v }))
+              )
+            , ( "Note"
+              , (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }))
+              )
             ]
+        }
+
+
+data : ActeEfectuateAnterior -> List ActEfectuatAnterior.Data
+data (ActeEfectuateAnterior list) =
+    List.map ActEfectuatAnterior.data list
+
+
+fromData : List ActEfectuatAnterior.Data -> ActeEfectuateAnterior
+fromData =
+    ActeEfectuateAnterior << List.map ActEfectuatAnterior
 
 
 listView : List ActEfectuatAnterior -> (List ActEfectuatAnterior -> msg) -> Html msg
@@ -73,10 +94,10 @@ emptyView =
     p [] [ text "Nu sunt acte efectuate anterior." ]
 
 
-appendView : List ActEfectuatAnterior -> (List ActEfectuatAnterior -> msg) -> Html msg
-appendView list callback =
+appendView : ActeEfectuateAnterior -> Callback msg -> Html msg
+appendView (ActeEfectuateAnterior list) callback =
     button
         [ title "Adaugă înregistrare"
-        , onClick (callback (List.append list [ ActEfectuatAnterior.newValue ]))
+        , onClick (callback <| ActeEfectuateAnterior <| List.append list [ ActEfectuatAnterior.newValue ])
         ]
         [ text "+" ]

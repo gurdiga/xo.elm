@@ -1,6 +1,7 @@
 module Widgets.Table exposing (view)
 
-import Html exposing (Html, table, thead, tbody, tr, th, td, text)
+import Html exposing (Html, div, table, thead, tbody, tr, th, td, button, text)
+import Html.Events exposing (onClick)
 import Utils.List as ListUtils
 
 
@@ -9,6 +10,7 @@ type alias Input record msg =
     , callback : ListCallback record msg
     , columns : Columns record msg
     , emptyView : Html msg
+    , newValue : record
     }
 
 
@@ -33,14 +35,17 @@ type alias ListCallback record msg =
 
 
 view : Input record msg -> Html msg
-view { data, callback, columns, emptyView } =
-    if List.isEmpty data then
-        emptyView
-    else
-        table []
-            [ thead [] (headRows columns)
-            , tbody [] (dataRows data callback columns)
-            ]
+view { data, callback, columns, emptyView, newValue } =
+    div []
+        [ if List.isEmpty data then
+            emptyView
+          else
+            table []
+                [ thead [] (headRows columns)
+                , tbody [] (dataRows data callback columns)
+                ]
+        , appendView data newValue callback
+        ]
 
 
 headRows : Columns record msg -> List (Html msg)
@@ -72,3 +77,10 @@ dataRows data listCallback columns =
             List.map Tuple.second columns
     in
         List.indexedMap dataRow data
+
+
+appendView : List record -> record -> ListCallback record msg -> Html msg
+appendView list newValue callback =
+    button
+        [ onClick (callback <| List.append list [ newValue ]) ]
+        [ text "+" ]

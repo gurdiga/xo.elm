@@ -6,7 +6,7 @@ import Html.Events exposing (onInput)
 
 
 fromValuesWithLabels : List ( a, String ) -> a -> (a -> msg) -> Html msg
-fromValuesWithLabels valuesWithLabels defaultValue msgConstructor =
+fromValuesWithLabels valuesWithLabels defaultValue callback =
     let
         optionForTuple ( value, label ) =
             option [ selected (defaultValue == value) ] [ text label ]
@@ -14,21 +14,18 @@ fromValuesWithLabels valuesWithLabels defaultValue msgConstructor =
         options valuesWithLabels defaultValue =
             List.map optionForTuple valuesWithLabels
 
-        constructMessageForLabel selectedLabel =
-            let
-                valueAsList =
-                    List.filter (\( value, label ) -> label == selectedLabel) valuesWithLabels
+        maybeValueFromLabel l =
+            List.filter (\( value, label ) -> label == l) valuesWithLabels
+                |> List.head
 
-                value =
-                    case List.head valueAsList of
-                        Nothing ->
-                            defaultValue
+        valueFromLabel label =
+            case maybeValueFromLabel label of
+                Nothing ->
+                    defaultValue
 
-                        Just ( grounds, label ) ->
-                            grounds
-            in
-                msgConstructor value
+                Just ( value, label ) ->
+                    value
     in
         select
-            [ onInput constructMessageForLabel ]
+            [ onInput (callback << valueFromLabel) ]
             (options valuesWithLabels defaultValue)

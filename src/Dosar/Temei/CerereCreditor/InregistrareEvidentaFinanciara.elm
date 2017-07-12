@@ -1,13 +1,17 @@
-module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara, newValue, view)
+module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara), Data, newValue, data, view)
 
 import Html exposing (Html, tr, td, text)
 import Html.Attributes exposing (style)
 import Money exposing (Money(Money), Currency(MDL))
 import MyDate exposing (MyDate)
-import Widgets.Fields exposing (unlabeledDateField, unlabeledMoneyField, unlabeledTextField)
+import Widgets.Fields exposing (unlabeledDateField, unlabeledMoneyField, unlabeledLargeTextField)
 
 
-type alias InregistrareEvidentaFinanciara =
+type InregistrareEvidentaFinanciara
+    = InregistrareEvidentaFinanciara Data
+
+
+type alias Data =
     { data : MyDate
     , suma : Money
     , note : String
@@ -16,29 +20,26 @@ type alias InregistrareEvidentaFinanciara =
 
 newValue : InregistrareEvidentaFinanciara
 newValue =
-    { data = MyDate.newValue
-    , suma = Money 0 MDL
-    , note = ""
-    }
+    InregistrareEvidentaFinanciara
+        { data = MyDate.newValue
+        , suma = Money 0 MDL
+        , note = ""
+        }
+
+
+data : InregistrareEvidentaFinanciara -> Data
+data (InregistrareEvidentaFinanciara data) =
+    data
 
 
 view : InregistrareEvidentaFinanciara -> (InregistrareEvidentaFinanciara -> msg) -> Html msg
-view i callback =
+view (InregistrareEvidentaFinanciara i) callback =
     let
         tdStyle =
             style [ ( "border", "1px solid silver" ) ]
-
-        dateField =
-            unlabeledDateField i.data (\v -> callback { i | data = v })
-
-        moneyField =
-            unlabeledMoneyField i.suma (\v -> callback { i | suma = v })
-
-        textField =
-            unlabeledTextField i.note (\v -> callback { i | note = v })
     in
         tr []
-            [ td [ tdStyle ] [ dateField.fieldElement, dateField.errorMessageElement ]
-            , td [ tdStyle ] [ moneyField.amountFieldElement, moneyField.currencyFieldElement ]
-            , td [ tdStyle ] [ textField ]
+            [ td [ tdStyle ] <| unlabeledDateField i.data (\v -> callback (InregistrareEvidentaFinanciara { i | data = v }))
+            , td [ tdStyle ] <| unlabeledMoneyField i.suma (\v -> callback (InregistrareEvidentaFinanciara { i | suma = v }))
+            , td [ tdStyle ] <| unlabeledLargeTextField i.note (\v -> callback (InregistrareEvidentaFinanciara { i | note = v }))
             ]

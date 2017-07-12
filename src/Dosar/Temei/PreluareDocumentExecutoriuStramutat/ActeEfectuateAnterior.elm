@@ -35,7 +35,7 @@ tableView acteEfectuatAnterior callback =
         , callback = callback << fromData
         , columns =
             [ ( "Copia scanată"
-              , (\r c -> DocumentScanat.unlabeledView r.copie (\v -> c { r | copie = v }))
+              , (\r c -> [ DocumentScanat.unlabeledView r.copie (\v -> c { r | copie = v }) ])
               )
             , ( "Note"
               , (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }))

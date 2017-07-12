@@ -1,10 +1,10 @@
 module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara, newValue, view)
 
-import Html exposing (Html, fieldset, legend, div, p, table, thead, tr, th, button, text)
-import Html.Attributes exposing (style, title)
-import Html.Events exposing (onClick)
-import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara)
+import Html exposing (Html, fieldset, legend, p, text)
+import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara))
 import Utils.List as ListUtils
+import Widgets.Table as Table
+import Widgets.Fields exposing (unlabeledDateField, unlabeledMoneyField, unlabeledLargeTextField)
 
 
 type ExtraseEvidentaFinanciara
@@ -24,54 +24,38 @@ view extraseEvidentaFinanciara callback =
     in
         fieldset []
             [ legend [] [ text "ExtraseEvidentaFinanciara" ]
-            , if List.isEmpty inregistrariEvidentaFinanciara then
-                emptyView
-              else
-                listView extraseEvidentaFinanciara callback
-            , appendView extraseEvidentaFinanciara callback
+            , tableView extraseEvidentaFinanciara callback
             ]
+
+
+tableView : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
+tableView extraseEvidentaFinanciara callback =
+    Table.view
+        { data = data extraseEvidentaFinanciara
+        , callback = callback << fromData
+        , columns =
+            [ ( "Data", (\r c -> unlabeledDateField r.data (\v -> c { r | data = v })) )
+            , ( "Suma", (\r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v })) )
+            , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
+            ]
+        , emptyView = emptyView
+        , newValue = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.newValue
+        }
+
+
+data : ExtraseEvidentaFinanciara -> List InregistrareEvidentaFinanciara.Data
+data (ExtraseEvidentaFinanciara list) =
+    List.map InregistrareEvidentaFinanciara.data list
+
+
+fromData : List InregistrareEvidentaFinanciara.Data -> ExtraseEvidentaFinanciara
+fromData =
+    ExtraseEvidentaFinanciara << List.map InregistrareEvidentaFinanciara
 
 
 emptyView : Html msg
 emptyView =
     p [] [ text "Nu sunt înregistrări." ]
-
-
-listView : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
-listView extraseEvidentaFinanciara callback =
-    case extraseEvidentaFinanciara of
-        ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara ->
-            table [ style [ ( "border", "1px solid silver" ), ( "border-collapse", "collapse" ) ] ]
-                (thead
-                    []
-                    [ let
-                        thStyle =
-                            style [ ( "border", "1px solid silver" ) ]
-                      in
-                        tr []
-                            [ th [ thStyle ] [ text "Data" ]
-                            , th [ thStyle ] [ text "Suma" ]
-                            , th [ thStyle ] [ text "Note" ]
-                            ]
-                    ]
-                    :: let
-                        mapper i v =
-                            InregistrareEvidentaFinanciara.view v
-                                (\newV ->
-                                    callback (replace extraseEvidentaFinanciara i newV)
-                                )
-                       in
-                        List.indexedMap mapper inregistrariEvidentaFinanciara
-                )
-
-
-appendView : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
-appendView extraseEvidentaFinanciara callback =
-    button
-        [ title "Adaugă înregistrare"
-        , onClick (callback (append extraseEvidentaFinanciara InregistrareEvidentaFinanciara.newValue))
-        ]
-        [ text "+" ]
 
 
 replace : ExtraseEvidentaFinanciara -> Int -> InregistrareEvidentaFinanciara -> ExtraseEvidentaFinanciara

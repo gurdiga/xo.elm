@@ -23,7 +23,7 @@ type alias HeaderLabel =
 
 
 type alias CellRenderer record msg =
-    record -> RecordCallback record msg -> Html msg
+    record -> RecordCallback record msg -> List (Html msg)
 
 
 type alias RecordCallback record msg =
@@ -70,7 +70,8 @@ dataRows data listCallback columns =
             tr [] <| List.map (dataCell record index) renderers
 
         dataCell record index renderer =
-            td [] [ renderer record (\v -> listCallback (ListUtils.replace data index v)) ]
+            -- TODO: make this point-free?
+            td [] <| renderer record (\v -> listCallback (ListUtils.replace data index v))
 
         renderers : List (CellRenderer record msg)
         renderers =

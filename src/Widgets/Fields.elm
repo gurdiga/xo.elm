@@ -22,51 +22,48 @@ import Widgets.Select as Select
 textField : String -> String -> (String -> msg) -> Html msg
 textField labelText defaultValue callback =
     label []
-        [ text labelText
-        , unlabeledTextField defaultValue callback
-        ]
+        (text labelText
+            :: unlabeledTextField defaultValue callback
+        )
 
 
-unlabeledTextField : String -> (String -> msg) -> Html msg
+unlabeledTextField : String -> (String -> msg) -> List (Html msg)
 unlabeledTextField defaultValue callback =
-    input
+    [ input
         [ value defaultValue
         , onInput callback
         ]
         []
+    ]
 
 
 largeTextField : String -> String -> (String -> msg) -> Html msg
 largeTextField labelText defaultValue callback =
     label []
-        [ text labelText
-        , unlabeledLargeTextField defaultValue callback
-        ]
+        (text labelText
+            :: unlabeledLargeTextField defaultValue callback
+        )
 
 
-unlabeledLargeTextField : String -> (String -> msg) -> Html msg
+unlabeledLargeTextField : String -> (String -> msg) -> List (Html msg)
 unlabeledLargeTextField defaultValue callback =
-    textarea
+    [ textarea
         [ value defaultValue
         , onInput callback
         ]
         []
+    ]
 
 
 dateField : String -> MyDate -> (MyDate -> msg) -> Html msg
 dateField labelText defaultValue callback =
-    let
-        { fieldElement, errorMessageElement } =
-            unlabeledDateField defaultValue callback
-    in
-        label []
-            [ text labelText
-            , fieldElement
-            , errorMessageElement
-            ]
+    label []
+        (text labelText
+            :: unlabeledDateField defaultValue callback
+        )
 
 
-unlabeledDateField : MyDate -> (MyDate -> msg) -> { fieldElement : Html msg, errorMessageElement : Html msg }
+unlabeledDateField : MyDate -> (MyDate -> msg) -> List (Html msg)
 unlabeledDateField defaultValue callback =
     let
         ( inputText, validationMessage ) =
@@ -77,14 +74,13 @@ unlabeledDateField defaultValue callback =
                 Err errorMessage ->
                     ( defaultValue.string, errorMessage )
     in
-        { fieldElement =
-            input
-                [ value inputText
-                , onInput (\v -> callback (MyDate.parse v))
-                ]
-                []
-        , errorMessageElement = text validationMessage
-        }
+        [ input
+            [ value inputText
+            , onInput (\v -> callback (MyDate.parse v))
+            ]
+            []
+        , text validationMessage
+        ]
 
 
 checkboxField : String -> Bool -> (Bool -> msg) -> Html msg
@@ -105,29 +101,23 @@ moneyField labelText money callback =
     let
         (Money amount currency) =
             money
-
-        { amountFieldElement, currencyFieldElement } =
-            unlabeledMoneyField money callback
     in
         label []
-            [ text labelText
-            , amountFieldElement
-            , currencyFieldElement
-            ]
+            (text labelText
+                :: unlabeledMoneyField money callback
+            )
 
 
-unlabeledMoneyField : Money -> (Money -> msg) -> { amountFieldElement : Html msg, currencyFieldElement : Html msg }
+unlabeledMoneyField : Money -> (Money -> msg) -> List (Html msg)
 unlabeledMoneyField (Money amount currency) callback =
-    { amountFieldElement =
-        input
-            [ type_ "number"
-            , value (toString amount)
-            , onInput (\v -> callback (Money (Result.withDefault 0 (String.toFloat v)) currency))
-            ]
-            []
-    , currencyFieldElement =
-        Select.fromValuesWithLabels
-            Money.currenciesWithLabels
-            currency
-            (\v -> callback (Money amount v))
-    }
+    [ input
+        [ type_ "number"
+        , value (toString amount)
+        , onInput (\v -> callback (Money (Result.withDefault 0 (String.toFloat v)) currency))
+        ]
+        []
+    , Select.fromValuesWithLabels
+        Money.currenciesWithLabels
+        currency
+        (\v -> callback (Money amount v))
+    ]

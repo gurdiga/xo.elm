@@ -1,6 +1,7 @@
 module Widgets.Table exposing (view)
 
 import Html exposing (Html, div, table, thead, tbody, tr, th, td, button, text)
+import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 import Utils.List as ListUtils
 
@@ -40,7 +41,7 @@ view { data, callback, columns, emptyView, newValue } =
         [ if List.isEmpty data then
             emptyView
           else
-            table []
+            table [ tableStyle ]
                 [ thead [] (headRows columns)
                 , tbody [] (dataRows data callback columns)
                 ]
@@ -53,7 +54,7 @@ headRows columns =
     let
         headCell : HeaderLabel -> Html msg
         headCell header =
-            th [] [ text header ]
+            th [ cellStyle ] [ text header ]
 
         headers : List HeaderLabel
         headers =
@@ -69,9 +70,9 @@ dataRows data listCallback columns =
         dataRow index record =
             tr [] <| List.map (dataCell record index) renderers
 
+        dataCell : record -> Int -> CellRenderer record msg -> Html msg
         dataCell record index renderer =
-            -- TODO: make this point-free?
-            td [] <| renderer record (\v -> listCallback (ListUtils.replace data index v))
+            td [ cellStyle ] <| renderer record (listCallback << ListUtils.replace data index)
 
         renderers : List (CellRenderer record msg)
         renderers =
@@ -83,5 +84,20 @@ dataRows data listCallback columns =
 appendView : List record -> record -> ListCallback record msg -> Html msg
 appendView list newValue callback =
     button
-        [ onClick (callback <| List.append list [ newValue ]) ]
+        [ onClick (callback <| list ++ [ newValue ]) ]
         [ text "+" ]
+
+
+tableStyle : Html.Attribute msg
+tableStyle =
+    style [ borderStyle, ( "border-collapse", "collapse" ) ]
+
+
+cellStyle : Html.Attribute msg
+cellStyle =
+    style [ borderStyle ]
+
+
+borderStyle : ( String, String )
+borderStyle =
+    ( "border", "1px solid silver" )

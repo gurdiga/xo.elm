@@ -1,28 +1,31 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat, newValue, view)
 
-import Html exposing (Html, fieldset, legend, ul, li, text)
-import Dosar.Temei.PreluareDocumentExecutoriuStramutat.IncheiereStramutare as IncheiereStramutare exposing (IncheiereStramutare)
+import Html exposing (Html, fieldset, legend, ul, li, button, text)
+import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare exposing (CauzaStramutare)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior exposing (ActeEfectuateAnterior)
+import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActPreluare as ActPreluare exposing (ActPreluare(ActPreluare))
 import DocumentScanat exposing (DocumentScanat)
 import Widgets.Fields exposing (largeTextField)
 
 
 type PreluareDocumentExecutoriuStramutat
     = PreluareDocumentExecutoriuStramutat
-        { incheiereStramutare : IncheiereStramutare
+        { cauzaStramutare : CauzaStramutare
         , copieIncheiereStramutare : DocumentScanat
         , acteEfectuatAnterior : ActeEfectuateAnterior
         , note : String
+        , actPreluare : Maybe ActPreluare
         }
 
 
 newValue : PreluareDocumentExecutoriuStramutat
 newValue =
     PreluareDocumentExecutoriuStramutat
-        { incheiereStramutare = IncheiereStramutare.newValue
+        { cauzaStramutare = CauzaStramutare.newValue
         , copieIncheiereStramutare = DocumentScanat.newValue
         , acteEfectuatAnterior = ActeEfectuateAnterior.newValue
         , note = ""
+        , actPreluare = Nothing
         }
 
 
@@ -32,8 +35,8 @@ view (PreluareDocumentExecutoriuStramutat data) callback =
         [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
         , ul []
             [ li []
-                [ IncheiereStramutare.view data.incheiereStramutare
-                    (\v -> callback (PreluareDocumentExecutoriuStramutat { data | incheiereStramutare = v }))
+                [ CauzaStramutare.view data.cauzaStramutare
+                    (\v -> callback (PreluareDocumentExecutoriuStramutat { data | cauzaStramutare = v }))
                 ]
             , li []
                 [ DocumentScanat.view "Copia încheierii:"
@@ -48,6 +51,14 @@ view (PreluareDocumentExecutoriuStramutat data) callback =
                 [ largeTextField "Note:"
                     data.note
                     (\v -> callback (PreluareDocumentExecutoriuStramutat { data | note = v }))
+                ]
+            , li []
+                [ case data.actPreluare of
+                    Nothing ->
+                        button [] [ text "Formează act de preluare" ]
+
+                    Just ActPreluare ->
+                        button [] [ text "Editează act preluare" ]
                 ]
             ]
         ]

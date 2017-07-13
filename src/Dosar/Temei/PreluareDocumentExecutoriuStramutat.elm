@@ -31,34 +31,28 @@ newValue =
 
 view : PreluareDocumentExecutoriuStramutat -> (PreluareDocumentExecutoriuStramutat -> msg) -> Html msg
 view (PreluareDocumentExecutoriuStramutat data) callback =
-    fieldset []
-        [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
-        , ul []
-            [ li []
-                [ CauzaStramutare.view data.cauzaStramutare
-                    (\v -> callback (PreluareDocumentExecutoriuStramutat { data | cauzaStramutare = v }))
-                ]
-            , li []
-                [ DocumentScanat.view "Copia încheierii:"
-                    data.copieIncheiereStramutare
-                    (\v -> callback (PreluareDocumentExecutoriuStramutat { data | copieIncheiereStramutare = v }))
-                ]
-            , li []
-                [ ActeEfectuateAnterior.view data.acteEfectuatAnterior
-                    (\v -> callback (PreluareDocumentExecutoriuStramutat { data | acteEfectuatAnterior = v }))
-                ]
-            , li []
-                [ largeTextField "Note:"
-                    data.note
-                    (\v -> callback (PreluareDocumentExecutoriuStramutat { data | note = v }))
-                ]
-            , li []
-                [ case data.actPreluare of
-                    Nothing ->
-                        button [] [ text "Formează act de preluare" ]
+    let
+        c =
+            callback << PreluareDocumentExecutoriuStramutat
+    in
+        fieldset []
+            [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
+            , ul []
+                [ li [] [ CauzaStramutare.view data.cauzaStramutare (\v -> c { data | cauzaStramutare = v }) ]
+                , li []
+                    [ DocumentScanat.view "Copia încheierii:"
+                        data.copieIncheiereStramutare
+                        (\v -> c { data | copieIncheiereStramutare = v })
+                    ]
+                , li [] [ ActeEfectuateAnterior.view data.acteEfectuatAnterior (\v -> c { data | acteEfectuatAnterior = v }) ]
+                , li [] [ largeTextField "Note:" data.note (\v -> c { data | note = v }) ]
+                , li []
+                    [ case data.actPreluare of
+                        Nothing ->
+                            button [] [ text "Formează act de preluare" ]
 
-                    Just ActPreluare ->
-                        button [] [ text "Editează act preluare" ]
+                        Just ActPreluare ->
+                            button [] [ text "Editează act preluare" ]
+                    ]
                 ]
             ]
-        ]

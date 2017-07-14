@@ -25,7 +25,7 @@ newValue =
         , copieIncheiereStramutare = DocumentScanat.newValue
         , acteEfectuatAnterior = ActeEfectuateAnterior.newValue
         , note = ""
-        , actPreluare = Nothing
+        , actPreluare = Just ActPreluare.newValue
         }
 
 
@@ -46,13 +46,6 @@ view (PreluareDocumentExecutoriuStramutat data) callback =
                     ]
                 , li [] [ ActeEfectuateAnterior.view data.acteEfectuatAnterior (\v -> c { data | acteEfectuatAnterior = v }) ]
                 , li [] [ largeTextField "Note:" data.note (\v -> c { data | note = v }) ]
-                , li []
-                    [ case data.actPreluare of
-                        Nothing ->
-                            button [] [ text "Formează act de preluare" ]
-
-                        Just ActPreluare ->
-                            button [] [ text "Editează act preluare" ]
-                    ]
+                , li [] [ ActPreluare.view data.actPreluare (\v -> c { data | actPreluare = v }) ]
                 ]
             ]

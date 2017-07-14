@@ -25,7 +25,7 @@ newValue =
         , copieIncheiereStramutare = DocumentScanat.newValue
         , acteEfectuatAnterior = ActeEfectuateAnterior.newValue
         , note = ""
-        , actPreluare = Just ActPreluare.newValue
+        , actPreluare = Nothing
         }
 
 

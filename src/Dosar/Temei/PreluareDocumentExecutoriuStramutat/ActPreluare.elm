@@ -1,8 +1,10 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActPreluare exposing (ActPreluare(ActPreluare), newValue, view)
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
-import Html.Events exposing (onClick, onInput)
-import Html.Attributes exposing (contenteditable)
+import Html.Events exposing (onClick, on)
+import Html.Attributes exposing (contenteditable, property)
+import Json.Decode
+import Json.Encode
 
 
 type ActPreluare
@@ -29,7 +31,7 @@ view maybeActPreluare callback =
         Just (ActPreluare actPreluare) ->
             fieldset []
                 [ legend [] [ text "Act de preluare" ]
-                , template actPreluare.values (\v -> callback (Just (ActPreluare { actPreluare | document = v })))
+                , template actPreluare (\v -> callback (Just (ActPreluare { actPreluare | document = v })))
                 , button [] [ text "Imprimă" ]
                 , button [] [ text "Formează din nou" ]
                 ]
@@ -38,13 +40,25 @@ view maybeActPreluare callback =
             button [ onClick (callback (Just newValue)) ] [ text "Formează act de preluare" ]
 
 
-template : List String -> (String -> msg) -> Html msg
-template values callback =
-    div [ contenteditable True, onInput (\v -> callback (Debug.log "document" v)) ]
-        [ h1 [] [ text "Act de preluare" ]
-        , p [] [ text "TODO: find a sample document and populate it with values" ]
-        ]
-
-
-
--- TODO: What’s the job-to-be-done? What UX?
+template : Data -> (String -> msg) -> Html msg
+template data callback =
+    let
+        c : Json.Decode.Decoder msg
+        c =
+            Json.Decode.map callback <| Json.Decode.at [ "target", "innerHTML" ] Json.Decode.string
+    in
+        if data.document == "" then
+            div
+                [ contenteditable True
+                , on "input" c
+                ]
+                [ h1 [] [ text "Act de preluare" ]
+                , p [] [ text "TODO: find a sample document and populate it with values" ]
+                ]
+        else
+            div
+                [ contenteditable True
+                , on "input" c
+                , property "innerHTML" (Json.Encode.string data.document)
+                ]
+                []

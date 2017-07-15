@@ -1,3 +1,5 @@
+default: compile
+
 test: elm-test
 	elm-test
 
@@ -8,7 +10,7 @@ elm-test: /usr/local/bin/elm-test
 
 c: compile
 compile: clean
-	elm-make --warn src/Main.elm
+	elm make --warn src/Main.elm --output dist/Main.js
 
 clean:
 	rm -rf elm-stuff/build-artifacts/0.18.0/user/project
@@ -17,7 +19,7 @@ open:
 	open http://localhost:8000
 
 start:
-	elm-reactor & sleep 0.1
+	elm reactor & sleep 0.1
 
 stop:
 	pkill elm-reactor

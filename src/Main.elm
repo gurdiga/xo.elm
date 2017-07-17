@@ -1,7 +1,8 @@
-module Main exposing (..)
+port module Main exposing (..)
 
-import Html exposing (Html, div, pre, text)
+import Html exposing (Html, div, pre, button, text)
 import Html.Attributes exposing (value, selected, style)
+import Html.Events exposing (onClick)
 import Dosar exposing (Dosar)
 
 
@@ -22,6 +23,7 @@ main =
 type alias Model =
     { dosare : List Dosar
     , dosarDeschis : Maybe Dosar
+    , text : String
     }
 
 
@@ -36,6 +38,7 @@ initialModel : Model
 initialModel =
     { dosare = []
     , dosarDeschis = Just Dosar.newValue
+    , text = "(initial text)"
     }
 
 
@@ -45,6 +48,8 @@ initialModel =
 
 type Msg
     = UpdateDosar Dosar
+    | SendToEditor String
+    | ReceiveFromEditor String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -52,6 +57,12 @@ update msg model =
     case msg of
         UpdateDosar dosar ->
             ( { model | dosarDeschis = Just dosar }, Cmd.none )
+
+        SendToEditor s ->
+            ( model, sendToEditor s )
+
+        ReceiveFromEditor s ->
+            ( { model | text = s }, Cmd.none )
 
 
 
@@ -61,7 +72,8 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ dosarView model.dosarDeschis
+        [ button [ onClick (SendToEditor "something to send to the editor") ] [ text "SendToEditor" ]
+        , dosarView model.dosarDeschis
         , pre [ style [ ( "white-space", "normal" ) ] ] [ text (toString model) ]
         ]
 
@@ -80,6 +92,12 @@ dosarView maybeDosar =
 -- SUBSCRIPTIONS
 
 
+port sendToEditor : String -> Cmd msg
+
+
+port receiveFromEditor : (String -> msg) -> Sub msg
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch []
+    receiveFromEditor ReceiveFromEditor

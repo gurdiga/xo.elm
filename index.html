@@ -6,10 +6,26 @@
 	</head>
 	<body>
 		<div id="main"></div>
+
+		<div>
+			The editor.
+			<pre id="editor"></pre>
+		</div>
+
 		<script src="dist/Main.js"></script>
 		<script>
 			var node = document.getElementById('main');
 			var app = Elm.Main.embed(node);
+			var editor = document.getElementById('editor');
+
+			app.ports.sendToEditor.subscribe(function(string) {
+				editor.textContent = string;
+			});
+
+			editor.addEventListener('dblclick', function() {
+				app.ports.receiveFromEditor.send(editor.textContent + " updated");
+			});
+
 		</script>
 	</body>
 </html>

@@ -9,7 +9,7 @@ elm-test: /usr/local/bin/elm-test
 	npm install -g elm-test
 
 c: compile
-compile: clean
+compile:
 	elm make --warn src/Main.elm --output dist/Main.js
 
 clean:
@@ -25,7 +25,7 @@ stop:
 	pkill elm-reactor
 
 pc: pre-commit
-pre-commit: compile test
+pre-commit: clean compile test
 
 .EXPORT_ALL_VARIABLES:
 

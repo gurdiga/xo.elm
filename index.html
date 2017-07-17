@@ -8,8 +8,9 @@
 		<div id="main"></div>
 
 		<div>
-			The editor.
+			The editor:
 			<pre id="editor"></pre>
+			<button id="editor--update">Update</button>
 		</div>
 
 		<script src="dist/Main.js"></script>
@@ -22,8 +23,8 @@
 				editor.textContent = string;
 			});
 
-			editor.addEventListener('dblclick', function() {
-				app.ports.receiveFromEditor.send(editor.textContent + " updated");
+			document.getElementById('editor--update').addEventListener('click', function() {
+				app.ports.receiveFromEditor.send(editor.textContent + " edited");
 			});
 
 		</script>

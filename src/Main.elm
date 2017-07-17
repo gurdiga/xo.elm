@@ -2,8 +2,8 @@ port module Main exposing (..)
 
 import Html exposing (Html, div, pre, button, text)
 import Html.Attributes exposing (value, selected, style)
-import Html.Events exposing (onClick)
 import Dosar exposing (Dosar)
+import Editor
 
 
 main : Program Never Model Msg
@@ -14,10 +14,6 @@ main =
         , update = update
         , subscriptions = subscriptions
         }
-
-
-
--- MODEL
 
 
 type alias Model =
@@ -42,10 +38,6 @@ initialModel =
     }
 
 
-
--- UPDATE
-
-
 type Msg
     = UpdateDosar Dosar
     | SendToEditor String
@@ -59,22 +51,18 @@ update msg model =
             ( { model | dosarDeschis = Just dosar }, Cmd.none )
 
         SendToEditor s ->
-            ( model, sendToEditor s )
+            ( model, Editor.sendToEditor s )
 
         ReceiveFromEditor s ->
             ( { model | text = s }, Cmd.none )
 
 
-
--- VIEW
-
-
 view : Model -> Html Msg
 view model =
     div []
-        [ button [ onClick (SendToEditor "something to send to the editor") ] [ text "SendToEditor" ]
-        , dosarView model.dosarDeschis
+        [ dosarView model.dosarDeschis
         , pre [ style [ ( "white-space", "normal" ) ] ] [ text (toString model) ]
+        , Editor.view model.text SendToEditor
         ]
 
 
@@ -88,16 +76,8 @@ dosarView maybeDosar =
             Dosar.view dosar UpdateDosar
 
 
-
--- SUBSCRIPTIONS
-
-
-port sendToEditor : String -> Cmd msg
-
-
-port receiveFromEditor : (String -> msg) -> Sub msg
-
-
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    receiveFromEditor ReceiveFromEditor
+    Sub.batch
+        [ Editor.receiveFromEditor ReceiveFromEditor
+        ]

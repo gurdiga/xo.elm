@@ -29,23 +29,23 @@ newValue =
         }
 
 
-view : PreluareDocumentExecutoriuStramutat -> (PreluareDocumentExecutoriuStramutat -> msg) -> Html msg
-view (PreluareDocumentExecutoriuStramutat data) callback =
+view : PreluareDocumentExecutoriuStramutat -> (Cmd msg -> PreluareDocumentExecutoriuStramutat -> msg) -> Html msg
+view (PreluareDocumentExecutoriuStramutat data) c =
     let
-        c =
-            callback << PreluareDocumentExecutoriuStramutat
+        callback =
+            (c Cmd.none) << PreluareDocumentExecutoriuStramutat
     in
         fieldset []
             [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
             , ul []
-                [ li [] [ CauzaStramutare.view data.cauzaStramutare (\v -> c { data | cauzaStramutare = v }) ]
+                [ li [] [ CauzaStramutare.view data.cauzaStramutare (\v -> callback { data | cauzaStramutare = v }) ]
                 , li []
                     [ DocumentScanat.view "Copia încheierii:"
                         data.copieIncheiereStramutare
-                        (\v -> c { data | copieIncheiereStramutare = v })
+                        (\v -> callback { data | copieIncheiereStramutare = v })
                     ]
-                , li [] [ ActeEfectuateAnterior.view data.acteEfectuatAnterior (\v -> c { data | acteEfectuatAnterior = v }) ]
-                , li [] [ largeTextField "Note:" data.note (\v -> c { data | note = v }) ]
-                , li [] [ ActPreluare.view data.actPreluare (\v -> c { data | actPreluare = v }) ]
+                , li [] [ ActeEfectuateAnterior.view data.acteEfectuatAnterior (\v -> callback { data | acteEfectuatAnterior = v }) ]
+                , li [] [ largeTextField "Note:" data.note (\v -> callback { data | note = v }) ]
+                , li [] [ ActPreluare.view data.actPreluare (\cmd v -> c cmd (PreluareDocumentExecutoriuStramutat { data | actPreluare = v })) ]
                 ]
             ]

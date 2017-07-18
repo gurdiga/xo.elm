@@ -18,34 +18,34 @@ newValue =
     PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.newValue
 
 
-view : Temei -> (Temei -> msg) -> Html msg
-view temei callback =
+view : (Cmd msg -> Temei -> msg) -> Temei -> Html msg
+view callback temei =
     div []
-        [ dropdown temei callback
-        , fields temei callback
+        [ dropdown (callback Cmd.none) temei
+        , fields callback temei
         ]
 
 
-dropdown : Temei -> (Temei -> msg) -> Html msg
-dropdown temei callback =
+dropdown : (Temei -> msg) -> Temei -> Html msg
+dropdown callback temei =
     label []
         [ text "Temei:"
         , Select.fromValuesWithLabels valuesWithLabels (defaultValue temei) callback
         ]
 
 
-fields : Temei -> (Temei -> msg) -> Html msg
-fields temei callback =
+fields : (Cmd msg -> Temei -> msg) -> Temei -> Html msg
+fields callback temei =
     case temei of
         CerereCreditor cerereCreditor ->
-            CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v))
+            CerereCreditor.view cerereCreditor (\v -> callback Cmd.none (CerereCreditor v))
 
         DemersInstanta demersInstanta ->
-            DemersInstanta.view demersInstanta (\v -> callback (DemersInstanta v))
+            DemersInstanta.view demersInstanta (\v -> callback Cmd.none (DemersInstanta v))
 
         PreluareDocumentExecutoriuStramutat preluareDocumentExecutoriuStramutat ->
             PreluareDocumentExecutoriuStramutat.view preluareDocumentExecutoriuStramutat
-                (\v -> callback (PreluareDocumentExecutoriuStramutat v))
+                (\cmd v -> callback cmd (PreluareDocumentExecutoriuStramutat v))
 
 
 valuesWithLabels : List ( Temei, String )

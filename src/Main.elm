@@ -73,4 +73,4 @@ dosarView maybeDosar =
             text ""
 
         Just dosar ->
-            Dosar.view dosar (\v -> UpdateDosar Cmd.none v)
+            Dosar.view UpdateDosar dosar

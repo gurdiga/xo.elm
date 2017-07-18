@@ -1,4 +1,4 @@
-port module Main exposing (..)
+module Main exposing (..)
 
 import Html exposing (Html, div, pre, button, text)
 import Html.Attributes exposing (value, selected, style)
@@ -9,7 +9,7 @@ import Editor
 main : Program Never Model Msg
 main =
     Html.program
-        { init = init
+        { init = ( initialModel, Cmd.none )
         , view = view
         , update = update
         , subscriptions = subscriptions
@@ -23,13 +23,6 @@ type alias Model =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( initialModel
-    , Cmd.none
-    )
-
-
 initialModel : Model
 initialModel =
     { dosare = []
@@ -39,7 +32,7 @@ initialModel =
 
 
 type Msg
-    = UpdateDosar Dosar
+    = UpdateDosar (Cmd Msg) Dosar
     | SendToEditor String
     | ReceiveFromEditor String
 
@@ -47,14 +40,21 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateDosar dosar ->
-            ( { model | dosarDeschis = Just dosar }, Cmd.none )
+        UpdateDosar cmd dosar ->
+            ( { model | dosarDeschis = Just dosar }, cmd )
 
         SendToEditor s ->
             ( model, Editor.sendToEditor s )
 
         ReceiveFromEditor s ->
             ( { model | text = s }, Cmd.none )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ Editor.receiveFromEditor ReceiveFromEditor
+        ]
 
 
 view : Model -> Html Msg
@@ -73,11 +73,4 @@ dosarView maybeDosar =
             text ""
 
         Just dosar ->
-            Dosar.view dosar UpdateDosar
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch
-        [ Editor.receiveFromEditor ReceiveFromEditor
-        ]
+            Dosar.view dosar (\v -> UpdateDosar Cmd.none v)

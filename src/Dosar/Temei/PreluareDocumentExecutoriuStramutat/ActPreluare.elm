@@ -23,7 +23,7 @@ newValue =
         }
 
 
-view : Maybe ActPreluare -> (Maybe ActPreluare -> Sub msg -> Cmd msg -> msg) -> Html msg
+view : Maybe ActPreluare -> (Maybe ActPreluare -> Cmd msg -> Sub msg -> msg) -> Html msg
 view maybeActPreluare callback =
     case maybeActPreluare of
         Just (ActPreluare actPreluare) ->
@@ -32,16 +32,16 @@ view maybeActPreluare callback =
                 , button
                     [ onClick
                         (callback maybeActPreluare
+                            (Editor.sendToEditor actPreluare.document)
                             (Editor.receiveFromEditor
                                 (\v ->
-                                    callback (Just (ActPreluare { actPreluare | document = v })) Sub.none Cmd.none
+                                    callback (Just (ActPreluare { actPreluare | document = v })) Cmd.none Sub.none
                                 )
                             )
-                            (Editor.sendToEditor actPreluare.document)
                         )
                     ]
                     [ text "Edit" ]
                 ]
 
         Nothing ->
-            button [ onClick (callback (Just newValue) Sub.none Cmd.none) ] [ text "Formează act de preluare" ]
+            button [ onClick (callback (Just newValue) Cmd.none Sub.none) ] [ text "Formează act de preluare" ]

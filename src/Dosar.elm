@@ -24,7 +24,7 @@ newValue =
     }
 
 
-view : (Dosar -> Sub msg -> Cmd msg -> msg) -> Dosar -> Html msg
+view : (Dosar -> Cmd msg -> Sub msg -> msg) -> Dosar -> Html msg
 view callback dosar =
     div []
         [ h1 [] [ text "Dosar nou" ]

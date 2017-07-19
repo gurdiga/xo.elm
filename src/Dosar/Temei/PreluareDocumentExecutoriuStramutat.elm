@@ -29,11 +29,11 @@ newValue =
         }
 
 
-view : PreluareDocumentExecutoriuStramutat -> (PreluareDocumentExecutoriuStramutat -> Sub msg -> Cmd msg -> msg) -> Html msg
+view : PreluareDocumentExecutoriuStramutat -> (PreluareDocumentExecutoriuStramutat -> Cmd msg -> Sub msg -> msg) -> Html msg
 view (PreluareDocumentExecutoriuStramutat data) c =
     let
         callback =
-            (\v -> c v Sub.none Cmd.none) << PreluareDocumentExecutoriuStramutat
+            (\v -> c v Cmd.none Sub.none) << PreluareDocumentExecutoriuStramutat
     in
         fieldset []
             [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]

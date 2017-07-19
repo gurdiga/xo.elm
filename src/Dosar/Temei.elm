@@ -18,10 +18,10 @@ newValue =
     PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.newValue
 
 
-view : (Temei -> Sub msg -> Cmd msg -> msg) -> Temei -> Html msg
+view : (Temei -> Cmd msg -> Sub msg -> msg) -> Temei -> Html msg
 view callback temei =
     div []
-        [ dropdown (\v -> callback v Sub.none Cmd.none) temei
+        [ dropdown (\v -> callback v Cmd.none Sub.none) temei
         , fields callback temei
         ]
 
@@ -34,14 +34,14 @@ dropdown callback temei =
         ]
 
 
-fields : (Temei -> Sub msg -> Cmd msg -> msg) -> Temei -> Html msg
+fields : (Temei -> Cmd msg -> Sub msg -> msg) -> Temei -> Html msg
 fields callback temei =
     case temei of
         CerereCreditor cerereCreditor ->
-            CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v) Sub.none Cmd.none)
+            CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v) Cmd.none Sub.none)
 
         DemersInstanta demersInstanta ->
-            DemersInstanta.view demersInstanta (\v -> callback (DemersInstanta v) Sub.none Cmd.none)
+            DemersInstanta.view demersInstanta (\v -> callback (DemersInstanta v) Cmd.none Sub.none)
 
         PreluareDocumentExecutoriuStramutat preluareDocumentExecutoriuStramutat ->
             PreluareDocumentExecutoriuStramutat.view preluareDocumentExecutoriuStramutat

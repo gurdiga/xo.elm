@@ -34,13 +34,13 @@ initialModel =
 
 
 type Msg
-    = Update Model (Sub Msg) (Cmd Msg)
+    = Update Model (Cmd Msg) (Sub Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Update model sub cmd ->
+        Update model cmd sub ->
             ( { model | subscription = sub }, cmd )
 
 

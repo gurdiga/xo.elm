@@ -24,9 +24,9 @@ newValue =
     }
 
 
-view : (Cmd msg -> Dosar -> msg) -> Dosar -> Html msg
+view : (Dosar -> Sub msg -> Cmd msg -> msg) -> Dosar -> Html msg
 view callback dosar =
     div []
         [ h1 [] [ text "Dosar nou" ]
-        , Temei.view (\cmd v -> callback cmd { dosar | temei = v }) dosar.temei
+        , Temei.view (\v -> callback { dosar | temei = v }) dosar.temei
         ]

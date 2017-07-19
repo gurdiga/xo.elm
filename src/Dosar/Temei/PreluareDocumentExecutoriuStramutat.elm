@@ -29,11 +29,11 @@ newValue =
         }
 
 
-view : PreluareDocumentExecutoriuStramutat -> (Cmd msg -> PreluareDocumentExecutoriuStramutat -> msg) -> Html msg
+view : PreluareDocumentExecutoriuStramutat -> (PreluareDocumentExecutoriuStramutat -> Sub msg -> Cmd msg -> msg) -> Html msg
 view (PreluareDocumentExecutoriuStramutat data) c =
     let
         callback =
-            (c Cmd.none) << PreluareDocumentExecutoriuStramutat
+            (\v -> c v Sub.none Cmd.none) << PreluareDocumentExecutoriuStramutat
     in
         fieldset []
             [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
@@ -46,6 +46,6 @@ view (PreluareDocumentExecutoriuStramutat data) c =
                     ]
                 , li [] [ ActeEfectuateAnterior.view data.acteEfectuatAnterior (\v -> callback { data | acteEfectuatAnterior = v }) ]
                 , li [] [ largeTextField "Note:" data.note (\v -> callback { data | note = v }) ]
-                , li [] [ ActPreluare.view data.actPreluare (\cmd v -> c cmd (PreluareDocumentExecutoriuStramutat { data | actPreluare = v })) ]
+                , li [] [ ActPreluare.view data.actPreluare (\v -> c (PreluareDocumentExecutoriuStramutat { data | actPreluare = v })) ]
                 ]
             ]

@@ -1,4 +1,4 @@
-port module Editor exposing (view, sendToEditor, receiveFromEditor, subscription)
+port module Editor exposing (view, sendToEditor, receiveFromEditor)
 
 import Html exposing (Html, program, div, pre, button, text)
 import Html.Events exposing (onClick)
@@ -13,8 +13,3 @@ port sendToEditor : String -> Cmd msg
 
 
 port receiveFromEditor : (String -> msg) -> Sub msg
-
-
-subscription : (String -> msg) -> Sub msg
-subscription =
-    receiveFromEditor

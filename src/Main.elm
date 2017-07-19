@@ -3,7 +3,9 @@ module Main exposing (..)
 import Html exposing (Html, div, pre, button, text)
 import Html.Attributes exposing (value, selected, style)
 import Dosar exposing (Dosar)
-import Editor
+
+
+-- import Editor
 
 
 main : Program Never Model Msg
@@ -19,7 +21,7 @@ main =
 type alias Model =
     { dosare : List Dosar
     , dosarDeschis : Maybe Dosar
-    , text : String
+    , subscription : Sub Msg
     }
 
 
@@ -27,50 +29,39 @@ initialModel : Model
 initialModel =
     { dosare = []
     , dosarDeschis = Just Dosar.newValue
-    , text = "(initial text)"
+    , subscription = Sub.none
     }
 
 
 type Msg
-    = UpdateDosar (Cmd Msg) Dosar
-    | SendToEditor String
-    | ReceiveFromEditor String
+    = Update Model (Sub Msg) (Cmd Msg)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        UpdateDosar cmd dosar ->
-            ( { model | dosarDeschis = Just dosar }, cmd )
-
-        SendToEditor s ->
-            ( model, Editor.sendToEditor s )
-
-        ReceiveFromEditor s ->
-            ( { model | text = s }, Cmd.none )
+        Update model sub cmd ->
+            ( { model | subscription = sub }, cmd )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ Editor.subscription ReceiveFromEditor
-        ]
+    Sub.batch [ model.subscription ]
 
 
 view : Model -> Html Msg
 view model =
     div []
-        [ dosarView model.dosarDeschis
+        [ dosarView model
         , pre [ style [ ( "white-space", "normal" ) ] ] [ text (toString model) ]
-        , Editor.view model.text SendToEditor
         ]
 
 
-dosarView : Maybe Dosar -> Html Msg
-dosarView maybeDosar =
-    case maybeDosar of
+dosarView : Model -> Html Msg
+dosarView model =
+    case model.dosarDeschis of
         Nothing ->
             text ""
 
         Just dosar ->
-            Dosar.view UpdateDosar dosar
+            Dosar.view (\v -> Update { model | dosarDeschis = Just v }) dosar

@@ -29,16 +29,18 @@ view maybeActPreluare callback =
         Just (ActPreluare actPreluare) ->
             fieldset []
                 [ legend [] [ text "Act de preluare" ]
-                , Editor.view actPreluare.document
-                    (\v ->
-                        let
-                            go v =
-                                Just (ActPreluare { actPreluare | document = v })
-                        in
-                            callback maybeActPreluare
-                                (Editor.receiveFromEditor (\v -> callback (go v) Sub.none Cmd.none))
-                                (Editor.sendToEditor actPreluare.document)
-                    )
+                , button
+                    [ onClick
+                        (callback maybeActPreluare
+                            (Editor.receiveFromEditor
+                                (\v ->
+                                    callback (Just (ActPreluare { actPreluare | document = v })) Sub.none Cmd.none
+                                )
+                            )
+                            (Editor.sendToEditor actPreluare.document)
+                        )
+                    ]
+                    [ text "Edit" ]
                 ]
 
         Nothing ->

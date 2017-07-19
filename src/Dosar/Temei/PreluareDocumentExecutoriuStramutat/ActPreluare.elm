@@ -18,7 +18,7 @@ type alias Data =
 newValue : ActPreluare
 newValue =
     ActPreluare
-        { document = ""
+        { document = "(initial document)"
         , values = []
         }
 
@@ -31,10 +31,13 @@ view maybeActPreluare callback =
                 [ legend [] [ text "Act de preluare" ]
                 , Editor.view actPreluare.document
                     (\v ->
-                        callback
-                            (Just (ActPreluare { actPreluare | document = v }))
-                            (Editor.receiveFromEditor (\v -> callback (Just (ActPreluare { actPreluare | document = v })) Sub.none Cmd.none))
-                            (Editor.sendToEditor "actPreluare.document")
+                        let
+                            go v =
+                                Just (ActPreluare { actPreluare | document = v })
+                        in
+                            callback maybeActPreluare
+                                (Editor.receiveFromEditor (\v -> callback (go v) Sub.none Cmd.none))
+                                (Editor.sendToEditor actPreluare.document)
                     )
                 ]
 

@@ -9,7 +9,7 @@
 
 		<div>
 			The editor:
-			<pre id="editor"></pre>
+			<textarea id="editor"></textarea>
 			<button id="editor--update">Update</button>
 		</div>
 
@@ -21,11 +21,11 @@
 
 			app.ports.sendToEditor.subscribe(function(string) {
 				console.log('got sendToEditor message with text', JSON.stringify(string));
-				editor.textContent = string;
+				editor.value = string;
 			});
 
 			document.getElementById('editor--update').addEventListener('click', function() {
-				var string = editor.textContent + " edited";
+				var string = editor.value;
 
 				console.log('sending receiveFromEditor message with text', JSON.stringify(string));
 				app.ports.receiveFromEditor.send(string);

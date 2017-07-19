@@ -20,11 +20,15 @@
 			var editor = document.getElementById('editor');
 
 			app.ports.sendToEditor.subscribe(function(string) {
+				console.log('got sendToEditor message with text', JSON.stringify(string));
 				editor.textContent = string;
 			});
 
 			document.getElementById('editor--update').addEventListener('click', function() {
-				app.ports.receiveFromEditor.send(editor.textContent + " edited");
+				var string = editor.textContent + " edited";
+
+				console.log('sending receiveFromEditor message with text', JSON.stringify(string));
+				app.ports.receiveFromEditor.send(string);
 			});
 
 		</script>

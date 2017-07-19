@@ -29,10 +29,10 @@ view maybeActPreluare callback =
         Just (ActPreluare actPreluare) ->
             fieldset []
                 [ legend [] [ text "Act de preluare" ]
-                , text "****"
-                , button [] [ text "Imprimă" ]
-                , button [] [ text "Formează din nou" ]
-                , Editor.view actPreluare.document (\v -> callback Cmd.none (Just (ActPreluare { actPreluare | document = v })))
+                , Editor.view actPreluare.document
+                    (\v ->
+                        callback (Editor.sendToEditor "actPreluare.document") (Just (ActPreluare { actPreluare | document = v }))
+                    )
                 ]
 
         Nothing ->

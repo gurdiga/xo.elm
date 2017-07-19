@@ -53,7 +53,7 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Editor.receiveFromEditor ReceiveFromEditor
+        [ Editor.subscription ReceiveFromEditor
         ]
 
 

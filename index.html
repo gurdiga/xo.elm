@@ -28,7 +28,7 @@
 				var string = editor.value;
 
 				console.log('sending receiveFromEditor message with text', JSON.stringify(string));
-				app.ports.receiveFromEditor.send(string);
+				app.ports.onResponseFromEditor.send(string);
 			});
 
 		</script>

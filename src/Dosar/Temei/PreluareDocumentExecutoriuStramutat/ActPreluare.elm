@@ -31,13 +31,17 @@ view maybeActPreluare callback =
                 [ legend [] [ text "Act de preluare" ]
                 , button
                     [ onClick
-                        (callback maybeActPreluare
-                            (Editor.sendToEditor actPreluare.document)
-                            (Editor.receiveFromEditor
-                                (\v ->
-                                    callback (Just (ActPreluare { actPreluare | document = v })) Cmd.none Sub.none
-                                )
-                            )
+                        (let
+                            editorCmd =
+                                Editor.send actPreluare.document
+
+                            editorSub =
+                                Editor.onResponse onEditorResponse
+
+                            onEditorResponse v =
+                                callback (Just (ActPreluare { actPreluare | document = v })) Cmd.none Sub.none
+                         in
+                            callback maybeActPreluare editorCmd editorSub
                         )
                     ]
                     [ text "Edit" ]

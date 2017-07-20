@@ -1,11 +1,8 @@
 module Main exposing (..)
 
-import Html exposing (Html, div, pre, button, text)
+import Html exposing (Html, div, pre, text)
 import Html.Attributes exposing (value, selected, style)
 import Dosar exposing (Dosar)
-
-
--- import Editor
 
 
 main : Program Never Model Msg
@@ -64,4 +61,4 @@ dosarView model =
             text ""
 
         Just dosar ->
-            Dosar.view (\v -> Update { model | dosarDeschis = Just v }) dosar
+            Dosar.view dosar (\v -> Update { model | dosarDeschis = Just v })

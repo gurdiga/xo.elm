@@ -18,24 +18,24 @@ newValue =
     PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.newValue
 
 
-view : (Temei -> Cmd msg -> Sub msg -> msg) -> Temei -> Html msg
-view callback temei =
+view : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg
+view temei callback =
     div []
-        [ dropdown (\v -> callback v Cmd.none Sub.none) temei
-        , fields callback temei
+        [ dropdown temei (\v -> callback v Cmd.none Sub.none)
+        , fields temei callback
         ]
 
 
-dropdown : (Temei -> msg) -> Temei -> Html msg
-dropdown callback temei =
+dropdown : Temei -> (Temei -> msg) -> Html msg
+dropdown temei callback =
     label []
         [ text "Temei:"
         , Select.fromValuesWithLabels valuesWithLabels (defaultValue temei) callback
         ]
 
 
-fields : (Temei -> Cmd msg -> Sub msg -> msg) -> Temei -> Html msg
-fields callback temei =
+fields : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg
+fields temei callback =
     case temei of
         CerereCreditor cerereCreditor ->
             CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v) Cmd.none Sub.none)

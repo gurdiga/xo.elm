@@ -7,10 +7,10 @@
 	<body>
 		<div id="main"></div>
 
-		<div>
+		<div id="editor" style="display: none">
 			The editor:
-			<textarea id="editor"></textarea>
-			<button id="editor--update">Update</button>
+			<textarea id="editor--field"></textarea>
+			<button id="editor--button">Update</button>
 		</div>
 
 		<script src="dist/Main.js"></script>
@@ -18,17 +18,21 @@
 			var node = document.getElementById('main');
 			var app = Elm.Main.embed(node);
 			var editor = document.getElementById('editor');
+			var editorField = document.getElementById('editor--field');
 
 			app.ports.sendToEditor.subscribe(function(string) {
 				console.log('got sendToEditor message with text', JSON.stringify(string));
-				editor.value = string;
+				editor.style.display = 'block';
+				editorField.value = string;
+				editorField.focus();
 			});
 
-			document.getElementById('editor--update').addEventListener('click', function() {
-				var string = editor.value;
+			document.getElementById('editor--button').addEventListener('click', function() {
+				var string = editorField.value;
 
 				console.log('sending receiveFromEditor message with text', JSON.stringify(string));
 				app.ports.onResponseFromEditor.send(string);
+				editor.style.display = 'none';
 			});
 
 		</script>

@@ -18,7 +18,7 @@ type alias Data =
 newValue : ActPreluare
 newValue =
     ActPreluare
-        { document = "(initial document)"
+        { document = ""
         , values = []
         }
 
@@ -29,6 +29,7 @@ view maybeActPreluare callback =
         Just (ActPreluare actPreluare) ->
             fieldset []
                 [ legend [] [ text "Act de preluare" ]
+                , text actPreluare.document
                 , button
                     [ onClick
                         (let

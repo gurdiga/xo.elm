@@ -3,9 +3,28 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<title>XO</title>
+		<script src="vendor/quill/quill.min.js"></script>
+		<link href="vendor/quill/quill.snow.css" rel="stylesheet"/>
+		<link href="vendor/quill/quill.bubble.css" rel="stylesheet"/>
 	</head>
 	<body>
 		<div id="main"></div>
+
+		<div id="rich-text-editor"></div>
+		<script>
+			var quill = new Quill('#rich-text-editor', {
+				modules: {
+					toolbar: [
+						[{ header: [1, 2, false] }],
+						['bold', 'italic', 'underline'],
+						['image', 'code-block']
+					]
+				},
+				// scrollingContainer: '#scrolling-container', 
+				placeholder: 'Compose an epic...',
+				theme: 'bubble'
+			});
+		</script>
 
 		<div id="editor" style="display: none">
 			The editor:

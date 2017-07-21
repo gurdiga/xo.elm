@@ -1,4 +1,4 @@
-default: compile
+default: rich-text-editor compile
 
 test: elm-test
 	elm-test
@@ -26,6 +26,14 @@ stop:
 
 pc: pre-commit
 pre-commit: clean compile test
+
+vendor:
+	mkdir vendor
+
+include $(shell find makefiles -name '*.mk')
+
+rich-text-editor: quill
+rte: rich-text-editor
 
 .EXPORT_ALL_VARIABLES:
 

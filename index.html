@@ -10,37 +10,17 @@
 	<body>
 		<div id="main"></div>
 
-		<div id="rich-text-editor"></div>
 		<script src="rich-text-editor/dist/main.js"></script>
-
-		<div id="editor" style="display: none">
-			The editor:
-			<textarea id="editor--field"></textarea>
-			<button id="editor--button">Update</button>
-		</div>
 
 		<script src="dist/Main.js"></script>
 		<script>
 			var node = document.getElementById('main');
 			var app = Elm.Main.embed(node);
-			var editor = document.getElementById('editor');
-			var editorField = document.getElementById('editor--field');
 
-			app.ports.sendToEditor.subscribe(function(string) {
-				console.log('got sendToEditor message with text', JSON.stringify(string));
-				editor.style.display = 'block';
-				editorField.value = string;
-				editorField.focus();
+			RichTextEditor.init({
+				onSetContent: app.ports.sendToEditor.subscribe,
+				onSave: app.ports.onResponseFromEditor.send
 			});
-
-			document.getElementById('editor--button').addEventListener('click', function() {
-				var string = editorField.value;
-
-				console.log('sending receiveFromEditor message with text', JSON.stringify(string));
-				app.ports.onResponseFromEditor.send(string);
-				editor.style.display = 'none';
-			});
-
 		</script>
 	</body>
 </html>

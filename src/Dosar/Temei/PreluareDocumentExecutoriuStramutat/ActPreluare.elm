@@ -18,7 +18,7 @@ type alias Data =
 newValue : ActPreluare
 newValue =
     ActPreluare
-        { document = ""
+        { document = "yes"
         , values = []
         }
 

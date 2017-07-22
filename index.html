@@ -11,22 +11,7 @@
 		<div id="main"></div>
 
 		<div id="rich-text-editor"></div>
-		<script>
-			var quill = new Quill('#rich-text-editor', {
-				modules: {
-					toolbar: [
-						[{ header: [1, 2, false] }],
-						['bold', 'italic', 'underline']
-					],
-					history: {
-						userOnly: true
-					}
-				},
-				// scrollingContainer: '#scrolling-container', 
-				placeholder: 'Compose an epic...',
-				theme: 'snow'
-			});
-		</script>
+		<script src="rich-text-editor/dist/main.js"></script>
 
 		<div id="editor" style="display: none">
 			The editor:

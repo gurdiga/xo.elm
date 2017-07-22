@@ -25,15 +25,11 @@ stop:
 	pkill elm-reactor
 
 pc: pre-commit
-pre-commit: clean compile test
+pre-commit: clean compile test rich-text-editor
 
-vendor:
-	mkdir vendor
-
-include $(shell find makefiles -name '*.mk')
-
-rich-text-editor: quill
-rte: rich-text-editor
+.PHONY: rich-text-editor
+rich-text-editor:
+	@make -C $@
 
 .EXPORT_ALL_VARIABLES:
 

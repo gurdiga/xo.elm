@@ -36,12 +36,12 @@ export function init(options: Options) {
     });
 
     console.log("-- Quill received text", JSON.stringify(s));
-    quill.setText(`${s}\n`);
+    quill.setText(s);
     quill.focus();
 
     const saveButton = toolbarContainer.querySelector("button")!;
     saveButton.addEventListener("click", () => {
-      const text = quill.getText();
+      const text = quill.getText().trim();
       console.log("-- Quill is sending back text", JSON.stringify(text));
       options.onSave(text);
 

@@ -11,7 +11,7 @@ type ActPreluare
 
 
 type alias Data =
-    { document : String
+    { html : String
     , values : List String
     }
 
@@ -19,7 +19,7 @@ type alias Data =
 newValue : ActPreluare
 newValue =
     ActPreluare
-        { document = ""
+        { html = ""
         , values = []
         }
 
@@ -35,13 +35,13 @@ view maybeActPreluare callback =
                         [ onClick
                             (let
                                 editorCmd =
-                                    Editor.send actPreluare.document
+                                    Editor.send templateId
 
                                 editorSub =
                                     Editor.onResponse onEditorResponse
 
                                 onEditorResponse v =
-                                    callback (Just (ActPreluare { actPreluare | document = v })) Cmd.none Sub.none
+                                    callback (Just (ActPreluare { actPreluare | html = v })) Cmd.none Sub.none
                              in
                                 callback maybeActPreluare editorCmd editorSub
                             )
@@ -57,7 +57,12 @@ view maybeActPreluare callback =
 
 template : a -> Html msg
 template data =
-    div [ id (toString TemplateActPreluare) ]
+    div [ id templateId ]
         [ h1 [] [ text "ActPreluare" ]
         , p [] [ text <| toString <| data ]
         ]
+
+
+templateId : String
+templateId =
+    toString TemplateActPreluare

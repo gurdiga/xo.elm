@@ -6,3 +6,5 @@ let g:elm_format_autosave = 1
 vmap gC gcgpgq
 
 autocmd BufWritePost *.elm :silent !ctags -R src
+
+source rich-text-editor/.vimrc

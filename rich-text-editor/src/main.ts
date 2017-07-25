@@ -18,7 +18,9 @@ export function init(options: Options) {
     return;
   }
 
-  options.onSetContent((s: string) => {
+  options.onSetContent((templateId: string) => {
+    console.log("-- Quill received text", JSON.stringify(templateId));
+
     const editorContainer = createEditorContainer();
     const toolbarContainer = createTollbarContainer();
 
@@ -35,8 +37,12 @@ export function init(options: Options) {
       theme: "snow",
     });
 
-    console.log("-- Quill received text", JSON.stringify(s));
-    quill.setText(s);
+    const templateContainer = document.getElementById(templateId);
+    const templateContent = templateContainer
+      ? templateContainer.innerHTML
+      : `(container not found: ${JSON.stringify(templateId)})`;
+
+    quill.clipboard.dangerouslyPasteHTML(templateContent);
     quill.focus();
 
     const saveButton = toolbarContainer.querySelector("button")!;

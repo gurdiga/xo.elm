@@ -19,17 +19,35 @@ export function init(options: Options) {
   }
 
   options.onSetContent((templateId: string) => {
-    console.log("-- Quill received text", JSON.stringify(templateId));
+    console.log("-- Quill received template ID", JSON.stringify(templateId));
 
-    const editorContainer = createEditorContainer();
-    const toolbarContainer = createTollbarContainer();
+    const editorContainer = document.createElement("div");
+    const toolbar = document.createElement("div");
+    const saveButton = document.createElement("button");
+    saveButton.textContent = "Save";
+    saveButton.addEventListener("click", () => {
+      const editorContent = editorContainer.querySelector(".ql-editor");
 
-    document.body.appendChild(toolbarContainer);
+      if (!editorContent) {
+        console.error("Couldn’t find .ql-editor");
+        return;
+      }
+
+      const html = editorContent.innerHTML;
+      console.log("-- Quill is sending back html", JSON.stringify(html));
+      options.onSave(html);
+
+      document.body.removeChild(editorContainer);
+      document.body.removeChild(toolbar);
+    });
+
+    toolbar.appendChild(saveButton);
+    document.body.appendChild(toolbar);
     document.body.appendChild(editorContainer);
 
     const quill = new Quill(editorContainer, {
       modules: {
-        toolbar: toolbarContainer,
+        toolbar: toolbar,
         history: {
           userOnly: true,
         },
@@ -44,29 +62,5 @@ export function init(options: Options) {
 
     quill.clipboard.dangerouslyPasteHTML(templateContent);
     quill.focus();
-
-    const saveButton = toolbarContainer.querySelector("button")!;
-    saveButton.addEventListener("click", () => {
-      const text = quill.getText().trim();
-      console.log("-- Quill is sending back text", JSON.stringify(text));
-      options.onSave(text);
-
-      document.body.removeChild(editorContainer);
-      document.body.removeChild(toolbarContainer);
-    });
   });
-}
-
-function createEditorContainer(): HTMLElement {
-  return document.createElement("div");
-}
-
-function createTollbarContainer(): HTMLElement {
-  const toolbar = document.createElement("div");
-
-  const saveButton = document.createElement("button");
-  saveButton.textContent = "Save";
-
-  toolbar.appendChild(saveButton);
-  return toolbar;
 }

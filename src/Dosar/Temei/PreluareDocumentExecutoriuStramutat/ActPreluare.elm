@@ -3,7 +3,7 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActPreluare exposing (Act
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
 import Html.Events exposing (onClick, on)
 import Html.Attributes exposing (id)
-import Editor exposing (DocumentTemplate(TemplateActPreluare))
+import RichTextEditor exposing (DocumentTemplate(TemplateActPreluare))
 
 
 type ActPreluare
@@ -35,10 +35,10 @@ view maybeActPreluare callback =
                         [ onClick
                             (let
                                 editorCmd =
-                                    Editor.send templateId
+                                    RichTextEditor.send templateId
 
                                 editorSub =
-                                    Editor.onResponse onEditorResponse
+                                    RichTextEditor.onResponse onEditorResponse
 
                                 onEditorResponse v =
                                     callback (Just (ActPreluare { actPreluare | html = v })) Cmd.none Sub.none

@@ -1,4 +1,8 @@
-port module Editor exposing (send, onResponse)
+port module Editor exposing (send, onResponse, DocumentTemplate(TemplateActPreluare))
+
+
+type DocumentTemplate
+    = TemplateActPreluare
 
 
 send : String -> Cmd msg

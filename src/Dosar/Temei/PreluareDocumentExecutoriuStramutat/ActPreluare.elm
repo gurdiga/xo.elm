@@ -2,7 +2,8 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActPreluare exposing (Act
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
 import Html.Events exposing (onClick, on)
-import Editor
+import Html.Attributes exposing (id)
+import Editor exposing (DocumentTemplate(TemplateActPreluare))
 
 
 type ActPreluare
@@ -28,25 +29,35 @@ view maybeActPreluare callback =
     case maybeActPreluare of
         Just (ActPreluare actPreluare) ->
             fieldset []
-                [ legend [] [ text "Act de preluare" ]
-                , text actPreluare.document
-                , button
-                    [ onClick
-                        (let
-                            editorCmd =
-                                Editor.send actPreluare.document
+                [ legend []
+                    [ text "Act de preluare"
+                    , button
+                        [ onClick
+                            (let
+                                editorCmd =
+                                    Editor.send actPreluare.document
 
-                            editorSub =
-                                Editor.onResponse onEditorResponse
+                                editorSub =
+                                    Editor.onResponse onEditorResponse
 
-                            onEditorResponse v =
-                                callback (Just (ActPreluare { actPreluare | document = v })) Cmd.none Sub.none
-                         in
-                            callback maybeActPreluare editorCmd editorSub
-                        )
+                                onEditorResponse v =
+                                    callback (Just (ActPreluare { actPreluare | document = v })) Cmd.none Sub.none
+                             in
+                                callback maybeActPreluare editorCmd editorSub
+                            )
+                        ]
+                        [ text "Edit" ]
                     ]
-                    [ text "Edit" ]
+                , template { a = 1 }
                 ]
 
         Nothing ->
             button [ onClick (callback (Just newValue) Cmd.none Sub.none) ] [ text "Formează act de preluare" ]
+
+
+template : a -> Html msg
+template data =
+    div [ id (toString TemplateActPreluare) ]
+        [ h1 [] [ text "ActPreluare" ]
+        , p [] [ text <| toString <| data ]
+        ]

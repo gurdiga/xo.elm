@@ -23,27 +23,28 @@ export function init(options: Options) {
 
     const editorContainer = document.createElement("div");
     const toolbar = document.createElement("div");
-    const saveButton = document.createElement("button");
-    saveButton.textContent = "Save";
-    saveButton.addEventListener("click", () => {
-      const editorContent = editorContainer.querySelector(".ql-editor");
+    toolbar.innerHTML = `
+      <button class="rte-save">Save</button>
+      <button class="rte-close">Close</button>
+    `;
 
-      if (!editorContent) {
-        console.error("Couldn’t find .ql-editor");
-        return;
-      }
-
+    querySelector("button.rte-save", toolbar).addEventListener("click", () => {
+      const editorContent = querySelector(".ql-editor", editorContainer);
       const html = editorContent.innerHTML;
+
       console.log("-- Quill is sending back html", JSON.stringify(html));
       options.onSave(html);
-
-      document.body.removeChild(editorContainer);
-      document.body.removeChild(toolbar);
+      destroyEditor();
     });
+    querySelector("button.rte-close", toolbar).addEventListener("click", destroyEditor);
 
-    toolbar.appendChild(saveButton);
     document.body.appendChild(toolbar);
     document.body.appendChild(editorContainer);
+
+    function destroyEditor() {
+      document.body.removeChild(editorContainer);
+      document.body.removeChild(toolbar);
+    }
 
     const quill = new Quill(editorContainer, {
       modules: {
@@ -55,12 +56,19 @@ export function init(options: Options) {
       theme: "snow",
     });
 
-    const templateContainer = document.getElementById(templateId);
-    const templateContent = templateContainer
-      ? templateContainer.innerHTML
-      : `(container not found: ${JSON.stringify(templateId)})`;
-
+    const templateContainer = querySelector("#" + templateId);
+    const templateContent = templateContainer.innerHTML;
     quill.clipboard.dangerouslyPasteHTML(templateContent);
     quill.focus();
   });
+}
+
+function querySelector(selector: string, containerElement: Element = document.documentElement): Element {
+  const element = containerElement.querySelector(selector);
+
+  if (!element) {
+    throw new Error(`Could not find element by selector: ${JSON.stringify(selector)} in ${containerElement}.`);
+  }
+
+  return element;
 }

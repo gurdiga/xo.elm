@@ -2,13 +2,15 @@ module Dosar exposing (Dosar, newValue, view)
 
 import Html exposing (Html, h1, div, text)
 import Dosar.Temei as Temei exposing (Temei)
+import Dosar.Actiune as Actiune exposing (Actiune)
 import Dosar.Pricina as Pricina exposing (Pricina)
 
 
 type alias Dosar =
     { id : ID
     , temei : Temei
-    , order : Pricina
+    , actiune : Actiune
+    , pricina : Pricina
     }
 
 
@@ -20,7 +22,8 @@ newValue : Dosar
 newValue =
     { id = "001"
     , temei = Temei.newValue
-    , order = Pricina.newValue
+    , actiune = Actiune.newValue
+    , pricina = Pricina.newValue
     }
 
 
@@ -29,4 +32,5 @@ view dosar callback =
     div []
         [ h1 [] [ text "Dosar nou" ]
         , Temei.view dosar.temei (\v -> callback { dosar | temei = v })
+        , Actiune.view dosar.actiune (\v -> callback { dosar | actiune = v })
         ]

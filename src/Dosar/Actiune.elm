@@ -1,0 +1,48 @@
+module Dosar.Actiune exposing (Actiune, newValue, view)
+
+import Dosar.Actiune.IncheiereIntentare as IncheiereIntentare exposing (IncheiereIntentare)
+import Dosar.Actiune.IncheiereRefuz as IncheiereRefuz exposing (IncheiereRefuz)
+import Html exposing (Html, div, label, text)
+import Widgets.Select as Select
+
+
+type Actiune
+    = IncheiereIntentare IncheiereIntentare
+    | IncheiereRefuz IncheiereRefuz
+
+
+newValue : Actiune
+newValue =
+    IncheiereIntentare IncheiereIntentare.newValue
+
+
+view : Actiune -> (Actiune -> Cmd msg -> Sub msg -> msg) -> Html msg
+view actiune c =
+    let
+        callback v =
+            c v Cmd.none Sub.none
+    in
+        div []
+            [ dropdown actiune callback
+            , fields actiune callback
+            ]
+
+
+dropdown : Actiune -> (Actiune -> msg) -> Html msg
+dropdown actiune callback =
+    label []
+        [ text "Actiune:"
+        , Select.fromValuesWithLabels valuesWithLabels newValue callback
+        ]
+
+
+valuesWithLabels : List ( Actiune, String )
+valuesWithLabels =
+    [ ( IncheiereIntentare IncheiereIntentare.newValue, "intentare" )
+    , ( IncheiereRefuz IncheiereRefuz.newValue, "refuz" )
+    ]
+
+
+fields : Actiune -> (Actiune -> msg) -> Html msg
+fields actiune callback =
+    div [] [ text "TODO fields" ]

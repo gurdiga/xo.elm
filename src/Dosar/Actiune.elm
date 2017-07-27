@@ -45,4 +45,9 @@ valuesWithLabels =
 
 fields : Actiune -> (Actiune -> msg) -> Html msg
 fields actiune callback =
-    div [] [ text "TODO fields" ]
+    case actiune of
+        IncheiereIntentare incheiereIntentare ->
+            IncheiereIntentare.view incheiereIntentare (callback << IncheiereIntentare)
+
+        IncheiereRefuz incheiereRefuz ->
+            IncheiereRefuz.view incheiereRefuz (callback << IncheiereRefuz)

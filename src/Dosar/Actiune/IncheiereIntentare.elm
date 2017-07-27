@@ -12,8 +12,9 @@ newValue =
     IncheiereIntentare
 
 
-view : Html msg
-view =
+view : IncheiereIntentare -> (IncheiereIntentare -> msg) -> Html msg
+view incheiereIntentare callback =
     fieldset []
-        [ legend [] [ text "IncheiereIntentare", div [] [ text "TODO" ] ]
+        [ legend [] [ text "IncheiereIntentare" ]
+        , div [] [ text "TODO" ]
         ]

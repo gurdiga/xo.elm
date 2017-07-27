@@ -12,8 +12,8 @@ newValue =
     IncheiereRefuz
 
 
-view : Html msg
-view =
+view : IncheiereRefuz -> (IncheiereRefuz -> msg) -> Html msg
+view incheiereRefuz callback =
     fieldset []
         [ legend [] [ text "IncheiereRefuz" ]
         , div [] [ text "TODO" ]

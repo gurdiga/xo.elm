@@ -7,13 +7,13 @@ import Widgets.Select as Select
 
 
 type Actiune
-    = IncheiereIntentare IncheiereIntentare
-    | IncheiereRefuz IncheiereRefuz
+    = IncheiereIntentare (Maybe IncheiereIntentare)
+    | IncheiereRefuz (Maybe IncheiereRefuz)
 
 
 newValue : Actiune
 newValue =
-    IncheiereIntentare IncheiereIntentare.newValue
+    IncheiereIntentare Nothing
 
 
 view : Actiune -> (Actiune -> Cmd msg -> Sub msg -> msg) -> Html msg
@@ -24,7 +24,7 @@ view actiune c =
     in
         div []
             [ dropdown actiune callback
-            , fields actiune callback
+            , fields actiune c
             ]
 
 
@@ -38,16 +38,16 @@ dropdown actiune callback =
 
 valuesWithLabels : List ( Actiune, String )
 valuesWithLabels =
-    [ ( IncheiereIntentare IncheiereIntentare.newValue, "intentare" )
-    , ( IncheiereRefuz IncheiereRefuz.newValue, "refuz" )
+    [ ( IncheiereIntentare (Just IncheiereIntentare.newValue), "intentare" )
+    , ( IncheiereRefuz (Just IncheiereRefuz.newValue), "refuz" )
     ]
 
 
-fields : Actiune -> (Actiune -> msg) -> Html msg
+fields : Actiune -> (Actiune -> Cmd msg -> Sub msg -> msg) -> Html msg
 fields actiune callback =
     case actiune of
         IncheiereIntentare incheiereIntentare ->
-            IncheiereIntentare.view incheiereIntentare (callback << IncheiereIntentare)
+            IncheiereIntentare.view incheiereIntentare (\v cmd sub -> callback (IncheiereIntentare v) cmd sub)
 
         IncheiereRefuz incheiereRefuz ->
-            IncheiereRefuz.view incheiereRefuz (callback << IncheiereRefuz)
+            IncheiereRefuz.view incheiereRefuz (\v -> callback (IncheiereRefuz v) Cmd.none Sub.none)

@@ -1,6 +1,6 @@
 module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, newValue, view)
 
-import Html exposing (Html, fieldset, legend, div, text)
+import Html exposing (Html, fieldset, legend, div, button, text)
 
 
 type IncheiereIntentare
@@ -12,9 +12,16 @@ newValue =
     IncheiereIntentare
 
 
-view : IncheiereIntentare -> (IncheiereIntentare -> msg) -> Html msg
-view incheiereIntentare callback =
+view : Maybe IncheiereIntentare -> (Maybe IncheiereIntentare -> Cmd msg -> Sub msg -> msg) -> Html msg
+view maybeIncheiereIntentare callback =
     fieldset []
         [ legend [] [ text "IncheiereIntentare" ]
-        , div [] [ text "TODO" ]
+        , case maybeIncheiereIntentare of
+            Just incheiereIntentare ->
+                div [] [ text "There is one generated and saved, display it" ]
+
+            Nothing ->
+                div []
+                    [ button [] [ text "Edit" ]
+                    ]
         ]

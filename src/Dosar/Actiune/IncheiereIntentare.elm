@@ -34,8 +34,7 @@ view maybeIncheiereIntentare callback =
         [ legend [] [ text "IncheiereIntentare" ]
         , div []
             (case maybeIncheiereIntentare of
-                Just (IncheiereIntentare incheiereIntentare) ->
-                    -- maybe mv incheiereIntentare data?
+                Just (IncheiereIntentare data) ->
                     [ button
                         [ onClick
                             (let
@@ -46,7 +45,7 @@ view maybeIncheiereIntentare callback =
                                     RichTextEditor.onResponse onEditorResponse
 
                                 onEditorResponse v =
-                                    callback (Just (IncheiereIntentare { incheiereIntentare | generatedHtml = v })) Cmd.none Sub.none
+                                    callback (Just (IncheiereIntentare { data | generatedHtml = v })) Cmd.none Sub.none
                              in
                                 callback maybeIncheiereIntentare editorCmd editorSub
                             )

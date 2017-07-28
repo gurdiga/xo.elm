@@ -34,7 +34,7 @@ view maybeActPreluare callback =
         [ legend [] [ text "Act de preluare" ]
         , div []
             (case maybeActPreluare of
-                Just (ActPreluare actPreluare) ->
+                Just (ActPreluare data) ->
                     [ button
                         [ onClick
                             (let
@@ -45,7 +45,7 @@ view maybeActPreluare callback =
                                     RichTextEditor.onResponse onEditorResponse
 
                                 onEditorResponse v =
-                                    callback (Just (ActPreluare { actPreluare | generatedHtml = v })) Cmd.none Sub.none
+                                    callback (Just (ActPreluare { data | generatedHtml = v })) Cmd.none Sub.none
                              in
                                 callback maybeActPreluare editorCmd editorSub
                             )

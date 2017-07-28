@@ -1,8 +1,9 @@
-port module RichTextEditor exposing (send, onResponse, DocumentTemplate(TemplateActPreluare))
+port module RichTextEditor exposing (send, onResponse, DocumentTemplate(TemplateActPreluare, TemplateIncheiereIntentare))
 
 
 type DocumentTemplate
     = TemplateActPreluare
+    | TemplateIncheiereIntentare
 
 
 send : String -> Cmd msg

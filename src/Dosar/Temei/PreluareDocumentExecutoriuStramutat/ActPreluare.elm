@@ -1,7 +1,7 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActPreluare exposing (ActPreluare(ActPreluare), newValue, view)
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
-import Html.Events exposing (onClick, on)
+import Html.Events exposing (onClick)
 import Html.Attributes exposing (id)
 import RichTextEditor exposing (DocumentTemplate(TemplateActPreluare))
 
@@ -11,27 +11,31 @@ type ActPreluare
 
 
 type alias Data =
-    { html : String
-    , values : List String
+    { generatedHtml : String
+    , templateData : TemplateData
     }
+
+
+type TemplateData
+    = TemplateData
 
 
 newValue : ActPreluare
 newValue =
     ActPreluare
-        { html = ""
-        , values = []
+        { generatedHtml = ""
+        , templateData = TemplateData
         }
 
 
 view : Maybe ActPreluare -> (Maybe ActPreluare -> Cmd msg -> Sub msg -> msg) -> Html msg
 view maybeActPreluare callback =
-    case maybeActPreluare of
-        Just (ActPreluare actPreluare) ->
-            fieldset []
-                [ legend []
-                    [ text "Act de preluare"
-                    , button
+    fieldset []
+        [ legend [] [ text "Act de preluare" ]
+        , div []
+            (case maybeActPreluare of
+                Just (ActPreluare actPreluare) ->
+                    [ button
                         [ onClick
                             (let
                                 editorCmd =
@@ -41,21 +45,22 @@ view maybeActPreluare callback =
                                     RichTextEditor.onResponse onEditorResponse
 
                                 onEditorResponse v =
-                                    callback (Just (ActPreluare { actPreluare | html = v })) Cmd.none Sub.none
+                                    callback (Just (ActPreluare { actPreluare | generatedHtml = v })) Cmd.none Sub.none
                              in
                                 callback maybeActPreluare editorCmd editorSub
                             )
                         ]
-                        [ text "Edit" ]
+                        [ text "Editează" ]
+                    , template TemplateData
                     ]
-                , template { a = 1 }
-                ]
 
-        Nothing ->
-            button [ onClick (callback (Just newValue) Cmd.none Sub.none) ] [ text "Formează act de preluare" ]
+                Nothing ->
+                    [ button [ onClick (callback (Just newValue) Cmd.none Sub.none) ] [ text "Formează act de preluare" ] ]
+            )
+        ]
 
 
-template : a -> Html msg
+template : TemplateData -> Html msg
 template data =
     div [ id templateId ]
         [ h1 [] [ text "ActPreluare" ]

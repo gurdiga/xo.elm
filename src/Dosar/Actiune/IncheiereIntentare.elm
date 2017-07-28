@@ -1,27 +1,74 @@
 module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, newValue, view)
 
-import Html exposing (Html, fieldset, legend, div, button, text)
+import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
+import Html.Events exposing (onClick)
+import Html.Attributes exposing (id)
+import RichTextEditor exposing (DocumentTemplate(TemplateIncheiereIntentare))
 
 
 type IncheiereIntentare
-    = IncheiereIntentare
+    = IncheiereIntentare Data
+
+
+type alias Data =
+    { generatedHtml : String
+    , templateData : TemplateData
+    }
+
+
+type TemplateData
+    = TemplateData
 
 
 newValue : IncheiereIntentare
 newValue =
     IncheiereIntentare
+        { generatedHtml = ""
+        , templateData = TemplateData
+        }
 
 
 view : Maybe IncheiereIntentare -> (Maybe IncheiereIntentare -> Cmd msg -> Sub msg -> msg) -> Html msg
 view maybeIncheiereIntentare callback =
     fieldset []
         [ legend [] [ text "IncheiereIntentare" ]
-        , case maybeIncheiereIntentare of
-            Just incheiereIntentare ->
-                div [] [ text "There is one generated and saved, display it" ]
+        , div []
+            (case maybeIncheiereIntentare of
+                Just (IncheiereIntentare incheiereIntentare) ->
+                    -- maybe mv incheiereIntentare data?
+                    [ button
+                        [ onClick
+                            (let
+                                editorCmd =
+                                    RichTextEditor.send templateId
 
-            Nothing ->
-                div []
-                    [ button [] [ text "Edit" ]
+                                editorSub =
+                                    RichTextEditor.onResponse onEditorResponse
+
+                                onEditorResponse v =
+                                    callback (Just (IncheiereIntentare { incheiereIntentare | generatedHtml = v })) Cmd.none Sub.none
+                             in
+                                callback maybeIncheiereIntentare editorCmd editorSub
+                            )
+                        ]
+                        [ text "Editează" ]
+                    , template TemplateData
                     ]
+
+                Nothing ->
+                    [ button [ onClick (callback (Just newValue) Cmd.none Sub.none) ] [ text "Formează" ] ]
+            )
         ]
+
+
+template : TemplateData -> Html msg
+template data =
+    div [ id templateId ]
+        [ h1 [] [ text "IncheiereIntentare" ]
+        , p [] [ text <| toString <| data ]
+        ]
+
+
+templateId : String
+templateId =
+    toString TemplateIncheiereIntentare

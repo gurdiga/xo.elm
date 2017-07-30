@@ -21,46 +21,55 @@ export function init(options: Options) {
   options.onSetContent((templateId: string) => {
     console.log("-- RichTextEditor received template ID", JSON.stringify(templateId));
 
-    const editorContainer = document.createElement("div");
-    const toolbar = document.createElement("div");
-    toolbar.innerHTML = `
-      <button class="rte-save">Save</button>
-      <button class="rte-close">Close</button>
-    `;
-
-    querySelector("button.rte-save", toolbar).addEventListener("click", () => {
-      const editorContent = querySelector(".ql-editor", editorContainer);
-      const html = editorContent.innerHTML;
-
-      console.log("-- RichTextEditor is sending back html", JSON.stringify(html));
-      options.onSave(html);
-      destroyEditor();
-    });
-    querySelector("button.rte-close", toolbar).addEventListener("click", destroyEditor);
-
-    document.body.appendChild(toolbar);
-    document.body.appendChild(editorContainer);
-
-    function destroyEditor() {
-      document.body.removeChild(editorContainer);
-      document.body.removeChild(toolbar);
-    }
-
-    const quill = new Quill(editorContainer, {
-      modules: {
-        toolbar: toolbar,
-        history: {
-          userOnly: true,
+    withEditorMarkup((editorToolbar, editorContainer) => {
+      const quill = new Quill(editorContainer, {
+        modules: {
+          toolbar: editorToolbar,
+          history: {
+            userOnly: true,
+          },
         },
-      },
-      theme: "snow",
-    });
+        theme: "snow",
+      });
 
-    const templateContainer = querySelector("#" + templateId);
-    const templateContent = templateContainer.innerHTML;
-    quill.clipboard.dangerouslyPasteHTML(templateContent);
-    quill.focus();
+      const content = querySelector("#" + templateId).innerHTML;
+      quill.clipboard.dangerouslyPasteHTML(content);
+      quill.focus();
+    }, options.onSave);
   });
+}
+
+function withEditorMarkup(
+  initQuill: (editorToolbar: HTMLElement, editorContainer: HTMLElement) => void,
+  onSave: Options["onSave"],
+): void {
+  const editorContainer = document.createElement("div");
+  const editorToolbar = document.createElement("div");
+  editorToolbar.innerHTML = `
+        <button class="rte-save">Save</button>
+        <button class="rte-close">Close</button>
+      `;
+
+  querySelector("button.rte-save", editorToolbar).addEventListener("click", () => {
+    const editorContent = querySelector(".ql-editor", editorContainer);
+    const html = editorContent.innerHTML;
+
+    console.log("-- RichTextEditor is sending back html", JSON.stringify(html));
+    onSave(html);
+    destroy();
+  });
+
+  querySelector("button.rte-close", editorToolbar).addEventListener("click", destroy);
+
+  document.body.appendChild(editorToolbar);
+  document.body.appendChild(editorContainer);
+
+  function destroy() {
+    document.body.removeChild(editorContainer);
+    document.body.removeChild(editorToolbar);
+  }
+
+  initQuill(editorToolbar, editorContainer);
 }
 
 function querySelector(selector: string, containerElement: Element = document.documentElement): Element {

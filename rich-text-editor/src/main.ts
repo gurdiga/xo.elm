@@ -1,5 +1,8 @@
 import {Quill} from "quill";
 
+// This widget assumes that there will be at most one instance of RTE open at
+// any given time, and it will be closed before openeing another one.
+
 type Callback = (s: string) => void;
 
 type Options = {

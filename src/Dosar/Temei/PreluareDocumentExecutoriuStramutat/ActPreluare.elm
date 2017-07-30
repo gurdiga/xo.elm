@@ -3,7 +3,7 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActPreluare exposing (Act
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (id)
-import RichTextEditor exposing (DocumentTemplate(TemplateActPreluare))
+import RichTextEditor exposing (TemplateId(TemplateActPreluare))
 
 
 type ActPreluare

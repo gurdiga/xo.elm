@@ -1,4 +1,11 @@
-port module RichTextEditor exposing (view, send, onResponse, TemplateId(TemplateActPreluare, TemplateIncheiereIntentare))
+port module RichTextEditor
+    exposing
+        ( view
+        , TemplateId
+            ( TemplateActPreluare
+            , TemplateIncheiereIntentare
+            )
+        )
 
 import Html exposing (Html, div, button, text)
 import Html.Events exposing (onClick)
@@ -13,48 +20,48 @@ type TemplateId
 type alias Input a msg =
     { maybeValue : Maybe a
     , newValue : a
-    , templateId : TemplateId -- TODO: consider reusing the same div to hold the content to edit
+    , templateId : TemplateId
     , compiledTemplate : List (Html msg)
     , callback : Maybe a -> Cmd msg -> Sub msg -> msg
-    , valueConstructor : a -> String -> a
+    , setter : a -> String -> a
     }
 
 
 view : Input a msg -> Html msg
-view { maybeValue, newValue, templateId, compiledTemplate, valueConstructor, callback } =
-    case maybeValue of
-        Just value ->
+view { maybeValue, newValue, templateId, compiledTemplate, setter, callback } =
+    let
+        editButton label value =
             button
-                [ onClick
-                    (let
-                        editorCmd =
-                            send (toString templateId)
-
-                        editorSub =
-                            onResponse onEditorResponse
-
-                        onEditorResponse s =
-                            callback (Just (valueConstructor value s)) Cmd.none Sub.none
-                     in
-                        callback (Just value) editorCmd editorSub
-                    )
-                ]
-                [ text "Editează"
-                , div [ style [ ( "display", "none" ) ], id (toString templateId) ] compiledTemplate
+                [ onClick (edit value) ]
+                [ text label
+                , contentPreparedForEditor
                 ]
 
-        Nothing ->
-            button [ onClick (callback (Just newValue) Cmd.none Sub.none) ] [ text "Formează" ]
+        edit value =
+            callback (Just value) editorCmd (editorSub value)
 
+        contentPreparedForEditor =
+            div
+                [ style [ ( "display", "none" ) ]
+                , id (toString templateId)
+                ]
+                compiledTemplate
 
-send : String -> Cmd msg
-send =
-    sendToEditor
+        editorCmd =
+            sendToEditor (toString templateId)
 
+        editorSub value =
+            onResponseFromEditor
+                (\newContent ->
+                    callback (Just (setter value newContent)) Cmd.none Sub.none
+                )
+    in
+        case maybeValue of
+            Just value ->
+                editButton "Editează" value
 
-onResponse : (String -> msg) -> Sub msg
-onResponse =
-    onResponseFromEditor
+            Nothing ->
+                editButton "Formează" newValue
 
 
 port sendToEditor : String -> Cmd msg

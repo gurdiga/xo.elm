@@ -36,7 +36,7 @@ view maybeIncheiereIntentare callback =
             , templateId = TemplateIncheiereIntentare
             , compiledTemplate = template TemplateData
             , callback = callback
-            , valueConstructor = (\(IncheiereIntentare data) s -> IncheiereIntentare { data | generatedHtml = s })
+            , setter = (\(IncheiereIntentare data) s -> IncheiereIntentare { data | generatedHtml = s })
             }
         ]
 

@@ -19,7 +19,7 @@ export function init(options: Options) {
   }
 
   options.onSetContent((templateId: string) => {
-    console.log("-- Quill received template ID", JSON.stringify(templateId));
+    console.log("-- RichTextEditor received template ID", JSON.stringify(templateId));
 
     const editorContainer = document.createElement("div");
     const toolbar = document.createElement("div");
@@ -32,7 +32,7 @@ export function init(options: Options) {
       const editorContent = querySelector(".ql-editor", editorContainer);
       const html = editorContent.innerHTML;
 
-      console.log("-- Quill is sending back html", JSON.stringify(html));
+      console.log("-- RichTextEditor is sending back html", JSON.stringify(html));
       options.onSave(html);
       destroyEditor();
     });

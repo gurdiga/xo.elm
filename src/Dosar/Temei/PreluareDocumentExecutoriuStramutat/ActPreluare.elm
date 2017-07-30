@@ -36,7 +36,7 @@ view maybeActPreluare callback =
             , templateId = TemplateActPreluare
             , compiledTemplate = template TemplateData
             , callback = callback
-            , valueConstructor = (\(ActPreluare data) s -> ActPreluare { data | generatedHtml = s })
+            , setter = (\(ActPreluare data) s -> ActPreluare { data | generatedHtml = s })
             }
         ]
 

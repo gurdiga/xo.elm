@@ -38,9 +38,9 @@ view maybeActPreluare callback =
         fieldset []
             [ legend [] [ text "Act de preluare" ]
             , RichTextEditor.view
-                { labelText = "Editează"
-                , compiledTemplate = template TemplateData
-                , onSend = (callback maybeActPreluare)
+                { buttonLabel = "Editează"
+                , content = template TemplateData
+                , onEdit = (callback maybeActPreluare)
                 , onReceive = (\s -> callback (Just (ActPreluare { data | generatedHtml = s })) Cmd.none Sub.none)
                 }
             ]

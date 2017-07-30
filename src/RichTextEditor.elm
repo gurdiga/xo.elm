@@ -7,25 +7,25 @@ import FNV as HashUtility
 
 
 type alias Input msg =
-    { labelText : String
-    , compiledTemplate : List (Html msg)
-    , onSend : Cmd msg -> Sub msg -> msg
+    { buttonLabel : String
+    , content : List (Html msg)
+    , onEdit : Cmd msg -> Sub msg -> msg
     , onReceive : String -> msg
     }
 
 
 view : Input msg -> Html msg
-view { labelText, compiledTemplate, onSend, onReceive } =
+view { buttonLabel, content, onEdit, onReceive } =
     let
         contentPreparedForEditor =
             div
                 [ style [ ( "display", "none" ) ]
                 , id contentUuid
                 ]
-                compiledTemplate
+                content
 
         contentUuid =
-            compiledTemplate |> toString |> HashUtility.hashString |> toString |> (++) "content-to-edit-"
+            content |> toString |> HashUtility.hashString |> toString |> (++) "content-to-edit-"
 
         editorCmd =
             sendToEditor contentUuid
@@ -34,8 +34,8 @@ view { labelText, compiledTemplate, onSend, onReceive } =
             onResponseFromEditor onReceive
     in
         button
-            [ onClick (onSend editorCmd editorSub) ]
-            [ text labelText
+            [ onClick (onEdit editorCmd editorSub) ]
+            [ text buttonLabel
             , contentPreparedForEditor
             ]
 

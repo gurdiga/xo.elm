@@ -38,9 +38,9 @@ view maybeIncheiereIntentare callback =
         fieldset []
             [ legend [] [ text "IncheiereIntentare" ]
             , RichTextEditor.view
-                { labelText = "Editează"
-                , compiledTemplate = template TemplateData
-                , onSend = (callback maybeIncheiereIntentare)
+                { buttonLabel = "Editează"
+                , content = template TemplateData
+                , onEdit = (callback maybeIncheiereIntentare)
                 , onReceive = (\s -> callback (Just (IncheiereIntentare { data | generatedHtml = s })) Cmd.none Sub.none)
                 }
             ]

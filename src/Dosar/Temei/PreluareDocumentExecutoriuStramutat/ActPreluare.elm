@@ -1,8 +1,6 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActPreluare exposing (ActPreluare(ActPreluare), newValue, view)
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
-import Html.Events exposing (onClick)
-import Html.Attributes exposing (id)
 import RichTextEditor exposing (TemplateId(TemplateActPreluare))
 
 
@@ -32,40 +30,22 @@ view : Maybe ActPreluare -> (Maybe ActPreluare -> Cmd msg -> Sub msg -> msg) -> 
 view maybeActPreluare callback =
     fieldset []
         [ legend [] [ text "Act de preluare" ]
-        , div []
-            (case maybeActPreluare of
-                Just (ActPreluare data) ->
-                    [ button
-                        [ onClick
-                            (let
-                                editorCmd =
-                                    RichTextEditor.send templateId
-
-                                editorSub =
-                                    RichTextEditor.onResponse onEditorResponse
-
-                                onEditorResponse v =
-                                    callback (Just (ActPreluare { data | generatedHtml = v })) Cmd.none Sub.none
-                             in
-                                callback maybeActPreluare editorCmd editorSub
-                            )
-                        ]
-                        [ text "Editează" ]
-                    , template TemplateData
-                    ]
-
-                Nothing ->
-                    [ button [ onClick (callback (Just newValue) Cmd.none Sub.none) ] [ text "Formează act de preluare" ] ]
-            )
+        , RichTextEditor.view
+            { maybeValue = maybeActPreluare
+            , newValue = newValue
+            , templateId = TemplateActPreluare
+            , compiledTemplate = template TemplateData
+            , callback = callback
+            , valueConstructor = (\(ActPreluare data) s -> ActPreluare { data | generatedHtml = s })
+            }
         ]
 
 
-template : TemplateData -> Html msg
+template : TemplateData -> List (Html msg)
 template data =
-    div [ id templateId ]
-        [ h1 [] [ text "ActPreluare" ]
-        , p [] [ text <| toString <| data ]
-        ]
+    [ h1 [] [ text "ActPreluare" ]
+    , p [] [ text <| toString <| data ]
+    ]
 
 
 templateId : String

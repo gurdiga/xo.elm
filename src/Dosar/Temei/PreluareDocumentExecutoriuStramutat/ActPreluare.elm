@@ -31,8 +31,7 @@ view maybeActPreluare callback =
     fieldset []
         [ legend [] [ text "Act de preluare" ]
         , RichTextEditor.view
-            { maybeValue = maybeActPreluare
-            , newValue = newValue
+            { value = Maybe.withDefault newValue maybeActPreluare
             , templateId = TemplateActPreluare
             , compiledTemplate = template TemplateData
             , callback = callback

@@ -31,8 +31,7 @@ view maybeIncheiereIntentare callback =
     fieldset []
         [ legend [] [ text "IncheiereIntentare" ]
         , RichTextEditor.view
-            { maybeValue = maybeIncheiereIntentare
-            , newValue = newValue
+            { value = Maybe.withDefault newValue maybeIncheiereIntentare
             , templateId = TemplateIncheiereIntentare
             , compiledTemplate = template TemplateData
             , callback = callback

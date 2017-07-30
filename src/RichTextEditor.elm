@@ -18,8 +18,7 @@ type TemplateId
 
 
 type alias Input a msg =
-    { maybeValue : Maybe a
-    , newValue : a
+    { value : a
     , templateId : TemplateId
     , compiledTemplate : List (Html msg)
     , callback : Maybe a -> Cmd msg -> Sub msg -> msg
@@ -28,15 +27,8 @@ type alias Input a msg =
 
 
 view : Input a msg -> Html msg
-view { maybeValue, newValue, templateId, compiledTemplate, setter, callback } =
+view { value, templateId, compiledTemplate, setter, callback } =
     let
-        editButton label value =
-            button
-                [ onClick (edit value) ]
-                [ text label
-                , contentPreparedForEditor
-                ]
-
         edit value =
             callback (Just value) editorCmd (editorSub value)
 
@@ -56,12 +48,11 @@ view { maybeValue, newValue, templateId, compiledTemplate, setter, callback } =
                     callback (Just (setter value newContent)) Cmd.none Sub.none
                 )
     in
-        case maybeValue of
-            Just value ->
-                editButton "Editează" value
-
-            Nothing ->
-                editButton "Formează" newValue
+        button
+            [ onClick (edit value) ]
+            [ text "Editează"
+            , contentPreparedForEditor
+            ]
 
 
 port sendToEditor : String -> Cmd msg

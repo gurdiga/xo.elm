@@ -1,25 +1,13 @@
-port module RichTextEditor
-    exposing
-        ( view
-        , TemplateId
-            ( TemplateActPreluare
-            , TemplateIncheiereIntentare
-            )
-        )
+port module RichTextEditor exposing (view)
 
 import Html exposing (Html, div, button, text)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (style, id)
-
-
-type TemplateId
-    = TemplateActPreluare
-    | TemplateIncheiereIntentare
+import FNV as HashUtility
 
 
 type alias Input msg =
     { labelText : String
-    , templateId : TemplateId
     , compiledTemplate : List (Html msg)
     , onSend : Cmd msg -> Sub msg -> msg
     , onReceive : String -> msg
@@ -27,17 +15,20 @@ type alias Input msg =
 
 
 view : Input msg -> Html msg
-view { labelText, templateId, compiledTemplate, onSend, onReceive } =
+view { labelText, compiledTemplate, onSend, onReceive } =
     let
         contentPreparedForEditor =
             div
                 [ style [ ( "display", "none" ) ]
-                , id (toString templateId)
+                , id contentUuid
                 ]
                 compiledTemplate
 
+        contentUuid =
+            compiledTemplate |> toString |> HashUtility.hashString |> toString |> (++) "content-to-edit-"
+
         editorCmd =
-            sendToEditor (toString templateId)
+            sendToEditor contentUuid
 
         editorSub =
             onResponseFromEditor onReceive

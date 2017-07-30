@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, newValue, view)
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
-import RichTextEditor exposing (TemplateId(TemplateIncheiereIntentare))
+import RichTextEditor
 
 
 type IncheiereIntentare
@@ -39,7 +39,6 @@ view maybeIncheiereIntentare callback =
             [ legend [] [ text "IncheiereIntentare" ]
             , RichTextEditor.view
                 { labelText = "Editează"
-                , templateId = TemplateIncheiereIntentare
                 , compiledTemplate = template TemplateData
                 , onSend = (callback maybeIncheiereIntentare)
                 , onReceive = (\s -> callback (Just (IncheiereIntentare { data | generatedHtml = s })) Cmd.none Sub.none)
@@ -52,8 +51,3 @@ template data =
     [ h1 [] [ text "IncheiereIntentare" ]
     , p [] [ text <| toString <| data ]
     ]
-
-
-templateId : String
-templateId =
-    toString TemplateIncheiereIntentare

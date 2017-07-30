@@ -1,7 +1,7 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActPreluare exposing (ActPreluare(ActPreluare), newValue, view)
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
-import RichTextEditor exposing (TemplateId(TemplateActPreluare))
+import RichTextEditor
 
 
 type ActPreluare
@@ -39,7 +39,6 @@ view maybeActPreluare callback =
             [ legend [] [ text "Act de preluare" ]
             , RichTextEditor.view
                 { labelText = "Editează"
-                , templateId = TemplateActPreluare
                 , compiledTemplate = template TemplateData
                 , onSend = (callback maybeActPreluare)
                 , onReceive = (\s -> callback (Just (ActPreluare { data | generatedHtml = s })) Cmd.none Sub.none)
@@ -52,8 +51,3 @@ template data =
     [ h1 [] [ text "ActPreluare" ]
     , p [] [ text <| toString <| data ]
     ]
-
-
-templateId : String
-templateId =
-    toString TemplateActPreluare

@@ -29,11 +29,8 @@ newValue =
 view : Maybe ActPreluare -> (Maybe ActPreluare -> Cmd msg -> Sub msg -> msg) -> Html msg
 view maybeActPreluare callback =
     let
-        value =
-            Maybe.withDefault newValue maybeActPreluare
-
         (ActPreluare data) =
-            value
+            Maybe.withDefault newValue maybeActPreluare
     in
         fieldset []
             [ legend [] [ text "Act de preluare" ]
@@ -47,7 +44,7 @@ view maybeActPreluare callback =
 
 
 template : TemplateData -> List (Html msg)
-template data =
+template templateData =
     [ h1 [] [ text "ActPreluare" ]
-    , p [] [ text <| toString <| data ]
+    , p [] [ text <| toString <| templateData ]
     ]

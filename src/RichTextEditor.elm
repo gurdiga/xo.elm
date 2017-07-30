@@ -17,21 +17,18 @@ type TemplateId
     | TemplateIncheiereIntentare
 
 
-type alias Input a msg =
-    { value : a
+type alias Input msg =
+    { labelText : String
     , templateId : TemplateId
     , compiledTemplate : List (Html msg)
-    , callback : Maybe a -> Cmd msg -> Sub msg -> msg
-    , setter : a -> String -> a
+    , onSend : Cmd msg -> Sub msg -> msg
+    , onReceive : String -> msg
     }
 
 
-view : Input a msg -> Html msg
-view { value, templateId, compiledTemplate, setter, callback } =
+view : Input msg -> Html msg
+view { labelText, templateId, compiledTemplate, onSend, onReceive } =
     let
-        edit value =
-            callback (Just value) editorCmd (editorSub value)
-
         contentPreparedForEditor =
             div
                 [ style [ ( "display", "none" ) ]
@@ -42,15 +39,12 @@ view { value, templateId, compiledTemplate, setter, callback } =
         editorCmd =
             sendToEditor (toString templateId)
 
-        editorSub value =
-            onResponseFromEditor
-                (\newContent ->
-                    callback (Just (setter value newContent)) Cmd.none Sub.none
-                )
+        editorSub =
+            onResponseFromEditor onReceive
     in
         button
-            [ onClick (edit value) ]
-            [ text "Editează"
+            [ onClick (onSend editorCmd editorSub) ]
+            [ text labelText
             , contentPreparedForEditor
             ]
 

@@ -28,16 +28,23 @@ newValue =
 
 view : Maybe IncheiereIntentare -> (Maybe IncheiereIntentare -> Cmd msg -> Sub msg -> msg) -> Html msg
 view maybeIncheiereIntentare callback =
-    fieldset []
-        [ legend [] [ text "IncheiereIntentare" ]
-        , RichTextEditor.view
-            { value = Maybe.withDefault newValue maybeIncheiereIntentare
-            , templateId = TemplateIncheiereIntentare
-            , compiledTemplate = template TemplateData
-            , callback = callback
-            , setter = (\(IncheiereIntentare data) s -> IncheiereIntentare { data | generatedHtml = s })
-            }
-        ]
+    let
+        value =
+            Maybe.withDefault newValue maybeIncheiereIntentare
+
+        (IncheiereIntentare data) =
+            value
+    in
+        fieldset []
+            [ legend [] [ text "IncheiereIntentare" ]
+            , RichTextEditor.view
+                { labelText = "Editează"
+                , templateId = TemplateIncheiereIntentare
+                , compiledTemplate = template TemplateData
+                , onSend = (callback maybeIncheiereIntentare)
+                , onReceive = (\s -> callback (Just (IncheiereIntentare { data | generatedHtml = s })) Cmd.none Sub.none)
+                }
+            ]
 
 
 template : TemplateData -> List (Html msg)

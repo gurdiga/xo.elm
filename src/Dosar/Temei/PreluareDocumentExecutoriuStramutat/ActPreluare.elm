@@ -28,16 +28,23 @@ newValue =
 
 view : Maybe ActPreluare -> (Maybe ActPreluare -> Cmd msg -> Sub msg -> msg) -> Html msg
 view maybeActPreluare callback =
-    fieldset []
-        [ legend [] [ text "Act de preluare" ]
-        , RichTextEditor.view
-            { value = Maybe.withDefault newValue maybeActPreluare
-            , templateId = TemplateActPreluare
-            , compiledTemplate = template TemplateData
-            , callback = callback
-            , setter = (\(ActPreluare data) s -> ActPreluare { data | generatedHtml = s })
-            }
-        ]
+    let
+        value =
+            Maybe.withDefault newValue maybeActPreluare
+
+        (ActPreluare data) =
+            value
+    in
+        fieldset []
+            [ legend [] [ text "Act de preluare" ]
+            , RichTextEditor.view
+                { labelText = "Editează"
+                , templateId = TemplateActPreluare
+                , compiledTemplate = template TemplateData
+                , onSend = (callback maybeActPreluare)
+                , onReceive = (\s -> callback (Just (ActPreluare { data | generatedHtml = s })) Cmd.none Sub.none)
+                }
+            ]
 
 
 template : TemplateData -> List (Html msg)

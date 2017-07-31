@@ -18,8 +18,8 @@
 			var app = Elm.Main.embed(node);
 
 			RichTextEditor.init({
-				onSetContent: app.ports.sendToEditor.subscribe,
-				onSave: app.ports.onResponseFromEditor.send
+				onSetContent: app.ports.richTextEditorSendContent.subscribe,
+				onSave: app.ports.richTextEditorOnReceiveResponse.send
 			});
 		</script>
 

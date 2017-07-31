@@ -37,8 +37,8 @@ view maybeActPreluare callback =
             , RichTextEditor.view
                 { buttonLabel = "Editează"
                 , content = template TemplateData
-                , onEdit = (callback maybeActPreluare)
-                , onReceive = (\s -> callback (Just (ActPreluare { data | generatedHtml = s })) Cmd.none Sub.none)
+                , onOpen = callback maybeActPreluare
+                , onResponse = (\s -> callback (Just (ActPreluare { data | generatedHtml = s })) Cmd.none Sub.none)
                 }
             ]
 

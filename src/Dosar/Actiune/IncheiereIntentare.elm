@@ -37,8 +37,8 @@ view maybeIncheiereIntentare callback =
             , RichTextEditor.view
                 { buttonLabel = "Editează"
                 , content = template TemplateData
-                , onEdit = (callback maybeIncheiereIntentare)
-                , onReceive = (\s -> callback (Just (IncheiereIntentare { data | generatedHtml = s })) Cmd.none Sub.none)
+                , onOpen = callback maybeIncheiereIntentare
+                , onResponse = (\s -> callback (Just (IncheiereIntentare { data | generatedHtml = s })) Cmd.none Sub.none)
                 }
             ]
 

@@ -11,15 +11,8 @@ type Options = {
 };
 
 export function init(options: Options) {
-  if (!(options.onSetContent instanceof Function)) {
-    console.error("RichTextEditor.init: setContent is expected to be a function");
-    return;
-  }
-
-  if (!(options.onSave instanceof Function)) {
-    console.error("RichTextEditor.init: onSave is expected to be a function");
-    return;
-  }
+  assertFunction(options, "onSetContent");
+  assertFunction(options, "onSave");
 
   options.onSetContent((templateId: string) => {
     console.log("-- RichTextEditor received template ID", JSON.stringify(templateId));
@@ -40,6 +33,12 @@ export function init(options: Options) {
       quill.focus();
     }, options.onSave);
   });
+}
+
+function assertFunction(object: any, propertyName: string): void {
+  if (!(object[propertyName] instanceof Function)) {
+    throw new Error(`RichTextEditor.init: ${propertyName} option is expected to be a function`);
+  }
 }
 
 function withEditorMarkup(

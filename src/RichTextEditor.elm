@@ -15,13 +15,13 @@ type alias Input msg =
 
     -- This is an API leak: Idealy the client code should not be aware of this
     -- widget’s needs, but this is needed to send the content to the RTE.
-    , onEdit : Cmd msg -> Sub msg -> msg
-    , onReceive : String -> msg
+    , onOpen : Cmd msg -> Sub msg -> msg
+    , onResponse : String -> msg
     }
 
 
 view : Input msg -> Html msg
-view { buttonLabel, content, onEdit, onReceive } =
+view { buttonLabel, content, onOpen, onResponse } =
     let
         contentPreparedForEditor =
             div
@@ -34,19 +34,19 @@ view { buttonLabel, content, onEdit, onReceive } =
             content |> toString |> HashingUtility.hashString |> toString |> (++) "content-to-edit-"
 
         editorCmd =
-            sendToEditor contentUuid
+            richTextEditorSendContent contentUuid
 
         editorSub =
-            onResponseFromEditor onReceive
+            richTextEditorOnReceiveResponse onResponse
     in
         button
-            [ onClick (onEdit editorCmd editorSub) ]
+            [ onClick (onOpen editorCmd editorSub) ]
             [ text buttonLabel
             , contentPreparedForEditor
             ]
 
 
-port sendToEditor : String -> Cmd msg
+port richTextEditorSendContent : String -> Cmd msg
 
 
-port onResponseFromEditor : (String -> msg) -> Sub msg
+port richTextEditorOnReceiveResponse : (String -> msg) -> Sub msg

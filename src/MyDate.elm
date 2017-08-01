@@ -175,7 +175,9 @@ format myDate =
                 )
 
         Nothing ->
-            if myDate.validationMessage == "" then
+            if myDate.string == "" then
+                Err ""
+            else if myDate.validationMessage == "" then
                 Err ("Data invalida: " ++ myDate.string)
             else
                 Err myDate.validationMessage

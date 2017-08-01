@@ -6,15 +6,15 @@ import {Quill} from "quill";
 type Callback = (s: string) => void;
 
 type Options = {
-  onSetContent: (callback: Callback) => void;
-  onSave: Callback;
+  sendContent: (callback: Callback) => void;
+  receiveResponse: Callback;
 };
 
 export function init(options: Options) {
-  assertFunction(options, "onSetContent");
-  assertFunction(options, "onSave");
+  assertFunction(options, "sendContent");
+  assertFunction(options, "receiveResponse");
 
-  options.onSetContent((templateId: string) => {
+  options.sendContent((templateId: string) => {
     console.log("-- RichTextEditor received template ID", JSON.stringify(templateId));
 
     withEditorMarkup((editorToolbar, editorContainer) => {
@@ -31,7 +31,7 @@ export function init(options: Options) {
       const content = querySelector("#" + templateId).innerHTML;
       quill.clipboard.dangerouslyPasteHTML(content);
       quill.focus();
-    }, options.onSave);
+    }, options.receiveResponse);
   });
 }
 
@@ -43,7 +43,7 @@ function assertFunction(object: any, propertyName: string): void {
 
 function withEditorMarkup(
   initQuill: (editorToolbar: HTMLElement, editorContainer: HTMLElement) => void,
-  onSave: Options["onSave"],
+  receiveResponse: Options["receiveResponse"],
 ): void {
   const editorContainer = document.createElement("div");
   const editorToolbar = document.createElement("div");
@@ -57,7 +57,7 @@ function withEditorMarkup(
     const html = editorContent.innerHTML;
 
     console.log("-- RichTextEditor is sending back html", JSON.stringify(html));
-    onSave(html);
+    receiveResponse(html);
     destroy();
   });
 

@@ -15,7 +15,7 @@ type Temei
 
 newValue : Temei
 newValue =
-    PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.newValue
+    CerereCreditor CerereCreditor.newValue
 
 
 view : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg

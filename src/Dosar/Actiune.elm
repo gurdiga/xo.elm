@@ -13,7 +13,7 @@ type Actiune
 
 newValue : Actiune
 newValue =
-    IncheiereIntentare Nothing
+    IncheiereRefuz Nothing
 
 
 view : Actiune -> (Actiune -> Cmd msg -> Sub msg -> msg) -> Html msg
@@ -50,4 +50,4 @@ fields actiune callback =
             IncheiereIntentare.view incheiereIntentare (\v cmd sub -> callback (IncheiereIntentare v) cmd sub)
 
         IncheiereRefuz incheiereRefuz ->
-            IncheiereRefuz.view incheiereRefuz (\v -> callback (IncheiereRefuz v) Cmd.none Sub.none)
+            IncheiereRefuz.view incheiereRefuz (\v cmd sub -> callback (IncheiereRefuz v) cmd sub)

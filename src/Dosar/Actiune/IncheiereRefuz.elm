@@ -1,6 +1,6 @@
 module Dosar.Actiune.IncheiereRefuz exposing (IncheiereRefuz, newValue, view)
 
-import Dosar.Actiune.IncheiereRefuz.CauzaRefuzului as CauzaRefuzului exposing (CauzaRefuzului)
+import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz exposing (CauzaRefuz)
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
 import RichTextEditor
 
@@ -10,7 +10,7 @@ type IncheiereRefuz
 
 
 type alias Data =
-    { cauza : CauzaRefuzului
+    { cauza : CauzaRefuz
     , generatedHtml : String
     , templateData : TemplateData
     }
@@ -23,7 +23,7 @@ type TemplateData
 newValue : IncheiereRefuz
 newValue =
     IncheiereRefuz
-        { cauza = CauzaRefuzului.newValue
+        { cauza = CauzaRefuz.newValue
         , generatedHtml = ""
         , templateData = TemplateData
         }

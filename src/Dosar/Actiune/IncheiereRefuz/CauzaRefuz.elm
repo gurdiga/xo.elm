@@ -1,4 +1,4 @@
-module Dosar.Actiune.IncheiereRefuz.CauzaRefuzului exposing (CauzaRefuzului, newValue, view)
+module Dosar.Actiune.IncheiereRefuz.CauzaRefuz exposing (CauzaRefuz, newValue, view)
 
 import Html exposing (Html, text)
 
@@ -7,7 +7,7 @@ import Html exposing (Html, text)
 -- (1) Executorul judecătoresc poate refuza intentarea procedurii de executare dacă:
 
 
-type CauzaRefuzului
+type CauzaRefuz
     = -- a) documentul nu este de competenţa sa;
       NecorespondentaCompetenta
     | -- b) termenul de prezentare a documentului spre executare a expirat;
@@ -22,11 +22,11 @@ type CauzaRefuzului
       DocumentExecutoriuDejaExecutat
 
 
-newValue : CauzaRefuzului
+newValue : CauzaRefuz
 newValue =
     NecorespondentaCompetenta
 
 
 view : Html msg
 view =
-    text "TODO: CauzaRefuzului.view"
+    text "TODO: CauzaRefuz.view"

@@ -10,6 +10,7 @@ type IncheiereIntentare
 
 type alias Data =
     { html : String
+    , borderouDeCalcul : String
     }
 
 
@@ -17,6 +18,7 @@ newValue : IncheiereIntentare
 newValue =
     IncheiereIntentare
         { html = ""
+        , borderouDeCalcul = ""
         }
 
 
@@ -25,14 +27,26 @@ view incheiereIntentare callback =
     let
         (IncheiereIntentare data) =
             incheiereIntentare
+
+        noop =
+            callback incheiereIntentare
+
+        c data =
+            callback (IncheiereIntentare data) Cmd.none Sub.none
     in
         fieldset []
             [ legend [] [ text "IncheiereIntentare" ]
             , RichTextEditor.view
                 { buttonLabel = "Editează"
                 , content = template data
-                , onOpen = callback incheiereIntentare
-                , onResponse = (\s -> callback (IncheiereIntentare { data | html = s }) Cmd.none Sub.none)
+                , onOpen = noop
+                , onResponse = (\s -> c { data | html = s })
+                }
+            , RichTextEditor.view
+                { buttonLabel = "Borderou de calcul"
+                , content = borderouDeCalculTemplate data
+                , onOpen = noop
+                , onResponse = (\s -> c { data | borderouDeCalcul = s })
                 }
             ]
 
@@ -41,5 +55,13 @@ template : Data -> List (Html msg)
 template data =
     -- TODO: find the real template
     [ h1 [] [ text "IncheiereIntentare" ]
+    , p [] [ text <| toString <| data ]
+    ]
+
+
+borderouDeCalculTemplate : Data -> List (Html msg)
+borderouDeCalculTemplate data =
+    -- TODO: find the real template
+    [ h1 [] [ text "Borderou de calcul pentru cheltuielile de intentare" ]
     , p [] [ text <| toString <| data ]
     ]

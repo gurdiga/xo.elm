@@ -13,7 +13,7 @@ type Actiune
 
 newValue : Actiune
 newValue =
-    IncheiereRefuz IncheiereRefuz.newValue
+    IncheiereIntentare IncheiereIntentare.newValue
 
 
 view : Actiune -> (Actiune -> Cmd msg -> Sub msg -> msg) -> Html msg

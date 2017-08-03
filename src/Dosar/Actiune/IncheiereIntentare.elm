@@ -9,42 +9,37 @@ type IncheiereIntentare
 
 
 type alias Data =
-    { generatedHtml : String
-    , templateData : TemplateData
+    { html : String
     }
-
-
-type TemplateData
-    = TemplateData
 
 
 newValue : IncheiereIntentare
 newValue =
     IncheiereIntentare
-        { generatedHtml = ""
-        , templateData = TemplateData
+        { html = ""
         }
 
 
-view : Maybe IncheiereIntentare -> (Maybe IncheiereIntentare -> Cmd msg -> Sub msg -> msg) -> Html msg
-view maybeIncheiereIntentare callback =
+view : IncheiereIntentare -> (IncheiereIntentare -> Cmd msg -> Sub msg -> msg) -> Html msg
+view incheiereIntentare callback =
     let
         (IncheiereIntentare data) =
-            Maybe.withDefault newValue maybeIncheiereIntentare
+            incheiereIntentare
     in
         fieldset []
             [ legend [] [ text "IncheiereIntentare" ]
             , RichTextEditor.view
                 { buttonLabel = "Editează"
-                , content = template TemplateData
-                , onOpen = callback maybeIncheiereIntentare
-                , onResponse = (\s -> callback (Just (IncheiereIntentare { data | generatedHtml = s })) Cmd.none Sub.none)
+                , content = template data
+                , onOpen = callback incheiereIntentare
+                , onResponse = (\s -> callback (IncheiereIntentare { data | html = s }) Cmd.none Sub.none)
                 }
             ]
 
 
-template : TemplateData -> List (Html msg)
-template templateData =
+template : Data -> List (Html msg)
+template data =
+    -- TODO: find the real template
     [ h1 [] [ text "IncheiereIntentare" ]
-    , p [] [ text <| toString <| templateData ]
+    , p [] [ text <| toString <| data ]
     ]

@@ -11,47 +11,42 @@ type IncheiereRefuz
 
 type alias Data =
     { cauza : CauzaRefuz
-    , generatedHtml : String
-    , templateData : TemplateData
+    , html : String
     }
-
-
-type TemplateData
-    = TemplateData
 
 
 newValue : IncheiereRefuz
 newValue =
     IncheiereRefuz
         { cauza = CauzaRefuz.newValue
-        , generatedHtml = ""
-        , templateData = TemplateData
+        , html = ""
         }
 
 
-view : Maybe IncheiereRefuz -> (Maybe IncheiereRefuz -> Cmd msg -> Sub msg -> msg) -> Html msg
-view maybeIncheiereRefuz callback =
+view : IncheiereRefuz -> (IncheiereRefuz -> Cmd msg -> Sub msg -> msg) -> Html msg
+view incheiereRefuz callback =
     let
         (IncheiereRefuz data) =
-            Maybe.withDefault newValue maybeIncheiereRefuz
+            incheiereRefuz
 
         c data =
-            callback (Just (IncheiereRefuz data)) Cmd.none Sub.none
+            callback (IncheiereRefuz data) Cmd.none Sub.none
     in
         fieldset []
             [ legend [] [ text "IncheiereRefuz" ]
             , CauzaRefuz.view data.cauza (\v -> c { data | cauza = v })
             , RichTextEditor.view
                 { buttonLabel = "Editează"
-                , content = template TemplateData
-                , onOpen = callback maybeIncheiereRefuz
-                , onResponse = (\s -> c { data | generatedHtml = s })
+                , content = template data
+                , onOpen = callback incheiereRefuz
+                , onResponse = (\s -> c { data | html = s })
                 }
             ]
 
 
-template : TemplateData -> List (Html msg)
-template templateData =
+template : Data -> List (Html msg)
+template data =
+    -- TODO: find the real template
     [ h1 [] [ text "IncheiereRefuz" ]
-    , p [] [ text <| toString <| templateData ]
+    , p [] [ text <| toString <| data ]
     ]

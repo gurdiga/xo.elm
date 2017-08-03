@@ -7,13 +7,13 @@ import Widgets.Select as Select
 
 
 type Actiune
-    = IncheiereIntentare (Maybe IncheiereIntentare)
-    | IncheiereRefuz (Maybe IncheiereRefuz)
+    = IncheiereIntentare IncheiereIntentare
+    | IncheiereRefuz IncheiereRefuz
 
 
 newValue : Actiune
 newValue =
-    IncheiereRefuz Nothing
+    IncheiereRefuz IncheiereRefuz.newValue
 
 
 view : Actiune -> (Actiune -> Cmd msg -> Sub msg -> msg) -> Html msg
@@ -38,8 +38,8 @@ dropdown actiune callback =
 
 valuesWithLabels : List ( Actiune, String )
 valuesWithLabels =
-    [ ( IncheiereIntentare (Just IncheiereIntentare.newValue), "intentare" )
-    , ( IncheiereRefuz (Just IncheiereRefuz.newValue), "refuz" )
+    [ ( IncheiereIntentare IncheiereIntentare.newValue, "intentare" )
+    , ( IncheiereRefuz IncheiereRefuz.newValue, "refuz" )
     ]
 
 

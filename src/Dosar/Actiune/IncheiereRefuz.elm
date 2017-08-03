@@ -34,14 +34,18 @@ view maybeIncheiereRefuz callback =
     let
         (IncheiereRefuz data) =
             Maybe.withDefault newValue maybeIncheiereRefuz
+
+        c data =
+            callback (Just (IncheiereRefuz data)) Cmd.none Sub.none
     in
         fieldset []
             [ legend [] [ text "IncheiereRefuz" ]
+            , CauzaRefuz.view data.cauza (\v -> c { data | cauza = v })
             , RichTextEditor.view
                 { buttonLabel = "Editează"
                 , content = template TemplateData
                 , onOpen = callback maybeIncheiereRefuz
-                , onResponse = (\s -> callback (Just (IncheiereRefuz { data | generatedHtml = s })) Cmd.none Sub.none)
+                , onResponse = (\s -> c { data | generatedHtml = s })
                 }
             ]
 

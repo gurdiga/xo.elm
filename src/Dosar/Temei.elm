@@ -38,7 +38,7 @@ fields : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg
 fields temei callback =
     case temei of
         CerereCreditor cerereCreditor ->
-            CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v) Cmd.none Sub.none)
+            CerereCreditor.view cerereCreditor (\v -> callback (CerereCreditor v))
 
         DemersInstanta demersInstanta ->
             DemersInstanta.view demersInstanta (\v -> callback (DemersInstanta v) Cmd.none Sub.none)

@@ -26,19 +26,25 @@ newValue =
         }
 
 
-view : Maybe ActPreluare -> (Maybe ActPreluare -> Cmd msg -> Sub msg -> msg) -> Html msg
-view maybeActPreluare callback =
+view : ActPreluare -> (ActPreluare -> Cmd msg -> Sub msg -> msg) -> Html msg
+view actPreluare callback =
     let
         (ActPreluare data) =
-            Maybe.withDefault newValue maybeActPreluare
+            actPreluare
+
+        noop =
+            callback actPreluare
+
+        c data =
+            callback (ActPreluare data) Cmd.none Sub.none
     in
         fieldset []
             [ legend [] [ text "Act de preluare" ]
             , RichTextEditor.view
                 { buttonLabel = "Editează"
-                , content = template TemplateData
-                , onOpen = callback maybeActPreluare
-                , onResponse = (\s -> callback (Just (ActPreluare { data | generatedHtml = s })) Cmd.none Sub.none)
+                , content = template TemplateData -- TODO: get rid of TemplateData
+                , onOpen = noop
+                , onResponse = (\s -> c { data | generatedHtml = s })
                 }
             ]
 

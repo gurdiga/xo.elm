@@ -14,7 +14,7 @@ type PreluareDocumentExecutoriuStramutat
         , copieIncheiereStramutare : DocumentScanat
         , acteEfectuatAnterior : ActeEfectuateAnterior
         , note : String
-        , actPreluare : Maybe ActPreluare
+        , actPreluare : ActPreluare
         }
 
 
@@ -25,7 +25,7 @@ newValue =
         , copieIncheiereStramutare = DocumentScanat.newValue
         , acteEfectuatAnterior = ActeEfectuateAnterior.newValue
         , note = ""
-        , actPreluare = Just ActPreluare.newValue
+        , actPreluare = ActPreluare.newValue
         }
 
 

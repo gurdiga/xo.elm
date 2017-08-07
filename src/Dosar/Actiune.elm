@@ -16,23 +16,23 @@ newValue =
     IncheiereIntentare IncheiereIntentare.newValue
 
 
-view : Actiune -> (Actiune -> Cmd msg -> Sub msg -> msg) -> Html msg
-view actiune c =
-    let
-        callback v =
-            c v Cmd.none Sub.none
-    in
-        div []
-            [ dropdown actiune callback
-            , fields actiune c
-            ]
+type alias Callback msg =
+    Actiune -> Cmd msg -> Sub msg -> msg
 
 
-dropdown : Actiune -> (Actiune -> msg) -> Html msg
+view : Actiune -> Callback msg -> Html msg
+view actiune callback =
+    div []
+        [ dropdown actiune callback
+        , fields actiune callback
+        ]
+
+
+dropdown : Actiune -> Callback msg -> Html msg
 dropdown actiune callback =
     label []
         [ text "Actiune:"
-        , Select.fromValuesWithLabels valuesWithLabels newValue callback
+        , Select.fromValuesWithLabels valuesWithLabels newValue (\v -> callback v Cmd.none Sub.none)
         ]
 
 
@@ -43,7 +43,7 @@ valuesWithLabels =
     ]
 
 
-fields : Actiune -> (Actiune -> Cmd msg -> Sub msg -> msg) -> Html msg
+fields : Actiune -> Callback msg -> Html msg
 fields actiune callback =
     case actiune of
         IncheiereIntentare incheiereIntentare ->

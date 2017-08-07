@@ -45,16 +45,16 @@ view incheiereIntentare callback =
                 , onOpen = noop
                 , onResponse = (\s -> c { data | html = s })
                 }
+            , RichTextEditor.view
+                { buttonLabel = "Formează borderou de calcul"
+                , content = borderouDeCalculTemplate data
+                , onOpen = noop
+                , onResponse = (\s -> c { data | borderouDeCalcul = s })
+                }
             , DocumentScanat.view
                 { labelText = "Copia încheierii:"
                 , documentScanat = data.copieIncheiere
                 , callback = (\v -> c { data | copieIncheiere = v })
-                }
-            , RichTextEditor.view
-                { buttonLabel = "Borderou de calcul"
-                , content = borderouDeCalculTemplate data
-                , onOpen = noop
-                , onResponse = (\s -> c { data | borderouDeCalcul = s })
                 }
             ]
 

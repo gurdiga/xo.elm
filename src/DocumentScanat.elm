@@ -1,6 +1,6 @@
 module DocumentScanat exposing (DocumentScanat, newValue, view, unlabeledView)
 
-import Html exposing (Html, label, input, text)
+import Html exposing (Html, div, label, input, text)
 import Html.Attributes exposing (type_)
 import Html.Events exposing (on)
 import Json.Decode as Json
@@ -25,7 +25,9 @@ newValue =
 
 view : Input msg -> Html msg
 view { labelText, documentScanat, callback } =
-    fileField labelText (\v -> callback { documentScanat | file = v })
+    div []
+        [ fileField labelText (\v -> callback { documentScanat | file = v })
+        ]
 
 
 unlabeledView : DocumentScanat -> (DocumentScanat -> msg) -> Html msg

@@ -7,32 +7,45 @@ import Json.Decode as Json
 import File exposing (File)
 
 
-type alias DocumentScanat =
+type DocumentScanat
+    = DocumentScanat Data
+
+
+type alias Data =
     { file : File }
 
 
 type alias Input msg =
     { labelText : String
     , documentScanat : DocumentScanat
-    , callback : DocumentScanat -> msg
+    , callback : Callback msg
     }
+
+
+type alias Callback msg =
+    DocumentScanat -> msg
 
 
 newValue : DocumentScanat
 newValue =
-    { file = File.newValue }
+    DocumentScanat
+        { file = File.newValue }
 
 
 view : Input msg -> Html msg
 view { labelText, documentScanat, callback } =
-    div []
-        [ fileField labelText (\v -> callback { documentScanat | file = v })
-        ]
+    let
+        (DocumentScanat data) =
+            documentScanat
+    in
+        div []
+            [ fileField labelText (\v -> callback (DocumentScanat { data | file = v }))
+            ]
 
 
-unlabeledView : DocumentScanat -> (DocumentScanat -> msg) -> Html msg
-unlabeledView documentScanat callback =
-    unlabeledFileField (\v -> callback { documentScanat | file = v })
+unlabeledView : DocumentScanat -> Callback msg -> Html msg
+unlabeledView (DocumentScanat data) callback =
+    unlabeledFileField (\v -> callback (DocumentScanat { data | file = v }))
 
 
 fileField : String -> (File -> msg) -> Html msg

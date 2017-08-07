@@ -11,13 +11,20 @@ type alias DocumentScanat =
     { file : File }
 
 
+type alias Input msg =
+    { labelText : String
+    , documentScanat : DocumentScanat
+    , callback : DocumentScanat -> msg
+    }
+
+
 newValue : DocumentScanat
 newValue =
     { file = File.newValue }
 
 
-view : String -> DocumentScanat -> (DocumentScanat -> msg) -> Html msg
-view labelText documentScanat callback =
+view : Input msg -> Html msg
+view { labelText, documentScanat, callback } =
     fileField labelText (\v -> callback { documentScanat | file = v })
 
 

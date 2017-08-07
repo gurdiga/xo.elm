@@ -24,6 +24,12 @@ view demersInstanta callback =
         [ legend [] [ text "DemersInstanta" ]
         , ul []
             [ li [] [ Pricina.view demersInstanta.pricina (\v -> callback { demersInstanta | pricina = v }) ]
-            , li [] [ DocumentScanat.view "Copia scanată:" demersInstanta.copia (\v -> callback { demersInstanta | copia = v }) ]
+            , li []
+                [ DocumentScanat.view
+                    { labelText = "Copia scanată:"
+                    , documentScanat = demersInstanta.copia
+                    , callback = (\v -> callback { demersInstanta | copia = v })
+                    }
+                ]
             ]
         ]

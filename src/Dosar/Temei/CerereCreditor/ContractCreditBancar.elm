@@ -23,7 +23,13 @@ view contractCreditBancar callback =
     fieldset []
         [ legend [] [ text "ContractCreditBancar" ]
         , ul []
-            [ li [] [ DocumentScanat.view "Copia" contractCreditBancar.copia (\v -> callback { contractCreditBancar | copia = v }) ]
+            [ li []
+                [ DocumentScanat.view
+                    { labelText = "Copia:"
+                    , documentScanat = contractCreditBancar.copia
+                    , callback = (\v -> callback { contractCreditBancar | copia = v })
+                    }
+                ]
             , li [] [ largeTextField "Note:" contractCreditBancar.note (\v -> callback { contractCreditBancar | note = v }) ]
             ]
         ]

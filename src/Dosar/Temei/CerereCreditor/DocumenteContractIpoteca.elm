@@ -62,14 +62,18 @@ fields maybeDocumenteContractIpoteca callback =
                         (\v -> callback (just contractIpoteca { documenteContractIpoteca | extraseEvidentaFinanciara = v }))
                     , ul []
                         [ li []
-                            [ DocumentScanat.view "Notificare:"
-                                documenteContractIpoteca.notificare
-                                (\v -> callback (just contractIpoteca { documenteContractIpoteca | notificare = v }))
+                            [ DocumentScanat.view
+                                { labelText = "Notificare:"
+                                , documentScanat = documenteContractIpoteca.notificare
+                                , callback = (\v -> callback (just contractIpoteca { documenteContractIpoteca | notificare = v }))
+                                }
                             ]
                         , li []
-                            [ DocumentScanat.view "Preaviz:"
-                                documenteContractIpoteca.preaviz
-                                (\v -> callback (just contractIpoteca { documenteContractIpoteca | preaviz = v }))
+                            [ DocumentScanat.view
+                                { labelText = "Preaviz:"
+                                , documentScanat = documenteContractIpoteca.preaviz
+                                , callback = (\v -> callback (just contractIpoteca { documenteContractIpoteca | preaviz = v }))
+                                }
                             ]
                         ]
                     , DeclaratieContractNonLitigios.view

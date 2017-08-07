@@ -46,9 +46,11 @@ view preluareDocumentExecutoriuStramutat callback =
             , ul []
                 [ li [] [ CauzaStramutare.view data.cauzaStramutare (\v -> c { data | cauzaStramutare = v }) ]
                 , li []
-                    [ DocumentScanat.view "Copia încheierii:"
-                        data.copieIncheiereStramutare
-                        (\v -> c { data | copieIncheiereStramutare = v })
+                    [ DocumentScanat.view
+                        { labelText = "Copia încheierii:"
+                        , documentScanat = data.copieIncheiereStramutare
+                        , callback = (\v -> c { data | copieIncheiereStramutare = v })
+                        }
                     ]
                 , li [] [ ActeEfectuateAnterior.view data.acteEfectuatAnterior (\v -> c { data | acteEfectuatAnterior = v }) ]
                 , li [] [ largeTextField "Note:" data.note (\v -> c { data | note = v }) ]

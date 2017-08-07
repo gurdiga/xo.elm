@@ -45,9 +45,11 @@ view incheiereIntentare callback =
                 , onOpen = noop
                 , onResponse = (\s -> c { data | html = s })
                 }
-            , DocumentScanat.view "Copia încheierii:"
-                data.copieIncheiere
-                (\v -> c { data | copieIncheiere = v })
+            , DocumentScanat.view
+                { labelText = "Copia încheierii:"
+                , documentScanat = data.copieIncheiere
+                , callback = (\v -> c { data | copieIncheiere = v })
+                }
             , RichTextEditor.view
                 { buttonLabel = "Borderou de calcul"
                 , content = borderouDeCalculTemplate data

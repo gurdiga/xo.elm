@@ -2,6 +2,7 @@ module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, newValue, 
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
 import RichTextEditor
+import DocumentScanat exposing (DocumentScanat)
 
 
 type IncheiereIntentare
@@ -11,6 +12,7 @@ type IncheiereIntentare
 type alias Data =
     { html : String
     , borderouDeCalcul : String
+    , copieIncheiere : DocumentScanat
     }
 
 
@@ -19,6 +21,7 @@ newValue =
     IncheiereIntentare
         { html = ""
         , borderouDeCalcul = ""
+        , copieIncheiere = DocumentScanat.newValue
         }
 
 
@@ -42,6 +45,9 @@ view incheiereIntentare callback =
                 , onOpen = noop
                 , onResponse = (\s -> c { data | html = s })
                 }
+            , DocumentScanat.view "Copia încheierii:"
+                data.copieIncheiere
+                (\v -> c { data | copieIncheiere = v })
             , RichTextEditor.view
                 { buttonLabel = "Borderou de calcul"
                 , content = borderouDeCalculTemplate data

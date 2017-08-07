@@ -11,6 +11,13 @@ type Actiune
     | IncheiereRefuz IncheiereRefuz
 
 
+valuesWithLabels : List ( Actiune, String )
+valuesWithLabels =
+    [ ( IncheiereIntentare IncheiereIntentare.newValue, "intentare" )
+    , ( IncheiereRefuz IncheiereRefuz.newValue, "refuz" )
+    ]
+
+
 newValue : Actiune
 newValue =
     IncheiereIntentare IncheiereIntentare.newValue
@@ -34,13 +41,6 @@ dropdown actiune callback =
         [ text "Actiune:"
         , Select.fromValuesWithLabels valuesWithLabels newValue (\v -> callback v Cmd.none Sub.none)
         ]
-
-
-valuesWithLabels : List ( Actiune, String )
-valuesWithLabels =
-    [ ( IncheiereIntentare IncheiereIntentare.newValue, "intentare" )
-    , ( IncheiereRefuz IncheiereRefuz.newValue, "refuz" )
-    ]
 
 
 fields : Actiune -> Callback msg -> Html msg

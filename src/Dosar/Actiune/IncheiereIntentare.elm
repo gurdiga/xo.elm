@@ -31,9 +31,6 @@ view incheiereIntentare callback =
         (IncheiereIntentare data) =
             incheiereIntentare
 
-        noop =
-            callback incheiereIntentare
-
         c data =
             callback (IncheiereIntentare data) Cmd.none Sub.none
     in
@@ -42,13 +39,13 @@ view incheiereIntentare callback =
             , RichTextEditor.view
                 { buttonLabel = "Editează"
                 , content = template data
-                , onOpen = noop
+                , onOpen = callback incheiereIntentare
                 , onResponse = (\s -> c { data | html = s })
                 }
             , RichTextEditor.view
                 { buttonLabel = "Formează borderou de calcul"
                 , content = borderouDeCalculTemplate data
-                , onOpen = noop
+                , onOpen = callback incheiereIntentare
                 , onResponse = (\s -> c { data | borderouDeCalcul = s })
                 }
             , DocumentScanat.view

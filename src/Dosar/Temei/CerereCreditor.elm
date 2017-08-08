@@ -4,6 +4,8 @@ import Html exposing (Html, h1, fieldset, legend, div, ul, li, text)
 import Dosar.Persoana as Persoana exposing (Persoana)
 import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
 import RichTextEditor
+import MyDate exposing (MyDate)
+import Widgets.Fields exposing (dateField)
 
 
 type CerereCreditor
@@ -11,7 +13,8 @@ type CerereCreditor
 
 
 type alias Data =
-    { creditor : Persoana
+    { dataDepunere : MyDate
+    , creditor : Persoana
     , html : String
     , documenteContractIpoteca : Maybe DocumenteContractIpoteca
     }
@@ -20,7 +23,8 @@ type alias Data =
 newValue : CerereCreditor
 newValue =
     CerereCreditor
-        { creditor = Persoana.newValue
+        { dataDepunere = MyDate.newValue
+        , creditor = Persoana.newValue
         , html = ""
         , documenteContractIpoteca = Nothing
         }
@@ -37,21 +41,16 @@ view cerereCreditor callback =
     in
         fieldset []
             [ legend [] [ text "CerereCreditor" ]
+            , dateField "Data depunerii:" data.dataDepunere (\v -> c { data | dataDepunere = v })
             , Persoana.view data.creditor (\v -> c { data | creditor = v })
-            , ul []
-                [ li []
-                    [ RichTextEditor.view
-                        { buttonLabel = "Formează cerere" -- TODO: make it printable
-                        , content = templateCerere data
-                        , onOpen = callback cerereCreditor
-                        , onResponse = (\s -> c { data | html = s })
-                        }
-                    ]
-                , li []
-                    [ DocumenteContractIpoteca.view data.documenteContractIpoteca
-                        (\v -> c { data | documenteContractIpoteca = v })
-                    ]
-                ]
+            , RichTextEditor.view
+                { buttonLabel = "Formează cerere" -- TODO: make it printable
+                , content = templateCerere data
+                , onOpen = callback cerereCreditor
+                , onResponse = (\s -> c { data | html = s })
+                }
+            , DocumenteContractIpoteca.view data.documenteContractIpoteca
+                (\v -> c { data | documenteContractIpoteca = v })
             ]
 
 

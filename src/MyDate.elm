@@ -98,10 +98,10 @@ parse dateString =
                             { data | validationMessage = "Ziua datei este incorecta: " ++ dayString }
 
                         ( Ok _, Err e, _ ) ->
-                            { data | validationMessage = ("Luna datei este incorecta: " ++ monthString) }
+                            { data | validationMessage = "Luna datei este incorecta: " ++ monthString }
 
                         ( Ok _, Ok _, Err e ) ->
-                            { data | validationMessage = ("Anul datei este incorect: " ++ yearString) }
+                            { data | validationMessage = "Anul datei este incorect: " ++ yearString }
 
                         ( Ok day, Ok month, Ok year ) ->
                             case validateDayForMonthAndYear day month year of
@@ -124,36 +124,28 @@ parse dateString =
 
 validateDayString : String -> Result String Int
 validateDayString dayString =
-    let
-        day =
-            String.toInt dayString
-    in
-        case day of
-            Err e ->
-                Err e
+    case String.toInt dayString of
+        Err e ->
+            Err e
 
-            Ok day ->
-                if day > 31 then
-                    Err dayString
-                else
-                    Ok day
+        Ok day ->
+            if day > 31 then
+                Err dayString
+            else
+                Ok day
 
 
 validateMonthString : String -> Result String Int
 validateMonthString monthString =
-    let
-        monthNumber =
-            String.toInt monthString
-    in
-        case monthNumber of
-            Err e ->
-                Err e
+    case String.toInt monthString of
+        Err e ->
+            Err e
 
-            Ok monthNumber ->
-                if monthNumber > 13 then
-                    Err monthString
-                else
-                    Ok monthNumber
+        Ok monthNumber ->
+            if monthNumber > 13 then
+                Err monthString
+            else
+                Ok monthNumber
 
 
 validateYearString : String -> Result String Int

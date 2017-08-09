@@ -1,4 +1,4 @@
-module MyDate exposing (MyDate, newValue, view, viewUnlabeled, parse, format)
+module MyDate exposing (MyDate(MyDate), newValue, view, viewUnlabeled, parse, format)
 
 import Html exposing (Html, label, input, text)
 import Html.Attributes exposing (value)
@@ -7,7 +7,11 @@ import Date exposing (Date)
 import Regex exposing (regex)
 
 
-type alias MyDate =
+type MyDate
+    = MyDate Data
+
+
+type alias Data =
     { string : String
     , date : Maybe Date
     , validationMessage : String
@@ -16,10 +20,11 @@ type alias MyDate =
 
 newValue : MyDate
 newValue =
-    { string = ""
-    , date = Nothing
-    , validationMessage = ""
-    }
+    MyDate
+        { string = ""
+        , date = Nothing
+        , validationMessage = ""
+        }
 
 
 view : String -> MyDate -> (MyDate -> msg) -> Html msg
@@ -33,13 +38,16 @@ view labelText defaultValue callback =
 viewUnlabeled : MyDate -> (MyDate -> msg) -> List (Html msg)
 viewUnlabeled defaultValue callback =
     let
+        (MyDate data) =
+            defaultValue
+
         ( inputText, validationMessage ) =
             case format defaultValue of
                 Ok dateString ->
                     ( dateString, "OK" )
 
                 Err errorMessage ->
-                    ( defaultValue.string, errorMessage )
+                    ( data.string, errorMessage )
     in
         [ input
             [ value inputText
@@ -53,62 +61,65 @@ viewUnlabeled defaultValue callback =
 parse : String -> MyDate
 parse dateString =
     let
-        myDate =
+        data : Data
+        data =
             { string = dateString
             , date = Nothing
             , validationMessage = ""
             }
     in
-        if not (Regex.contains (regex "^\\d{2}\\.\\d{2}\\.\\d{4}$") dateString) then
-            { myDate | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
-        else
-            let
-                dayString =
-                    -- DD.LL.AAAA
-                    -- ^^
-                    String.slice 0 2 dateString
+        MyDate
+            (if not (Regex.contains (regex "^\\d{2}\\.\\d{2}\\.\\d{4}$") dateString) then
+                { data | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
+             else
+                let
+                    dayString =
+                        -- DD.LL.AAAA
+                        -- ^^
+                        String.slice 0 2 dateString
 
-                monthString =
-                    -- DD.LL.AAAA
-                    --    ^^
-                    String.slice 3 5 dateString
+                    monthString =
+                        -- DD.LL.AAAA
+                        --    ^^
+                        String.slice 3 5 dateString
 
-                yearString =
-                    -- DD.LL.AAAA
-                    --       ^^^^
-                    String.slice 6 10 dateString
-            in
-                case
-                    ( validateDayString dayString
-                    , validateMonthString monthString
-                    , validateYearString yearString
-                    )
-                of
-                    ( Err e, _, _ ) ->
-                        { myDate | validationMessage = "Ziua datei este incorecta: " ++ dayString }
+                    yearString =
+                        -- DD.LL.AAAA
+                        --       ^^^^
+                        String.slice 6 10 dateString
+                in
+                    case
+                        ( validateDayString dayString
+                        , validateMonthString monthString
+                        , validateYearString yearString
+                        )
+                    of
+                        ( Err e, _, _ ) ->
+                            { data | validationMessage = "Ziua datei este incorecta: " ++ dayString }
 
-                    ( Ok _, Err e, _ ) ->
-                        { myDate | validationMessage = ("Luna datei este incorecta: " ++ monthString) }
+                        ( Ok _, Err e, _ ) ->
+                            { data | validationMessage = ("Luna datei este incorecta: " ++ monthString) }
 
-                    ( Ok _, Ok _, Err e ) ->
-                        { myDate | validationMessage = ("Anul datei este incorect: " ++ yearString) }
+                        ( Ok _, Ok _, Err e ) ->
+                            { data | validationMessage = ("Anul datei este incorect: " ++ yearString) }
 
-                    ( Ok day, Ok month, Ok year ) ->
-                        case validateDayForMonthAndYear day month year of
-                            Err errorMessage ->
-                                { myDate | validationMessage = errorMessage }
+                        ( Ok day, Ok month, Ok year ) ->
+                            case validateDayForMonthAndYear day month year of
+                                Err errorMessage ->
+                                    { data | validationMessage = errorMessage }
 
-                            Ok day ->
-                                let
-                                    isoDateString =
-                                        yearString ++ "-" ++ monthString ++ "-" ++ dayString
-                                in
-                                    case Date.fromString isoDateString of
-                                        Ok date ->
-                                            { myDate | date = Just date }
+                                Ok day ->
+                                    let
+                                        isoDateString =
+                                            yearString ++ "-" ++ monthString ++ "-" ++ dayString
+                                    in
+                                        case Date.fromString isoDateString of
+                                            Ok date ->
+                                                { data | date = Just date }
 
-                                        Err errorMessage ->
-                                            { myDate | validationMessage = errorMessage }
+                                            Err errorMessage ->
+                                                { data | validationMessage = errorMessage }
+            )
 
 
 validateDayString : String -> Result String Int
@@ -148,6 +159,10 @@ validateMonthString monthString =
 validateYearString : String -> Result String Int
 validateYearString yearString =
     String.toInt yearString
+
+
+
+-- TODO: maybe have a DayForMonthAndYearValidationError type instead of String
 
 
 validateDayForMonthAndYear : Int -> Int -> Int -> Result String Int
@@ -194,8 +209,8 @@ isLeapYear year =
 
 
 format : MyDate -> Result String String
-format myDate =
-    case myDate.date of
+format (MyDate data) =
+    case data.date of
         Just date ->
             Ok
                 ((String.padLeft 2 '0' (toString (Date.day date)))
@@ -206,12 +221,12 @@ format myDate =
                 )
 
         Nothing ->
-            if myDate.string == "" then
+            if data.string == "" then
                 Err ""
-            else if myDate.validationMessage == "" then
-                Err ("Data invalida: " ++ myDate.string)
+            else if data.validationMessage == "" then
+                Err ("Data invalida: " ++ data.string)
             else
-                Err myDate.validationMessage
+                Err data.validationMessage
 
 
 monthNumber : Date -> Int

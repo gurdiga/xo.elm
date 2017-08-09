@@ -1,5 +1,8 @@
-module MyDate exposing (MyDate, newValue, parse, format)
+module MyDate exposing (MyDate, newValue, view, viewUnlabeled, parse, format)
 
+import Html exposing (Html, label, input, text)
+import Html.Attributes exposing (value)
+import Html.Events exposing (onInput)
 import Date exposing (Date)
 import Regex exposing (regex)
 
@@ -17,6 +20,34 @@ newValue =
     , date = Nothing
     , validationMessage = ""
     }
+
+
+view : String -> MyDate -> (MyDate -> msg) -> Html msg
+view labelText defaultValue callback =
+    label []
+        (text labelText
+            :: viewUnlabeled defaultValue callback
+        )
+
+
+viewUnlabeled : MyDate -> (MyDate -> msg) -> List (Html msg)
+viewUnlabeled defaultValue callback =
+    let
+        ( inputText, validationMessage ) =
+            case format defaultValue of
+                Ok dateString ->
+                    ( dateString, "OK" )
+
+                Err errorMessage ->
+                    ( defaultValue.string, errorMessage )
+    in
+        [ input
+            [ value inputText
+            , onInput (\v -> callback (parse v))
+            ]
+            []
+        , text validationMessage
+        ]
 
 
 parse : String -> MyDate

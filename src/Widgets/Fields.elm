@@ -4,8 +4,6 @@ module Widgets.Fields
         , unlabeledTextField
         , largeTextField
         , unlabeledLargeTextField
-        , dateField
-        , unlabeledDateField
         , checkboxField
         , moneyField
         , unlabeledMoneyField
@@ -14,7 +12,6 @@ module Widgets.Fields
 import Html exposing (Html, label, input, textarea, text)
 import Html.Attributes exposing (value, checked, type_)
 import Html.Events exposing (onInput, onCheck)
-import MyDate exposing (MyDate)
 import Money exposing (Money(..))
 import Widgets.Select as Select
 
@@ -53,34 +50,6 @@ unlabeledLargeTextField defaultValue callback =
         ]
         []
     ]
-
-
-dateField : String -> MyDate -> (MyDate -> msg) -> Html msg
-dateField labelText defaultValue callback =
-    label []
-        (text labelText
-            :: unlabeledDateField defaultValue callback
-        )
-
-
-unlabeledDateField : MyDate -> (MyDate -> msg) -> List (Html msg)
-unlabeledDateField defaultValue callback =
-    let
-        ( inputText, validationMessage ) =
-            case MyDate.format defaultValue of
-                Ok dateString ->
-                    ( dateString, "OK" )
-
-                Err errorMessage ->
-                    ( defaultValue.string, errorMessage )
-    in
-        [ input
-            [ value inputText
-            , onInput (\v -> callback (MyDate.parse v))
-            ]
-            []
-        , text validationMessage
-        ]
 
 
 checkboxField : String -> Bool -> (Bool -> msg) -> Html msg

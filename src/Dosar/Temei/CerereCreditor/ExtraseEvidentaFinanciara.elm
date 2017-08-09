@@ -4,7 +4,8 @@ import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara))
 import Utils.List as ListUtils
 import Widgets.Table as Table
-import Widgets.Fields exposing (unlabeledDateField, unlabeledMoneyField, unlabeledLargeTextField)
+import Widgets.Fields exposing (unlabeledMoneyField, unlabeledLargeTextField)
+import MyDate
 
 
 type ExtraseEvidentaFinanciara
@@ -34,7 +35,7 @@ tableView extraseEvidentaFinanciara callback =
         { data = data extraseEvidentaFinanciara
         , callback = callback << fromData
         , columns =
-            [ ( "Data", (\r c -> unlabeledDateField r.data (\v -> c { r | data = v })) )
+            [ ( "Data", (\r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v })) )
             , ( "Suma", (\r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v })) )
             , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
             ]

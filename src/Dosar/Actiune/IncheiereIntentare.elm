@@ -3,7 +3,6 @@ module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, newValue, 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
 import RichTextEditor
 import DocumentScanat exposing (DocumentScanat)
-import Widgets.Fields exposing (dateField)
 import MyDate exposing (MyDate)
 
 
@@ -57,7 +56,7 @@ view incheiereIntentare callback =
                 , documentScanat = data.copieIncheiere
                 , callback = (\v -> c { data | copieIncheiere = v })
                 }
-            , dateField "Termen de conciliere:" data.termenConciliere (\v -> c { data | termenConciliere = v })
+            , MyDate.view "Termen de conciliere:" data.termenConciliere (\v -> c { data | termenConciliere = v })
             ]
 
 

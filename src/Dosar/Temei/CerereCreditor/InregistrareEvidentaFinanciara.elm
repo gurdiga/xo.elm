@@ -4,7 +4,7 @@ import Html exposing (Html, tr, td, text)
 import Html.Attributes exposing (style)
 import Money exposing (Money(Money), Currency(MDL))
 import MyDate exposing (MyDate)
-import Widgets.Fields exposing (unlabeledDateField, unlabeledMoneyField, unlabeledLargeTextField)
+import Widgets.Fields exposing (unlabeledMoneyField, unlabeledLargeTextField)
 
 
 type InregistrareEvidentaFinanciara
@@ -39,7 +39,7 @@ view (InregistrareEvidentaFinanciara i) callback =
             style [ ( "border", "1px solid silver" ) ]
     in
         tr []
-            [ td [ tdStyle ] <| unlabeledDateField i.data (\v -> callback (InregistrareEvidentaFinanciara { i | data = v }))
+            [ td [ tdStyle ] <| MyDate.viewUnlabeled i.data (\v -> callback (InregistrareEvidentaFinanciara { i | data = v }))
             , td [ tdStyle ] <| unlabeledMoneyField i.suma (\v -> callback (InregistrareEvidentaFinanciara { i | suma = v }))
             , td [ tdStyle ] <| unlabeledLargeTextField i.note (\v -> callback (InregistrareEvidentaFinanciara { i | note = v }))
             ]

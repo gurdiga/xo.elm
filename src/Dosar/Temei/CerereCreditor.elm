@@ -5,7 +5,6 @@ import Dosar.Persoana as Persoana exposing (Persoana)
 import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
 import RichTextEditor
 import MyDate exposing (MyDate)
-import Widgets.Fields exposing (dateField)
 
 
 type CerereCreditor
@@ -41,7 +40,7 @@ view cerereCreditor callback =
     in
         fieldset []
             [ legend [] [ text "CerereCreditor" ]
-            , dateField "Data depunerii:" data.dataDepunere (\v -> c { data | dataDepunere = v })
+            , MyDate.view "Data depunerii:" data.dataDepunere (\v -> c { data | dataDepunere = v })
             , Persoana.view data.creditor (\v -> c { data | creditor = v })
             , RichTextEditor.view
                 { buttonLabel = "Formează cerere" -- TODO: make it printable

@@ -8,15 +8,11 @@ import Html.Events exposing (onInput)
 fromValuesWithLabels : List ( a, String ) -> a -> (a -> msg) -> Html msg
 fromValuesWithLabels valuesWithLabels defaultValue callback =
     let
-        optionForTuple ( value, label ) =
-            option [ selected (defaultValue == value) ] [ text label ]
-
         options valuesWithLabels defaultValue =
             List.map optionForTuple valuesWithLabels
 
-        maybeValueFromLabel l =
-            List.filter (\( value, label ) -> label == l) valuesWithLabels
-                |> List.head
+        optionForTuple ( value, label ) =
+            option [ selected (defaultValue == value) ] [ text label ]
 
         valueFromLabel label =
             case maybeValueFromLabel label of
@@ -25,6 +21,10 @@ fromValuesWithLabels valuesWithLabels defaultValue callback =
 
                 Just ( value, label ) ->
                     value
+
+        maybeValueFromLabel l =
+            List.filter (\( value, label ) -> label == l) valuesWithLabels
+                |> List.head
     in
         select
             [ onInput (callback << valueFromLabel) ]

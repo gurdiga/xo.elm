@@ -24,11 +24,8 @@ newValue =
 
 
 view : IncheiereRefuz -> (IncheiereRefuz -> Cmd msg -> Sub msg -> msg) -> Html msg
-view incheiereRefuz callback =
+view ((IncheiereRefuz data) as incheiereRefuz) callback =
     let
-        (IncheiereRefuz data) =
-            incheiereRefuz
-
         c data =
             callback (IncheiereRefuz data) Cmd.none Sub.none
     in

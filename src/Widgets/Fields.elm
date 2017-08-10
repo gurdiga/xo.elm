@@ -67,14 +67,10 @@ checkboxField labelText isChecked callback =
 
 moneyField : String -> Money -> (Money -> msg) -> Html msg
 moneyField labelText money callback =
-    let
-        (Money amount currency) =
-            money
-    in
-        label []
-            (text labelText
-                :: unlabeledMoneyField money callback
-            )
+    label []
+        (text labelText
+            :: unlabeledMoneyField money callback
+        )
 
 
 unlabeledMoneyField : Money -> (Money -> msg) -> List (Html msg)

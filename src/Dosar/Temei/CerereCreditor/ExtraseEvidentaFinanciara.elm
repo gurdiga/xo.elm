@@ -2,7 +2,6 @@ module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (ExtraseEvi
 
 import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara))
-import Utils.List as ListUtils
 import Widgets.Table as Table
 import Widgets.Fields exposing (unlabeledMoneyField, unlabeledLargeTextField)
 import MyDate
@@ -19,14 +18,10 @@ newValue =
 
 view : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
 view extraseEvidentaFinanciara callback =
-    let
-        (ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara) =
-            extraseEvidentaFinanciara
-    in
-        fieldset []
-            [ legend [] [ text "ExtraseEvidentaFinanciara" ]
-            , tableView extraseEvidentaFinanciara callback
-            ]
+    fieldset []
+        [ legend [] [ text "ExtraseEvidentaFinanciara" ]
+        , tableView extraseEvidentaFinanciara callback
+        ]
 
 
 tableView : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
@@ -57,11 +52,6 @@ fromData =
 emptyView : Html msg
 emptyView =
     p [] [ text "Nu sunt înregistrări." ]
-
-
-replace : ExtraseEvidentaFinanciara -> Int -> InregistrareEvidentaFinanciara -> ExtraseEvidentaFinanciara
-replace (ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara) index newValue =
-    ExtraseEvidentaFinanciara (ListUtils.replace inregistrariEvidentaFinanciara index newValue)
 
 
 append : ExtraseEvidentaFinanciara -> InregistrareEvidentaFinanciara -> ExtraseEvidentaFinanciara

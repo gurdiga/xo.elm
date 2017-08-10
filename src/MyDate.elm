@@ -39,11 +39,8 @@ view labelText defaultValue callback =
 
 
 viewUnlabeled : MyDate -> (MyDate -> msg) -> List (Html msg)
-viewUnlabeled defaultValue callback =
+viewUnlabeled ((MyDate data) as defaultValue) callback =
     let
-        (MyDate data) =
-            defaultValue
-
         ( inputText, validationMessage ) =
             case format defaultValue of
                 Ok dateString ->

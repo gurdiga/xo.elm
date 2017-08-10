@@ -33,11 +33,8 @@ newValue =
 
 
 view : PreluareDocumentExecutoriuStramutat -> (PreluareDocumentExecutoriuStramutat -> Cmd msg -> Sub msg -> msg) -> Html msg
-view preluareDocumentExecutoriuStramutat callback =
+view ((PreluareDocumentExecutoriuStramutat data) as preluareDocumentExecutoriuStramutat) callback =
     let
-        (PreluareDocumentExecutoriuStramutat data) =
-            preluareDocumentExecutoriuStramutat
-
         c data =
             callback (PreluareDocumentExecutoriuStramutat data) Cmd.none Sub.none
     in

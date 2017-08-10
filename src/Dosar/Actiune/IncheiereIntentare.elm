@@ -29,11 +29,8 @@ newValue =
 
 
 view : IncheiereIntentare -> (IncheiereIntentare -> Cmd msg -> Sub msg -> msg) -> Html msg
-view incheiereIntentare callback =
+view ((IncheiereIntentare data) as incheiereIntentare) callback =
     let
-        (IncheiereIntentare data) =
-            incheiereIntentare
-
         c data =
             callback (IncheiereIntentare data) Cmd.none Sub.none
     in

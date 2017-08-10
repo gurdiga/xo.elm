@@ -30,11 +30,8 @@ newValue =
 
 
 view : CerereCreditor -> (CerereCreditor -> Cmd msg -> Sub msg -> msg) -> Html msg
-view cerereCreditor callback =
+view ((CerereCreditor data) as cerereCreditor) callback =
     let
-        (CerereCreditor data) =
-            cerereCreditor
-
         c data =
             callback (CerereCreditor data) Cmd.none Sub.none
     in

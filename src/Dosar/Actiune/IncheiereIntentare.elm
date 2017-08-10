@@ -56,7 +56,8 @@ view incheiereIntentare callback =
                 , documentScanat = data.copieIncheiere
                 , callback = (\v -> c { data | copieIncheiere = v })
                 }
-            , MyDate.view "Termen de conciliere:" data.termenConciliere (\v -> c { data | termenConciliere = v })
+            , -- LATER: Check that the date is reasonable? In the near future?
+              MyDate.view "Termen de conciliere:" data.termenConciliere (\v -> c { data | termenConciliere = v })
             ]
 
 

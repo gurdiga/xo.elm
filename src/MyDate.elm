@@ -7,6 +7,9 @@ import Date exposing (Date)
 import Regex exposing (regex)
 
 
+-- LATER: add the ability to validate
+
+
 type MyDate
     = MyDate Data
 
@@ -68,6 +71,8 @@ parse dateString =
             , validationMessage = ""
             }
     in
+        -- LATER: How do I model this as a series of transformations? Split,
+        -- then look at each piece, etc. ??
         MyDate
             (if not (Regex.contains (regex "^\\d{2}\\.\\d{2}\\.\\d{4}$") dateString) then
                 { data | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
@@ -154,7 +159,9 @@ validateYearString yearString =
 
 
 
--- TODO: maybe have a DayForMonthAndYearValidationError type instead of String
+-- LATER: consider having a MyDateParsingError union type with
+-- members for each possible error, then let the client code
+-- attach text labels for every one of them.
 
 
 validateDayForMonthAndYear : Int -> Int -> Int -> Result String Int

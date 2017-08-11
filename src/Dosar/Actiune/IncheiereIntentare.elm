@@ -4,7 +4,6 @@ import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
 import RichTextEditor
 import DocumentScanat exposing (DocumentScanat)
 import MyDate exposing (MyDate)
-import Memento exposing (Memento)
 
 
 type IncheiereIntentare
@@ -16,7 +15,6 @@ type alias Data =
     , borderouDeCalcul : String
     , copieIncheiere : DocumentScanat
     , termenConciliere : MyDate
-    , memento : List Memento
     }
 
 
@@ -27,7 +25,6 @@ newValue =
         , borderouDeCalcul = ""
         , copieIncheiere = DocumentScanat.newValue
         , termenConciliere = MyDate.newValue
-        , memento = []
         }
 
 
@@ -58,7 +55,6 @@ view ((IncheiereIntentare data) as incheiereIntentare) callback =
                 }
             , -- LATER: Check that the date is reasonable? In the near future?
               MyDate.view "Termen de conciliere:" data.termenConciliere (\v -> c { data | termenConciliere = v })
-            , Memento.view data.memento (\v -> c { data | memento = v })
             ]
 
 

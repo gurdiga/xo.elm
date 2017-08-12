@@ -8,6 +8,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
 import Html exposing (Html, h1, div, p, text)
 import RichTextEditor
 import DocumentScanat exposing (DocumentScanat)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare exposing (IncheiereIncetare)
 
 
 type PartileAjungLaIntelegere
@@ -19,6 +20,9 @@ type alias Data =
     , copieProcesVerbalConsemnareConditiiExecutare : DocumentScanat
     , procesVerbalConstatareExecutare : String
     , copieProcesVerbalConstatareExecutare : DocumentScanat
+    , incheiereIncetare : IncheiereIncetare
+
+    -- TODO: maybe add borderouDeCalcul?
     }
 
 
@@ -29,6 +33,7 @@ newValue =
         , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat.newValue
         , procesVerbalConstatareExecutare = ""
         , copieProcesVerbalConstatareExecutare = DocumentScanat.newValue
+        , incheiereIncetare = IncheiereIncetare.newValue
         }
 
 
@@ -64,6 +69,7 @@ view partileAjungLaIntelegere callback =
                 , documentScanat = data.copieProcesVerbalConstatareExecutare
                 , callback = (\v -> c { data | copieProcesVerbalConstatareExecutare = v })
                 }
+            , IncheiereIncetare.view data.incheiereIncetare (\v -> callback (PartileAjungLaIntelegere { data | incheiereIncetare = v }))
             ]
 
 

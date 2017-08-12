@@ -2,12 +2,13 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (Re
 
 import Html exposing (Html, fieldset, legend, div, label, text)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileConvinAsupraConditiilorExecutarii as PartileConvinAsupraConditiilorExecutarii exposing (PartileConvinAsupraConditiilorExecutarii)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileConvinAsupraUneiTranzactii as PartileConvinAsupraUneiTranzactii exposing (PartileConvinAsupraUneiTranzactii)
 import Widgets.Select as Select
 
 
 type RezultatIncercareConciliere
     = PartileConvinAsupraConditiilorExecutarii PartileConvinAsupraConditiilorExecutarii
-    | PartileConvinAsupraUneiTranzactii
+    | PartileConvinAsupraUneiTranzactii PartileConvinAsupraUneiTranzactii
     | NeprezentareaUneiParti
     | PartileNuAjungLaIntelegere
 
@@ -39,8 +40,8 @@ fields rezultatIncercareConciliere callback =
         PartileConvinAsupraConditiilorExecutarii v ->
             PartileConvinAsupraConditiilorExecutarii.view v (callback << PartileConvinAsupraConditiilorExecutarii)
 
-        PartileConvinAsupraUneiTranzactii ->
-            div [] [ text <| toString rezultatIncercareConciliere ]
+        PartileConvinAsupraUneiTranzactii v ->
+            PartileConvinAsupraUneiTranzactii.view v (callback << PartileConvinAsupraUneiTranzactii)
 
         NeprezentareaUneiParti ->
             div [] [ text <| toString rezultatIncercareConciliere ]
@@ -54,7 +55,7 @@ valuesWithLabels =
     [ ( PartileConvinAsupraConditiilorExecutarii PartileConvinAsupraConditiilorExecutarii.newValue
       , "părțile convin asupra condițiilor de executare"
       )
-    , ( PartileConvinAsupraUneiTranzactii
+    , ( PartileConvinAsupraUneiTranzactii PartileConvinAsupraUneiTranzactii.newValue
       , "părțile convin asupra unei tranzacții"
       )
     , ( NeprezentareaUneiParti
@@ -72,8 +73,8 @@ defaultValue rezultatIncercareConciliere =
         PartileConvinAsupraConditiilorExecutarii _ ->
             PartileConvinAsupraConditiilorExecutarii PartileConvinAsupraConditiilorExecutarii.newValue
 
-        PartileConvinAsupraUneiTranzactii ->
-            PartileConvinAsupraUneiTranzactii
+        PartileConvinAsupraUneiTranzactii _ ->
+            PartileConvinAsupraUneiTranzactii PartileConvinAsupraUneiTranzactii.newValue
 
         NeprezentareaUneiParti ->
             NeprezentareaUneiParti

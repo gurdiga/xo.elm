@@ -15,16 +15,20 @@ type PartileAjungLaIntelegere
 
 
 type alias Data =
-    { procesVerbalConditiiExecutare : String
-    , copieProcesVerbalConditiiExecutare : DocumentScanat
+    { procesVerbalConsemnareConditiiExecutare : String
+    , copieProcesVerbalConsemnareConditiiExecutare : DocumentScanat
+    , procesVerbalConstatareExecutare : String
+    , copieProcesVerbalConstatareExecutare : DocumentScanat
     }
 
 
 newValue : PartileAjungLaIntelegere
 newValue =
     PartileAjungLaIntelegere
-        { procesVerbalConditiiExecutare = ""
-        , copieProcesVerbalConditiiExecutare = DocumentScanat.newValue
+        { procesVerbalConsemnareConditiiExecutare = ""
+        , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat.newValue
+        , procesVerbalConstatareExecutare = ""
+        , copieProcesVerbalConstatareExecutare = DocumentScanat.newValue
         }
 
 
@@ -39,22 +43,41 @@ view partileAjungLaIntelegere callback =
     in
         div []
             [ RichTextEditor.view
-                { buttonLabel = "Formează proces-verbal conditii executare"
-                , content = template data
+                { buttonLabel = "Formează proces-verbal de consemnare condițiilor de executare"
+                , content = templateProcesVerbalConsemnareConditiiExecutare data
                 , onOpen = callback partileAjungLaIntelegere
-                , onResponse = (\s -> c { data | procesVerbalConditiiExecutare = s })
+                , onResponse = (\v -> c { data | procesVerbalConsemnareConditiiExecutare = v })
                 }
             , DocumentScanat.view
-                { labelText = "Copia semnată a procesului-verbal condiții executare"
-                , documentScanat = data.copieProcesVerbalConditiiExecutare
-                , callback = (\v -> c { data | copieProcesVerbalConditiiExecutare = v })
+                { labelText = "Copia semnată a procesului-verbal de consemnare a condițiilor de executare"
+                , documentScanat = data.copieProcesVerbalConsemnareConditiiExecutare
+                , callback = (\v -> c { data | copieProcesVerbalConsemnareConditiiExecutare = v })
+                }
+            , RichTextEditor.view
+                { buttonLabel = "Formează proces-verbal de constatare a executării"
+                , content = templateProcesVerbalConstatareExecutare data
+                , onOpen = callback partileAjungLaIntelegere
+                , onResponse = (\v -> c { data | procesVerbalConstatareExecutare = v })
+                }
+            , DocumentScanat.view
+                { labelText = "Copia semnată a procesului-verbal de constatare a executării"
+                , documentScanat = data.copieProcesVerbalConstatareExecutare
+                , callback = (\v -> c { data | copieProcesVerbalConstatareExecutare = v })
                 }
             ]
 
 
-template : Data -> List (Html msg)
-template data =
+templateProcesVerbalConsemnareConditiiExecutare : Data -> List (Html msg)
+templateProcesVerbalConsemnareConditiiExecutare data =
     -- TODO: find the real template
-    [ h1 [] [ text "Proces-verbal PartileAjungLaIntelegere" ]
+    [ h1 [] [ text "Proces-verbal de consemnare a condițiilor de executare" ]
+    , p [] [ text <| toString <| data ]
+    ]
+
+
+templateProcesVerbalConstatareExecutare : Data -> List (Html msg)
+templateProcesVerbalConstatareExecutare data =
+    -- TODO: find the real template
+    [ h1 [] [ text "Proces-verbal de constatare a executării" ]
     , p [] [ text <| toString <| data ]
     ]

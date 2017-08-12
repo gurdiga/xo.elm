@@ -60,7 +60,7 @@ view ((IncheiereIntentare data) as incheiereIntentare) callback =
               MyDate.view "Termen de conciliere:" data.termenConciliere (\v -> c { data | termenConciliere = v })
             , RezultatIncercareConciliere.view
                 data.rezultatIncercareConciliere
-                (\v -> c { data | rezultatIncercareConciliere = v })
+                (\v -> callback (IncheiereIntentare { data | rezultatIncercareConciliere = v }))
             ]
 
 

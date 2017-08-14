@@ -3,16 +3,17 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (Re
 import Html exposing (Html, fieldset, legend, label, div, text)
 import Widgets.Select as Select
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere as PartileAjungLaIntelegere exposing (PartileAjungLaIntelegere)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere as PartileNuAjungLaIntelegere exposing (PartileNuAjungLaIntelegere)
 
 
 type RezultatIncercareConciliere
     = PartileAjungLaIntelegere PartileAjungLaIntelegere
-    | PartileNuAjungLaIntelegere
+    | PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere
 
 
 newValue : RezultatIncercareConciliere
 newValue =
-    PartileAjungLaIntelegere PartileAjungLaIntelegere.newValue
+    PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.newValue
 
 
 view : RezultatIncercareConciliere -> (RezultatIncercareConciliere -> Cmd msg -> Sub msg -> msg) -> Html msg
@@ -37,8 +38,8 @@ fields rezultatIncercareConciliere callback =
         PartileAjungLaIntelegere v ->
             PartileAjungLaIntelegere.view v (\v -> callback (PartileAjungLaIntelegere v))
 
-        PartileNuAjungLaIntelegere ->
-            div [] [ text <| toString rezultatIncercareConciliere ]
+        PartileNuAjungLaIntelegere v ->
+            PartileNuAjungLaIntelegere.view v (\v -> callback (PartileNuAjungLaIntelegere v))
 
 
 valuesWithLabels : List ( RezultatIncercareConciliere, String )
@@ -46,7 +47,7 @@ valuesWithLabels =
     [ ( PartileAjungLaIntelegere PartileAjungLaIntelegere.newValue
       , "părțile ajung la înțelegere"
       )
-    , ( PartileNuAjungLaIntelegere
+    , ( PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.newValue
       , "părțile nu ajung la înțelegere"
       )
     ]
@@ -58,5 +59,5 @@ defaultValue rezultatIncercareConciliere =
         PartileAjungLaIntelegere _ ->
             PartileAjungLaIntelegere PartileAjungLaIntelegere.newValue
 
-        PartileNuAjungLaIntelegere ->
-            PartileNuAjungLaIntelegere
+        PartileNuAjungLaIntelegere _ ->
+            PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.newValue

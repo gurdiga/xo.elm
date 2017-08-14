@@ -21,8 +21,6 @@ type alias Data =
     , procesVerbalConstatareExecutare : String
     , copieProcesVerbalConstatareExecutare : DocumentScanat
     , incheiereIncetare : IncheiereIncetare
-
-    -- TODO: maybe add borderouDeCalcul?
     }
 
 

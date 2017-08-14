@@ -1,8 +1,10 @@
 --langdef=Elm
 --langmap=Elm:.elm
+--exclude=elm-stuff
 --regex-Elm=/^ *([[:lower:]][[:alnum:]_]+)[[:blank:]]*:[^:].*->.*/\1/f,function,functions/
 --regex-Elm=/^ *([[:lower:]][[:alnum:]_]+)[[:blank:]]*:[^:][^-]+$/\1/c,constant,constants/
 --regex-Elm=/^port +([[:lower:]][[:alnum:]_]+)[[:blank:]]*:[^:]/\1/p,port,ports/
+--regex-Elm=/^port module +([[:upper:]][[:alnum:]]+)[[:blank:]]/\1/p,port_module,port_modules/
 --regex-Elm=/^type +([[:upper:]][[:alnum:]_]+)/\1/t,type,types/
 --regex-Elm=/^type[[:blank:]]+alias[[:blank:]]+([[:upper:]][[:alnum:]_]+)/\1/a,type-alias,type-aliases/
 --regex-Elm=/^[[:blank:]]*([[:lower:]][[:alnum:]_]+) =$/\1/f,function,functions/

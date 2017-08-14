@@ -16,13 +16,11 @@ clean:
 	rm -rf elm-stuff/build-artifacts/0.18.0/user/project
 
 open:
-	open http://localhost:8000
+	open index.html
 
-start:
-	elm reactor & sleep 0.1
-
-stop:
-	pkill elm-reactor
+.PHONY: tags
+tags:
+	ctags -R
 
 pc: pre-commit
 pre-commit: clean compile test rich-text-editor

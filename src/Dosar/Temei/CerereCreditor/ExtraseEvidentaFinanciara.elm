@@ -52,8 +52,3 @@ fromData =
 emptyView : Html msg
 emptyView =
     p [] [ text "Nu sunt înregistrări." ]
-
-
-append : ExtraseEvidentaFinanciara -> InregistrareEvidentaFinanciara -> ExtraseEvidentaFinanciara
-append (ExtraseEvidentaFinanciara inregistrariEvidentaFinanciara) inregistrareEvidentaFinanciara =
-    ExtraseEvidentaFinanciara (inregistrariEvidentaFinanciara ++ [ inregistrareEvidentaFinanciara ])

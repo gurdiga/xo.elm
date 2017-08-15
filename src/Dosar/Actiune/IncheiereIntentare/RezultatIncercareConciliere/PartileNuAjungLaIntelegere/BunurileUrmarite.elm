@@ -1,9 +1,8 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunurileUrmarite exposing (BunurileUrmarite, newValue, view)
 
 import Html exposing (Html, fieldset, legend, p, text)
-import MyDate
 import Widgets.Table as Table
-import Widgets.Fields exposing (unlabeledMoneyField, unlabeledLargeTextField)
+import Widgets.Fields exposing (unlabeledTextField, unlabeledMoneyField, unlabeledLargeTextField)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunurileUrmarite.BunUrmarit as BunUrmarit
     exposing
         ( BunUrmarit(BunUrmarit)
@@ -33,7 +32,7 @@ tableView bunurileUrmarite callback =
         { data = data bunurileUrmarite
         , callback = callback << fromData
         , columns =
-            [ ( "Denumire", (\r c -> MyDate.viewUnlabeled r.denumire (\v -> c { r | denumire = v })) )
+            [ ( "Denumire", (\r c -> unlabeledTextField r.denumire (\v -> c { r | denumire = v })) )
             , ( "Valoare", (\r c -> unlabeledMoneyField r.valoare (\v -> c { r | valoare = v })) )
             , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
             ]

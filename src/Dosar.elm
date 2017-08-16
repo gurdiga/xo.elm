@@ -6,31 +6,36 @@ import Dosar.Actiune as Actiune exposing (Actiune)
 import Dosar.Pricina as Pricina exposing (Pricina)
 
 
-type alias Dosar =
-    { id : ID
+type Dosar
+    = Dosar Data
+
+
+type alias Data =
+    { id : String
     , temei : Temei
     , actiune : Actiune
     , pricina : Pricina
     }
 
 
-type alias ID =
-    String
-
-
 newValue : Dosar
 newValue =
-    { id = "001"
-    , temei = Temei.newValue
-    , actiune = Actiune.newValue
-    , pricina = Pricina.newValue
-    }
+    Dosar
+        { id = "001"
+        , temei = Temei.newValue
+        , actiune = Actiune.newValue
+        , pricina = Pricina.newValue
+        }
 
 
 view : Dosar -> (Dosar -> Cmd msg -> Sub msg -> msg) -> Html msg
-view dosar callback =
-    div []
-        [ h1 [] [ text "Dosar nou" ]
-        , Temei.view dosar.temei (\v -> callback { dosar | temei = v })
-        , Actiune.view dosar.actiune (\v -> callback { dosar | actiune = v })
-        ]
+view (Dosar data) callback =
+    let
+        c data =
+            callback (Dosar data)
+    in
+        div []
+            [ h1 [] [ text "Dosar nou" ]
+            , Temei.view data.temei (\v -> c { data | temei = v })
+            , Actiune.view data.actiune (\v -> c { data | actiune = v })
+            ]

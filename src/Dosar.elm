@@ -4,6 +4,7 @@ import Html exposing (Html, h1, div, text)
 import Dosar.Temei as Temei exposing (Temei)
 import Dosar.Actiune as Actiune exposing (Actiune)
 import Dosar.Pricina as Pricina exposing (Pricina)
+import Dosar.DocumentExecutoriu as DocumentExecutoriu exposing (DocumentExecutoriu)
 
 
 type Dosar
@@ -13,6 +14,7 @@ type Dosar
 type alias Data =
     { id : String
     , temei : Temei
+    , documentExecutoriu : DocumentExecutoriu
     , actiune : Actiune
     , pricina : Pricina
     }
@@ -23,6 +25,7 @@ newValue =
     Dosar
         { id = "001"
         , temei = Temei.newValue
+        , documentExecutoriu = DocumentExecutoriu.newValue
         , actiune = Actiune.newValue
         , pricina = Pricina.newValue
         }
@@ -37,5 +40,6 @@ view (Dosar data) callback =
         div []
             [ h1 [] [ text "Dosar nou" ]
             , Temei.view data.temei (\v -> c { data | temei = v })
+            , DocumentExecutoriu.view data.documentExecutoriu (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
             , Actiune.view data.actiune (\v -> c { data | actiune = v })
             ]

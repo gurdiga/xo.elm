@@ -3,7 +3,6 @@ module Dosar exposing (Dosar, newValue, view)
 import Html exposing (Html, h1, div, text)
 import Dosar.Temei as Temei exposing (Temei)
 import Dosar.Actiune as Actiune exposing (Actiune)
-import Dosar.Pricina as Pricina exposing (Pricina)
 import Dosar.DocumentExecutoriu as DocumentExecutoriu exposing (DocumentExecutoriu)
 
 
@@ -16,7 +15,6 @@ type alias Data =
     , temei : Temei
     , documentExecutoriu : DocumentExecutoriu
     , actiune : Actiune
-    , pricina : Pricina
     }
 
 
@@ -27,7 +25,6 @@ newValue =
         , temei = Temei.newValue
         , documentExecutoriu = DocumentExecutoriu.newValue
         , actiune = Actiune.newValue
-        , pricina = Pricina.newValue
         }
 
 

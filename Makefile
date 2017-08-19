@@ -20,7 +20,7 @@ open:
 
 .PHONY: tags
 tags:
-	ctags -R
+	rm tags; ctags -R
 
 pc: pre-commit
 pre-commit: clean compile test rich-text-editor

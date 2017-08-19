@@ -1,6 +1,7 @@
 module Dosar.DocumentExecutoriu exposing (DocumentExecutoriu, newValue, view)
 
-import Html exposing (Html, fieldset, legend, br, text)
+import Html exposing (Html, fieldset, legend, div, button, br, text)
+import Html.Events exposing (onClick)
 import MyDate exposing (MyDate)
 import Utils.List as ListUtils
 import Widgets.Fields exposing (largeTextField)
@@ -62,15 +63,11 @@ view documentExecutoriu callback =
 debitoriView : List Persoana -> (List Persoana -> msg) -> Html msg
 debitoriView debitori callback =
     fieldset []
-        ((legend [] [ text "Debitori" ])
-            :: (List.indexedMap
-                    (\i debitor ->
-                        fieldset []
-                            [ legend [] [ text (toString i) ]
-                            , text (toString debitor)
-                            , Persoana.view debitor (\v -> ListUtils.replace debitor i v)
-                            ]
-                    )
-                    debitori
-               )
+        ([ legend [] [ text "Debitori" ] ]
+            ++ List.indexedMap
+                (\i debitor ->
+                    Persoana.view debitor (\v -> callback (ListUtils.replace debitori i v))
+                )
+                debitori
+            ++ [ button [ onClick (callback (debitori ++ [ Persoana.newValue ])) ] [ text "+" ] ]
         )

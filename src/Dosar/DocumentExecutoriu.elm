@@ -21,6 +21,7 @@ type alias Data =
     , dispozitivul : String
     , dataRamineriiDefinitive : MyDate
     , debitori : List Persoana
+    , dataEliberarii : MyDate
     }
 
 
@@ -33,6 +34,7 @@ newValue =
         , dispozitivul = ""
         , dataRamineriiDefinitive = MyDate.newValue
         , debitori = [ Persoana.newValue ]
+        , dataEliberarii = MyDate.newValue
         }
 
 
@@ -57,6 +59,7 @@ view documentExecutoriu callback =
             , br [] []
             , MyDate.view "Data rămînerii definitive:" data.dataRamineriiDefinitive (\v -> c { data | dataRamineriiDefinitive = v })
             , debitoriView data.debitori (\v -> c { data | debitori = v })
+            , MyDate.view "Data eliberării:" data.dataEliberarii (\v -> c { data | dataEliberarii = v })
             ]
 
 

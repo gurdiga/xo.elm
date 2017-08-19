@@ -18,14 +18,23 @@ newValue =
 
 view : Persoana -> (Persoana -> msg) -> Html msg
 view persoana callback =
-    fieldset []
-        [ legend [] [ text "Persoana" ]
-        , label []
-            [ text "Gen persoana:"
-            , Select.fromValuesWithLabels valuesWithLabels persoana callback
+    let
+        defaultValueFor persoana =
+            case persoana of
+                PersoanaFizica _ ->
+                    PersoanaFizica PersoanaFizica.newValue
+
+                PersoanaJuridica _ ->
+                    PersoanaJuridica PersoanaJuridica.newValue
+    in
+        fieldset []
+            [ legend [] [ text "Persoana" ]
+            , label []
+                [ text "Gen persoana:"
+                , Select.fromValuesWithLabels valuesWithLabels (defaultValueFor persoana) callback
+                ]
+            , fields persoana callback
             ]
-        , fields persoana callback
-        ]
 
 
 valuesWithLabels : List ( Persoana, String )

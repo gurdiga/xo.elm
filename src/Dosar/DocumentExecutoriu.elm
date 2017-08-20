@@ -24,6 +24,8 @@ type alias Data =
     , debitori : List Persoana
     , dataEliberarii : MyDate
     , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
+    , mentiuniPrivindPatrundereaFortata : String
+    , note : String
     }
 
 
@@ -38,6 +40,8 @@ newValue =
         , debitori = [ Persoana.newValue ]
         , dataEliberarii = MyDate.newValue
         , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.newValue
+        , mentiuniPrivindPatrundereaFortata = ""
+        , note = ""
         }
 
 
@@ -66,6 +70,11 @@ view documentExecutoriu callback =
             , DocumenteAplicareMasuriAsigurare.view
                 data.documenteAplicareMasuriAsigurare
                 (\v -> c { data | documenteAplicareMasuriAsigurare = v })
+            , largeTextField "Mențiuni privind autorizarea pătrunderii forțate:"
+                data.mentiuniPrivindPatrundereaFortata
+                (\v -> c { data | mentiuniPrivindPatrundereaFortata = v })
+            , br [] []
+            , largeTextField "Note:" data.note (\v -> c { data | note = v })
             ]
 
 

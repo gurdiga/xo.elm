@@ -8,7 +8,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 import Html exposing (Html, h1, div, p, text)
 import RichTextEditor
 import MyDate exposing (MyDate)
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunurileUrmarite as BunurileUrmarite exposing (BunurileUrmarite)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite as BunuriUrmarite exposing (BunuriUrmarite)
 
 
 type PartileNuAjungLaIntelegere
@@ -20,7 +20,7 @@ type alias Data =
     , incheiereContinuare : String
     , borderouDeCalcul : String
     , termenDeExecutare : MyDate
-    , bunurileUrmarite : BunurileUrmarite
+    , bunurileUrmarite : BunuriUrmarite
     }
 
 
@@ -31,7 +31,7 @@ newValue =
         , incheiereContinuare = ""
         , borderouDeCalcul = ""
         , termenDeExecutare = MyDate.newValue
-        , bunurileUrmarite = BunurileUrmarite.newValue
+        , bunurileUrmarite = BunuriUrmarite.newValue
         }
 
 
@@ -64,7 +64,7 @@ view partileNuAjungLaIntelegere callback =
                 , onOpen = callback partileNuAjungLaIntelegere
                 , onResponse = (\v -> c { data | borderouDeCalcul = v })
                 }
-            , BunurileUrmarite.view data.bunurileUrmarite (\v -> c { data | bunurileUrmarite = v })
+            , BunuriUrmarite.view data.bunurileUrmarite (\v -> c { data | bunurileUrmarite = v })
             ]
 
 

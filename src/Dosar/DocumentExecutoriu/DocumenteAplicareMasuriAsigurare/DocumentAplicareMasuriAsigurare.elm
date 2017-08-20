@@ -6,6 +6,8 @@ module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicar
         , data
         )
 
+import DocumentScanat exposing (DocumentScanat)
+
 
 type DocumentAplicareMasuriAsigurare
     = DocumentAplicareMasuriAsigurare Data
@@ -14,12 +16,17 @@ type DocumentAplicareMasuriAsigurare
 type alias Data =
     { denumire : String
     , note : String
+    , copiaScanata : DocumentScanat
     }
 
 
 empty : DocumentAplicareMasuriAsigurare
 empty =
-    DocumentAplicareMasuriAsigurare { denumire = "", note = "" }
+    DocumentAplicareMasuriAsigurare
+        { denumire = ""
+        , note = ""
+        , copiaScanata = DocumentScanat.empty
+        }
 
 
 data : DocumentAplicareMasuriAsigurare -> Data

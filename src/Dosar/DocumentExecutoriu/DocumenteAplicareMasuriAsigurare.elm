@@ -1,6 +1,7 @@
 module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare, empty, view)
 
 import Html exposing (Html, fieldset, legend, text)
+import DocumentScanat
 import Widgets.Table as Table
 import Widgets.Fields exposing (unlabeledTextField, unlabeledLargeTextField)
 import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicareMasuriAsigurare as DocumentAplicareMasuriAsigurare exposing (DocumentAplicareMasuriAsigurare(DocumentAplicareMasuriAsigurare))
@@ -25,6 +26,7 @@ view documenteAplicareMasuriAsigurare callback =
             , columns =
                 [ ( "Denumire", (\r c -> unlabeledTextField r.denumire (\v -> c { r | denumire = v })) )
                 , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
+                , ( "Copia scanată", (\r c -> [ DocumentScanat.unlabeledView r.copiaScanata (\v -> c { r | copiaScanata = v }) ]) )
                 ]
             , emptyView = text ""
             , empty = DocumentAplicareMasuriAsigurare.data DocumentAplicareMasuriAsigurare.empty

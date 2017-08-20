@@ -25,6 +25,7 @@ type alias Data =
     , dataEliberarii : MyDate
     , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
     , mentiuniPrivindPatrundereaFortata : String
+    , locPastrareBunuriSechestrate : String
     , note : String
     }
 
@@ -41,6 +42,7 @@ empty =
         , dataEliberarii = MyDate.empty
         , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.empty
         , mentiuniPrivindPatrundereaFortata = ""
+        , locPastrareBunuriSechestrate = ""
         , note = ""
         }
 
@@ -73,6 +75,8 @@ view documentExecutoriu callback =
             , largeTextField "Mențiuni privind autorizarea pătrunderii forțate:"
                 data.mentiuniPrivindPatrundereaFortata
                 (\v -> c { data | mentiuniPrivindPatrundereaFortata = v })
+            , br [] []
+            , largeTextField "Locul de păstrare a bunurilor sechestrate:" data.note (\v -> c { data | note = v })
             , br [] []
             , largeTextField "Note:" data.note (\v -> c { data | note = v })
             ]

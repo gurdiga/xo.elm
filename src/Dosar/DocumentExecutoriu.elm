@@ -8,6 +8,7 @@ import Widgets.Fields exposing (largeTextField)
 import Dosar.Persoana as Persoana exposing (Persoana)
 import Dosar.DocumentExecutoriu.Pricina as Pricina exposing (Pricina)
 import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata exposing (InstantaDeJudecata)
+import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare)
 
 
 type DocumentExecutoriu
@@ -22,6 +23,7 @@ type alias Data =
     , dataRamineriiDefinitive : MyDate
     , debitori : List Persoana
     , dataEliberarii : MyDate
+    , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
     }
 
 
@@ -35,6 +37,7 @@ newValue =
         , dataRamineriiDefinitive = MyDate.newValue
         , debitori = [ Persoana.newValue ]
         , dataEliberarii = MyDate.newValue
+        , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.newValue
         }
 
 
@@ -60,6 +63,9 @@ view documentExecutoriu callback =
             , MyDate.view "Data rămînerii definitive:" data.dataRamineriiDefinitive (\v -> c { data | dataRamineriiDefinitive = v })
             , debitoriView data.debitori (\v -> c { data | debitori = v })
             , MyDate.view "Data eliberării:" data.dataEliberarii (\v -> c { data | dataEliberarii = v })
+            , DocumenteAplicareMasuriAsigurare.view
+                data.documenteAplicareMasuriAsigurare
+                (\v -> c { data | documenteAplicareMasuriAsigurare = v })
             ]
 
 

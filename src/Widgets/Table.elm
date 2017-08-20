@@ -52,15 +52,21 @@ view { data, callback, columns, emptyView, empty } =
 headRows : Columns record msg -> List (Html msg)
 headRows columns =
     let
+        headers : List HeaderLabel
+        headers =
+            List.map Tuple.first columns
+
         headCell : HeaderLabel -> Html msg
         headCell header =
             th [ cellStyle ] [ text header ]
 
-        headers : List HeaderLabel
-        headers =
-            List.map Tuple.first columns
+        dataColumnNames =
+            List.map headCell headers
+
+        actionColumnNames =
+            [ th [ cellStyle ] [] ]
     in
-        [ tr [] <| List.map headCell headers ]
+        [ tr [] <| dataColumnNames ++ actionColumnNames ]
 
 
 dataRows : List record -> ListCallback record msg -> Columns record msg -> List (Html msg)
@@ -68,7 +74,10 @@ dataRows data listCallback columns =
     let
         dataRow : Int -> record -> Html msg
         dataRow index record =
-            tr [] <| List.map (dataCell record index) renderers
+            tr [] <| (dataCells index record) ++ (actionCells record)
+
+        dataCells index record =
+            List.map (dataCell record index) renderers
 
         dataCell : record -> Int -> CellRenderer record msg -> Html msg
         dataCell record index renderer =
@@ -77,6 +86,12 @@ dataRows data listCallback columns =
         renderers : List (CellRenderer record msg)
         renderers =
             List.map Tuple.second columns
+
+        actionCells record =
+            [ td [] [ button [ onClick (delete record) ] [ text "delete" ] ] ]
+
+        delete record =
+            listCallback (List.filter ((/=) record) data)
     in
         List.indexedMap dataRow data
 

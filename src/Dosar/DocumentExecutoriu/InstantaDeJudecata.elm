@@ -1,4 +1,4 @@
-module Dosar.DocumentExecutoriu.InstantaDeJudecata exposing (InstantaDeJudecata, newValue, view)
+module Dosar.DocumentExecutoriu.InstantaDeJudecata exposing (InstantaDeJudecata, empty, view)
 
 import Html exposing (Html, label, text)
 import Widgets.Select as Select
@@ -27,8 +27,8 @@ type InstantaDeJudecata
     | JudecatoriaChisinau
 
 
-newValue : InstantaDeJudecata
-newValue =
+empty : InstantaDeJudecata
+empty =
     CurteaSupremaDeJustitie
 
 
@@ -36,7 +36,7 @@ view : InstantaDeJudecata -> (InstantaDeJudecata -> msg) -> Html msg
 view instantaDeJudecata callback =
     label []
         [ text "Instanța de judecată:"
-        , Select.fromValuesWithLabels valuesWithLabels newValue callback
+        , Select.fromValuesWithLabels valuesWithLabels empty callback
         ]
 
 

@@ -1,4 +1,4 @@
-module Dosar.Persoana exposing (Persoana, newValue, view)
+module Dosar.Persoana exposing (Persoana, empty, view)
 
 import Html exposing (Html, fieldset, legend, label, text)
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica exposing (PersoanaFizica)
@@ -11,9 +11,9 @@ type Persoana
     | PersoanaJuridica PersoanaJuridica
 
 
-newValue : Persoana
-newValue =
-    PersoanaFizica PersoanaFizica.newValue
+empty : Persoana
+empty =
+    PersoanaFizica PersoanaFizica.empty
 
 
 view : Persoana -> (Persoana -> msg) -> Html msg
@@ -22,10 +22,10 @@ view persoana callback =
         defaultValueFor persoana =
             case persoana of
                 PersoanaFizica _ ->
-                    PersoanaFizica PersoanaFizica.newValue
+                    PersoanaFizica PersoanaFizica.empty
 
                 PersoanaJuridica _ ->
-                    PersoanaJuridica PersoanaJuridica.newValue
+                    PersoanaJuridica PersoanaJuridica.empty
     in
         fieldset []
             [ legend [] [ text "Persoana" ]
@@ -39,8 +39,8 @@ view persoana callback =
 
 valuesWithLabels : List ( Persoana, String )
 valuesWithLabels =
-    [ ( PersoanaFizica PersoanaFizica.newValue, "fizica" )
-    , ( PersoanaJuridica PersoanaJuridica.newValue, "juridica" )
+    [ ( PersoanaFizica PersoanaFizica.empty, "fizica" )
+    , ( PersoanaJuridica PersoanaJuridica.empty, "juridica" )
     ]
 
 

@@ -13,9 +13,9 @@ type Temei
     | PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat
 
 
-newValue : Temei
-newValue =
-    CerereCreditor CerereCreditor.newValue
+empty : Temei
+empty =
+    CerereCreditor CerereCreditor.empty
 
 
 view : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg
@@ -50,13 +50,13 @@ fields temei callback =
 
 valuesWithLabels : List ( Temei, String )
 valuesWithLabels =
-    [ ( CerereCreditor CerereCreditor.newValue
+    [ ( CerereCreditor CerereCreditor.empty
       , "cerere a creditorului"
       )
-    , ( DemersInstanta DemersInstanta.newValue
+    , ( DemersInstanta DemersInstanta.empty
       , "demersul instanţei de judecata"
       )
-    , ( PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.newValue
+    , ( PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.empty
       , "preluarea unui document executoriu stramutat"
       )
     ]
@@ -66,10 +66,10 @@ defaultValue : Temei -> Temei
 defaultValue temei =
     case temei of
         CerereCreditor _ ->
-            CerereCreditor CerereCreditor.newValue
+            CerereCreditor CerereCreditor.empty
 
         DemersInstanta _ ->
-            DemersInstanta DemersInstanta.newValue
+            DemersInstanta DemersInstanta.empty
 
         PreluareDocumentExecutoriuStramutat _ ->
-            PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.newValue
+            PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.empty

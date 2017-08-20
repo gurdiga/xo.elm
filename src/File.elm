@@ -1,4 +1,4 @@
-module File exposing (File, newValue)
+module File exposing (File, empty)
 
 
 type alias File =
@@ -6,6 +6,6 @@ type alias File =
     }
 
 
-newValue : File
-newValue =
+empty : File
+empty =
     { path = "" }

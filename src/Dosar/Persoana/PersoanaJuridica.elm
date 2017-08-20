@@ -1,4 +1,4 @@
-module Dosar.Persoana.PersoanaJuridica exposing (PersoanaJuridica, newValue, view)
+module Dosar.Persoana.PersoanaJuridica exposing (PersoanaJuridica, empty, view)
 
 import Html exposing (Html, ul, li)
 import Widgets.Fields exposing (textField, largeTextField)
@@ -13,8 +13,8 @@ type alias PersoanaJuridica =
     }
 
 
-newValue : PersoanaJuridica
-newValue =
+empty : PersoanaJuridica
+empty =
     { denumire = ""
     , codFiscal = ""
     , dateBancare = ""

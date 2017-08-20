@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara), Data, newValue, data, view)
+module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara), Data, empty, data, view)
 
 import Html exposing (Html, tr, td, text)
 import Html.Attributes exposing (style)
@@ -18,10 +18,10 @@ type alias Data =
     }
 
 
-newValue : InregistrareEvidentaFinanciara
-newValue =
+empty : InregistrareEvidentaFinanciara
+empty =
     InregistrareEvidentaFinanciara
-        { data = MyDate.newValue
+        { data = MyDate.empty
         , suma = Money 0 MDL
         , note = ""
         }

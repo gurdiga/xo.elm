@@ -1,4 +1,4 @@
-module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare, newValue, view)
+module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare, empty, view)
 
 import Html exposing (Html, fieldset, legend, text)
 import Widgets.Table as Table
@@ -10,8 +10,8 @@ type DocumenteAplicareMasuriAsigurare
     = DocumenteAplicareMasuriAsigurare (List DocumentAplicareMasuriAsigurare)
 
 
-newValue : DocumenteAplicareMasuriAsigurare
-newValue =
+empty : DocumenteAplicareMasuriAsigurare
+empty =
     DocumenteAplicareMasuriAsigurare []
 
 
@@ -27,7 +27,7 @@ view documenteAplicareMasuriAsigurare callback =
                 , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
                 ]
             , emptyView = text ""
-            , newValue = DocumentAplicareMasuriAsigurare.data DocumentAplicareMasuriAsigurare.newValue
+            , empty = DocumentAplicareMasuriAsigurare.data DocumentAplicareMasuriAsigurare.empty
             }
         ]
 

@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara, newValue, view)
+module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara, empty, view)
 
 import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara))
@@ -11,8 +11,8 @@ type ExtraseEvidentaFinanciara
     = ExtraseEvidentaFinanciara (List InregistrareEvidentaFinanciara)
 
 
-newValue : ExtraseEvidentaFinanciara
-newValue =
+empty : ExtraseEvidentaFinanciara
+empty =
     ExtraseEvidentaFinanciara []
 
 
@@ -29,7 +29,7 @@ view extraseEvidentaFinanciara callback =
                 , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
                 ]
             , emptyView = emptyView
-            , newValue = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.newValue
+            , empty = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.empty
             }
         ]
 

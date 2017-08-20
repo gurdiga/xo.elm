@@ -11,7 +11,7 @@ type alias Input record msg =
     , callback : ListCallback record msg
     , columns : Columns record msg
     , emptyView : Html msg
-    , newValue : record
+    , empty : record
     }
 
 
@@ -36,7 +36,7 @@ type alias ListCallback record msg =
 
 
 view : Input record msg -> Html msg
-view { data, callback, columns, emptyView, newValue } =
+view { data, callback, columns, emptyView, empty } =
     div []
         [ if List.isEmpty data then
             emptyView
@@ -45,7 +45,7 @@ view { data, callback, columns, emptyView, newValue } =
                 [ thead [] (headRows columns)
                 , tbody [] (dataRows data callback columns)
                 ]
-        , appendView data newValue callback
+        , appendView data empty callback
         ]
 
 
@@ -82,9 +82,9 @@ dataRows data listCallback columns =
 
 
 appendView : List record -> record -> ListCallback record msg -> Html msg
-appendView list newValue callback =
+appendView list empty callback =
     button
-        [ onClick (callback <| list ++ [ newValue ]) ]
+        [ onClick (callback <| list ++ [ empty ]) ]
         [ text "+" ]
 
 

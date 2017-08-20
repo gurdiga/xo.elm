@@ -1,4 +1,4 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (RezultatIncercareConciliere, newValue, view)
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (RezultatIncercareConciliere, empty, view)
 
 import Html exposing (Html, fieldset, legend, label, div, text)
 import Widgets.Select as Select
@@ -11,9 +11,9 @@ type RezultatIncercareConciliere
     | PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere
 
 
-newValue : RezultatIncercareConciliere
-newValue =
-    PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.newValue
+empty : RezultatIncercareConciliere
+empty =
+    PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.empty
 
 
 view : RezultatIncercareConciliere -> (RezultatIncercareConciliere -> Cmd msg -> Sub msg -> msg) -> Html msg
@@ -44,10 +44,10 @@ fields rezultatIncercareConciliere callback =
 
 valuesWithLabels : List ( RezultatIncercareConciliere, String )
 valuesWithLabels =
-    [ ( PartileAjungLaIntelegere PartileAjungLaIntelegere.newValue
+    [ ( PartileAjungLaIntelegere PartileAjungLaIntelegere.empty
       , "părțile ajung la înțelegere"
       )
-    , ( PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.newValue
+    , ( PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.empty
       , "părțile nu ajung la înțelegere"
       )
     ]
@@ -57,7 +57,7 @@ defaultValue : RezultatIncercareConciliere -> RezultatIncercareConciliere
 defaultValue rezultatIncercareConciliere =
     case rezultatIncercareConciliere of
         PartileAjungLaIntelegere _ ->
-            PartileAjungLaIntelegere PartileAjungLaIntelegere.newValue
+            PartileAjungLaIntelegere PartileAjungLaIntelegere.empty
 
         PartileNuAjungLaIntelegere _ ->
-            PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.newValue
+            PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.empty

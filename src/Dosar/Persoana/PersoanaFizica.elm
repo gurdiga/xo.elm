@@ -1,4 +1,4 @@
-module Dosar.Persoana.PersoanaFizica exposing (PersoanaFizica, newValue, view)
+module Dosar.Persoana.PersoanaFizica exposing (PersoanaFizica, empty, view)
 
 import Html exposing (Html, ul, li)
 import MyDate exposing (MyDate)
@@ -16,11 +16,11 @@ type alias PersoanaFizica =
     }
 
 
-newValue : PersoanaFizica
-newValue =
+empty : PersoanaFizica
+empty =
     { nume = ""
     , prenume = ""
-    , dataNasterii = MyDate.newValue
+    , dataNasterii = MyDate.empty
     , cnp = ""
     , adresa = ""
     , note = ""

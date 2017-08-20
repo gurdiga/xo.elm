@@ -1,4 +1,4 @@
-module DocumentScanat exposing (DocumentScanat, newValue, view, unlabeledView)
+module DocumentScanat exposing (DocumentScanat, empty, view, unlabeledView)
 
 import Html exposing (Html, div, label, input, text)
 import Html.Attributes exposing (type_)
@@ -26,10 +26,10 @@ type alias Callback msg =
     DocumentScanat -> msg
 
 
-newValue : DocumentScanat
-newValue =
+empty : DocumentScanat
+empty =
     DocumentScanat
-        { file = File.newValue }
+        { file = File.empty }
 
 
 view : Input msg -> Html msg

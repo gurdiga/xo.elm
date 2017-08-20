@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor exposing (CerereCreditor, newValue, view)
+module Dosar.Temei.CerereCreditor exposing (CerereCreditor, empty, view)
 
 import Html exposing (Html, h1, fieldset, legend, div, ul, li, text)
 import Dosar.Persoana as Persoana exposing (Persoana)
@@ -19,11 +19,11 @@ type alias Data =
     }
 
 
-newValue : CerereCreditor
-newValue =
+empty : CerereCreditor
+empty =
     CerereCreditor
-        { dataDepunere = MyDate.newValue
-        , creditor = Persoana.newValue
+        { dataDepunere = MyDate.empty
+        , creditor = Persoana.empty
         , html = ""
         , documenteContractIpoteca = Nothing
         }

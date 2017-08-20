@@ -2,7 +2,7 @@ module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicar
     exposing
         ( DocumentAplicareMasuriAsigurare(DocumentAplicareMasuriAsigurare)
         , Data
-        , newValue
+        , empty
         , data
         )
 
@@ -17,8 +17,8 @@ type alias Data =
     }
 
 
-newValue : DocumentAplicareMasuriAsigurare
-newValue =
+empty : DocumentAplicareMasuriAsigurare
+empty =
     DocumentAplicareMasuriAsigurare { denumire = "", note = "" }
 
 

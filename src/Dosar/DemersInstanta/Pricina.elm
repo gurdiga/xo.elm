@@ -1,4 +1,4 @@
-module Dosar.DemersInstanta.Pricina exposing (Pricina, newValue, view)
+module Dosar.DemersInstanta.Pricina exposing (Pricina, empty, view)
 
 import Html exposing (Html, div, label, p, text)
 import Widgets.Select as Select
@@ -103,8 +103,8 @@ valuesWithLabels =
     ]
 
 
-newValue : Pricina
-newValue =
+empty : Pricina
+empty =
     ConfiscareBunuri
 
 

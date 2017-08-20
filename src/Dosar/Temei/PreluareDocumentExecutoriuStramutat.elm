@@ -1,4 +1,4 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat, newValue, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat, empty, view)
 
 import Html exposing (Html, h1, fieldset, legend, ul, li, p, button, text)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare exposing (CauzaStramutare)
@@ -21,12 +21,12 @@ type alias Data =
     }
 
 
-newValue : PreluareDocumentExecutoriuStramutat
-newValue =
+empty : PreluareDocumentExecutoriuStramutat
+empty =
     PreluareDocumentExecutoriuStramutat
-        { cauzaStramutare = CauzaStramutare.newValue
-        , copieIncheiereStramutare = DocumentScanat.newValue
-        , acteEfectuatAnterior = ActeEfectuateAnterior.newValue
+        { cauzaStramutare = CauzaStramutare.empty
+        , copieIncheiereStramutare = DocumentScanat.empty
+        , acteEfectuatAnterior = ActeEfectuateAnterior.empty
         , note = ""
         , actPreluare = ""
         }

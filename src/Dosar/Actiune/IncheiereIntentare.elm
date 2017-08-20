@@ -1,4 +1,4 @@
-module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, newValue, view)
+module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, empty, view)
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
 import RichTextEditor
@@ -20,14 +20,14 @@ type alias Data =
     }
 
 
-newValue : IncheiereIntentare
-newValue =
+empty : IncheiereIntentare
+empty =
     IncheiereIntentare
         { html = ""
         , borderouDeCalcul = ""
-        , copieIncheiere = DocumentScanat.newValue
-        , termenConciliere = MyDate.newValue
-        , rezultatIncercareConciliere = RezultatIncercareConciliere.newValue
+        , copieIncheiere = DocumentScanat.empty
+        , termenConciliere = MyDate.empty
+        , rezultatIncercareConciliere = RezultatIncercareConciliere.empty
         }
 
 

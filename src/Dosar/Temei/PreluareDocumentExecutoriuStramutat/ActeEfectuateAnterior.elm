@@ -1,4 +1,4 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (ActeEfectuateAnterior, newValue, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (ActeEfectuateAnterior, empty, view)
 
 import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior exposing (ActEfectuatAnterior(ActEfectuatAnterior))
@@ -15,9 +15,9 @@ type alias Callback msg =
     ActeEfectuateAnterior -> msg
 
 
-newValue : ActeEfectuateAnterior
-newValue =
-    ActeEfectuateAnterior [ ActEfectuatAnterior.newValue ]
+empty : ActeEfectuateAnterior
+empty =
+    ActeEfectuateAnterior [ ActEfectuatAnterior.empty ]
 
 
 view : ActeEfectuateAnterior -> Callback msg -> Html msg
@@ -42,7 +42,7 @@ tableView acteEfectuatAnterior callback =
               )
             ]
         , emptyView = emptyView
-        , newValue = ActEfectuatAnterior.data ActEfectuatAnterior.newValue
+        , empty = ActEfectuatAnterior.data ActEfectuatAnterior.empty
         }
 
 

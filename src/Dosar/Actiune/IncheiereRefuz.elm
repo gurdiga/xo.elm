@@ -1,4 +1,4 @@
-module Dosar.Actiune.IncheiereRefuz exposing (IncheiereRefuz, newValue, view)
+module Dosar.Actiune.IncheiereRefuz exposing (IncheiereRefuz, empty, view)
 
 import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz exposing (CauzaRefuz)
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
@@ -15,10 +15,10 @@ type alias Data =
     }
 
 
-newValue : IncheiereRefuz
-newValue =
+empty : IncheiereRefuz
+empty =
     IncheiereRefuz
-        { cauza = CauzaRefuz.newValue
+        { cauza = CauzaRefuz.empty
         , html = ""
         }
 

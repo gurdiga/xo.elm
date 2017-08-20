@@ -2,7 +2,7 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior
     exposing
         ( ActEfectuatAnterior(ActEfectuatAnterior)
         , Data
-        , newValue
+        , empty
         , data
         )
 
@@ -19,10 +19,10 @@ type alias Data =
     }
 
 
-newValue : ActEfectuatAnterior
-newValue =
+empty : ActEfectuatAnterior
+empty =
     ActEfectuatAnterior
-        { copie = DocumentScanat.newValue
+        { copie = DocumentScanat.empty
         , note = ""
         }
 

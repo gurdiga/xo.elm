@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere
     exposing
         ( PartileNuAjungLaIntelegere
-        , newValue
+        , empty
         , view
         )
 
@@ -24,14 +24,14 @@ type alias Data =
     }
 
 
-newValue : PartileNuAjungLaIntelegere
-newValue =
+empty : PartileNuAjungLaIntelegere
+empty =
     PartileNuAjungLaIntelegere
         { procesVerbalContinuare = ""
         , incheiereContinuare = ""
         , borderouDeCalcul = ""
-        , termenDeExecutare = MyDate.newValue
-        , bunurileUrmarite = BunuriUrmarite.newValue
+        , termenDeExecutare = MyDate.empty
+        , bunurileUrmarite = BunuriUrmarite.empty
         }
 
 

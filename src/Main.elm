@@ -25,7 +25,7 @@ type alias Model =
 initialModel : Model
 initialModel =
     { dosare = []
-    , dosarDeschis = Just Dosar.newValue
+    , dosarDeschis = Just Dosar.empty
     , subscription = Sub.none
     }
 

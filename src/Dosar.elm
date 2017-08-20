@@ -1,4 +1,4 @@
-module Dosar exposing (Dosar, newValue, view)
+module Dosar exposing (Dosar, empty, view)
 
 import Html exposing (Html, h1, div, text)
 import Dosar.Temei as Temei exposing (Temei)
@@ -18,13 +18,13 @@ type alias Data =
     }
 
 
-newValue : Dosar
-newValue =
+empty : Dosar
+empty =
     Dosar
         { id = "001"
-        , temei = Temei.newValue
-        , documentExecutoriu = DocumentExecutoriu.newValue
-        , actiune = Actiune.newValue
+        , temei = Temei.empty
+        , documentExecutoriu = DocumentExecutoriu.empty
+        , actiune = Actiune.empty
         }
 
 

@@ -1,4 +1,4 @@
-module Dosar.Actiune exposing (Actiune, newValue, view)
+module Dosar.Actiune exposing (Actiune, empty, view)
 
 import Dosar.Actiune.IncheiereIntentare as IncheiereIntentare exposing (IncheiereIntentare)
 import Dosar.Actiune.IncheiereRefuz as IncheiereRefuz exposing (IncheiereRefuz)
@@ -13,14 +13,14 @@ type Actiune
 
 valuesWithLabels : List ( Actiune, String )
 valuesWithLabels =
-    [ ( IncheiereIntentare IncheiereIntentare.newValue, "intentare" )
-    , ( IncheiereRefuz IncheiereRefuz.newValue, "refuz" )
+    [ ( IncheiereIntentare IncheiereIntentare.empty, "intentare" )
+    , ( IncheiereRefuz IncheiereRefuz.empty, "refuz" )
     ]
 
 
-newValue : Actiune
-newValue =
-    IncheiereIntentare IncheiereIntentare.newValue
+empty : Actiune
+empty =
+    IncheiereIntentare IncheiereIntentare.empty
 
 
 type alias Callback msg =
@@ -39,7 +39,7 @@ dropdown : Actiune -> Callback msg -> Html msg
 dropdown actiune callback =
     label []
         [ text "Actiune:"
-        , Select.fromValuesWithLabels valuesWithLabels newValue (\v -> callback v Cmd.none Sub.none)
+        , Select.fromValuesWithLabels valuesWithLabels empty (\v -> callback v Cmd.none Sub.none)
         ]
 
 

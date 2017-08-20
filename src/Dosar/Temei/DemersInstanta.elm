@@ -1,4 +1,4 @@
-module Dosar.Temei.DemersInstanta exposing (DemersInstanta, newValue, view)
+module Dosar.Temei.DemersInstanta exposing (DemersInstanta, empty, view)
 
 import Html exposing (Html, fieldset, legend, ul, li, text)
 import Dosar.DemersInstanta.Pricina as Pricina exposing (Pricina)
@@ -11,10 +11,10 @@ type alias DemersInstanta =
     }
 
 
-newValue : DemersInstanta
-newValue =
-    { pricina = Pricina.newValue
-    , copia = DocumentScanat.newValue
+empty : DemersInstanta
+empty =
+    { pricina = Pricina.empty
+    , copia = DocumentScanat.empty
     }
 
 

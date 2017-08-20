@@ -1,4 +1,4 @@
-module Dosar.DocumentExecutoriu.Pricina exposing (Pricina, newValue, view)
+module Dosar.DocumentExecutoriu.Pricina exposing (Pricina, empty, view)
 
 import Html exposing (Html, label, text)
 import Widgets.Select as Select
@@ -88,8 +88,8 @@ valuesWithLabels =
     ]
 
 
-newValue : Pricina
-newValue =
+empty : Pricina
+empty =
     PensieIntretinere
 
 
@@ -97,5 +97,5 @@ view : Pricina -> (Pricina -> msg) -> Html msg
 view pricina callback =
     label []
         [ text "Pricina:"
-        , Select.fromValuesWithLabels valuesWithLabels newValue callback
+        , Select.fromValuesWithLabels valuesWithLabels empty callback
         ]

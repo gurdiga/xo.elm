@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare
     exposing
         ( IncheiereIncetare
-        , newValue
+        , empty
         , view
         )
 
@@ -20,11 +20,11 @@ type alias Data =
     }
 
 
-newValue : IncheiereIncetare
-newValue =
+empty : IncheiereIncetare
+empty =
     IncheiereIncetare
         { html = ""
-        , copie = DocumentScanat.newValue
+        , copie = DocumentScanat.empty
         }
 
 

@@ -1,4 +1,4 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare exposing (CauzaStramutare, newValue, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare exposing (CauzaStramutare, empty, view)
 
 import Html exposing (Html, label, text)
 import Widgets.Select as Select
@@ -22,8 +22,8 @@ type
       CerereaCreditorului
 
 
-newValue : CauzaStramutare
-newValue =
+empty : CauzaStramutare
+empty =
     IntrerupereCompetenta
 
 
@@ -39,5 +39,5 @@ view : CauzaStramutare -> (CauzaStramutare -> msg) -> Html msg
 view cauzaStramutare callback =
     label []
         [ text "Cauza strămutării:"
-        , Select.fromValuesWithLabels valuesWithLabels newValue callback
+        , Select.fromValuesWithLabels valuesWithLabels empty callback
         ]

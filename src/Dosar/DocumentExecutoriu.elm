@@ -1,4 +1,4 @@
-module Dosar.DocumentExecutoriu exposing (DocumentExecutoriu, newValue, view)
+module Dosar.DocumentExecutoriu exposing (DocumentExecutoriu, empty, view)
 
 import Html exposing (Html, fieldset, legend, div, button, br, text)
 import Html.Events exposing (onClick)
@@ -29,17 +29,17 @@ type alias Data =
     }
 
 
-newValue : DocumentExecutoriu
-newValue =
+empty : DocumentExecutoriu
+empty =
     DocumentExecutoriu
-        { instantaEmitatoare = InstantaDeJudecata.newValue
-        , pricina = Pricina.newValue
-        , dataPronuntareHotarire = MyDate.newValue
+        { instantaEmitatoare = InstantaDeJudecata.empty
+        , pricina = Pricina.empty
+        , dataPronuntareHotarire = MyDate.empty
         , dispozitivul = ""
-        , dataRamineriiDefinitive = MyDate.newValue
-        , debitori = [ Persoana.newValue ]
-        , dataEliberarii = MyDate.newValue
-        , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.newValue
+        , dataRamineriiDefinitive = MyDate.empty
+        , debitori = [ Persoana.empty ]
+        , dataEliberarii = MyDate.empty
+        , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.empty
         , mentiuniPrivindPatrundereaFortata = ""
         , note = ""
         }
@@ -87,5 +87,5 @@ debitoriView debitori callback =
                     Persoana.view debitor (\v -> callback (ListUtils.replace debitori i v))
                 )
                 debitori
-            ++ [ button [ onClick (callback (debitori ++ [ Persoana.newValue ])) ] [ text "+" ] ]
+            ++ [ button [ onClick (callback (debitori ++ [ Persoana.empty ])) ] [ text "+" ] ]
         )

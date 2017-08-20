@@ -2,7 +2,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
     exposing
         ( BunUrmarit(BunUrmarit)
         , Data
-        , newValue
+        , empty
         , data
         )
 
@@ -20,8 +20,8 @@ type alias Data =
     }
 
 
-newValue : BunUrmarit
-newValue =
+empty : BunUrmarit
+empty =
     BunUrmarit
         { denumire = ""
         , valoare = Money 0 MDL

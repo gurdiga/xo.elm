@@ -1,4 +1,4 @@
-module Dosar.Actiune.IncheiereRefuz.CauzaRefuz exposing (CauzaRefuz, newValue, view)
+module Dosar.Actiune.IncheiereRefuz.CauzaRefuz exposing (CauzaRefuz, empty, view)
 
 import Html exposing (Html, div, label, text)
 import Widgets.Select as Select
@@ -46,8 +46,8 @@ valuesWithLabels =
     ]
 
 
-newValue : CauzaRefuz
-newValue =
+empty : CauzaRefuz
+empty =
     NecorespondentaCompetenta
 
 

@@ -1,4 +1,4 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite exposing (BunuriUrmarite, newValue, view)
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite exposing (BunuriUrmarite, empty, view)
 
 import Html exposing (Html, fieldset, legend, p, text)
 import Widgets.Table as Table
@@ -13,8 +13,8 @@ type BunuriUrmarite
     = BunuriUrmarite (List BunUrmarit)
 
 
-newValue : BunuriUrmarite
-newValue =
+empty : BunuriUrmarite
+empty =
     BunuriUrmarite []
 
 
@@ -37,7 +37,7 @@ tableView bunurileUrmarite callback =
             , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
             ]
         , emptyView = emptyView
-        , newValue = BunUrmarit.data BunUrmarit.newValue
+        , empty = BunUrmarit.data BunUrmarit.empty
         }
 
 

@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios exposing (DeclaratieContractNonLitigios, newValue, view)
+module Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios exposing (DeclaratieContractNonLitigios, empty, view)
 
 import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (ContractIpoteca)
@@ -8,8 +8,8 @@ type DeclaratieContractNonLitigios
     = DeclaratieContractNonLitigios ContractIpoteca
 
 
-newValue : ContractIpoteca -> DeclaratieContractNonLitigios
-newValue contractIpoteca =
+empty : ContractIpoteca -> DeclaratieContractNonLitigios
+empty contractIpoteca =
     DeclaratieContractNonLitigios contractIpoteca
 
 

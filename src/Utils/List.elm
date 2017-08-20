@@ -2,11 +2,11 @@ module Utils.List exposing (replace)
 
 
 replace : List a -> Int -> a -> List a
-replace list index newValue =
+replace list index empty =
     let
         mapper i v =
             if i == index then
-                newValue
+                empty
             else
                 v
     in

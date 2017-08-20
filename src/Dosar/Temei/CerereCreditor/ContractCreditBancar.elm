@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (ContractCreditBancar, newValue, view)
+module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (ContractCreditBancar, empty, view)
 
 import Html exposing (Html, fieldset, legend, ul, li, text)
 import DocumentScanat exposing (DocumentScanat)
@@ -11,9 +11,9 @@ type alias ContractCreditBancar =
     }
 
 
-newValue : ContractCreditBancar
-newValue =
-    { copia = DocumentScanat.newValue
+empty : ContractCreditBancar
+empty =
+    { copia = DocumentScanat.empty
     , note = ""
     }
 

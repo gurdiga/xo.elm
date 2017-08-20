@@ -1,4 +1,4 @@
-module MyDate exposing (MyDate(MyDate), newValue, view, viewUnlabeled, parse, format)
+module MyDate exposing (MyDate(MyDate), empty, view, viewUnlabeled, parse, format)
 
 import Html exposing (Html, label, input, text)
 import Html.Attributes exposing (value)
@@ -21,8 +21,8 @@ type alias Data =
     }
 
 
-newValue : MyDate
-newValue =
+empty : MyDate
+empty =
     MyDate
         { string = ""
         , date = Nothing

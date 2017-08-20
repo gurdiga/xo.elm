@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor.ContractIpoteca exposing (ContractIpoteca, newValue, view)
+module Dosar.Temei.CerereCreditor.ContractIpoteca exposing (ContractIpoteca, empty, view)
 
 import Html exposing (Html, fieldset, ul, li, legend, text)
 import Widgets.Fields exposing (textField, largeTextField, moneyField)
@@ -14,8 +14,8 @@ type alias ContractIpoteca =
     }
 
 
-newValue : ContractIpoteca
-newValue =
+empty : ContractIpoteca
+empty =
     { obiect = ""
     , valoareBunDePiata = Money 0 MDL
     , valoareBunDeInlocuire = Money 0 MDL

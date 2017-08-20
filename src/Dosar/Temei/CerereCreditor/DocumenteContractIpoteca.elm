@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor.DocumenteContractIpoteca exposing (DocumenteContractIpoteca, newValue, view)
+module Dosar.Temei.CerereCreditor.DocumenteContractIpoteca exposing (DocumenteContractIpoteca, empty, view)
 
 import Html exposing (Html, fieldset, legend, div, ul, li, text)
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (ContractIpoteca)
@@ -20,14 +20,14 @@ type DocumenteContractIpoteca
         }
 
 
-newValue : ContractIpoteca -> DocumenteContractIpoteca
-newValue contractIpoteca =
+empty : ContractIpoteca -> DocumenteContractIpoteca
+empty contractIpoteca =
     DocumenteContractIpoteca contractIpoteca
-        { contractCreditBancar = ContractCreditBancar.newValue
-        , extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.newValue
-        , notificare = DocumentScanat.newValue
-        , preaviz = DocumentScanat.newValue
-        , declaratieContractNonLitigios = DeclaratieContractNonLitigios.newValue contractIpoteca
+        { contractCreditBancar = ContractCreditBancar.empty
+        , extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.empty
+        , notificare = DocumentScanat.empty
+        , preaviz = DocumentScanat.empty
+        , declaratieContractNonLitigios = DeclaratieContractNonLitigios.empty contractIpoteca
         }
 
 
@@ -89,7 +89,7 @@ boolToMaybe : Bool -> Maybe DocumenteContractIpoteca
 boolToMaybe v =
     case v of
         True ->
-            Just (newValue ContractIpoteca.newValue)
+            Just (empty ContractIpoteca.empty)
 
         False ->
             Nothing

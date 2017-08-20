@@ -20,23 +20,18 @@ view : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html m
 view extraseEvidentaFinanciara callback =
     fieldset []
         [ legend [] [ text "ExtraseEvidentaFinanciara" ]
-        , tableView extraseEvidentaFinanciara callback
+        , Table.view
+            { data = data extraseEvidentaFinanciara
+            , callback = callback << fromData
+            , columns =
+                [ ( "Data", (\r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v })) )
+                , ( "Suma", (\r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v })) )
+                , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
+                ]
+            , emptyView = emptyView
+            , newValue = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.newValue
+            }
         ]
-
-
-tableView : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
-tableView extraseEvidentaFinanciara callback =
-    Table.view
-        { data = data extraseEvidentaFinanciara
-        , callback = callback << fromData
-        , columns =
-            [ ( "Data", (\r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v })) )
-            , ( "Suma", (\r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v })) )
-            , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
-            ]
-        , emptyView = emptyView
-        , newValue = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.newValue
-        }
 
 
 data : ExtraseEvidentaFinanciara -> List InregistrareEvidentaFinanciara.Data

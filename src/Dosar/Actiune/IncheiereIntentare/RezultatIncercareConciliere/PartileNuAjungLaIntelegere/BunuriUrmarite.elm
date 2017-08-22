@@ -36,7 +36,7 @@ tableView bunurileUrmarite callback =
             , ( "Valoare", (\r c -> unlabeledMoneyField r.valoare (\v -> c { r | valoare = v })) )
             , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
             ]
-        , emptyView = emptyView
+        , emptyView = text ""
         , empty = BunUrmarit.data BunUrmarit.empty
         }
 
@@ -49,8 +49,3 @@ data (BunuriUrmarite list) =
 fromData : List BunUrmarit.Data -> BunuriUrmarite
 fromData =
     BunuriUrmarite << List.map BunUrmarit
-
-
-emptyView : Html msg
-emptyView =
-    p [] [ text "Nu sunt bunuri înregistrate." ]

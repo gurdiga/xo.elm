@@ -17,7 +17,7 @@ type alias Callback msg =
 
 empty : ActeEfectuateAnterior
 empty =
-    ActeEfectuateAnterior [ ActEfectuatAnterior.empty ]
+    ActeEfectuateAnterior []
 
 
 view : ActeEfectuateAnterior -> Callback msg -> Html msg
@@ -41,7 +41,7 @@ tableView acteEfectuatAnterior callback =
               , (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }))
               )
             ]
-        , emptyView = emptyView
+        , emptyView = text ""
         , empty = ActEfectuatAnterior.data ActEfectuatAnterior.empty
         }
 
@@ -54,8 +54,3 @@ data (ActeEfectuateAnterior list) =
 fromData : List ActEfectuatAnterior.Data -> ActeEfectuateAnterior
 fromData =
     ActeEfectuateAnterior << List.map ActEfectuatAnterior
-
-
-emptyView : Html msg
-emptyView =
-    p [] [ text "Nu sunt acte efectuate anterior." ]

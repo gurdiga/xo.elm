@@ -2,7 +2,7 @@ module Dosar.Temei.DemersInstanta exposing (DemersInstanta, empty, view)
 
 import Html exposing (Html, fieldset, legend, ul, li, text)
 import Dosar.DemersInstanta.Pricina as Pricina exposing (Pricina)
-import DocumentScanat exposing (DocumentScanat)
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 
 
 type alias DemersInstanta =

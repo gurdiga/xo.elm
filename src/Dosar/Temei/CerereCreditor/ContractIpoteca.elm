@@ -2,7 +2,7 @@ module Dosar.Temei.CerereCreditor.ContractIpoteca exposing (ContractIpoteca, emp
 
 import Html exposing (Html, fieldset, ul, li, legend, text)
 import Widgets.Fields exposing (textField, largeTextField, moneyField)
-import Money exposing (Money(..), Currency(..))
+import Utils.Money as Money exposing (Money(..), Currency(..))
 
 
 type alias ContractIpoteca =

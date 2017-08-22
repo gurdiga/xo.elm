@@ -5,7 +5,7 @@ import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (C
 import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar exposing (ContractCreditBancar)
 import Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara as ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara)
 import Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios as DeclaratieContractNonLitigios exposing (DeclaratieContractNonLitigios)
-import DocumentScanat exposing (DocumentScanat)
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 import Widgets.Fields exposing (checkboxField)
 
 

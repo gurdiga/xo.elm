@@ -1,4 +1,4 @@
-module Money exposing (Money(..), Currency(..), currenciesWithLabels)
+module Utils.Money exposing (Money(..), Currency(..), currenciesWithLabels)
 
 
 type alias Amount =

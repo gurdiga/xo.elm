@@ -1,4 +1,4 @@
-module File exposing (File, empty)
+module Utils.File exposing (File, empty)
 
 
 type alias File =

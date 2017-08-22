@@ -4,7 +4,7 @@ import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior exposing (ActEfectuatAnterior(ActEfectuatAnterior))
 import Widgets.Table as Table
 import Widgets.Fields exposing (unlabeledLargeTextField)
-import DocumentScanat
+import Utils.DocumentScanat as DocumentScanat
 
 
 type ActeEfectuateAnterior

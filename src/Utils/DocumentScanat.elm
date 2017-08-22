@@ -1,10 +1,10 @@
-module DocumentScanat exposing (DocumentScanat, empty, view, unlabeledView)
+module Utils.DocumentScanat exposing (DocumentScanat, empty, view, unlabeledView)
 
 import Html exposing (Html, div, label, input, text)
 import Html.Attributes exposing (type_)
 import Html.Events exposing (on)
 import Json.Decode as Json
-import File exposing (File)
+import Utils.File as File exposing (File)
 
 
 type DocumentScanat

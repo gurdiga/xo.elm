@@ -1,4 +1,4 @@
-module MyDate exposing (MyDate(MyDate), empty, view, viewUnlabeled, parse, format)
+module Utils.MyDate exposing (MyDate(MyDate), empty, view, viewUnlabeled, parse, format)
 
 import Html exposing (Html, label, input, text)
 import Html.Attributes exposing (value)

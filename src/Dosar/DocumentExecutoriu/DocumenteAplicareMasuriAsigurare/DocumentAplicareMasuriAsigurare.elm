@@ -6,7 +6,7 @@ module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicar
         , data
         )
 
-import DocumentScanat exposing (DocumentScanat)
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 
 
 type DocumentAplicareMasuriAsigurare

@@ -6,7 +6,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , data
         )
 
-import Money exposing (Money(Money), Currency(MDL))
+import Utils.Money as Money exposing (Money(Money), Currency(MDL))
 
 
 type BunUrmarit

@@ -1,4 +1,4 @@
-port module RichTextEditor exposing (view)
+port module Utils.RichTextEditor exposing (view)
 
 -- This widget assumes that there will be at most one instance of RTE open at
 -- any given time, and it will be closed before openeing another one.

@@ -1,9 +1,9 @@
 module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, empty, view)
 
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
-import RichTextEditor
-import DocumentScanat exposing (DocumentScanat)
-import MyDate exposing (MyDate)
+import Utils.RichTextEditor as RichTextEditor
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
+import Utils.MyDate as MyDate exposing (MyDate)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere as RezultatIncercareConciliere exposing (RezultatIncercareConciliere)
 
 

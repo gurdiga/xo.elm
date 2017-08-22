@@ -6,7 +6,7 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior
         , data
         )
 
-import DocumentScanat exposing (DocumentScanat)
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 
 
 type ActEfectuatAnterior

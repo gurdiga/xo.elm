@@ -4,7 +4,7 @@ import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara))
 import Widgets.Table as Table
 import Widgets.Fields exposing (unlabeledMoneyField, unlabeledLargeTextField)
-import MyDate
+import Utils.MyDate as MyDate
 
 
 type ExtraseEvidentaFinanciara

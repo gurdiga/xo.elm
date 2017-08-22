@@ -3,9 +3,9 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (PreluareDocumen
 import Html exposing (Html, h1, fieldset, legend, ul, li, p, button, text)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare exposing (CauzaStramutare)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior exposing (ActeEfectuateAnterior)
-import DocumentScanat exposing (DocumentScanat)
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 import Widgets.Fields exposing (largeTextField)
-import RichTextEditor
+import Utils.RichTextEditor as RichTextEditor
 
 
 type PreluareDocumentExecutoriuStramutat

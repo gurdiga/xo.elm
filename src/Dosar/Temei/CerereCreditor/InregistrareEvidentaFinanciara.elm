@@ -2,8 +2,8 @@ module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Inreg
 
 import Html exposing (Html, tr, td, text)
 import Html.Attributes exposing (style)
-import Money exposing (Money(Money), Currency(MDL))
-import MyDate exposing (MyDate)
+import Utils.Money as Money exposing (Money(Money), Currency(MDL))
+import Utils.MyDate as MyDate exposing (MyDate)
 import Widgets.Fields exposing (unlabeledMoneyField, unlabeledLargeTextField)
 
 

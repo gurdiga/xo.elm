@@ -6,8 +6,8 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
         )
 
 import Html exposing (Html, h1, fieldset, legend, p, text)
-import RichTextEditor
-import DocumentScanat exposing (DocumentScanat)
+import Utils.RichTextEditor as RichTextEditor
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 
 
 type IncheiereIncetare

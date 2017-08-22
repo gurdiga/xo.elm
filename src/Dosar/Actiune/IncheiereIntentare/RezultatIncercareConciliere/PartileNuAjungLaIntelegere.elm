@@ -6,8 +6,8 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         )
 
 import Html exposing (Html, h1, div, p, text)
-import RichTextEditor
-import MyDate exposing (MyDate)
+import Utils.RichTextEditor as RichTextEditor
+import Utils.MyDate as MyDate exposing (MyDate)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite as BunuriUrmarite exposing (BunuriUrmarite)
 
 

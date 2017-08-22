@@ -2,7 +2,7 @@ module Dosar.Actiune.IncheiereRefuz exposing (IncheiereRefuz, empty, view)
 
 import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz exposing (CauzaRefuz)
 import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
-import RichTextEditor
+import Utils.RichTextEditor as RichTextEditor
 
 
 type IncheiereRefuz

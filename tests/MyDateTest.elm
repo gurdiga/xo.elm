@@ -2,7 +2,7 @@ module MyDateTest exposing (..)
 
 import Test exposing (..)
 import Expect
-import MyDate exposing (MyDate(MyDate))
+import Utils.MyDate as MyDate exposing (MyDate(MyDate))
 import Date exposing (Date)
 
 

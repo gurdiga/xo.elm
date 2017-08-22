@@ -1,7 +1,7 @@
 module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (ContractCreditBancar, empty, view)
 
 import Html exposing (Html, fieldset, legend, ul, li, text)
-import DocumentScanat exposing (DocumentScanat)
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 import Widgets.Fields exposing (largeTextField)
 
 

@@ -1,9 +1,9 @@
 module Dosar.Persoana.PersoanaFizica exposing (PersoanaFizica, empty, view)
 
 import Html exposing (Html, ul, li)
-import MyDate exposing (MyDate)
+import Utils.MyDate as MyDate exposing (MyDate)
 import Widgets.Fields exposing (textField, largeTextField)
-import MyDate
+import Utils.MyDate as MyDate
 
 
 type alias PersoanaFizica =

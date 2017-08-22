@@ -12,7 +12,7 @@ module Widgets.Fields
 import Html exposing (Html, label, input, textarea, text)
 import Html.Attributes exposing (value, checked, type_)
 import Html.Events exposing (onInput, onCheck)
-import Money exposing (Money(..))
+import Utils.Money as Money exposing (Money(..))
 import Widgets.Select as Select
 
 

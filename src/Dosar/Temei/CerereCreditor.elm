@@ -3,8 +3,8 @@ module Dosar.Temei.CerereCreditor exposing (CerereCreditor, empty, view)
 import Html exposing (Html, h1, fieldset, legend, div, ul, li, text)
 import Dosar.Persoana as Persoana exposing (Persoana)
 import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
-import RichTextEditor
-import MyDate exposing (MyDate)
+import Utils.RichTextEditor as RichTextEditor
+import Utils.MyDate as MyDate exposing (MyDate)
 
 
 type CerereCreditor

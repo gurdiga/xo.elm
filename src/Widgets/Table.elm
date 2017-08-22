@@ -7,7 +7,7 @@ import Utils.List as ListUtils
 
 
 type alias Input record msg =
-    { data : List record
+    { recordList : List record
     , callback : ListCallback record msg
     , columns : Columns record msg
     , emptyView : Html msg
@@ -16,14 +16,14 @@ type alias Input record msg =
 
 
 type alias Columns record msg =
-    List ( HeaderLabel, CellRenderer record msg )
+    List ( HeaderLabel, DataCellRenderer record msg )
 
 
 type alias HeaderLabel =
     String
 
 
-type alias CellRenderer record msg =
+type alias DataCellRenderer record msg =
     record -> RecordCallback record msg -> List (Html msg)
 
 
@@ -36,64 +36,68 @@ type alias ListCallback record msg =
 
 
 view : Input record msg -> Html msg
-view { data, callback, columns, emptyView, empty } =
+view { recordList, callback, columns, emptyView, empty } =
     div []
-        [ if List.isEmpty data then
+        [ if List.isEmpty recordList then
             emptyView
           else
             table [ tableStyle ]
                 [ thead [] (headRows columns)
-                , tbody [] (dataRows data callback columns)
+                , tbody [] (dataRows recordList callback columns)
                 ]
-        , appendView data empty callback
+        , appendView recordList empty callback
         ]
 
 
 headRows : Columns record msg -> List (Html msg)
 headRows columns =
     let
-        headers : List HeaderLabel
-        headers =
+        headerLabels : List HeaderLabel
+        headerLabels =
             List.map Tuple.first columns
 
         headCell : HeaderLabel -> Html msg
-        headCell header =
-            th [ cellStyle ] [ text header ]
+        headCell headerLabel =
+            th [ cellStyle ] [ text headerLabel ]
 
-        dataColumnNames =
-            List.map headCell headers
+        dataHeaderCells =
+            List.map headCell headerLabels
 
-        actionColumnNames =
+        actionColumnCells =
             [ th [ cellStyle ] [] ]
     in
-        [ tr [] <| dataColumnNames ++ actionColumnNames ]
+        [ tr [] (dataHeaderCells ++ actionColumnCells) ]
 
 
 dataRows : List record -> ListCallback record msg -> Columns record msg -> List (Html msg)
-dataRows data listCallback columns =
+dataRows recordList listCallback columns =
     let
         dataRow : Int -> record -> Html msg
         dataRow index record =
             tr [] <| (dataCells index record) ++ (actionCells record)
 
         dataCells index record =
-            List.map (dataCell record index) renderers
+            List.map (dataCell index record) dataCellRenderers
 
-        dataCell : record -> Int -> CellRenderer record msg -> Html msg
-        dataCell record index renderer =
-            td [ cellStyle ] <| renderer record (listCallback << ListUtils.replace data index)
+        dataCell : Int -> record -> DataCellRenderer record msg -> Html msg
+        dataCell index record dataCellRenderer =
+            td [ cellStyle ] <| dataCellRenderer record (recordCallback index)
 
-        renderers : List (CellRenderer record msg)
-        renderers =
+        recordCallback : Int -> record -> msg
+        recordCallback index record =
+            listCallback (ListUtils.replace recordList index record)
+
+        dataCellRenderers : List (DataCellRenderer record msg)
+        dataCellRenderers =
             List.map Tuple.second columns
 
         actionCells record =
             [ td [] [ button [ onClick (delete record) ] [ text "delete" ] ] ]
 
         delete record =
-            listCallback (List.filter ((/=) record) data)
+            listCallback (List.filter ((/=) record) recordList)
     in
-        List.indexedMap dataRow data
+        List.indexedMap dataRow recordList
 
 
 appendView : List record -> record -> ListCallback record msg -> Html msg

@@ -21,7 +21,7 @@ view extraseEvidentaFinanciara callback =
     fieldset []
         [ legend [] [ text "ExtraseEvidentaFinanciara" ]
         , Table.view
-            { data = data extraseEvidentaFinanciara
+            { recordList = data extraseEvidentaFinanciara
             , callback = callback << fromData
             , columns =
                 [ ( "Data", (\r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v })) )

@@ -31,7 +31,7 @@ view acteEfectuatAnterior callback =
 tableView : ActeEfectuateAnterior -> Callback msg -> Html msg
 tableView acteEfectuatAnterior callback =
     Table.view
-        { data = data acteEfectuatAnterior
+        { recordList = data acteEfectuatAnterior
         , callback = callback << fromData
         , columns =
             [ ( "Copia scanată"

@@ -21,7 +21,7 @@ view documenteAplicareMasuriAsigurare callback =
     fieldset []
         [ legend [] [ text "DocumenteAplicareMasuriAsigurare" ]
         , Table.view
-            { data = data documenteAplicareMasuriAsigurare
+            { recordList = data documenteAplicareMasuriAsigurare
             , callback = callback << fromData
             , columns =
                 [ ( "Denumire", (\r c -> unlabeledTextField r.denumire (\v -> c { r | denumire = v })) )

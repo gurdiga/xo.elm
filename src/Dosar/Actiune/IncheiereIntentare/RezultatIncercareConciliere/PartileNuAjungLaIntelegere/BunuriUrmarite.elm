@@ -29,7 +29,7 @@ view bunurileUrmarite callback =
 tableView : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
 tableView bunurileUrmarite callback =
     Table.view
-        { data = data bunurileUrmarite
+        { recordList = data bunurileUrmarite
         , callback = callback << fromData
         , columns =
             [ ( "Denumire", (\r c -> unlabeledTextField r.denumire (\v -> c { r | denumire = v })) )

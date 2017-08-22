@@ -1,12 +1,20 @@
-module Widgets.Select exposing (fromValuesWithLabels)
+module Widgets.Select exposing (view, unlabeledView)
 
-import Html exposing (Html, select, option, text)
+import Html exposing (Html, label, select, option, text)
 import Html.Attributes exposing (selected)
 import Html.Events exposing (onInput)
 
 
-fromValuesWithLabels : List ( a, String ) -> a -> (a -> msg) -> Html msg
-fromValuesWithLabels valuesWithLabels defaultValue callback =
+view : String -> List ( a, String ) -> a -> (a -> msg) -> Html msg
+view labelText valuesWithLabels defaultValue callback =
+    label []
+        [ text labelText
+        , unlabeledView valuesWithLabels defaultValue callback
+        ]
+
+
+unlabeledView : List ( a, String ) -> a -> (a -> msg) -> Html msg
+unlabeledView valuesWithLabels defaultValue callback =
     let
         options valuesWithLabels defaultValue =
             List.map optionForTuple valuesWithLabels

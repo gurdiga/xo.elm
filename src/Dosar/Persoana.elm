@@ -29,10 +29,7 @@ view persoana callback =
     in
         fieldset []
             [ legend [] [ text "Persoana" ]
-            , label []
-                [ text "Gen persoana:"
-                , Select.fromValuesWithLabels valuesWithLabels (defaultValueFor persoana) callback
-                ]
+            , Select.view "Gen persoana:" valuesWithLabels (defaultValueFor persoana) callback
             , fields persoana callback
             ]
 

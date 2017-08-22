@@ -81,7 +81,7 @@ unlabeledMoneyField (Money amount currency) callback =
         , onInput (\v -> callback (Money (Result.withDefault 0 (String.toFloat v)) currency))
         ]
         []
-    , Select.fromValuesWithLabels
+    , Select.unlabeledView
         Money.currenciesWithLabels
         currency
         (\v -> callback (Money amount v))

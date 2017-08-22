@@ -95,7 +95,4 @@ empty =
 
 view : Pricina -> (Pricina -> msg) -> Html msg
 view pricina callback =
-    label []
-        [ text "Pricina:"
-        , Select.fromValuesWithLabels valuesWithLabels empty callback
-        ]
+    Select.view "Pricina:" valuesWithLabels empty callback

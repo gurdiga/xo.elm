@@ -34,10 +34,7 @@ empty =
 
 view : InstantaDeJudecata -> (InstantaDeJudecata -> msg) -> Html msg
 view instantaDeJudecata callback =
-    label []
-        [ text "Instanța de judecată:"
-        , Select.fromValuesWithLabels valuesWithLabels empty callback
-        ]
+    Select.view "Instanța de judecată:" valuesWithLabels empty callback
 
 
 valuesWithLabels : List ( InstantaDeJudecata, String )

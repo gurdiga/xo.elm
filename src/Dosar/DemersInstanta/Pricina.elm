@@ -111,10 +111,7 @@ empty =
 view : Pricina -> (Pricina -> msg) -> Html msg
 view pricina callback =
     div []
-        [ label []
-            [ text "Pricina:"
-            , Select.fromValuesWithLabels valuesWithLabels pricina callback
-            ]
+        [ Select.view "Pricina:" valuesWithLabels pricina callback
         , p [] [ text ("TODO: collect details of " ++ toString pricina) ]
         ]
 

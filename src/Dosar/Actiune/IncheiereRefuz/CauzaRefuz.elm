@@ -54,8 +54,5 @@ empty =
 view : CauzaRefuz -> (CauzaRefuz -> msg) -> Html msg
 view cauzaRefuz callback =
     div []
-        [ label []
-            [ text "Cauza refuzului:"
-            , Select.fromValuesWithLabels valuesWithLabels cauzaRefuz callback
-            ]
+        [ Select.view "Cauza refuzului:" valuesWithLabels cauzaRefuz callback
         ]

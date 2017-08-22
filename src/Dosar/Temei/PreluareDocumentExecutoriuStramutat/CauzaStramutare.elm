@@ -37,7 +37,4 @@ valuesWithLabels =
 
 view : CauzaStramutare -> (CauzaStramutare -> msg) -> Html msg
 view cauzaStramutare callback =
-    label []
-        [ text "Cauza strămutării:"
-        , Select.fromValuesWithLabels valuesWithLabels empty callback
-        ]
+    Select.view "Cauza strămutării:" valuesWithLabels empty callback

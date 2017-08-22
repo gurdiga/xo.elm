@@ -26,10 +26,7 @@ view rezultatIncercareConciliere callback =
 
 dropdown : RezultatIncercareConciliere -> (RezultatIncercareConciliere -> msg) -> Html msg
 dropdown rezultatIncercareConciliere callback =
-    label []
-        [ text "RezultatIncercareConciliere:"
-        , Select.fromValuesWithLabels valuesWithLabels (defaultValue rezultatIncercareConciliere) callback
-        ]
+    Select.view "RezultatIncercareConciliere:" valuesWithLabels (defaultValue rezultatIncercareConciliere) callback
 
 
 fields : RezultatIncercareConciliere -> (RezultatIncercareConciliere -> Cmd msg -> Sub msg -> msg) -> Html msg

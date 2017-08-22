@@ -37,10 +37,7 @@ view actiune callback =
 
 dropdown : Actiune -> Callback msg -> Html msg
 dropdown actiune callback =
-    label []
-        [ text "Actiune:"
-        , Select.fromValuesWithLabels valuesWithLabels empty (\v -> callback v Cmd.none Sub.none)
-        ]
+    Select.view "Actiune:" valuesWithLabels empty (\v -> callback v Cmd.none Sub.none)
 
 
 fields : Actiune -> Callback msg -> Html msg

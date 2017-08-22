@@ -28,10 +28,7 @@ view temei callback =
 
 dropdown : Temei -> (Temei -> msg) -> Html msg
 dropdown temei callback =
-    label []
-        [ text "Temei:"
-        , Select.fromValuesWithLabels valuesWithLabels (defaultValue temei) callback
-        ]
+    Select.view "Temei:" valuesWithLabels (defaultValue temei) callback
 
 
 fields : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg

@@ -50,7 +50,7 @@ update msg model =
             ( { model | subscription = sub }, cmd )
 
         Mdl msg ->
-            Material.update msg model
+            Material.update Mdl msg model
 
 
 subscriptions : Model -> Sub Msg

@@ -3,6 +3,7 @@ module Main exposing (..)
 import Html exposing (Html, div, pre, text)
 import Html.Attributes exposing (value, selected, style)
 import Dosar exposing (Dosar)
+import PingPong
 
 
 main : Program Never Model Msg
@@ -49,7 +50,8 @@ subscriptions model =
 view : Model -> Html Msg
 view model =
     div []
-        [ dosarView model
+        [ PingPong.view (\v -> Update model)
+        , dosarView model
         , pre [ style [ ( "white-space", "normal" ) ] ] [ text (toString model) ]
         ]
 

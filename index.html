@@ -21,14 +21,6 @@
 				sendContent: app.ports.richTextEditorSendContent.subscribe,
 				receiveResponse: app.ports.richTextEditorOnReceiveResponse.send
 			});
-
-			app.ports.ping.subscribe(function(string) {
-				console.log("Received a ping:", string);
-				setTimeout(function() {
-					console.log("Responding to the ping: ", string);
-					app.ports.pong.send(string);
-				}, 1000);
-			});
 		</script>
 
 	</body>

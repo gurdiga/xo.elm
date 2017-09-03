@@ -9,43 +9,42 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 
 type BunuriUrmarite
-    = BunuriUrmarite (List BunUrmarit) (Maybe BunUrmarit)
+    = BunuriUrmarite Data
+
+
+type alias Data =
+    { items : List BunUrmarit
+    , itemToEdit : Maybe BunUrmarit
+    }
 
 
 empty : BunuriUrmarite
 empty =
-    BunuriUrmarite [] Nothing
-
-
-
-{-
-
-   THE IDEA
-
-   There is the existing list, and maybe another one item which can be:
-   - the one that I’m adding
-   - one of the existing that I’m editing
-   - nothing, it’s just the list
-
--}
+    BunuriUrmarite
+        { items = []
+        , itemToEdit = Nothing
+        }
 
 
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-view (BunuriUrmarite list newItem) callback =
+view bunuriUrmarite callback =
     let
-        c list newItem =
-            callback (BunuriUrmarite list (Just newItem))
+        (BunuriUrmarite { items, itemToEdit }) =
+            bunuriUrmarite
+
+        itemToEditCallback itemToEdit =
+            callback (BunuriUrmarite { items = items, itemToEdit = Just itemToEdit })
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
 
             -- maybe extract this case into a helper function?
-            , case newItem of
+            , case itemToEdit of
                 Nothing ->
                     text ""
 
-                Just newItem ->
-                    -- add a callback for “Cancel” that will set newItem to nothing
-                    BunUrmarit.editView newItem (\v -> c list v)
-            , button [ onClick (c list BunUrmarit.empty) ] [ text "+" ]
+                Just itemToEdit ->
+                    -- add a callback for “Cancel” that will set itemToEdit to nothing
+                    BunUrmarit.editView itemToEdit itemToEditCallback
+            , button [ onClick (itemToEditCallback BunUrmarit.empty) ] [ text "+" ]
             ]

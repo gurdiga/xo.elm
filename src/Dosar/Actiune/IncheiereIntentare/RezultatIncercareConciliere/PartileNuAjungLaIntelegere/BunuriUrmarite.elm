@@ -1,8 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite exposing (BunuriUrmarite, empty, view)
 
-import Html exposing (Html, fieldset, legend, p, text)
-import Widgets.Table as Table
-import Widgets.Fields exposing (unlabeledTextField, unlabeledMoneyField, unlabeledLargeTextField)
+import Html exposing (Html, fieldset, legend, p, button, text)
+import Html.Events exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite.BunUrmarit as BunUrmarit
     exposing
         ( BunUrmarit(BunUrmarit)
@@ -10,44 +9,43 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 
 type BunuriUrmarite
-    = BunuriUrmarite (List BunUrmarit)
+    = BunuriUrmarite (List BunUrmarit) (Maybe BunUrmarit)
 
 
 empty : BunuriUrmarite
 empty =
-    BunuriUrmarite []
+    BunuriUrmarite [] Nothing
+
+
+
+{-
+
+   THE IDEA
+
+   There is the existing list, and maybe another one item which can be:
+   - the one that I’m adding
+   - one of the existing that I’m editing
+   - nothing, it’s just the list
+
+-}
 
 
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-view bunurileUrmarite callback =
-    fieldset []
-        [ legend [] [ text "BunuriUrmarite" ]
-        , BunUrmarit.editView BunUrmarit.empty (\v -> callback (BunuriUrmarite [ v ]))
+view (BunuriUrmarite list newItem) callback =
+    let
+        c list newItem =
+            callback (BunuriUrmarite list (Just newItem))
+    in
+        fieldset []
+            [ legend [] [ text "BunuriUrmarite" ]
 
-        --, tableView bunurileUrmarite callback
-        ]
+            -- maybe extract this case into a helper function?
+            , case newItem of
+                Nothing ->
+                    text ""
 
-
-tableView : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-tableView bunurileUrmarite callback =
-    Table.view
-        { recordList = data bunurileUrmarite
-        , callback = callback << fromData
-        , columns =
-            [ ( "Denumire", (\r c -> unlabeledTextField r.denumire (\v -> c { r | denumire = v })) )
-            , ( "Valoare", (\r c -> unlabeledMoneyField r.valoare (\v -> c { r | valoare = v })) )
-            , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
+                Just newItem ->
+                    -- add a callback for “Cancel” that will set newItem to nothing
+                    BunUrmarit.editView newItem (\v -> c list v)
+            , button [ onClick (c list BunUrmarit.empty) ] [ text "+" ]
             ]
-        , emptyView = text ""
-        , empty = BunUrmarit.data BunUrmarit.empty
-        }
-
-
-data : BunuriUrmarite -> List BunUrmarit.Data
-data (BunuriUrmarite list) =
-    List.map BunUrmarit.data list
-
-
-fromData : List BunUrmarit.Data -> BunuriUrmarite
-fromData =
-    BunuriUrmarite << List.map BunUrmarit

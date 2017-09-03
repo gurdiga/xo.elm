@@ -41,3 +41,9 @@ define SETUP_GIT_HOOK
 
 make pre-commit
 endef
+
+start:
+	elm reactor & sleep 0.1
+
+stop:
+	pkill elm-reactor

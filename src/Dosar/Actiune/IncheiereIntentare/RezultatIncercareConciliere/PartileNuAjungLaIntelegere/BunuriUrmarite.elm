@@ -22,7 +22,9 @@ view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
 view bunurileUrmarite callback =
     fieldset []
         [ legend [] [ text "BunuriUrmarite" ]
-        , tableView bunurileUrmarite callback
+        , BunUrmarit.editView BunUrmarit.empty (\v -> callback (BunuriUrmarite [ v ]))
+
+        --, tableView bunurileUrmarite callback
         ]
 
 

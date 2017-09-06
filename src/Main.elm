@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Html, div, pre, text)
 import Html.Attributes exposing (value, selected, style)
-import Dosar exposing (Dosar)
+import Dosar
 
 
 main : Program Never Model Msg
@@ -16,8 +16,8 @@ main =
 
 
 type alias Model =
-    { dosare : List Dosar
-    , dosarDeschis : Maybe Dosar
+    { dosare : List Dosar.Model
+    , dosarDeschis : Maybe Dosar.Model
     , subscription : Sub Msg
     }
 
@@ -32,6 +32,7 @@ initialModel =
 
 type Msg
     = Update Model (Cmd Msg) (Sub Msg)
+    | SetDosar Dosar.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -39,6 +40,14 @@ update msg model =
     case msg of
         Update model cmd sub ->
             ( { model | subscription = sub }, cmd )
+
+        SetDosar dosarMsg ->
+            case model.dosarDeschis of
+                Just v ->
+                    ( { model | dosarDeschis = Just (Dosar.update dosarMsg v) }, Cmd.none )
+
+                Nothing ->
+                    ( { model | dosarDeschis = Nothing }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -61,4 +70,4 @@ dosarView model =
             text ""
 
         Just dosar ->
-            Dosar.view dosar (\v -> Update { model | dosarDeschis = Just v })
+            Dosar.view dosar SetDosar

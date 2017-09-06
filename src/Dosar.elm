@@ -1,4 +1,4 @@
-module Dosar exposing (Dosar, empty, view)
+module Dosar exposing (Model, Msg, empty, update, view)
 
 import Html exposing (Html, h1, div, text)
 import Dosar.Temei as Temei exposing (Temei)
@@ -6,7 +6,7 @@ import Dosar.Actiune as Actiune exposing (Actiune)
 import Dosar.DocumentExecutoriu as DocumentExecutoriu exposing (DocumentExecutoriu)
 
 
-type Dosar
+type Model
     = Dosar Data
 
 
@@ -18,7 +18,7 @@ type alias Data =
     }
 
 
-empty : Dosar
+empty : Model
 empty =
     Dosar
         { id = "001"
@@ -28,15 +28,30 @@ empty =
         }
 
 
-view : Dosar -> (Dosar -> Cmd msg -> Sub msg -> msg) -> Html msg
+type Msg
+    = SetTemei Temei
+    | SetDocumentExecutoriu DocumentExecutoriu
+    | SetActiune Actiune
+
+
+update : Msg -> Model -> Model
+update msg (Dosar data) =
+    case msg of
+        SetTemei v ->
+            Dosar { data | temei = v }
+
+        SetDocumentExecutoriu v ->
+            Dosar { data | documentExecutoriu = v }
+
+        SetActiune v ->
+            Dosar { data | actiune = v }
+
+
+view : Model -> (Model -> Msg) -> Html Msg
 view (Dosar data) callback =
-    let
-        c data =
-            callback (Dosar data)
-    in
-        div []
-            [ h1 [] [ text "Dosar nou" ]
-            , Temei.view data.temei (\v -> c { data | temei = v })
-            , DocumentExecutoriu.view data.documentExecutoriu (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
-            , Actiune.view data.actiune (\v -> c { data | actiune = v })
-            ]
+    div []
+        [ h1 [] [ text "Dosar nou" ]
+        , Temei.view data.temei (\v cmd sub -> SetTemei v)
+        , DocumentExecutoriu.view data.documentExecutoriu SetDocumentExecutoriu
+        , Actiune.view data.actiune (\v cmd sub -> SetActiune v)
+        ]

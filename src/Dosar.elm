@@ -47,11 +47,11 @@ update msg (Dosar data) =
             Dosar { data | actiune = v }
 
 
-view : Model -> (Model -> Msg) -> Html Msg
+view : Model -> (Msg -> msg) -> Html msg
 view (Dosar data) callback =
     div []
         [ h1 [] [ text "Dosar nou" ]
-        , Temei.view data.temei (\v cmd sub -> SetTemei v)
-        , DocumentExecutoriu.view data.documentExecutoriu SetDocumentExecutoriu
-        , Actiune.view data.actiune (\v cmd sub -> SetActiune v)
+        , Temei.view data.temei (\v cmd sub -> callback (SetTemei v))
+        , DocumentExecutoriu.view data.documentExecutoriu (callback << SetDocumentExecutoriu)
+        , Actiune.view data.actiune (\v cmd sub -> callback (SetActiune v))
         ]

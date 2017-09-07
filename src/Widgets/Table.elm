@@ -2,7 +2,7 @@ module Widgets.Table exposing (view)
 
 import Html exposing (Html, div, table, thead, tbody, tr, th, td, button, text)
 import Html.Attributes exposing (style)
-import Html.Events exposing (onClick)
+import Utils.MyHtmlEvents exposing (onClick)
 import Utils.List as ListUtils
 
 
@@ -92,7 +92,7 @@ dataRows recordList listCallback columns =
             List.map Tuple.second columns
 
         actionCells record =
-            [ td [] [ button [ onClick (delete record) ] [ text "delete" ] ] ]
+            [ td [] [ button [ onClick (\_ -> delete record) ] [ text "delete" ] ] ]
 
         delete record =
             listCallback (List.filter ((/=) record) recordList)
@@ -103,7 +103,7 @@ dataRows recordList listCallback columns =
 appendView : List record -> record -> ListCallback record msg -> Html msg
 appendView list empty callback =
     button
-        [ onClick (callback <| list ++ [ empty ]) ]
+        [ onClick (\_ -> callback <| list ++ [ empty ]) ]
         [ text "+" ]
 
 

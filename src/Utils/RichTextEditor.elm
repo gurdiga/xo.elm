@@ -4,7 +4,7 @@ port module Utils.RichTextEditor exposing (view)
 -- any given time, and it will be closed before openeing another one.
 
 import Html exposing (Html, div, button, text)
-import Html.Events exposing (onClick)
+import Utils.MyHtmlEvents exposing (onClick)
 import Html.Attributes exposing (style, id)
 import FNV as HashingUtility
 
@@ -40,7 +40,7 @@ view { buttonLabel, content, onOpen, onResponse } =
             richTextEditorOnReceiveResponse onResponse
     in
         button
-            [ onClick (onOpen editorCmd editorSub) ]
+            [ onClick (\_ -> onOpen editorCmd editorSub) ]
             [ text buttonLabel
             , contentPreparedForEditor
             ]

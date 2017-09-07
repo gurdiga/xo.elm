@@ -1,7 +1,7 @@
 module Dosar.DocumentExecutoriu exposing (DocumentExecutoriu, empty, view)
 
 import Html exposing (Html, fieldset, legend, div, button, br, text)
-import Html.Events exposing (onClick)
+import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyDate as MyDate exposing (MyDate)
 import Utils.List as ListUtils
 import Widgets.Fields exposing (largeTextField)
@@ -91,5 +91,5 @@ debitoriView debitori callback =
                     Persoana.view debitor (\v -> callback (ListUtils.replace debitori i v))
                 )
                 debitori
-            ++ [ button [ onClick (callback (debitori ++ [ Persoana.empty ])) ] [ text "+" ] ]
+            ++ [ button [ onClick (\_ -> callback (debitori ++ [ Persoana.empty ])) ] [ text "+" ] ]
         )

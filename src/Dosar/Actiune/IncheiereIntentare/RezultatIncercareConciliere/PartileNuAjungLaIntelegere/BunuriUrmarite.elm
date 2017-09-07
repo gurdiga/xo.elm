@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite exposing (BunuriUrmarite, empty, view)
 
 import Html exposing (Html, fieldset, legend, p, button, text)
-import Html.Events exposing (onClick)
+import Utils.MyHtmlEvents exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite.BunUrmarit as BunUrmarit
     exposing
         ( BunUrmarit(BunUrmarit)
@@ -46,5 +46,5 @@ view bunuriUrmarite callback =
                 Just itemToEdit ->
                     -- add a callback for “Cancel” that will set itemToEdit to nothing
                     BunUrmarit.editView itemToEdit itemToEditCallback
-            , button [ onClick (itemToEditCallback BunUrmarit.empty) ] [ text "+" ]
+            , button [ onClick (\_ -> itemToEditCallback BunUrmarit.empty) ] [ text "+" ]
             ]

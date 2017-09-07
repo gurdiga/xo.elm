@@ -1,6 +1,6 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite exposing (BunuriUrmarite, empty, view)
 
-import Html exposing (Html, fieldset, legend, p, button, text)
+import Html exposing (Html, fieldset, legend, p, button, text, br)
 import Utils.MyHtmlEvents exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite.BunUrmarit as BunUrmarit
     exposing
@@ -32,19 +32,25 @@ view bunuriUrmarite callback =
         (BunuriUrmarite { items, itemToEdit }) =
             bunuriUrmarite
 
-        itemToEditCallback itemToEdit =
-            callback (BunuriUrmarite { items = items, itemToEdit = Just itemToEdit })
+        updateItemToEdit item =
+            callback (BunuriUrmarite { items = items, itemToEdit = Just item })
+
+        submitItemCallback item =
+            callback (BunuriUrmarite { items = items ++ [ item ], itemToEdit = Nothing })
+
+        cancelEditCallback item =
+            callback (BunuriUrmarite { items = items, itemToEdit = Nothing })
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
-
-            -- maybe extract this case into a helper function?
+            , text (toString bunuriUrmarite)
+            , br [] []
             , case itemToEdit of
                 Nothing ->
                     text ""
 
                 Just itemToEdit ->
                     -- add a callback for “Cancel” that will set itemToEdit to nothing
-                    BunUrmarit.editView itemToEdit itemToEditCallback
-            , button [ onClick (\_ -> itemToEditCallback BunUrmarit.empty) ] [ text "+" ]
+                    BunUrmarit.editView itemToEdit updateItemToEdit submitItemCallback cancelEditCallback
+            , button [ onClick (\_ -> updateItemToEdit BunUrmarit.empty) ] [ text "+" ]
             ]

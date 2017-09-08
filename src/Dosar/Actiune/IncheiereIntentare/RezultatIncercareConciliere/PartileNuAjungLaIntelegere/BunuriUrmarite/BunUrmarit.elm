@@ -4,7 +4,8 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , Data
         , empty
         , data
-        , editView
+        , view
+        , editForm
         )
 
 import Html exposing (Html, fieldset, legend, label, input, button, text, br)
@@ -38,8 +39,8 @@ data (BunUrmarit data) =
     data
 
 
-editView : BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
-editView bunUrmarit updateCallback submitCallback cancelCallback =
+editForm : BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
+editForm bunUrmarit updateCallback submitCallback cancelCallback =
     let
         (BunUrmarit data) =
             bunUrmarit
@@ -58,3 +59,8 @@ editView bunUrmarit updateCallback submitCallback cancelCallback =
             , button [ onClick (\_ -> submitCallback bunUrmarit) ] [ text "Submit" ]
             , button [ onClick (\_ -> cancelCallback bunUrmarit) ] [ text "Cancel" ]
             ]
+
+
+view : BunUrmarit -> Html msg
+view bunUrmarit =
+    text <| toString bunUrmarit

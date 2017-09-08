@@ -1,6 +1,6 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite exposing (BunuriUrmarite, empty, view)
 
-import Html exposing (Html, fieldset, legend, p, button, text, br)
+import Html exposing (Html, fieldset, legend, ul, li, p, button, text, br)
 import Utils.MyHtmlEvents exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite.BunUrmarit as BunUrmarit
     exposing
@@ -21,7 +21,7 @@ type alias Data =
 empty : BunuriUrmarite
 empty =
     BunuriUrmarite
-        { items = []
+        { items = [ BunUrmarit.empty ]
         , itemToEdit = Nothing
         }
 
@@ -43,14 +43,25 @@ view bunuriUrmarite callback =
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
-            , text (toString bunuriUrmarite)
-            , br [] []
-            , case itemToEdit of
-                Nothing ->
-                    text ""
-
-                Just itemToEdit ->
-                    -- add a callback for “Cancel” that will set itemToEdit to nothing
-                    BunUrmarit.editView itemToEdit updateItemToEdit submitItemCallback cancelEditCallback
+            , itemList items
+            , editForm itemToEdit updateItemToEdit submitItemCallback cancelEditCallback
             , button [ onClick (\_ -> updateItemToEdit BunUrmarit.empty) ] [ text "+" ]
             ]
+
+
+itemList : List BunUrmarit -> Html msg
+itemList items =
+    if List.length items > 0 then
+        ul [] <| List.map (\v -> li [] [ BunUrmarit.view v ]) items
+    else
+        text ""
+
+
+editForm : Maybe BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
+editForm itemToEdit updateItemToEdit submitItemCallback cancelEditCallback =
+    case itemToEdit of
+        Just itemToEdit ->
+            BunUrmarit.editForm itemToEdit updateItemToEdit submitItemCallback cancelEditCallback
+
+        Nothing ->
+            text ""

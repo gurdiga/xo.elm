@@ -2,6 +2,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 import Html exposing (Html, fieldset, legend, ul, li, p, button, text, br)
 import Utils.MyHtmlEvents exposing (onClick)
+import Utils.Money as Money exposing (Money(Money), Currency(EUR))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite.BunUrmarit as BunUrmarit
     exposing
         ( BunUrmarit(BunUrmarit)
@@ -21,7 +22,7 @@ type alias Data =
 empty : BunuriUrmarite
 empty =
     BunuriUrmarite
-        { items = [ BunUrmarit.empty ]
+        { items = [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" } ]
         , itemToEdit = Nothing
         }
 
@@ -51,10 +52,14 @@ view bunuriUrmarite callback =
 
 itemList : List BunUrmarit -> Html msg
 itemList items =
-    if List.length items > 0 then
-        ul [] <| List.map (\v -> li [] [ BunUrmarit.view v ]) items
-    else
-        text ""
+    let
+        itemView =
+            li [] << BunUrmarit.view
+    in
+        if List.length items > 0 then
+            ul [] <| List.map itemView items
+        else
+            text ""
 
 
 editForm : Maybe BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg

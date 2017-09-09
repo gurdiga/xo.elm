@@ -1,4 +1,6 @@
-module Utils.Money exposing (Money(..), Currency(..), currenciesWithLabels)
+module Utils.Money exposing (Money(..), Currency(..), format, currenciesWithLabels)
+
+import Utils.MyNumber as MyNumber
 
 
 type alias Amount =
@@ -21,3 +23,8 @@ currenciesWithLabels =
     , ( EUR, "EUR" )
     , ( USD, "USD" )
     ]
+
+
+format : Money -> String
+format (Money amount currency) =
+    (MyNumber.format amount) ++ " " ++ (toString currency)

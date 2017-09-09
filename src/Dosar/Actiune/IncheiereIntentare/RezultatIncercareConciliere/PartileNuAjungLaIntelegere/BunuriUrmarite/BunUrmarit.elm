@@ -76,7 +76,7 @@ view (BunUrmarit { denumire, valoare, note }) =
         [ p [ style mainStyle ]
             [ span [] [ text denumire ]
             , text " "
-            , strong [] [ text (toString valoare) ]
+            , strong [] [ text (Money.format valoare) ]
             ]
         , p [ style noteStyle ] [ small [] [ text note ] ]
         ]

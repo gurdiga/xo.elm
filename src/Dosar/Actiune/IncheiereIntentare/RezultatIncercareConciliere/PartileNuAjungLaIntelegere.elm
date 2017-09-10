@@ -9,7 +9,6 @@ import Html exposing (Html, h1, div, p, text)
 import Utils.RichTextEditor as RichTextEditor
 import Utils.MyDate as MyDate exposing (MyDate)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare as MasuriDeAsigurare exposing (MasuriDeAsigurare)
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite as BunuriUrmarite exposing (BunuriUrmarite)
 
 
 type PartileNuAjungLaIntelegere
@@ -22,7 +21,6 @@ type alias Data =
     , borderouDeCalcul : String
     , termenDeExecutare : MyDate
     , masuriDeAsigurare : MasuriDeAsigurare
-    , bunurileUrmarite : BunuriUrmarite
     }
 
 
@@ -34,7 +32,6 @@ empty =
         , borderouDeCalcul = ""
         , termenDeExecutare = MyDate.empty
         , masuriDeAsigurare = MasuriDeAsigurare.empty
-        , bunurileUrmarite = BunuriUrmarite.empty
         }
 
 
@@ -68,7 +65,6 @@ view partileNuAjungLaIntelegere callback =
                 , onResponse = (\v -> c { data | borderouDeCalcul = v })
                 }
             , MasuriDeAsigurare.view data.masuriDeAsigurare (\v -> c { data | masuriDeAsigurare = v })
-            , BunuriUrmarite.view data.bunurileUrmarite (\v -> c { data | bunurileUrmarite = v })
             ]
 
 

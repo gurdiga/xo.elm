@@ -2,11 +2,12 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
     exposing
         ( MasuraDeAsigurare
         , empty
-        , valuesWithLabels
+        , addView
         , view
         )
 
-import Html exposing (Html, fieldset, legend, text)
+import Html exposing (Html, div, fieldset, legend, ul, li, button, text)
+import Utils.MyHtmlEvents exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu as UrmarirePatrimoniu exposing (UrmarirePatrimoniu)
 
 
@@ -23,21 +24,25 @@ empty =
     UrmarirePatrimoniu UrmarirePatrimoniu.empty
 
 
-valuesWithLabels : List ( MasuraDeAsigurare, String )
-valuesWithLabels =
-    [ ( UrmarirePatrimoniu UrmarirePatrimoniu.empty, "UrmarirePatrimoniu" )
-    , ( Evacuare, "Evacuare" )
-    , ( EfectuareActeObligatorii, "EfectuareActeObligatorii" )
-    , ( RestabilireSalariat, "RestabilireSalariat" )
-    , ( StabilireDomiciliuCopil, "StabilireDomiciliuCopil" )
-    ]
+addView : (MasuraDeAsigurare -> msg) -> Html msg
+addView callback =
+    div []
+        [ text "Adaugă măsură:"
+        , ul []
+            [ li [] [ button [ onClick (\_ -> callback << UrmarirePatrimoniu <| UrmarirePatrimoniu.empty) ] [ text "UrmarirePatrimoniu" ] ]
+            , li [] [ button [ onClick (\_ -> callback Evacuare) ] [ text "Evacuare" ] ]
+            , li [] [ button [ onClick (\_ -> callback EfectuareActeObligatorii) ] [ text "EfectuareActeObligatorii" ] ]
+            , li [] [ button [ onClick (\_ -> callback RestabilireSalariat) ] [ text "RestabilireSalariat" ] ]
+            , li [] [ button [ onClick (\_ -> callback StabilireDomiciliuCopil) ] [ text "StabilireDomiciliuCopil" ] ]
+            ]
+        ]
 
 
-view : MasuraDeAsigurare -> Html msg
-view masuraDeAsigurare =
+view : MasuraDeAsigurare -> (MasuraDeAsigurare -> msg) -> Html msg
+view masuraDeAsigurare callback =
     case masuraDeAsigurare of
         UrmarirePatrimoniu v ->
-            UrmarirePatrimoniu.view v
+            UrmarirePatrimoniu.view v (callback << UrmarirePatrimoniu)
 
         Evacuare ->
             viewEvacuare

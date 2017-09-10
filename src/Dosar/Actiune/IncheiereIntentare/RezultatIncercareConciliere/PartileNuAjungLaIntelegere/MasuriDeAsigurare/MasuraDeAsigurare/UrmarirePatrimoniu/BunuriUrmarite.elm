@@ -1,9 +1,14 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite exposing (BunuriUrmarite, empty, view)
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite
+    exposing
+        ( BunuriUrmarite
+        , empty
+        , view
+        )
 
 import Html exposing (Html, fieldset, legend, ul, li, p, button, text, br)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.Money as Money exposing (Money(Money), Currency(EUR))
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.BunuriUrmarite.BunUrmarit as BunUrmarit
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit
     exposing
         ( BunUrmarit(BunUrmarit)
         )

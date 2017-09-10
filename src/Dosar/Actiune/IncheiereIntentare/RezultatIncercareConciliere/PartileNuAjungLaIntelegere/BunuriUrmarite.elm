@@ -22,7 +22,9 @@ type alias Data =
 empty : BunuriUrmarite
 empty =
     BunuriUrmarite
-        { items = [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" } ]
+        { items =
+            [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
+            ]
         , itemToEdit = Nothing
         }
 

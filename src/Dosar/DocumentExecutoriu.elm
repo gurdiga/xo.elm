@@ -3,7 +3,7 @@ module Dosar.DocumentExecutoriu exposing (DocumentExecutoriu, empty, view)
 import Html exposing (Html, fieldset, legend, div, button, br, text)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyDate as MyDate exposing (MyDate)
-import Utils.List as ListUtils
+import Utils.MyList as MyList
 import Widgets.Fields exposing (largeTextField)
 import Dosar.Persoana as Persoana exposing (Persoana)
 import Dosar.DocumentExecutoriu.Pricina as Pricina exposing (Pricina)
@@ -88,7 +88,7 @@ debitoriView debitori callback =
         ([ legend [] [ text "Debitori" ] ]
             ++ List.indexedMap
                 (\i debitor ->
-                    Persoana.view debitor (\v -> callback (ListUtils.replace debitori i v))
+                    Persoana.view debitor (\v -> callback (MyList.replace debitori i v))
                 )
                 debitori
             ++ [ button [ onClick (\_ -> callback (debitori ++ [ Persoana.empty ])) ] [ text "+" ] ]

@@ -6,8 +6,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         )
 
 import Html exposing (Html, fieldset, legend, ul, li, text)
-import Widgets.Select as Select
-import Utils.List as List
+import Utils.MyList as MyList
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare as MasuraDeAsigurare exposing (MasuraDeAsigurare)
 
 
@@ -30,7 +29,7 @@ view (MasuriDeAsigurare items) callback =
             c (items ++ [ item ])
 
         itemView i item =
-            li [] [ MasuraDeAsigurare.view item (\v -> c (List.replace items i v)) ]
+            li [] [ MasuraDeAsigurare.view item (\v -> c (MyList.replace items i v)) ]
     in
         fieldset []
             [ legend [] [ text "MasuriDeAsigurare" ]

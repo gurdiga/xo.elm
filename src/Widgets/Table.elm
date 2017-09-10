@@ -3,7 +3,7 @@ module Widgets.Table exposing (view)
 import Html exposing (Html, div, table, thead, tbody, tr, th, td, button, text)
 import Html.Attributes exposing (style)
 import Utils.MyHtmlEvents exposing (onClick)
-import Utils.List as ListUtils
+import Utils.MyList as MyList
 
 
 type alias Input record msg =
@@ -85,7 +85,7 @@ dataRows recordList listCallback columns =
 
         recordCallback : Int -> record -> msg
         recordCallback index record =
-            listCallback (ListUtils.replace recordList index record)
+            listCallback (MyList.replace recordList index record)
 
         dataCellRenderers : List (DataCellRenderer record msg)
         dataCellRenderers =

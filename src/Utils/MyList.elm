@@ -1,4 +1,4 @@
-module Utils.List exposing (replace)
+module Utils.MyList exposing (replace)
 
 
 replace : List a -> Int -> a -> List a

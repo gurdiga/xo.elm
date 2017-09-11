@@ -5,8 +5,11 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, fieldset, legend, ul, li, p, button, text, br)
+import Html exposing (Html, fieldset, legend, ul, li, p, button, input, text, br)
+import Html.Attributes exposing (type_, checked)
+import Html.Events exposing (onCheck)
 import Utils.MyHtmlEvents exposing (onClick)
+import Utils.MyList as MyList
 import Utils.Money as Money exposing (Money(Money), Currency(EUR))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit
     exposing
@@ -19,16 +22,26 @@ type BunuriUrmarite
 
 
 type alias Data =
-    { items : List BunUrmarit
+    { items : List (Selectable BunUrmarit)
     , itemToEdit : Maybe BunUrmarit
     }
+
+
+type Selectable a
+    = Selectable
+        { isSelected : Bool
+        , item : a
+        }
 
 
 empty : BunuriUrmarite
 empty =
     BunuriUrmarite
         { items =
-            [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
+            [ Selectable
+                { item = BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
+                , isSelected = False
+                }
             ]
         , itemToEdit = Nothing
         }
@@ -44,29 +57,47 @@ view bunuriUrmarite callback =
             callback (BunuriUrmarite { items = items, itemToEdit = Just item })
 
         submitItemCallback item =
-            callback (BunuriUrmarite { items = items ++ [ item ], itemToEdit = Nothing })
+            callback (BunuriUrmarite { items = items ++ [ Selectable { item = item, isSelected = False } ], itemToEdit = Nothing })
 
         cancelEditCallback item =
             callback (BunuriUrmarite { items = items, itemToEdit = Nothing })
+
+        updateItems items =
+            callback (BunuriUrmarite { items = items, itemToEdit = itemToEdit })
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
-            , itemList items
+            , itemListView items updateItems
             , editForm itemToEdit updateItemToEdit submitItemCallback cancelEditCallback
             , button [ onClick (\_ -> updateItemToEdit BunUrmarit.empty) ] [ text "+" ]
             ]
 
 
-itemList : List BunUrmarit -> Html msg
-itemList items =
+itemListView : List (Selectable BunUrmarit) -> (List (Selectable BunUrmarit) -> msg) -> Html msg
+itemListView items callback =
+    if List.length items > 0 then
+        let
+            updateItem index item =
+                callback (MyList.replace items index item)
+        in
+            ul [] <| List.indexedMap (\index v -> itemView v (updateItem index)) items
+    else
+        text ""
+
+
+itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> Html msg
+itemView selectableBunUrmarit callback =
     let
-        itemView =
-            li [] << BunUrmarit.view
+        (Selectable { isSelected, item }) =
+            selectableBunUrmarit
+
+        checkbox =
+            input [ type_ "checkbox", checked isSelected, onCheck select ] []
+
+        select isSelected =
+            callback (Selectable { isSelected = isSelected, item = item })
     in
-        if List.length items > 0 then
-            ul [] <| List.map itemView items
-        else
-            text ""
+        li [] (checkbox :: (BunUrmarit.view item))
 
 
 editForm : Maybe BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg

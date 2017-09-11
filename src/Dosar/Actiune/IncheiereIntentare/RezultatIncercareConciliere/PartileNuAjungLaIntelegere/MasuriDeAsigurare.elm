@@ -17,7 +17,7 @@ type MasuriDeAsigurare
 
 empty : MasuriDeAsigurare
 empty =
-    MasuriDeAsigurare []
+    MasuriDeAsigurare [ MasuraDeAsigurare.empty ]
 
 
 view : MasuriDeAsigurare -> (MasuriDeAsigurare -> msg) -> Html msg

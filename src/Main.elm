@@ -50,7 +50,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ dosarView model
-        , pre [ style [ ( "white-space", "normal" ) ] ] [ text (toString model) ]
+        , pre [ style [ ( "white-space", "normal" ), ( "margin-bottom", "5em" ) ] ] [ text (toString model) ]
         ]
 
 

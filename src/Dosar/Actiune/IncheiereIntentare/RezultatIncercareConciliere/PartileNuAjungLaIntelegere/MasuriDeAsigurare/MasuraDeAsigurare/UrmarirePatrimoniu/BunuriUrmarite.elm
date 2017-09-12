@@ -22,9 +22,13 @@ type BunuriUrmarite
 
 
 type alias Data =
-    { items : List (Selectable BunUrmarit)
+    { items : Items
     , itemToEdit : Maybe BunUrmarit
     }
+
+
+type alias Items =
+    List (Selectable BunUrmarit)
 
 
 type Selectable a
@@ -50,26 +54,44 @@ empty =
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
 view bunuriUrmarite callback =
     let
-        (BunuriUrmarite { items, itemToEdit }) =
+        (BunuriUrmarite data) =
             bunuriUrmarite
 
-        updateItemToEdit item =
-            callback (BunuriUrmarite { items = items, itemToEdit = Just item })
+        c =
+            BunuriUrmarite >> callback
 
-        submitItemCallback item =
-            callback (BunuriUrmarite { items = items ++ [ Selectable { item = item, isSelected = False } ], itemToEdit = Nothing })
+        setItemToEdit data v =
+            { data | itemToEdit = v }
 
-        cancelEditCallback item =
-            callback (BunuriUrmarite { items = items, itemToEdit = Nothing })
+        setItems data v =
+            { data | items = v }
 
-        updateItems items =
-            callback (BunuriUrmarite { items = items, itemToEdit = itemToEdit })
+        removeItemToEdit _ =
+            setItemToEdit data Nothing
+
+        initItemToEdit _ =
+            updateItemToEdit BunUrmarit.empty
+
+        updateItemToEdit v =
+            setItemToEdit data (Just v)
+
+        submitItemItoEdit v =
+            [ Selectable { item = v, isSelected = False } ]
+                |> List.append data.items
+                |> setItems data
+                |> (flip setItemToEdit) Nothing
+
+        updateItems v =
+            setItems data v
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
-            , itemListView items updateItems
-            , editForm itemToEdit updateItemToEdit submitItemCallback cancelEditCallback
-            , button [ onClick (\_ -> updateItemToEdit BunUrmarit.empty) ] [ text "+" ]
+            , itemListView data.items (updateItems >> c)
+            , editForm data.itemToEdit
+                (updateItemToEdit >> c)
+                (submitItemItoEdit >> c)
+                (removeItemToEdit >> c)
+            , button [ onClick (initItemToEdit >> c) ] [ text "+" ]
             ]
 
 
@@ -78,7 +100,8 @@ itemListView items callback =
     if List.length items > 0 then
         let
             updateItem index item =
-                callback (MyList.replace items index item)
+                MyList.replace items index item
+                    |> callback
         in
             ul [] <| List.indexedMap (\index v -> itemView v (updateItem index)) items
     else

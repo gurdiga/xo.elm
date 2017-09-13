@@ -9,7 +9,6 @@ import Html exposing (Html, fieldset, legend, ul, li, p, button, input, text, br
 import Html.Attributes exposing (type_, checked)
 import Html.Events exposing (onCheck)
 import Utils.MyHtmlEvents exposing (onClick)
-import Utils.MyHtml exposing (nonEmpty)
 import Utils.MyList as MyList
 import Utils.Money as Money exposing (Money(Money), Currency(EUR))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit
@@ -91,7 +90,7 @@ view bunuriUrmarite callback =
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
-            , itemListView data.items (updateItems >> c)
+            , maybeItemListView data.items (updateItems >> c)
             , editForm data.itemToEdit
                 (updateItemToEdit >> c)
                 (submitItemItoEdit >> c)
@@ -100,16 +99,19 @@ view bunuriUrmarite callback =
             ]
 
 
-itemListView : List (Selectable BunUrmarit) -> (List (Selectable BunUrmarit) -> msg) -> Html msg
-itemListView items callback =
-    let
-        updateItem i v =
-            MyList.replace items i v
+maybeItemListView : List (Selectable BunUrmarit) -> (List (Selectable BunUrmarit) -> msg) -> Html msg
+maybeItemListView items callback =
+    if List.length items > 0 then
+        let
+            updateItem i v =
+                MyList.replace items i v
 
-        renderItem i v =
-            itemView v (updateItem i >> callback)
-    in
-        nonEmpty ul [] (List.indexedMap renderItem items)
+            renderItem i v =
+                itemView v (updateItem i >> callback)
+        in
+            ul [] (List.indexedMap renderItem items)
+    else
+        text ""
 
 
 itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> Html msg

@@ -9,6 +9,7 @@ import Html exposing (Html, fieldset, legend, ul, li, p, button, input, text, br
 import Html.Attributes exposing (type_, checked)
 import Html.Events exposing (onCheck)
 import Utils.MyHtmlEvents exposing (onClick)
+import Utils.MyHtml exposing (nonEmpty)
 import Utils.MyList as MyList
 import Utils.Money as Money exposing (Money(Money), Currency(EUR))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit
@@ -51,6 +52,16 @@ empty =
         }
 
 
+setItems : Data -> Items -> Data
+setItems data v =
+    { data | items = v }
+
+
+setItemToEdit : Data -> Maybe BunUrmarit -> Data
+setItemToEdit data v =
+    { data | itemToEdit = v }
+
+
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
 view bunuriUrmarite callback =
     let
@@ -60,20 +71,14 @@ view bunuriUrmarite callback =
         c =
             BunuriUrmarite >> callback
 
-        setItemToEdit data v =
-            { data | itemToEdit = v }
-
-        setItems data v =
-            { data | items = v }
-
-        removeItemToEdit _ =
-            setItemToEdit data Nothing
-
         initItemToEdit _ =
             updateItemToEdit BunUrmarit.empty
 
         updateItemToEdit v =
             setItemToEdit data (Just v)
+
+        removeItemToEdit _ =
+            setItemToEdit data Nothing
 
         submitItemItoEdit v =
             [ Selectable { item = v, isSelected = False } ]
@@ -97,30 +102,32 @@ view bunuriUrmarite callback =
 
 itemListView : List (Selectable BunUrmarit) -> (List (Selectable BunUrmarit) -> msg) -> Html msg
 itemListView items callback =
-    if List.length items > 0 then
-        let
-            updateItem index item =
-                MyList.replace items index item
-                    |> callback
-        in
-            ul [] <| List.indexedMap (\index v -> itemView v (updateItem index)) items
-    else
-        text ""
+    let
+        updateItem i v =
+            MyList.replace items i v
+
+        renderItem i v =
+            itemView v (updateItem i >> callback)
+    in
+        nonEmpty ul [] (List.indexedMap renderItem items)
 
 
 itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> Html msg
 itemView selectableBunUrmarit callback =
     let
-        (Selectable { isSelected, item }) =
+        c =
+            Selectable >> callback
+
+        (Selectable data) =
             selectableBunUrmarit
 
-        checkbox =
-            input [ type_ "checkbox", checked isSelected, onCheck select ] []
+        setIsSelected v =
+            { data | isSelected = v }
 
-        select isSelected =
-            callback (Selectable { isSelected = isSelected, item = item })
+        checkbox =
+            input [ type_ "checkbox", checked data.isSelected, onCheck (setIsSelected >> c) ] []
     in
-        li [] (checkbox :: (BunUrmarit.view item))
+        li [] (checkbox :: BunUrmarit.view data.item)
 
 
 editForm : Maybe BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg

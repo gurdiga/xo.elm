@@ -98,7 +98,7 @@ view bunuriUrmarite callback =
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
-            , maybeItemListView data.items (updateItems >> c)
+            , itemListView data.items (updateItems >> c)
             , editForm data.itemToEdit
                 (updateItemToEdit >> c)
                 (submitItemItoEdit >> c)
@@ -107,8 +107,8 @@ view bunuriUrmarite callback =
             ]
 
 
-maybeItemListView : List (Selectable BunUrmarit) -> (List (Selectable BunUrmarit) -> msg) -> Html msg
-maybeItemListView items callback =
+itemListView : List (Selectable BunUrmarit) -> (List (Selectable BunUrmarit) -> msg) -> Html msg
+itemListView items callback =
     if List.length items > 0 then
         let
             updateItem i v =

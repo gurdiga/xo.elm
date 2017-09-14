@@ -98,7 +98,9 @@ view bunuriUrmarite callback =
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
-            , itemListView data.items (updateItems >> c)
+            , itemListView data.items
+                (updateItems >> c)
+                (updateItemToEdit >> c)
             , editForm data.itemToEdit
                 (updateItemToEdit >> c)
                 (submitItemItoEdit >> c)
@@ -107,26 +109,28 @@ view bunuriUrmarite callback =
             ]
 
 
-itemListView : List (Selectable BunUrmarit) -> (List (Selectable BunUrmarit) -> msg) -> Html msg
-itemListView items callback =
+itemListView : Items -> (Items -> msg) -> (BunUrmarit -> msg) -> Html msg
+itemListView items updateCallback editCallback =
     if List.length items > 0 then
         let
             updateItem i v =
                 MyList.replace items i v
 
             renderItem i v =
-                itemView v (updateItem i >> callback)
+                itemView v
+                    (updateItem i >> updateCallback)
+                    editCallback
         in
             ul [] (List.indexedMap renderItem items)
     else
         text ""
 
 
-itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> Html msg
-itemView selectableBunUrmarit callback =
+itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
+itemView selectableBunUrmarit updateCallback editCallback =
     let
         c =
-            Selectable >> callback
+            Selectable >> updateCallback
 
         (Selectable data) =
             selectableBunUrmarit
@@ -134,15 +138,27 @@ itemView selectableBunUrmarit callback =
         setIsSelected v =
             { data | isSelected = v }
 
+        edit _ =
+            editCallback data.item
+
         checkbox =
-            input [ type_ "checkbox", checked data.isSelected, onCheck (setIsSelected >> c) ] []
+            input
+                [ type_ "checkbox"
+                , checked data.isSelected
+                , onCheck (setIsSelected >> c)
+                ]
+                []
     in
-        li [] (checkbox :: BunUrmarit.view data.item)
+        li []
+            ([ checkbox ]
+                ++ BunUrmarit.view data.item
+                ++ [ button [ onClick edit ] [ text "Edit" ] ]
+            )
 
 
 editForm : Maybe BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
-editForm itemToEdit updateItemToEdit submitItemCallback cancelEditCallback =
-    case itemToEdit of
+editForm maybeItemToEdit updateItemToEdit submitItemCallback cancelEditCallback =
+    case maybeItemToEdit of
         Just itemToEdit ->
             BunUrmarit.editForm itemToEdit updateItemToEdit submitItemCallback cancelEditCallback
 

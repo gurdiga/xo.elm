@@ -10,7 +10,7 @@ import Html.Attributes exposing (type_, checked)
 import Html.Events exposing (onCheck)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyList as MyList
-import Utils.Money as Money exposing (Money(Money), Currency(EUR))
+import Utils.Money as Money exposing (Money(Money), Currency(EUR, USD))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit
     exposing
         ( BunUrmarit(BunUrmarit)
@@ -41,14 +41,22 @@ type Selectable a
 empty : BunuriUrmarite
 empty =
     BunuriUrmarite
-        { items =
-            [ Selectable
-                { item = BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
-                , isSelected = False
-                }
-            ]
+        { items = someItems
         , itemToEdit = Nothing
         }
+
+
+someItems : Items
+someItems =
+    [ Selectable
+        { item = BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
+        , isSelected = False
+        }
+    , Selectable
+        { item = BunUrmarit { denumire = "Automobil Porche", valoare = Money 250000 USD, note = "Yeah!" }
+        , isSelected = True
+        }
+    ]
 
 
 setItems : Data -> Items -> Data

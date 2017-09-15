@@ -30,7 +30,7 @@ type alias Data =
 type ItemToEdit
     = ItemToEdit
         { index : Maybe Int
-        , value : BunUrmarit
+        , item : BunUrmarit
         }
 
 
@@ -96,18 +96,17 @@ view bunuriUrmarite callback =
             BunuriUrmarite >> callback
 
         initItemToEdit _ =
-            ItemToEdit { index = Nothing, value = BunUrmarit.empty }
-                |> Just
+            ItemToEdit { index = Nothing, item = BunUrmarit.empty }
                 |> updateItemToEdit
 
         updateItemToEdit v =
-            setItemToEdit data v
+            setItemToEdit data (Just v)
 
         removeItemToEdit _ =
             setItemToEdit data Nothing
 
-        submitItem (ItemToEdit { value, index }) =
-            Selectable { item = value, isSelected = False }
+        submitItem (ItemToEdit { item, index }) =
+            Selectable { item = item, isSelected = False }
                 |> addOrReplaceItem data index
                 |> setItems data
                 |> (flip setItemToEdit) Nothing
@@ -119,9 +118,9 @@ view bunuriUrmarite callback =
             [ legend [] [ text "BunuriUrmarite" ]
             , itemListView data.items
                 (updateItems >> c)
-                (Just >> updateItemToEdit >> c)
+                (updateItemToEdit >> c)
             , editForm data.itemToEdit
-                (Just >> updateItemToEdit >> c)
+                (updateItemToEdit >> c)
                 (submitItem >> c)
                 (removeItemToEdit >> c)
             , button [ onClick (initItemToEdit >> c) ] [ text "+" ]
@@ -136,7 +135,7 @@ itemListView items updateCallback editCallback =
                 MyList.replace items i v
 
             editItem i v =
-                ItemToEdit { index = Just i, value = v }
+                ItemToEdit { index = Just i, item = v }
 
             renderItem i v =
                 itemView v
@@ -151,42 +150,34 @@ itemListView items updateCallback editCallback =
 itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
 itemView selectableBunUrmarit updateCallback editCallback =
     let
-        c =
-            Selectable >> updateCallback
-
         (Selectable data) =
             selectableBunUrmarit
 
         setIsSelected v =
-            { data | isSelected = v }
-
-        edit _ =
-            editCallback data.item
-
-        checkbox =
-            input
-                [ type_ "checkbox"
-                , checked data.isSelected
-                , onCheck (setIsSelected >> c)
-                ]
-                []
+            Selectable { data | isSelected = v }
     in
         li []
-            ([ checkbox ]
+            ([ input
+                [ type_ "checkbox"
+                , checked data.isSelected
+                , onCheck (setIsSelected >> updateCallback)
+                ]
+                []
+             ]
                 ++ BunUrmarit.view data.item
-                ++ [ button [ onClick edit ] [ text "Edit" ] ]
+                ++ [ button [ onClick (\_ -> editCallback data.item) ] [ text "Edit" ] ]
             )
 
 
 editForm : Maybe ItemToEdit -> (ItemToEdit -> msg) -> (ItemToEdit -> msg) -> (ItemToEdit -> msg) -> Html msg
 editForm maybeItemToEdit updateItemToEditCallback submitItemCallback cancelEditCallback =
     case maybeItemToEdit of
-        Just (ItemToEdit { index, value }) ->
+        Just (ItemToEdit { index, item }) ->
             let
                 makeItemToEdit v =
-                    ItemToEdit { index = index, value = v }
+                    ItemToEdit { index = index, item = v }
             in
-                BunUrmarit.editForm value
+                BunUrmarit.editForm item
                     (makeItemToEdit >> updateItemToEditCallback)
                     (makeItemToEdit >> submitItemCallback)
                     (makeItemToEdit >> cancelEditCallback)

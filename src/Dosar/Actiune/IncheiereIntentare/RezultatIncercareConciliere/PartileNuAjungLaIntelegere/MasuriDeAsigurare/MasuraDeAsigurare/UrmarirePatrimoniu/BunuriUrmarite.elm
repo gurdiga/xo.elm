@@ -23,8 +23,15 @@ type BunuriUrmarite
 
 type alias Data =
     { items : Items
-    , itemToEdit : Maybe BunUrmarit
+    , itemToEdit : Maybe ItemToEdit
     }
+
+
+type ItemToEdit
+    = ItemToEdit
+        { index : Maybe Int
+        , value : BunUrmarit
+        }
 
 
 type alias Items =
@@ -64,7 +71,17 @@ setItems data v =
     { data | items = v }
 
 
-setItemToEdit : Data -> Maybe BunUrmarit -> Data
+addOrReplaceItem : Data -> Maybe Int -> Selectable BunUrmarit -> Items
+addOrReplaceItem data index selectableItem =
+    case index of
+        Just i ->
+            MyList.replace data.items i selectableItem
+
+        Nothing ->
+            data.items ++ [ selectableItem ]
+
+
+setItemToEdit : Data -> Maybe ItemToEdit -> Data
 setItemToEdit data v =
     { data | itemToEdit = v }
 
@@ -79,17 +96,19 @@ view bunuriUrmarite callback =
             BunuriUrmarite >> callback
 
         initItemToEdit _ =
-            updateItemToEdit BunUrmarit.empty
+            ItemToEdit { index = Nothing, value = BunUrmarit.empty }
+                |> Just
+                |> updateItemToEdit
 
         updateItemToEdit v =
-            setItemToEdit data (Just v)
+            setItemToEdit data v
 
         removeItemToEdit _ =
             setItemToEdit data Nothing
 
-        submitItemItoEdit v =
-            [ Selectable { item = v, isSelected = False } ]
-                |> List.append data.items
+        submitItem (ItemToEdit { value, index }) =
+            Selectable { item = value, isSelected = False }
+                |> addOrReplaceItem data index
                 |> setItems data
                 |> (flip setItemToEdit) Nothing
 
@@ -100,26 +119,29 @@ view bunuriUrmarite callback =
             [ legend [] [ text "BunuriUrmarite" ]
             , itemListView data.items
                 (updateItems >> c)
-                (updateItemToEdit >> c)
+                (Just >> updateItemToEdit >> c)
             , editForm data.itemToEdit
-                (updateItemToEdit >> c)
-                (submitItemItoEdit >> c)
+                (Just >> updateItemToEdit >> c)
+                (submitItem >> c)
                 (removeItemToEdit >> c)
             , button [ onClick (initItemToEdit >> c) ] [ text "+" ]
             ]
 
 
-itemListView : Items -> (Items -> msg) -> (BunUrmarit -> msg) -> Html msg
+itemListView : Items -> (Items -> msg) -> (ItemToEdit -> msg) -> Html msg
 itemListView items updateCallback editCallback =
     if List.length items > 0 then
         let
             updateItem i v =
                 MyList.replace items i v
 
+            editItem i v =
+                ItemToEdit { index = Just i, value = v }
+
             renderItem i v =
                 itemView v
                     (updateItem i >> updateCallback)
-                    editCallback
+                    (editItem i >> editCallback)
         in
             ul [] (List.indexedMap renderItem items)
     else
@@ -156,11 +178,18 @@ itemView selectableBunUrmarit updateCallback editCallback =
             )
 
 
-editForm : Maybe BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
-editForm maybeItemToEdit updateItemToEdit submitItemCallback cancelEditCallback =
+editForm : Maybe ItemToEdit -> (ItemToEdit -> msg) -> (ItemToEdit -> msg) -> (ItemToEdit -> msg) -> Html msg
+editForm maybeItemToEdit updateItemToEditCallback submitItemCallback cancelEditCallback =
     case maybeItemToEdit of
-        Just itemToEdit ->
-            BunUrmarit.editForm itemToEdit updateItemToEdit submitItemCallback cancelEditCallback
+        Just (ItemToEdit { index, value }) ->
+            let
+                makeItemToEdit v =
+                    ItemToEdit { index = index, value = v }
+            in
+                BunUrmarit.editForm value
+                    (makeItemToEdit >> updateItemToEditCallback)
+                    (makeItemToEdit >> submitItemCallback)
+                    (makeItemToEdit >> cancelEditCallback)
 
         Nothing ->
             text ""

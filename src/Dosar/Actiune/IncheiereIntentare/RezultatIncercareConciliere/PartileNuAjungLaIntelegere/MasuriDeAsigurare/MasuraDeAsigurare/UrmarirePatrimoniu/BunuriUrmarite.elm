@@ -76,7 +76,7 @@ submitItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
 submitItem ((BunuriUrmarite { items, itemToEdit }) as bunuriUrmarite) v index =
     -- TODO: make this nice
     setItems
-        (setItemToEdit bunuriUrmarite Nothing)
+        (resetItemToEdit bunuriUrmarite)
         (case index of
             Just index ->
                 MyList.replace items index (Selectable { isSelected = False, item = v })
@@ -91,84 +91,67 @@ setItemToEdit (BunuriUrmarite data) v =
     BunuriUrmarite { data | itemToEdit = v }
 
 
+resetItemToEdit : BunuriUrmarite -> BunuriUrmarite
+resetItemToEdit bunuriUrmarite =
+    setItemToEdit bunuriUrmarite Nothing
+
+
+updateItemToEdit : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
+updateItemToEdit bunuriUrmarite bunUrmarit index =
+    setItemToEdit bunuriUrmarite
+        (Just (ItemToEdit { item = bunUrmarit, index = index }))
+
+
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-view ((BunuriUrmarite { items, itemToEdit }) as bunuriUrmarite) callback =
+view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
     fieldset []
         [ legend [] [ text "BunuriUrmarite" ]
-        , itemListView items
-            (setItems bunuriUrmarite >> callback)
-            (\bunUrmarit index ->
-                ItemToEdit { item = bunUrmarit, index = Just index }
-                    |> Just
-                    |> setItemToEdit bunuriUrmarite
-                    |> callback
+        , withNonEmpty items
+            (\items ->
+                itemListView items
+                    (\items -> setItems v items |> callback)
+                    (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
             )
-
-        -- TODO: make this nice
-        , case itemToEdit of
-            Just (ItemToEdit { item, index }) ->
+        , withNonNothing itemToEdit
+            (\(ItemToEdit { item, index }) ->
                 editForm item
-                    (\bunUrmarit ->
-                        ItemToEdit { index = index, item = bunUrmarit }
-                            |> Just
-                            |> setItemToEdit bunuriUrmarite
-                            |> callback
-                    )
-                    (\bunUrmarit -> submitItem bunuriUrmarite bunUrmarit index |> callback)
-                    (\bunUrmarit -> setItemToEdit bunuriUrmarite Nothing |> callback)
-
-            Nothing ->
-                text ""
+                    (\bunUrmarit -> updateItemToEdit v item index |> callback)
+                    (\bunUrmarit -> submitItem v item index |> callback)
+                    (\bunUrmarit -> resetItemToEdit v |> callback)
+            )
         , button
-            [ onClick
-                (\_ ->
-                    ItemToEdit { item = BunUrmarit.empty, index = Nothing }
-                        |> Just
-                        |> setItemToEdit bunuriUrmarite
-                        |> callback
-                )
-            ]
+            [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> callback) ]
             [ text "+" ]
         ]
 
 
 itemListView : Items -> (Items -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg
 itemListView items updateCallback editCallback =
-    if List.length items > 0 then
-        let
-            updateItem i v =
-                MyList.replace items i v
-
-            renderItem i v =
-                itemView v
-                    (updateItem i >> updateCallback)
-                    (\bunUrmarit -> editCallback bunUrmarit i)
-        in
-            ul [] (List.indexedMap renderItem items)
-    else
-        text ""
-
-
-itemView : Item -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
-itemView selectableBunUrmarit updateCallback editCallback =
     let
-        (Selectable data) =
-            selectableBunUrmarit
+        updateItem i v =
+            MyList.replace items i v
 
-        setIsSelected v =
-            Selectable { data | isSelected = v }
+        renderItem i v =
+            selectableItemView v
+                (updateItem i >> updateCallback)
+                (\bunUrmarit -> editCallback bunUrmarit i)
     in
-        li []
-            ([ input
-                [ type_ "checkbox"
-                , checked data.isSelected
-                , onCheck (setIsSelected >> updateCallback)
-                ]
-                []
-             ]
-                ++ BunUrmarit.view data.item
-                ++ [ button [ onClick (\_ -> editCallback data.item) ] [ text "Edit" ] ]
-            )
+        ul [] (List.indexedMap renderItem items)
+
+
+selectableItemView : Item -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
+selectableItemView (Selectable { item, isSelected }) updateCallback editCallback =
+    li []
+        ([ input
+            [ type_ "checkbox"
+            , checked isSelected
+            , onCheck (\v -> Selectable { item = item, isSelected = v } |> updateCallback)
+            ]
+            []
+         ]
+            ++ BunUrmarit.view item
+            ++ [ button [ onClick (\_ -> editCallback item) ] [ text "Edit" ] ]
+        )
 
 
 editForm : BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
@@ -177,3 +160,21 @@ editForm bunUrmarit updateItemToEditCallback submitItemCallback cancelEditCallba
         (updateItemToEditCallback)
         (submitItemCallback)
         (cancelEditCallback)
+
+
+withNonNothing : Maybe a -> (a -> Html msg) -> Html msg
+withNonNothing maybeV renderer =
+    case maybeV of
+        Just v ->
+            renderer v
+
+        Nothing ->
+            text ""
+
+
+withNonEmpty : List a -> (List a -> Html msg) -> Html msg
+withNonEmpty list renderer =
+    if List.isEmpty list then
+        text ""
+    else
+        renderer list

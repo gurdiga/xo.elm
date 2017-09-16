@@ -73,17 +73,21 @@ setItems (BunuriUrmarite data) v =
 
 
 submitItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
-submitItem ((BunuriUrmarite { items, itemToEdit }) as bunuriUrmarite) v index =
-    -- TODO: make this nice
-    setItems
-        (resetItemToEdit bunuriUrmarite)
-        (case index of
-            Just index ->
-                MyList.replace items index (Selectable { isSelected = False, item = v })
+submitItem ((BunuriUrmarite { items }) as bunuriUrmarite) bunUrmarit index =
+    let
+        item =
+            Selectable { isSelected = False, item = bunUrmarit }
 
-            Nothing ->
-                items ++ [ Selectable { isSelected = False, item = v } ]
-        )
+        newItems =
+            case index of
+                Just index ->
+                    MyList.replace items index item
+
+                Nothing ->
+                    items ++ [ item ]
+    in
+        setItems bunuriUrmarite newItems
+            |> resetItemToEdit
 
 
 setItemToEdit : BunuriUrmarite -> Maybe ItemToEdit -> BunuriUrmarite

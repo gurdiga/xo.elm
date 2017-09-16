@@ -5,7 +5,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, fieldset, legend, ul, li, p, button, input, text, br)
+import Html exposing (Html, fieldset, legend, div, ul, li, p, button, input, text, br)
 import Html.Attributes exposing (type_, checked)
 import Html.Events exposing (onCheck)
 import Utils.MyHtmlEvents exposing (onClick)
@@ -21,6 +21,7 @@ type BunuriUrmarite
     = BunuriUrmarite
         { items : Items
         , maybeItemToEdit : Maybe ItemToEdit
+        , isSelectionPending : Bool
         }
 
 
@@ -51,6 +52,7 @@ empty =
     BunuriUrmarite
         { items = someItems
         , maybeItemToEdit = Nothing
+        , isSelectionPending = False
         }
 
 
@@ -62,7 +64,7 @@ someItems =
         }
     , Selectable
         { item = BunUrmarit { denumire = "Automobil Porche", valoare = Money 250000 USD, note = "Yeah!" }
-        , isSelected = True
+        , isSelected = False
         }
     ]
 
@@ -70,6 +72,11 @@ someItems =
 setItems : BunuriUrmarite -> Items -> BunuriUrmarite
 setItems (BunuriUrmarite data) v =
     BunuriUrmarite { data | items = v }
+
+
+setIsSelectionPending : BunuriUrmarite -> Bool -> BunuriUrmarite
+setIsSelectionPending (BunuriUrmarite data) v =
+    BunuriUrmarite { data | isSelectionPending = v }
 
 
 submitItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
@@ -90,6 +97,15 @@ submitItem ((BunuriUrmarite { items }) as bunuriUrmarite) bunUrmarit maybeIndex 
             |> resetItemToEdit
 
 
+resetSelectedItems : BunuriUrmarite -> BunuriUrmarite
+resetSelectedItems ((BunuriUrmarite ({ items } as data)) as bunuriUrmarite) =
+    let
+        newItems =
+            List.map (\(Selectable bunUrmarit) -> Selectable { bunUrmarit | isSelected = False }) items
+    in
+        BunuriUrmarite { data | items = newItems }
+
+
 setItemToEdit : BunuriUrmarite -> Maybe ItemToEdit -> BunuriUrmarite
 setItemToEdit (BunuriUrmarite data) v =
     BunuriUrmarite { data | maybeItemToEdit = v }
@@ -107,14 +123,22 @@ updateItemToEdit bunuriUrmarite bunUrmarit maybeIndex =
 
 
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-view ((BunuriUrmarite { items, maybeItemToEdit }) as v) callback =
+view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) callback =
     fieldset []
         [ legend [] [ text "BunuriUrmarite" ]
         , withNonEmpty items
             (\items ->
-                itemListView items
-                    (\(Selectable { item }) index -> submitItem v item (Just index) |> callback)
-                    (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
+                div []
+                    [ button [ onClick (\_ -> setIsSelectionPending v True |> callback) ] [ text "Start action" ]
+                    , withTrue isSelectionPending
+                        (\_ ->
+                            button [ onClick (\_ -> setIsSelectionPending v False |> resetSelectedItems |> callback) ] [ text "Cancel" ]
+                        )
+                    , itemListView items
+                        isSelectionPending
+                        (\(Selectable { item }) index -> submitItem v item (Just index) |> callback)
+                        (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
+                    ]
             )
         , withNonNothing maybeItemToEdit
             (\(ItemToEdit { item, maybeIndex }) ->
@@ -129,26 +153,30 @@ view ((BunuriUrmarite { items, maybeItemToEdit }) as v) callback =
         ]
 
 
-itemListView : Items -> (Item -> Int -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg
-itemListView items updateCallback editCallback =
+itemListView : Items -> Bool -> (Item -> Int -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg
+itemListView items isSelectionPending updateCallback editCallback =
     let
         renderItem i v =
             selectableItemView v
+                isSelectionPending
                 (\item -> updateCallback item i)
                 (\bunUrmarit -> editCallback bunUrmarit i)
     in
         ul [] (List.indexedMap renderItem items)
 
 
-selectableItemView : Item -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
-selectableItemView (Selectable { item, isSelected }) updateCallback editCallback =
+selectableItemView : Item -> Bool -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
+selectableItemView (Selectable { item, isSelected }) shouldDisplayCheckbox updateCallback editCallback =
     li []
-        [ input
-            [ type_ "checkbox"
-            , checked isSelected
-            , onCheck (\v -> Selectable { item = item, isSelected = v } |> updateCallback)
-            ]
-            []
+        [ withTrue shouldDisplayCheckbox
+            (\_ ->
+                input
+                    [ type_ "checkbox"
+                    , checked isSelected
+                    , onCheck (\v -> Selectable { item = item, isSelected = v } |> updateCallback)
+                    ]
+                    []
+            )
         , BunUrmarit.view item
         , button [ onClick (\_ -> editCallback item) ] [ text "Edit" ]
         ]
@@ -170,3 +198,11 @@ withNonEmpty list renderer =
         text ""
     else
         renderer list
+
+
+withTrue : Bool -> (Bool -> Html msg) -> Html msg
+withTrue v renderer =
+    if v == True then
+        renderer v
+    else
+        text ""

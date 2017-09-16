@@ -147,55 +147,48 @@ processSelectedItems bunuriUrmarite =
 
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
 view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) callback =
-    fieldset []
-        [ legend [] [ text "BunuriUrmarite" ]
-        , withNonEmpty items
-            (\items ->
-                div []
-                    [ button [ onClick (\_ -> setIsSelectionPending v True |> callback) ] [ text "Start action" ]
-                    , withTrue isSelectionPending
-                        (\_ ->
-                            span []
-                                [ withTrue (anyItemSelected v)
-                                    (\_ ->
-                                        button
-                                            [ onClick
-                                                (\_ ->
-                                                    processSelectedItems v
-                                                        |> (flip setIsSelectionPending) False
-                                                        |> callback
-                                                )
-                                            ]
-                                            [ text "Commit" ]
-                                    )
-                                , button
-                                    [ onClick
-                                        (\_ ->
-                                            setIsSelectionPending v False
-                                                |> resetSelectedItems
-                                                |> callback
-                                        )
-                                    ]
-                                    [ text "Cancel" ]
-                                ]
-                        )
-                    , itemListView items
-                        isSelectionPending
-                        (\item index -> updateItem v item (Just index) |> callback)
-                        (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
-                    ]
-            )
-        , withNonNothing maybeItemToEdit
-            (\(ItemToEdit { item, maybeIndex }) ->
-                BunUrmarit.editForm item
-                    (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> callback)
-                    (\bunUrmarit -> commitItem v bunUrmarit maybeIndex |> callback)
-                    (\bunUrmarit -> resetItemToEdit v |> callback)
-            )
-        , button
-            [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> callback) ]
-            [ text "+" ]
-        ]
+    let
+        actionButtons =
+            span []
+                [ whenTrue (anyItemSelected v)
+                    (\_ -> button [ onClick (\_ -> doProcessSelectedItems) ] [ text "Commit" ])
+                , button [ onClick (\_ -> doCancelAction) ] [ text "Cancel" ]
+                ]
+
+        doProcessSelectedItems =
+            processSelectedItems v
+                |> (flip setIsSelectionPending) False
+                |> callback
+
+        doCancelAction =
+            setIsSelectionPending v False
+                |> resetSelectedItems
+                |> callback
+    in
+        fieldset []
+            [ legend [] [ text "BunuriUrmarite" ]
+            , whenNonEmpty items
+                (\items ->
+                    div []
+                        [ button [ onClick (\_ -> setIsSelectionPending v True |> callback) ] [ text "Start action" ]
+                        , whenTrue isSelectionPending (\_ -> actionButtons)
+                        , itemListView items
+                            isSelectionPending
+                            (\item index -> updateItem v item (Just index) |> callback)
+                            (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
+                        ]
+                )
+            , whenNonNothing maybeItemToEdit
+                (\(ItemToEdit { item, maybeIndex }) ->
+                    BunUrmarit.editForm item
+                        (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> callback)
+                        (\bunUrmarit -> commitItem v bunUrmarit maybeIndex |> callback)
+                        (\bunUrmarit -> resetItemToEdit v |> callback)
+                )
+            , button
+                [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> callback) ]
+                [ text "+" ]
+            ]
 
 
 itemListView : Items -> Bool -> (Item -> Int -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg
@@ -213,7 +206,7 @@ itemListView items isSelectionPending updateCallback editCallback =
 selectableItemView : Item -> Bool -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
 selectableItemView (Selectable ({ item, isSelected } as data)) shouldDisplayCheckbox updateCallback editCallback =
     li []
-        [ withTrue shouldDisplayCheckbox
+        [ whenTrue shouldDisplayCheckbox
             (\_ ->
                 input
                     [ type_ "checkbox"
@@ -227,8 +220,8 @@ selectableItemView (Selectable ({ item, isSelected } as data)) shouldDisplayChec
         ]
 
 
-withNonNothing : Maybe a -> (a -> Html msg) -> Html msg
-withNonNothing maybeV renderer =
+whenNonNothing : Maybe a -> (a -> Html msg) -> Html msg
+whenNonNothing maybeV renderer =
     case maybeV of
         Just v ->
             renderer v
@@ -237,16 +230,16 @@ withNonNothing maybeV renderer =
             text ""
 
 
-withNonEmpty : List a -> (List a -> Html msg) -> Html msg
-withNonEmpty list renderer =
+whenNonEmpty : List a -> (List a -> Html msg) -> Html msg
+whenNonEmpty list renderer =
     if List.isEmpty list then
         text ""
     else
         renderer list
 
 
-withTrue : Bool -> (Bool -> Html msg) -> Html msg
-withTrue v renderer =
+whenTrue : Bool -> (Bool -> Html msg) -> Html msg
+whenTrue v renderer =
     if v == True then
         renderer v
     else

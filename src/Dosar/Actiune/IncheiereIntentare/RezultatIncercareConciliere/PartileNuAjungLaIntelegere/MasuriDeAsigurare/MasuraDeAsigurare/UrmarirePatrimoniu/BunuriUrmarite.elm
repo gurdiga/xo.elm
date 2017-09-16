@@ -119,8 +119,8 @@ view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
         , withNonNothing itemToEdit
             (\(ItemToEdit { item, index }) ->
                 BunUrmarit.editForm item
-                    (\bunUrmarit -> updateItemToEdit v item index |> callback)
-                    (\bunUrmarit -> submitItem v item index |> callback)
+                    (\bunUrmarit -> updateItemToEdit v bunUrmarit index |> callback)
+                    (\bunUrmarit -> submitItem v bunUrmarit index |> callback)
                     (\bunUrmarit -> resetItemToEdit v |> callback)
             )
         , button

@@ -5,7 +5,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, fieldset, legend, div, ul, li, p, button, input, text, br)
+import Html exposing (Html, fieldset, legend, div, span, ul, li, p, button, input, text, br)
 import Html.Attributes exposing (type_, checked)
 import Html.Events exposing (onCheck)
 import Utils.MyHtmlEvents exposing (onClick)
@@ -79,12 +79,9 @@ setIsSelectionPending (BunuriUrmarite data) v =
     BunuriUrmarite { data | isSelectionPending = v }
 
 
-submitItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
-submitItem ((BunuriUrmarite { items }) as bunuriUrmarite) bunUrmarit maybeIndex =
+updateItem : BunuriUrmarite -> Item -> Maybe Int -> BunuriUrmarite
+updateItem ((BunuriUrmarite { items }) as bunuriUrmarite) item maybeIndex =
     let
-        item =
-            Selectable { isSelected = False, item = bunUrmarit }
-
         newItems =
             case maybeIndex of
                 Just index ->
@@ -97,13 +94,34 @@ submitItem ((BunuriUrmarite { items }) as bunuriUrmarite) bunUrmarit maybeIndex 
             |> resetItemToEdit
 
 
+commitItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
+commitItem bunuriUrmarite bunUrmarit maybeIndex =
+    let
+        item =
+            (Selectable { item = bunUrmarit, isSelected = False })
+    in
+        updateItem bunuriUrmarite item maybeIndex
+
+
 resetSelectedItems : BunuriUrmarite -> BunuriUrmarite
 resetSelectedItems ((BunuriUrmarite ({ items } as data)) as bunuriUrmarite) =
     let
+        unselect (Selectable bunUrmarit) =
+            Selectable { bunUrmarit | isSelected = False }
+
         newItems =
-            List.map (\(Selectable bunUrmarit) -> Selectable { bunUrmarit | isSelected = False }) items
+            List.map unselect items
     in
         BunuriUrmarite { data | items = newItems }
+
+
+anyItemSelected : BunuriUrmarite -> Bool
+anyItemSelected (BunuriUrmarite { items }) =
+    let
+        isSelected (Selectable bunUrmarit) =
+            bunUrmarit.isSelected
+    in
+        List.any isSelected items
 
 
 setItemToEdit : BunuriUrmarite -> Maybe ItemToEdit -> BunuriUrmarite
@@ -122,6 +140,11 @@ updateItemToEdit bunuriUrmarite bunUrmarit maybeIndex =
         (Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }))
 
 
+processSelectedItems : BunuriUrmarite -> BunuriUrmarite
+processSelectedItems bunuriUrmarite =
+    Debug.log "processItems" bunuriUrmarite
+
+
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
 view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) callback =
     fieldset []
@@ -132,11 +155,33 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) call
                     [ button [ onClick (\_ -> setIsSelectionPending v True |> callback) ] [ text "Start action" ]
                     , withTrue isSelectionPending
                         (\_ ->
-                            button [ onClick (\_ -> setIsSelectionPending v False |> resetSelectedItems |> callback) ] [ text "Cancel" ]
+                            span []
+                                [ withTrue (anyItemSelected v)
+                                    (\_ ->
+                                        button
+                                            [ onClick
+                                                (\_ ->
+                                                    processSelectedItems v
+                                                        |> (flip setIsSelectionPending) False
+                                                        |> callback
+                                                )
+                                            ]
+                                            [ text "Commit" ]
+                                    )
+                                , button
+                                    [ onClick
+                                        (\_ ->
+                                            setIsSelectionPending v False
+                                                |> resetSelectedItems
+                                                |> callback
+                                        )
+                                    ]
+                                    [ text "Cancel" ]
+                                ]
                         )
                     , itemListView items
                         isSelectionPending
-                        (\(Selectable { item }) index -> submitItem v item (Just index) |> callback)
+                        (\item index -> updateItem v item (Just index) |> callback)
                         (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
                     ]
             )
@@ -144,7 +189,7 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) call
             (\(ItemToEdit { item, maybeIndex }) ->
                 BunUrmarit.editForm item
                     (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> callback)
-                    (\bunUrmarit -> submitItem v bunUrmarit maybeIndex |> callback)
+                    (\bunUrmarit -> commitItem v bunUrmarit maybeIndex |> callback)
                     (\bunUrmarit -> resetItemToEdit v |> callback)
             )
         , button
@@ -166,14 +211,14 @@ itemListView items isSelectionPending updateCallback editCallback =
 
 
 selectableItemView : Item -> Bool -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
-selectableItemView (Selectable { item, isSelected }) shouldDisplayCheckbox updateCallback editCallback =
+selectableItemView (Selectable ({ item, isSelected } as data)) shouldDisplayCheckbox updateCallback editCallback =
     li []
         [ withTrue shouldDisplayCheckbox
             (\_ ->
                 input
                     [ type_ "checkbox"
                     , checked isSelected
-                    , onCheck (\v -> Selectable { item = item, isSelected = v } |> updateCallback)
+                    , onCheck (\v -> Selectable { data | isSelected = v } |> updateCallback)
                     ]
                     []
             )

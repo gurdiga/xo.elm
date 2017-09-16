@@ -8,7 +8,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , editForm
         )
 
-import Html exposing (Html, fieldset, legend, p, label, input, button, span, strong, small, text, br)
+import Html exposing (Html, fieldset, legend, p, label, input, button, div, span, strong, small, text, br)
 import Html.Attributes exposing (style)
 import Utils.MyHtmlEvents exposing (onClick)
 import Widgets.Fields exposing (textField, largeTextField, moneyField)
@@ -62,7 +62,7 @@ editForm bunUrmarit updateCallback submitCallback cancelCallback =
             ]
 
 
-view : BunUrmarit -> List (Html msg)
+view : BunUrmarit -> Html msg
 view (BunUrmarit { denumire, valoare, note }) =
     let
         mainStyle =
@@ -73,10 +73,11 @@ view (BunUrmarit { denumire, valoare, note }) =
             , ( "color", "gray" )
             ]
     in
-        [ p [ style mainStyle ]
-            [ span [] [ text denumire ]
-            , text " "
-            , strong [] [ text (Money.format valoare) ]
+        div []
+            [ p [ style mainStyle ]
+                [ span [] [ text denumire ]
+                , text " "
+                , strong [] [ text (Money.format valoare) ]
+                ]
+            , p [ style noteStyle ] [ small [] [ text note ] ]
             ]
-        , p [ style noteStyle ] [ small [] [ text note ] ]
-        ]

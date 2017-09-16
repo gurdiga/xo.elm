@@ -113,7 +113,7 @@ view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
         , withNonEmpty items
             (\items ->
                 itemListView items
-                    (\items -> setItems v items |> callback)
+                    (\(Selectable { item }) index -> submitItem v item (Just index) |> callback)
                     (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
             )
         , withNonNothing itemToEdit
@@ -129,15 +129,12 @@ view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
         ]
 
 
-itemListView : Items -> (Items -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg
+itemListView : Items -> (Item -> Int -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg
 itemListView items updateCallback editCallback =
     let
-        updateItem i v =
-            MyList.replace items i v
-
         renderItem i v =
             selectableItemView v
-                (updateItem i >> updateCallback)
+                (\item -> updateCallback item i)
                 (\bunUrmarit -> editCallback bunUrmarit i)
     in
         ul [] (List.indexedMap renderItem items)
@@ -146,16 +143,15 @@ itemListView items updateCallback editCallback =
 selectableItemView : Item -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
 selectableItemView (Selectable { item, isSelected }) updateCallback editCallback =
     li []
-        ([ input
+        [ input
             [ type_ "checkbox"
             , checked isSelected
             , onCheck (\v -> Selectable { item = item, isSelected = v } |> updateCallback)
             ]
             []
-         ]
-            ++ BunUrmarit.view item
-            ++ [ button [ onClick (\_ -> editCallback item) ] [ text "Edit" ] ]
-        )
+        , BunUrmarit.view item
+        , button [ onClick (\_ -> editCallback item) ] [ text "Edit" ]
+        ]
 
 
 withNonNothing : Maybe a -> (a -> Html msg) -> Html msg

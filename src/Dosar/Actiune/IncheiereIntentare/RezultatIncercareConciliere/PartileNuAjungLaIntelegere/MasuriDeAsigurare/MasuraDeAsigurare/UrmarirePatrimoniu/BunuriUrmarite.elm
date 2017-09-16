@@ -97,17 +97,28 @@ view ((BunuriUrmarite { items, itemToEdit }) as bunuriUrmarite) callback =
         [ legend [] [ text "BunuriUrmarite" ]
         , itemListView items
             (setItems bunuriUrmarite >> callback)
-            -- TODO: can I get an non-Selectable Item here?
             (\bunUrmarit index ->
                 ItemToEdit { item = bunUrmarit, index = Just index }
                     |> Just
                     |> setItemToEdit bunuriUrmarite
                     |> callback
             )
-        , editForm itemToEdit
-            (Just >> setItemToEdit bunuriUrmarite >> callback)
-            (\(ItemToEdit { item, index }) -> submitItem bunuriUrmarite item index |> callback)
-            (\(ItemToEdit { item, index }) -> setItemToEdit bunuriUrmarite Nothing |> callback)
+
+        -- TODO: make this nice
+        , case itemToEdit of
+            Just (ItemToEdit { item, index }) ->
+                editForm item
+                    (\bunUrmarit ->
+                        ItemToEdit { index = index, item = bunUrmarit }
+                            |> Just
+                            |> setItemToEdit bunuriUrmarite
+                            |> callback
+                    )
+                    (\bunUrmarit -> submitItem bunuriUrmarite bunUrmarit index |> callback)
+                    (\bunUrmarit -> setItemToEdit bunuriUrmarite Nothing |> callback)
+
+            Nothing ->
+                text ""
         , button
             [ onClick
                 (\_ ->
@@ -160,18 +171,9 @@ itemView selectableBunUrmarit updateCallback editCallback =
             )
 
 
-editForm : Maybe ItemToEdit -> (ItemToEdit -> msg) -> (ItemToEdit -> msg) -> (ItemToEdit -> msg) -> Html msg
-editForm maybeItemToEdit updateItemToEditCallback submitItemCallback cancelEditCallback =
-    case maybeItemToEdit of
-        Just (ItemToEdit { index, item }) ->
-            let
-                makeItemToEdit v =
-                    ItemToEdit { index = index, item = v }
-            in
-                BunUrmarit.editForm item
-                    (makeItemToEdit >> updateItemToEditCallback)
-                    (makeItemToEdit >> submitItemCallback)
-                    (makeItemToEdit >> cancelEditCallback)
-
-        Nothing ->
-            text ""
+editForm : BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
+editForm bunUrmarit updateItemToEditCallback submitItemCallback cancelEditCallback =
+    BunUrmarit.editForm bunUrmarit
+        (updateItemToEditCallback)
+        (submitItemCallback)
+        (cancelEditCallback)

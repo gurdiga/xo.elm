@@ -114,7 +114,7 @@ view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
             )
         , withNonNothing itemToEdit
             (\(ItemToEdit { item, index }) ->
-                editForm item
+                BunUrmarit.editForm item
                     (\bunUrmarit -> updateItemToEdit v item index |> callback)
                     (\bunUrmarit -> submitItem v item index |> callback)
                     (\bunUrmarit -> resetItemToEdit v |> callback)
@@ -152,14 +152,6 @@ selectableItemView (Selectable { item, isSelected }) updateCallback editCallback
             ++ BunUrmarit.view item
             ++ [ button [ onClick (\_ -> editCallback item) ] [ text "Edit" ] ]
         )
-
-
-editForm : BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
-editForm bunUrmarit updateItemToEditCallback submitItemCallback cancelEditCallback =
-    BunUrmarit.editForm bunUrmarit
-        (updateItemToEditCallback)
-        (submitItemCallback)
-        (cancelEditCallback)
 
 
 withNonNothing : Maybe a -> (a -> Html msg) -> Html msg

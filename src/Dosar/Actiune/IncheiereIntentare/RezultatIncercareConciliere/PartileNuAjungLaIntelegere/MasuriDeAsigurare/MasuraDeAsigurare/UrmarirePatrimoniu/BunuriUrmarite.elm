@@ -18,13 +18,10 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 
 type BunuriUrmarite
-    = BunuriUrmarite Data
-
-
-type alias Data =
-    { items : Items
-    , itemToEdit : Maybe ItemToEdit
-    }
+    = BunuriUrmarite
+        { items : Items
+        , itemToEdit : Maybe ItemToEdit
+        }
 
 
 type ItemToEdit
@@ -66,88 +63,76 @@ someItems =
     ]
 
 
-setItems : Data -> Items -> Data
-setItems data v =
-    { data | items = v }
+setItems : BunuriUrmarite -> Items -> BunuriUrmarite
+setItems (BunuriUrmarite data) v =
+    BunuriUrmarite { data | items = v }
 
 
-addOrReplaceItem : Data -> Maybe Int -> Selectable BunUrmarit -> Items
-addOrReplaceItem data index selectableItem =
-    case index of
-        Just i ->
-            MyList.replace data.items i selectableItem
+addOrReplaceItem : BunuriUrmarite -> Maybe Int -> BunUrmarit -> BunuriUrmarite
+addOrReplaceItem ((BunuriUrmarite { items, itemToEdit }) as bunuriUrmarite) index v =
+    setItems
+        (setItemToEdit bunuriUrmarite Nothing)
+        (case index of
+            Just index ->
+                MyList.replace items index (Selectable { isSelected = False, item = v })
 
-        Nothing ->
-            data.items ++ [ selectableItem ]
+            Nothing ->
+                items ++ [ Selectable { isSelected = False, item = v } ]
+        )
 
 
-setItemToEdit : Data -> Maybe ItemToEdit -> Data
-setItemToEdit data v =
-    { data | itemToEdit = v }
+setItemToEdit : BunuriUrmarite -> Maybe ItemToEdit -> BunuriUrmarite
+setItemToEdit (BunuriUrmarite data) v =
+    BunuriUrmarite { data | itemToEdit = v }
 
 
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-view bunuriUrmarite callback =
-    let
-        (BunuriUrmarite data) =
-            bunuriUrmarite
-
-        c =
-            BunuriUrmarite >> callback
-
-        initItemToEdit _ =
-            ItemToEdit { index = Nothing, item = BunUrmarit.empty }
-                |> updateItemToEdit
-
-        updateItemToEdit v =
-            setItemToEdit data (Just v)
-
-        removeItemToEdit _ =
-            setItemToEdit data Nothing
-
-        submitItem (ItemToEdit { item, index }) =
-            Selectable { item = item, isSelected = False }
-                |> addOrReplaceItem data index
-                |> setItems data
-                |> (flip setItemToEdit) Nothing
-
-        updateItems v =
-            setItems data v
-    in
-        fieldset []
-            [ legend [] [ text "BunuriUrmarite" ]
-            , itemListView data.items
-                (updateItems >> c)
-                (updateItemToEdit >> c)
-            , editForm data.itemToEdit
-                (updateItemToEdit >> c)
-                (submitItem >> c)
-                (removeItemToEdit >> c)
-            , button [ onClick (initItemToEdit >> c) ] [ text "+" ]
+view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
+    fieldset []
+        [ legend [] [ text "BunuriUrmarite" ]
+        , itemListView items
+            (setItems v >> callback)
+            (\i (Selectable { isSelected, item }) -> callback (setItemToEdit v (Just (ItemToEdit { item = item, index = Just i }))))
+        , editForm itemToEdit
+            (Just >> setItemToEdit v >> callback)
+            (\(ItemToEdit { index, item }) -> callback (addOrReplaceItem v index item))
+            (\(ItemToEdit { index, item }) -> callback (setItemToEdit v Nothing))
+        , button
+            [ onClick
+                (\_ ->
+                    callback <|
+                        setItemToEdit v
+                            (Just
+                                (ItemToEdit
+                                    { index = Nothing
+                                    , item = BunUrmarit.empty
+                                    }
+                                )
+                            )
+                )
             ]
+            [ text "+" ]
+        ]
 
 
-itemListView : Items -> (Items -> msg) -> (ItemToEdit -> msg) -> Html msg
+itemListView : Items -> (Items -> msg) -> (Int -> Selectable BunUrmarit -> msg) -> Html msg
 itemListView items updateCallback editCallback =
     if List.length items > 0 then
         let
             updateItem i v =
                 MyList.replace items i v
 
-            editItem i v =
-                ItemToEdit { index = Just i, item = v }
-
             renderItem i v =
                 itemView v
                     (updateItem i >> updateCallback)
-                    (editItem i >> editCallback)
+                    (editCallback i)
         in
             ul [] (List.indexedMap renderItem items)
     else
         text ""
 
 
-itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
+itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> (Selectable BunUrmarit -> msg) -> Html msg
 itemView selectableBunUrmarit updateCallback editCallback =
     let
         (Selectable data) =
@@ -165,7 +150,7 @@ itemView selectableBunUrmarit updateCallback editCallback =
                 []
              ]
                 ++ BunUrmarit.view data.item
-                ++ [ button [ onClick (\_ -> editCallback data.item) ] [ text "Edit" ] ]
+                ++ [ button [ onClick (\_ -> editCallback selectableBunUrmarit) ] [ text "Edit" ] ]
             )
 
 

@@ -20,14 +20,7 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 type BunuriUrmarite
     = BunuriUrmarite
         { items : Items
-        , itemToEdit : Maybe ItemToEdit
-        }
-
-
-type ItemToEdit
-    = ItemToEdit
-        { item : BunUrmarit
-        , index : Maybe Int
+        , maybeItemToEdit : Maybe ItemToEdit
         }
 
 
@@ -46,11 +39,18 @@ type Selectable a
         }
 
 
+type ItemToEdit
+    = ItemToEdit
+        { item : BunUrmarit
+        , maybeIndex : Maybe Int
+        }
+
+
 empty : BunuriUrmarite
 empty =
     BunuriUrmarite
         { items = someItems
-        , itemToEdit = Nothing
+        , maybeItemToEdit = Nothing
         }
 
 
@@ -73,13 +73,13 @@ setItems (BunuriUrmarite data) v =
 
 
 submitItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
-submitItem ((BunuriUrmarite { items }) as bunuriUrmarite) bunUrmarit index =
+submitItem ((BunuriUrmarite { items }) as bunuriUrmarite) bunUrmarit maybeIndex =
     let
         item =
             Selectable { isSelected = False, item = bunUrmarit }
 
         newItems =
-            case index of
+            case maybeIndex of
                 Just index ->
                     MyList.replace items index item
 
@@ -92,7 +92,7 @@ submitItem ((BunuriUrmarite { items }) as bunuriUrmarite) bunUrmarit index =
 
 setItemToEdit : BunuriUrmarite -> Maybe ItemToEdit -> BunuriUrmarite
 setItemToEdit (BunuriUrmarite data) v =
-    BunuriUrmarite { data | itemToEdit = v }
+    BunuriUrmarite { data | maybeItemToEdit = v }
 
 
 resetItemToEdit : BunuriUrmarite -> BunuriUrmarite
@@ -101,13 +101,13 @@ resetItemToEdit bunuriUrmarite =
 
 
 updateItemToEdit : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
-updateItemToEdit bunuriUrmarite bunUrmarit index =
+updateItemToEdit bunuriUrmarite bunUrmarit maybeIndex =
     setItemToEdit bunuriUrmarite
-        (Just (ItemToEdit { item = bunUrmarit, index = index }))
+        (Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }))
 
 
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
+view ((BunuriUrmarite { items, maybeItemToEdit }) as v) callback =
     fieldset []
         [ legend [] [ text "BunuriUrmarite" ]
         , withNonEmpty items
@@ -116,11 +116,11 @@ view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
                     (\(Selectable { item }) index -> submitItem v item (Just index) |> callback)
                     (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
             )
-        , withNonNothing itemToEdit
-            (\(ItemToEdit { item, index }) ->
+        , withNonNothing maybeItemToEdit
+            (\(ItemToEdit { item, maybeIndex }) ->
                 BunUrmarit.editForm item
-                    (\bunUrmarit -> updateItemToEdit v bunUrmarit index |> callback)
-                    (\bunUrmarit -> submitItem v bunUrmarit index |> callback)
+                    (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> callback)
+                    (\bunUrmarit -> submitItem v bunUrmarit maybeIndex |> callback)
                     (\bunUrmarit -> resetItemToEdit v |> callback)
             )
         , button

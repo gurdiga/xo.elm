@@ -26,13 +26,17 @@ type BunuriUrmarite
 
 type ItemToEdit
     = ItemToEdit
-        { index : Maybe Int
-        , item : BunUrmarit
+        { item : BunUrmarit
+        , index : Maybe Int
         }
 
 
 type alias Items =
-    List (Selectable BunUrmarit)
+    List Item
+
+
+type alias Item =
+    Selectable BunUrmarit
 
 
 type Selectable a
@@ -68,8 +72,9 @@ setItems (BunuriUrmarite data) v =
     BunuriUrmarite { data | items = v }
 
 
-addOrReplaceItem : BunuriUrmarite -> Maybe Int -> BunUrmarit -> BunuriUrmarite
-addOrReplaceItem ((BunuriUrmarite { items, itemToEdit }) as bunuriUrmarite) index v =
+submitItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
+submitItem ((BunuriUrmarite { items, itemToEdit }) as bunuriUrmarite) v index =
+    -- TODO: make this nice
     setItems
         (setItemToEdit bunuriUrmarite Nothing)
         (case index of
@@ -87,35 +92,36 @@ setItemToEdit (BunuriUrmarite data) v =
 
 
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-view ((BunuriUrmarite { items, itemToEdit }) as v) callback =
+view ((BunuriUrmarite { items, itemToEdit }) as bunuriUrmarite) callback =
     fieldset []
         [ legend [] [ text "BunuriUrmarite" ]
         , itemListView items
-            (setItems v >> callback)
-            (\i (Selectable { isSelected, item }) -> callback (setItemToEdit v (Just (ItemToEdit { item = item, index = Just i }))))
+            (setItems bunuriUrmarite >> callback)
+            -- TODO: can I get an non-Selectable Item here?
+            (\bunUrmarit index ->
+                ItemToEdit { item = bunUrmarit, index = Just index }
+                    |> Just
+                    |> setItemToEdit bunuriUrmarite
+                    |> callback
+            )
         , editForm itemToEdit
-            (Just >> setItemToEdit v >> callback)
-            (\(ItemToEdit { index, item }) -> callback (addOrReplaceItem v index item))
-            (\(ItemToEdit { index, item }) -> callback (setItemToEdit v Nothing))
+            (Just >> setItemToEdit bunuriUrmarite >> callback)
+            (\(ItemToEdit { item, index }) -> submitItem bunuriUrmarite item index |> callback)
+            (\(ItemToEdit { item, index }) -> setItemToEdit bunuriUrmarite Nothing |> callback)
         , button
             [ onClick
                 (\_ ->
-                    callback <|
-                        setItemToEdit v
-                            (Just
-                                (ItemToEdit
-                                    { index = Nothing
-                                    , item = BunUrmarit.empty
-                                    }
-                                )
-                            )
+                    ItemToEdit { item = BunUrmarit.empty, index = Nothing }
+                        |> Just
+                        |> setItemToEdit bunuriUrmarite
+                        |> callback
                 )
             ]
             [ text "+" ]
         ]
 
 
-itemListView : Items -> (Items -> msg) -> (Int -> Selectable BunUrmarit -> msg) -> Html msg
+itemListView : Items -> (Items -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg
 itemListView items updateCallback editCallback =
     if List.length items > 0 then
         let
@@ -125,14 +131,14 @@ itemListView items updateCallback editCallback =
             renderItem i v =
                 itemView v
                     (updateItem i >> updateCallback)
-                    (editCallback i)
+                    (\bunUrmarit -> editCallback bunUrmarit i)
         in
             ul [] (List.indexedMap renderItem items)
     else
         text ""
 
 
-itemView : Selectable BunUrmarit -> (Selectable BunUrmarit -> msg) -> (Selectable BunUrmarit -> msg) -> Html msg
+itemView : Item -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
 itemView selectableBunUrmarit updateCallback editCallback =
     let
         (Selectable data) =
@@ -150,7 +156,7 @@ itemView selectableBunUrmarit updateCallback editCallback =
                 []
              ]
                 ++ BunUrmarit.view data.item
-                ++ [ button [ onClick (\_ -> editCallback selectableBunUrmarit) ] [ text "Edit" ] ]
+                ++ [ button [ onClick (\_ -> editCallback data.item) ] [ text "Edit" ] ]
             )
 
 

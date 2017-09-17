@@ -23,7 +23,11 @@ tags:
 	rm tags; ctags -R
 
 pc: pre-commit
-pre-commit: clean compile test rich-text-editor
+pre-commit: clean compile test rich-text-editor check-untracked
+
+
+check-untracked:
+	test `git ls-files --other --directory --exclude-standard | wc -c` == '0'
 
 .PHONY: rich-text-editor
 rich-text-editor:

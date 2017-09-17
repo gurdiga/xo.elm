@@ -108,11 +108,9 @@ resetSelectedItems ((BunuriUrmarite ({ items } as data)) as bunuriUrmarite) =
     let
         unselect (Selectable bunUrmarit) =
             Selectable { bunUrmarit | isSelected = False }
-
-        newItems =
-            List.map unselect items
     in
-        BunuriUrmarite { data | items = newItems }
+        List.map unselect items
+            |> setItems bunuriUrmarite
 
 
 anyItemSelected : BunuriUrmarite -> Bool
@@ -192,11 +190,11 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) call
 
 
 itemListView : Items -> Bool -> (Item -> Int -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg
-itemListView items isSelectionPending updateCallback editCallback =
+itemListView items shouldDisplayCheckboxes updateCallback editCallback =
     let
         renderItem i v =
             selectableItemView v
-                isSelectionPending
+                shouldDisplayCheckboxes
                 (\item -> updateCallback item i)
                 (\bunUrmarit -> editCallback bunUrmarit i)
     in
@@ -205,19 +203,20 @@ itemListView items isSelectionPending updateCallback editCallback =
 
 selectableItemView : Item -> Bool -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
 selectableItemView (Selectable ({ item, isSelected } as data)) shouldDisplayCheckbox updateCallback editCallback =
-    li []
-        [ whenTrue shouldDisplayCheckbox
-            (\_ ->
-                input
-                    [ type_ "checkbox"
-                    , checked isSelected
-                    , onCheck (\v -> Selectable { data | isSelected = v } |> updateCallback)
-                    ]
-                    []
-            )
-        , BunUrmarit.view item
-        , button [ onClick (\_ -> editCallback item) ] [ text "Edit" ]
-        ]
+    let
+        checkbox =
+            input
+                [ type_ "checkbox"
+                , checked isSelected
+                , onCheck (\v -> Selectable { data | isSelected = v } |> updateCallback)
+                ]
+                []
+    in
+        li []
+            [ whenTrue shouldDisplayCheckbox (\_ -> checkbox)
+            , BunUrmarit.view item
+            , button [ onClick (\_ -> editCallback item) ] [ text "Edit" ]
+            ]
 
 
 whenNonNothing : Maybe a -> (a -> Html msg) -> Html msg

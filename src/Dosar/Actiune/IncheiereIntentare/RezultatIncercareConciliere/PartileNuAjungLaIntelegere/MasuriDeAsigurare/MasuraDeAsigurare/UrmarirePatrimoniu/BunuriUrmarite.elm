@@ -8,6 +8,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 import Html exposing (Html, fieldset, legend, div, span, ul, li, p, button, input, text, br)
 import Html.Attributes exposing (type_, checked)
 import Html.Events exposing (onCheck)
+import Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNonNothing)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyList as MyList
 import Utils.Money as Money exposing (Money(Money), Currency(EUR, USD))
@@ -217,29 +218,3 @@ selectableItemView (Selectable ({ item, isSelected } as data)) shouldDisplayChec
             , BunUrmarit.view item
             , button [ onClick (\_ -> editCallback item) ] [ text "Edit" ]
             ]
-
-
-whenNonNothing : Maybe a -> (a -> Html msg) -> Html msg
-whenNonNothing maybeV renderer =
-    case maybeV of
-        Just v ->
-            renderer v
-
-        Nothing ->
-            text ""
-
-
-whenNonEmpty : List a -> (List a -> Html msg) -> Html msg
-whenNonEmpty list renderer =
-    if List.isEmpty list then
-        text ""
-    else
-        renderer list
-
-
-whenTrue : Bool -> (Bool -> Html msg) -> Html msg
-whenTrue v renderer =
-    if v == True then
-        renderer v
-    else
-        text ""

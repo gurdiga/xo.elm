@@ -5,7 +5,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, fieldset, legend, div, span, ul, li, p, button, input, text, br)
+import Html exposing (Html, fieldset, legend, div, span, ul, li, p, button, input, text, strong, br)
 import Html.Attributes exposing (type_, checked)
 import Html.Events exposing (onCheck)
 import Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNonNothing)
@@ -22,7 +22,7 @@ type BunuriUrmarite
     = BunuriUrmarite
         { items : Items
         , maybeItemToEdit : Maybe ItemToEdit
-        , isSelectionPending : Bool
+        , isSelectionStarted : Bool
         }
 
 
@@ -53,7 +53,7 @@ empty =
     BunuriUrmarite
         { items = someItems
         , maybeItemToEdit = Nothing
-        , isSelectionPending = False
+        , isSelectionStarted = False
         }
 
 
@@ -72,7 +72,7 @@ someItems =
 
 setIsSelectionPending : BunuriUrmarite -> Bool -> BunuriUrmarite
 setIsSelectionPending (BunuriUrmarite data) v =
-    BunuriUrmarite { data | isSelectionPending = v }
+    BunuriUrmarite { data | isSelectionStarted = v }
 
 
 updateItem : BunuriUrmarite -> Item -> Maybe Int -> BunuriUrmarite
@@ -142,23 +142,21 @@ processSelectedItems bunuriUrmarite =
 
 
 view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
-view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) callback =
+view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) callback =
     let
-        actionButtons =
-            span []
-                [ whenTrue (anyItemSelected v)
-                    (\_ -> button [ onClick (\_ -> doProcessSelectedItems) ] [ text "Commit" ])
-                , button [ onClick (\_ -> doCancelAction) ] [ text "Cancel" ]
-                ]
-
-        doProcessSelectedItems =
-            processSelectedItems v
-                |> (flip setIsSelectionPending) False
-                |> callback
-
-        doCancelAction =
+        formeazaProcesVerbal _ =
             setIsSelectionPending v False
                 |> clearSelection
+                |> processSelectedItems
+                |> callback
+
+        cancelAction _ =
+            setIsSelectionPending v False
+                |> clearSelection
+                |> callback
+
+        startSelection _ =
+            setIsSelectionPending v True
                 |> callback
     in
         fieldset []
@@ -166,10 +164,20 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) call
             , whenNonEmpty items
                 (\items ->
                     div []
-                        [ button [ onClick (\_ -> setIsSelectionPending v True |> callback) ] [ text "Start action" ]
-                        , whenTrue isSelectionPending (\_ -> actionButtons)
+                        [ whenTrue (not isSelectionStarted)
+                            (\_ -> button [ onClick startSelection ] [ text "Aplică sechestru" ])
+                        , whenTrue isSelectionStarted
+                            (\_ ->
+                                div []
+                                    [ p [] [ strong [] [ text "Aplicare sechestru" ] ]
+                                    , p [] [ text "Selectați bunurile:" ]
+                                    , whenTrue (anyItemSelected v)
+                                        (\_ -> button [ onClick formeazaProcesVerbal ] [ text "Formează proces-verbal" ])
+                                    , button [ onClick cancelAction ] [ text "Anulează" ]
+                                    ]
+                            )
                         , itemListView items
-                            isSelectionPending
+                            isSelectionStarted
                             (\item index -> updateItem v item (Just index) |> callback)
                             (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
                         ]

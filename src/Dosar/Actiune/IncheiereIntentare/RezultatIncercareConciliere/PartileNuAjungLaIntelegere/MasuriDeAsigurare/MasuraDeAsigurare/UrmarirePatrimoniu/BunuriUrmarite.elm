@@ -70,18 +70,13 @@ someItems =
     ]
 
 
-setItems : BunuriUrmarite -> Items -> BunuriUrmarite
-setItems (BunuriUrmarite data) v =
-    BunuriUrmarite { data | items = v }
-
-
 setIsSelectionPending : BunuriUrmarite -> Bool -> BunuriUrmarite
 setIsSelectionPending (BunuriUrmarite data) v =
     BunuriUrmarite { data | isSelectionPending = v }
 
 
 updateItem : BunuriUrmarite -> Item -> Maybe Int -> BunuriUrmarite
-updateItem ((BunuriUrmarite { items }) as bunuriUrmarite) item maybeIndex =
+updateItem ((BunuriUrmarite ({ items } as data)) as bunuriUrmarite) item maybeIndex =
     let
         newItems =
             case maybeIndex of
@@ -91,8 +86,11 @@ updateItem ((BunuriUrmarite { items }) as bunuriUrmarite) item maybeIndex =
                 Nothing ->
                     items ++ [ item ]
     in
-        setItems bunuriUrmarite newItems
-            |> resetItemToEdit
+        BunuriUrmarite
+            { data
+                | items = newItems
+                , maybeItemToEdit = Nothing
+            }
 
 
 commitItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
@@ -104,14 +102,13 @@ commitItem bunuriUrmarite bunUrmarit maybeIndex =
         updateItem bunuriUrmarite item maybeIndex
 
 
-resetSelectedItems : BunuriUrmarite -> BunuriUrmarite
-resetSelectedItems ((BunuriUrmarite ({ items } as data)) as bunuriUrmarite) =
+clearSelection : BunuriUrmarite -> BunuriUrmarite
+clearSelection ((BunuriUrmarite ({ items } as data)) as bunuriUrmarite) =
     let
         unselect (Selectable bunUrmarit) =
             Selectable { bunUrmarit | isSelected = False }
     in
-        List.map unselect items
-            |> setItems bunuriUrmarite
+        BunuriUrmarite { data | items = List.map unselect items }
 
 
 anyItemSelected : BunuriUrmarite -> Bool
@@ -161,7 +158,7 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionPending }) as v) call
 
         doCancelAction =
             setIsSelectionPending v False
-                |> resetSelectedItems
+                |> clearSelection
                 |> callback
     in
         fieldset []

@@ -139,11 +139,6 @@ updateItemToEdit bunuriUrmarite bunUrmarit maybeIndex =
         (Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }))
 
 
-processSelectedItems : Callback msg -> BunuriUrmarite -> msg
-processSelectedItems callback bunuriUrmarite =
-    Debug.log "processItems" (callback bunuriUrmarite Cmd.none Sub.none)
-
-
 type alias Callback msg =
     BunuriUrmarite -> Cmd msg -> Sub msg -> msg
 
@@ -154,11 +149,6 @@ view ((BunuriUrmarite ({ items, maybeItemToEdit, isSelectionStarted } as data)) 
         c bunuriUrmarite =
             callback bunuriUrmarite Cmd.none Sub.none
 
-        formeazaProcesVerbalSechestru _ =
-            setIsSelectionPending v False
-                |> clearSelection
-                |> processSelectedItems callback
-
         cancelAction _ =
             setIsSelectionPending v False
                 |> clearSelection
@@ -167,52 +157,56 @@ view ((BunuriUrmarite ({ items, maybeItemToEdit, isSelectionStarted } as data)) 
         startSelection _ =
             setIsSelectionPending v True
                 |> c
+
+        editItemForm (ItemToEdit { item, maybeIndex }) =
+            BunUrmarit.editForm item
+                (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> c)
+                (\bunUrmarit -> commitItem v bunUrmarit maybeIndex |> c)
+                (\bunUrmarit -> resetItemToEdit v |> c)
+
+        addItemButton _ =
+            button
+                [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> c) ]
+                [ text "Adaugă bun" ]
+
+        selecteazaBunuriPentruSechestruHint _ =
+            p []
+                [ text "Selectează bunurile care urmează a fi sechestrate sau "
+                , button [ onClick cancelAction ] [ text "Anulează" ]
+                , text "."
+                ]
+
+        formeazaProcesVerbalSechestruButton _ =
+            div []
+                [ RichTextEditor.view
+                    { buttonLabel = "Formează proces-verbal de sechestru"
+                    , content = templateProcesVerbalSechestru v
+                    , onOpen = callback v
+                    , onResponse = (\v -> c (BunuriUrmarite { data | procesVerbalSechestru = v }))
+                    }
+                ]
+
+        actionButtons _ =
+            div []
+                [ button [ onClick startSelection ] [ text "Aplică sechestru" ]
+                ]
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
             , whenNonEmpty items
                 (\items ->
                     div []
-                        [ whenTrue (not isSelectionStarted)
-                            (\_ -> button [ onClick startSelection ] [ text "Aplică sechestru" ])
-                        , whenTrue isSelectionStarted
-                            (\_ ->
-                                p []
-                                    [ text "Selectează bunurile care urmează a fi sechestrate sau "
-                                    , button [ onClick cancelAction ] [ text "Anulează" ]
-                                    , text "."
-                                    ]
-                            )
+                        [ whenTrue (not isSelectionStarted) actionButtons
+                        , whenTrue isSelectionStarted selecteazaBunuriPentruSechestruHint
                         , itemListView items
                             isSelectionStarted
                             (\item index -> updateItem v item (Just index) |> c)
                             (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> c)
-                        , whenTrue (anyItemSelected v)
-                            (\_ ->
-                                div []
-                                    [ RichTextEditor.view
-                                        { buttonLabel = "Formează proces-verbal de sechestru"
-                                        , content = templateProcesVerbalSechestru v
-                                        , onOpen = callback v
-                                        , onResponse = (\v -> c (BunuriUrmarite { data | procesVerbalSechestru = v }))
-                                        }
-                                    ]
-                            )
+                        , whenTrue (anyItemSelected v) formeazaProcesVerbalSechestruButton
                         ]
                 )
-            , whenNonNothing maybeItemToEdit
-                (\(ItemToEdit { item, maybeIndex }) ->
-                    BunUrmarit.editForm item
-                        (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> c)
-                        (\bunUrmarit -> commitItem v bunUrmarit maybeIndex |> c)
-                        (\bunUrmarit -> resetItemToEdit v |> c)
-                )
-            , whenTrue (not isSelectionStarted)
-                (\_ ->
-                    button
-                        [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> c) ]
-                        [ text "+" ]
-                )
+            , whenNonNothing maybeItemToEdit editItemForm
+            , whenTrue (not isSelectionStarted) addItemButton
             ]
 
 

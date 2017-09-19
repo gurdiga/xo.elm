@@ -19,7 +19,7 @@ empty =
         { bunuriUrmarite = BunuriUrmarite.empty }
 
 
-view : UrmarirePatrimoniu -> (UrmarirePatrimoniu -> msg) -> Html msg
+view : UrmarirePatrimoniu -> (UrmarirePatrimoniu -> Cmd msg -> Sub msg -> msg) -> Html msg
 view (UrmarirePatrimoniu data) callback =
     let
         c =

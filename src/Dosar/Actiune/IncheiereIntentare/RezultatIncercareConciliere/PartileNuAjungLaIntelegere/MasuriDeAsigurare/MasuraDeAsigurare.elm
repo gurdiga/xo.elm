@@ -38,7 +38,7 @@ addView callback =
         ]
 
 
-view : MasuraDeAsigurare -> (MasuraDeAsigurare -> msg) -> Html msg
+view : MasuraDeAsigurare -> (MasuraDeAsigurare -> Cmd msg -> Sub msg -> msg) -> Html msg
 view masuraDeAsigurare callback =
     case masuraDeAsigurare of
         UrmarirePatrimoniu v ->

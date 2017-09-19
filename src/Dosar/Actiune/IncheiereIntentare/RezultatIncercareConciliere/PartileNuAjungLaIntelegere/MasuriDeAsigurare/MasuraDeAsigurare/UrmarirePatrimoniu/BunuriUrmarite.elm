@@ -141,23 +141,26 @@ processSelectedItems bunuriUrmarite =
     Debug.log "processItems" bunuriUrmarite
 
 
-view : BunuriUrmarite -> (BunuriUrmarite -> msg) -> Html msg
+view : BunuriUrmarite -> (BunuriUrmarite -> Cmd msg -> Sub msg -> msg) -> Html msg
 view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) callback =
     let
-        formeazaProcesVerbal _ =
+        c bunuriUrmarite =
+            callback bunuriUrmarite Cmd.none Sub.none
+
+        formeazaProcesVerbalSechestru _ =
             setIsSelectionPending v False
                 |> clearSelection
                 |> processSelectedItems
-                |> callback
+                |> c
 
         cancelAction _ =
             setIsSelectionPending v False
                 |> clearSelection
-                |> callback
+                |> c
 
         startSelection _ =
             setIsSelectionPending v True
-                |> callback
+                |> c
     in
         fieldset []
             [ legend [] [ text "BunuriUrmarite" ]
@@ -179,23 +182,29 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) call
                             )
                         , itemListView items
                             isSelectionStarted
-                            (\item index -> updateItem v item (Just index) |> callback)
-                            (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
+                            (\item index -> updateItem v item (Just index) |> c)
+                            (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> c)
                         , whenTrue (anyItemSelected v)
-                            (\_ -> div [] [ button [ onClick formeazaProcesVerbal ] [ text "Formează proces-verbal" ] ])
+                            (\_ ->
+                                div []
+                                    [ button
+                                        [ onClick formeazaProcesVerbalSechestru ]
+                                        [ text "Formează proces-verbal de sechestru" ]
+                                    ]
+                            )
                         ]
                 )
             , whenNonNothing maybeItemToEdit
                 (\(ItemToEdit { item, maybeIndex }) ->
                     BunUrmarit.editForm item
-                        (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> callback)
-                        (\bunUrmarit -> commitItem v bunUrmarit maybeIndex |> callback)
-                        (\bunUrmarit -> resetItemToEdit v |> callback)
+                        (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> c)
+                        (\bunUrmarit -> commitItem v bunUrmarit maybeIndex |> c)
+                        (\bunUrmarit -> resetItemToEdit v |> c)
                 )
             , whenTrue (not isSelectionStarted)
                 (\_ ->
                     button
-                        [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> callback) ]
+                        [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> c) ]
                         [ text "+" ]
                 )
             ]

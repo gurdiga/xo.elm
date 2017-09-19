@@ -64,7 +64,10 @@ view partileNuAjungLaIntelegere callback =
                 , onOpen = callback partileNuAjungLaIntelegere
                 , onResponse = (\v -> c { data | borderouDeCalcul = v })
                 }
-            , MasuriDeAsigurare.view data.masuriDeAsigurare (\v -> c { data | masuriDeAsigurare = v })
+            , MasuriDeAsigurare.view data.masuriDeAsigurare
+                (\v ->
+                    PartileNuAjungLaIntelegere { data | masuriDeAsigurare = v } |> callback
+                )
             ]
 
 

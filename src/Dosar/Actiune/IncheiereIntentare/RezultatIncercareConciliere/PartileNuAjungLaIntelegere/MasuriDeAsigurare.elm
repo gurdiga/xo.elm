@@ -20,11 +20,11 @@ empty =
     MasuriDeAsigurare [ MasuraDeAsigurare.empty ]
 
 
-view : MasuriDeAsigurare -> (MasuriDeAsigurare -> msg) -> Html msg
+view : MasuriDeAsigurare -> (MasuriDeAsigurare -> Cmd msg -> Sub msg -> msg) -> Html msg
 view (MasuriDeAsigurare items) callback =
     let
-        c =
-            callback << MasuriDeAsigurare
+        c data =
+            callback (MasuriDeAsigurare data) Cmd.none Sub.none
 
         addItem item =
             c (items ++ [ item ])
@@ -34,7 +34,12 @@ view (MasuriDeAsigurare items) callback =
 
         itemView i item =
             li []
-                [ MasuraDeAsigurare.view item (\v -> c (MyList.replace items i v))
+                [ MasuraDeAsigurare.view item
+                    (\v ->
+                        MyList.replace items i v
+                            |> MasuriDeAsigurare
+                            |> callback
+                    )
                 , button
                     [ onClick (deleteItem item) ]
                     [ text "Șterge" ]

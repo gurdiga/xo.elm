@@ -170,16 +170,19 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) call
                             (\_ ->
                                 div []
                                     [ p [] [ strong [] [ text "Aplicare sechestru" ] ]
-                                    , p [] [ text "Selectați bunurile:" ]
-                                    , whenTrue (anyItemSelected v)
-                                        (\_ -> button [ onClick formeazaProcesVerbal ] [ text "Formează proces-verbal" ])
-                                    , button [ onClick cancelAction ] [ text "Anulează" ]
+                                    , p []
+                                        [ text "Selectează bunurile sau "
+                                        , button [ onClick cancelAction ] [ text "Anulează" ]
+                                        , text "."
+                                        ]
                                     ]
                             )
                         , itemListView items
                             isSelectionStarted
                             (\item index -> updateItem v item (Just index) |> callback)
                             (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
+                        , whenTrue (anyItemSelected v)
+                            (\_ -> div [] [ button [ onClick formeazaProcesVerbal ] [ text "Formează proces-verbal" ] ])
                         ]
                 )
             , whenNonNothing maybeItemToEdit
@@ -189,9 +192,12 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) call
                         (\bunUrmarit -> commitItem v bunUrmarit maybeIndex |> callback)
                         (\bunUrmarit -> resetItemToEdit v |> callback)
                 )
-            , button
-                [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> callback) ]
-                [ text "+" ]
+            , whenTrue (not isSelectionStarted)
+                (\_ ->
+                    button
+                        [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> callback) ]
+                        [ text "+" ]
+                )
             ]
 
 
@@ -210,6 +216,9 @@ itemListView items shouldDisplayCheckboxes updateCallback editCallback =
 selectableItemView : Item -> Bool -> (Item -> msg) -> (BunUrmarit -> msg) -> Html msg
 selectableItemView (Selectable ({ item, isSelected } as data)) shouldDisplayCheckbox updateCallback editCallback =
     let
+        shouldDisplayEditButton =
+            not shouldDisplayCheckbox
+
         checkbox =
             input
                 [ type_ "checkbox"
@@ -221,5 +230,8 @@ selectableItemView (Selectable ({ item, isSelected } as data)) shouldDisplayChec
         li []
             [ whenTrue shouldDisplayCheckbox (\_ -> checkbox)
             , BunUrmarit.view item
-            , button [ onClick (\_ -> editCallback item) ] [ text "Edit" ]
+            , whenTrue shouldDisplayEditButton
+                (\_ ->
+                    button [ onClick (\_ -> editCallback item) ] [ text "Edit" ]
+                )
             ]

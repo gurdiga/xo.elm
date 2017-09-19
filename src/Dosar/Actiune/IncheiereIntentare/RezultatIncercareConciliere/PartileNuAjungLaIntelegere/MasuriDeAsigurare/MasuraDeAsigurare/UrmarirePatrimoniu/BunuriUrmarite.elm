@@ -5,9 +5,10 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, fieldset, legend, div, span, ul, li, p, button, input, text, strong, br)
+import Html exposing (Html, h1, fieldset, legend, div, span, ul, li, p, button, input, text, strong, br)
 import Html.Attributes exposing (type_, checked)
 import Html.Events exposing (onCheck)
+import Utils.RichTextEditor as RichTextEditor
 import Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNonNothing)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyList as MyList
@@ -23,6 +24,7 @@ type BunuriUrmarite
         { items : Items
         , maybeItemToEdit : Maybe ItemToEdit
         , isSelectionStarted : Bool
+        , procesVerbalSechestru : String
         }
 
 
@@ -54,6 +56,7 @@ empty =
         { items = someItems
         , maybeItemToEdit = Nothing
         , isSelectionStarted = False
+        , procesVerbalSechestru = ""
         }
 
 
@@ -136,13 +139,17 @@ updateItemToEdit bunuriUrmarite bunUrmarit maybeIndex =
         (Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }))
 
 
-processSelectedItems : BunuriUrmarite -> BunuriUrmarite
-processSelectedItems bunuriUrmarite =
-    Debug.log "processItems" bunuriUrmarite
+processSelectedItems : Callback msg -> BunuriUrmarite -> msg
+processSelectedItems callback bunuriUrmarite =
+    Debug.log "processItems" (callback bunuriUrmarite Cmd.none Sub.none)
 
 
-view : BunuriUrmarite -> (BunuriUrmarite -> Cmd msg -> Sub msg -> msg) -> Html msg
-view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) callback =
+type alias Callback msg =
+    BunuriUrmarite -> Cmd msg -> Sub msg -> msg
+
+
+view : BunuriUrmarite -> Callback msg -> Html msg
+view ((BunuriUrmarite ({ items, maybeItemToEdit, isSelectionStarted } as data)) as v) callback =
     let
         c bunuriUrmarite =
             callback bunuriUrmarite Cmd.none Sub.none
@@ -150,8 +157,7 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) call
         formeazaProcesVerbalSechestru _ =
             setIsSelectionPending v False
                 |> clearSelection
-                |> processSelectedItems
-                |> c
+                |> processSelectedItems callback
 
         cancelAction _ =
             setIsSelectionPending v False
@@ -171,13 +177,10 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) call
                             (\_ -> button [ onClick startSelection ] [ text "Aplică sechestru" ])
                         , whenTrue isSelectionStarted
                             (\_ ->
-                                div []
-                                    [ p [] [ strong [] [ text "Aplicare sechestru" ] ]
-                                    , p []
-                                        [ text "Selectează bunurile sau "
-                                        , button [ onClick cancelAction ] [ text "Anulează" ]
-                                        , text "."
-                                        ]
+                                p []
+                                    [ text "Selectează bunurile care urmează a fi sechestrate sau "
+                                    , button [ onClick cancelAction ] [ text "Anulează" ]
+                                    , text "."
                                     ]
                             )
                         , itemListView items
@@ -187,9 +190,12 @@ view ((BunuriUrmarite { items, maybeItemToEdit, isSelectionStarted }) as v) call
                         , whenTrue (anyItemSelected v)
                             (\_ ->
                                 div []
-                                    [ button
-                                        [ onClick formeazaProcesVerbalSechestru ]
-                                        [ text "Formează proces-verbal de sechestru" ]
+                                    [ RichTextEditor.view
+                                        { buttonLabel = "Formează proces-verbal de sechestru"
+                                        , content = templateProcesVerbalSechestru v
+                                        , onOpen = callback v
+                                        , onResponse = (\v -> c (BunuriUrmarite { data | procesVerbalSechestru = v }))
+                                        }
                                     ]
                             )
                         ]
@@ -244,3 +250,11 @@ selectableItemView (Selectable ({ item, isSelected } as data)) shouldDisplayChec
                     button [ onClick (\_ -> editCallback item) ] [ text "Edit" ]
                 )
             ]
+
+
+templateProcesVerbalSechestru : BunuriUrmarite -> List (Html msg)
+templateProcesVerbalSechestru bunuriUrmarite =
+    -- TODO: find the real template
+    [ h1 [] [ text "Proces-verbal de sechestru" ]
+    , p [] [ text <| toString <| bunuriUrmarite ]
+    ]

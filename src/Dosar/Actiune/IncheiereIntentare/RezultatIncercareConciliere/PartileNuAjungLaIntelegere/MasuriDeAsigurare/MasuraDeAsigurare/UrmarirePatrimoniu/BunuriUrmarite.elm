@@ -123,20 +123,14 @@ anyItemSelected (BunuriUrmarite { items }) =
         List.any isSelected items
 
 
-setItemToEdit : BunuriUrmarite -> Maybe ItemToEdit -> BunuriUrmarite
-setItemToEdit (BunuriUrmarite data) v =
-    BunuriUrmarite { data | maybeItemToEdit = v }
-
-
 resetItemToEdit : BunuriUrmarite -> BunuriUrmarite
-resetItemToEdit bunuriUrmarite =
-    setItemToEdit bunuriUrmarite Nothing
+resetItemToEdit (BunuriUrmarite data) =
+    BunuriUrmarite { data | maybeItemToEdit = Nothing }
 
 
 updateItemToEdit : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
-updateItemToEdit bunuriUrmarite bunUrmarit maybeIndex =
-    setItemToEdit bunuriUrmarite
-        (Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }))
+updateItemToEdit (BunuriUrmarite data) bunUrmarit maybeIndex =
+    BunuriUrmarite { data | maybeItemToEdit = Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }) }
 
 
 type alias Callback msg =
@@ -146,6 +140,25 @@ type alias Callback msg =
 view : BunuriUrmarite -> Callback msg -> Html msg
 view ((BunuriUrmarite ({ items, maybeItemToEdit, isSelectionStarted } as data)) as v) callback =
     let
+        this =
+            fieldset []
+                [ legend [] [ text "BunuriUrmarite" ]
+                , whenNonEmpty items
+                    (\items ->
+                        div []
+                            [ whenTrue (not isSelectionStarted) actionButtons
+                            , whenTrue isSelectionStarted hintSelecteazaBunuriPentruSechestru
+                            , itemListView items
+                                isSelectionStarted
+                                (\item index -> updateItem v item (Just index) |> c)
+                                (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> c)
+                            , whenTrue (anyItemSelected v) buttonFormeazaProcesVerbalSechestru
+                            ]
+                    )
+                , whenNonNothing maybeItemToEdit editItemForm
+                , whenTrue (not isSelectionStarted) addItemButton
+                ]
+
         c bunuriUrmarite =
             callback bunuriUrmarite Cmd.none Sub.none
 
@@ -169,14 +182,14 @@ view ((BunuriUrmarite ({ items, maybeItemToEdit, isSelectionStarted } as data)) 
                 [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> c) ]
                 [ text "Adaugă bun" ]
 
-        selecteazaBunuriPentruSechestruHint _ =
+        hintSelecteazaBunuriPentruSechestru _ =
             p []
                 [ text "Selectează bunurile care urmează a fi sechestrate sau "
                 , button [ onClick cancelAction ] [ text "Anulează" ]
                 , text "."
                 ]
 
-        formeazaProcesVerbalSechestruButton _ =
+        buttonFormeazaProcesVerbalSechestru _ =
             div []
                 [ RichTextEditor.view
                     { buttonLabel = "Formează proces-verbal de sechestru"
@@ -191,23 +204,7 @@ view ((BunuriUrmarite ({ items, maybeItemToEdit, isSelectionStarted } as data)) 
                 [ button [ onClick startSelection ] [ text "Aplică sechestru" ]
                 ]
     in
-        fieldset []
-            [ legend [] [ text "BunuriUrmarite" ]
-            , whenNonEmpty items
-                (\items ->
-                    div []
-                        [ whenTrue (not isSelectionStarted) actionButtons
-                        , whenTrue isSelectionStarted selecteazaBunuriPentruSechestruHint
-                        , itemListView items
-                            isSelectionStarted
-                            (\item index -> updateItem v item (Just index) |> c)
-                            (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> c)
-                        , whenTrue (anyItemSelected v) formeazaProcesVerbalSechestruButton
-                        ]
-                )
-            , whenNonNothing maybeItemToEdit editItemForm
-            , whenTrue (not isSelectionStarted) addItemButton
-            ]
+        this
 
 
 itemListView : Items -> Bool -> (Item -> Int -> msg) -> (BunUrmarit -> Int -> msg) -> Html msg

@@ -3,6 +3,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         ( BunuriUrmarite
         , empty
         , view
+        , bunuriUrmarite
         )
 
 import Html exposing (Html, h1, fieldset, legend, div, span, ul, li, p, button, input, text, strong, br)
@@ -131,6 +132,11 @@ resetItemToEdit (BunuriUrmarite data) =
 updateItemToEdit : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
 updateItemToEdit (BunuriUrmarite data) bunUrmarit maybeIndex =
     BunuriUrmarite { data | maybeItemToEdit = Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }) }
+
+
+bunuriUrmarite : BunuriUrmarite -> List BunUrmarit
+bunuriUrmarite (BunuriUrmarite { items }) =
+    List.map (\(Selectable { item }) -> item) items
 
 
 type alias Callback msg =

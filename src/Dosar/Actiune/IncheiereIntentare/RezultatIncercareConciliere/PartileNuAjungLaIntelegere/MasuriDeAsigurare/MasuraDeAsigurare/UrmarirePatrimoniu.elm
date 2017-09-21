@@ -2,7 +2,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 import Html exposing (Html, fieldset, legend, button, text)
 import Utils.MyHtmlEvents exposing (onClick)
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite as BunuriUrmarite exposing (BunuriUrmarite)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite as BunuriUrmarite exposing (BunuriUrmarite(BunuriUrmarite), Selectable(Selectable))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestru as Sechestru exposing (Sechestru)
 
 
@@ -28,12 +28,20 @@ view (UrmarirePatrimoniu ({ bunuriUrmarite, regimSechestrare } as data)) callbac
     let
         c data =
             callback (UrmarirePatrimoniu data) Cmd.none Sub.none
+
+        (BunuriUrmarite itemData) =
+            bunuriUrmarite
     in
         fieldset []
             [ legend [] [ text "UrmarirePatrimoniu" ]
             , button [ onClick (\_ -> c { data | regimSechestrare = True }) ] [ text "Aplică sechestru 2.0" ]
             , if regimSechestrare then
                 Sechestru.view (BunuriUrmarite.bunuriUrmarite bunuriUrmarite)
+                    (\v ->
+                        { data | bunuriUrmarite = BunuriUrmarite { itemData | items = List.map Selectable v } }
+                            |> UrmarirePatrimoniu
+                            |> callback
+                    )
               else
                 BunuriUrmarite.view data.bunuriUrmarite (\v -> { data | bunuriUrmarite = v } |> UrmarirePatrimoniu |> callback)
             ]

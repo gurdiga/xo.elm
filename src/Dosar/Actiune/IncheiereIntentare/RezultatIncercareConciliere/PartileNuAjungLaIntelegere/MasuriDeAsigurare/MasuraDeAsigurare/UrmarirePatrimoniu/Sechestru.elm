@@ -4,8 +4,10 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, text)
+import Html exposing (Html, ul, li, text)
+import Utils.RichTextEditor as RichTextEditor
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit exposing (BunUrmarit)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selectable as Selectable
 
 
 type Sechestru
@@ -15,15 +17,14 @@ type Sechestru
         }
 
 
-view : List BunUrmarit -> Html msg
-view =
-    toString >> text
+type alias Callback msg =
+    List BunUrmarit -> Cmd msg -> Sub msg -> msg
 
 
-
-{--
-
-Maybe Sechestru should have its own view, given the list of available items.
-Its container will decide when to display it.
-
---}
+view : List BunUrmarit -> Callback msg -> Html msg
+view bunuriUrmarite callback =
+    let
+        this =
+            Selectable.view bunuriUrmarite BunUrmarit.view (\v -> callback bunuriUrmarite Cmd.none Sub.none)
+    in
+        this

@@ -1,6 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite
     exposing
-        ( BunuriUrmarite
+        ( BunuriUrmarite(BunuriUrmarite)
+        , Selectable(Selectable)
         , empty
         , view
         , bunuriUrmarite

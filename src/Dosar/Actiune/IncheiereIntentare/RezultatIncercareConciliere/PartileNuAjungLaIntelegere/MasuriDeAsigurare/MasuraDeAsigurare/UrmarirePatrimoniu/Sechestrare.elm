@@ -7,13 +7,14 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 import Html exposing (Html, ul, li, text)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit exposing (BunUrmarit)
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selection as Selection
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selection as Selection exposing (Selection)
 
 
 type Sechestrare
     = Sechestrare
         { bunuri : List BunUrmarit
         , procesVerbal : String
+        , selection : Selection BunUrmarit
         }
 
 
@@ -26,6 +27,7 @@ new bunuri =
     Sechestrare
         { bunuri = bunuri
         , procesVerbal = ""
+        , selection = Selection.empty
         }
 
 

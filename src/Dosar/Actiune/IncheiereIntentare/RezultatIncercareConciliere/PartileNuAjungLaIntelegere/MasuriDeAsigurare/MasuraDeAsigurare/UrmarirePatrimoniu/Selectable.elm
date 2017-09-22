@@ -3,23 +3,20 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         ( view
         )
 
-import Html exposing (Html, ul, li, text)
-
-
-type alias Input a msg =
-    { items : List a
-    , itemRenderer : a -> Html msg
-    , callback : List a -> msg
-    }
+import Html exposing (Html, ul, li, input, text)
+import Html.Attributes exposing (type_, checked)
 
 
 view : List a -> (a -> Html msg) -> (List a -> msg) -> Html msg
-view xs itemRenderer callback =
+view items itemRenderer callback =
     let
         this =
-            ul [] (List.map renderItem xs)
+            ul [] (List.map renderItem items)
 
         renderItem item =
-            li [] [ itemRenderer item ]
+            li [] [ checkbox, itemRenderer item ]
+
+        checkbox =
+            input [ type_ "checkbox", checked True ] []
     in
         this

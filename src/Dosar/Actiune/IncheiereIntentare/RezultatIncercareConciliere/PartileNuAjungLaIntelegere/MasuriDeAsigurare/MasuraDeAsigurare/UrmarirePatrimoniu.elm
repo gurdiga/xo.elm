@@ -3,13 +3,13 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 import Html exposing (Html, fieldset, legend, button, text)
 import Utils.MyHtmlEvents exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite as BunuriUrmarite exposing (BunuriUrmarite(BunuriUrmarite), Selectable(Selectable))
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestru as Sechestru exposing (Sechestru)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestrare as Sechestrare exposing (Sechestrare)
 
 
 type UrmarirePatrimoniu
     = UrmarirePatrimoniu
         { bunuriUrmarite : BunuriUrmarite
-        , sechestru : Maybe Sechestru
+        , sechestrare : Maybe Sechestrare
         }
 
 
@@ -17,7 +17,7 @@ empty : UrmarirePatrimoniu
 empty =
     UrmarirePatrimoniu
         { bunuriUrmarite = BunuriUrmarite.empty
-        , sechestru = Nothing
+        , sechestrare = Nothing
         }
 
 
@@ -35,15 +35,15 @@ view (UrmarirePatrimoniu data) callback =
             , button
                 [ onClick
                     (\_ ->
-                        c { data | sechestru = BunuriUrmarite.bunuriUrmarite data.bunuriUrmarite |> Sechestru.new |> Just }
+                        c { data | sechestrare = BunuriUrmarite.bunuriUrmarite data.bunuriUrmarite |> Sechestrare.new |> Just }
                     )
                 ]
-                [ text "Aplică sechestru 2.0" ]
-            , case data.sechestru of
-                Just sechestru ->
-                    Sechestru.view sechestru
+                [ text "Aplică sechestrare 2.0" ]
+            , case data.sechestrare of
+                Just sechestrare ->
+                    Sechestrare.view sechestrare
                         (\v ->
-                            { data | sechestru = Just v }
+                            { data | sechestrare = Just v }
                                 |> UrmarirePatrimoniu
                                 |> callback
                         )

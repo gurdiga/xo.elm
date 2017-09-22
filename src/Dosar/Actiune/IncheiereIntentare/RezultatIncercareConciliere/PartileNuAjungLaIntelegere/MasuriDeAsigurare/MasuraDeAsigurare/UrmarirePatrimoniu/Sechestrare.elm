@@ -1,6 +1,6 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestru
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestrare
     exposing
-        ( Sechestru
+        ( Sechestrare
         , new
         , view
         )
@@ -10,29 +10,29 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selection as Selection
 
 
-type Sechestru
-    = Sechestru
+type Sechestrare
+    = Sechestrare
         { bunuri : List BunUrmarit
         , procesVerbal : String
         }
 
 
 type alias Callback msg =
-    Sechestru -> Cmd msg -> Sub msg -> msg
+    Sechestrare -> Cmd msg -> Sub msg -> msg
 
 
-new : List BunUrmarit -> Sechestru
+new : List BunUrmarit -> Sechestrare
 new bunuri =
-    Sechestru
+    Sechestrare
         { bunuri = bunuri
         , procesVerbal = ""
         }
 
 
-view : Sechestru -> Callback msg -> Html msg
-view (Sechestru data) callback =
+view : Sechestrare -> Callback msg -> Html msg
+view (Sechestrare data) callback =
     let
         this =
-            Selection.view data.bunuri BunUrmarit.view (\v -> callback (Sechestru { data | bunuri = v }) Cmd.none Sub.none)
+            Selection.view data.bunuri BunUrmarit.view (\v -> callback (Sechestrare { data | bunuri = v }) Cmd.none Sub.none)
     in
         this

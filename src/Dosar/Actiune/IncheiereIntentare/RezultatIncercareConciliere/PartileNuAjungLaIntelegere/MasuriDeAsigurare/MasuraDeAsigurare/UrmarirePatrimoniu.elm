@@ -9,8 +9,7 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 type UrmarirePatrimoniu
     = UrmarirePatrimoniu
         { bunuriUrmarite : BunuriUrmarite
-        , sechestre : List Sechestru
-        , regimSechestrare : Bool
+        , sechestru : Maybe Sechestru
         }
 
 
@@ -18,30 +17,37 @@ empty : UrmarirePatrimoniu
 empty =
     UrmarirePatrimoniu
         { bunuriUrmarite = BunuriUrmarite.empty
-        , sechestre = []
-        , regimSechestrare = False
+        , sechestru = Nothing
         }
 
 
 view : UrmarirePatrimoniu -> (UrmarirePatrimoniu -> Cmd msg -> Sub msg -> msg) -> Html msg
-view (UrmarirePatrimoniu ({ bunuriUrmarite, regimSechestrare } as data)) callback =
+view (UrmarirePatrimoniu data) callback =
     let
         c data =
             callback (UrmarirePatrimoniu data) Cmd.none Sub.none
 
         (BunuriUrmarite itemData) =
-            bunuriUrmarite
+            data.bunuriUrmarite
     in
         fieldset []
             [ legend [] [ text "UrmarirePatrimoniu" ]
-            , button [ onClick (\_ -> c { data | regimSechestrare = True }) ] [ text "Aplică sechestru 2.0" ]
-            , if regimSechestrare then
-                Sechestru.view (BunuriUrmarite.bunuriUrmarite bunuriUrmarite)
-                    (\v ->
-                        { data | bunuriUrmarite = BunuriUrmarite { itemData | items = List.map Selectable v } }
-                            |> UrmarirePatrimoniu
-                            |> callback
+            , button
+                [ onClick
+                    (\_ ->
+                        c { data | sechestru = BunuriUrmarite.bunuriUrmarite data.bunuriUrmarite |> Sechestru.new |> Just }
                     )
-              else
-                BunuriUrmarite.view data.bunuriUrmarite (\v -> { data | bunuriUrmarite = v } |> UrmarirePatrimoniu |> callback)
+                ]
+                [ text "Aplică sechestru 2.0" ]
+            , case data.sechestru of
+                Just sechestru ->
+                    Sechestru.view sechestru
+                        (\v ->
+                            { data | sechestru = Just v }
+                                |> UrmarirePatrimoniu
+                                |> callback
+                        )
+
+                Nothing ->
+                    BunuriUrmarite.view data.bunuriUrmarite (\v -> { data | bunuriUrmarite = v } |> UrmarirePatrimoniu |> callback)
             ]

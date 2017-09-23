@@ -1,11 +1,11 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestrare
     exposing
         ( Sechestrare
-        , new
+        , fromItems
         , view
         )
 
-import Html exposing (Html, ul, li, text)
+import Html exposing (Html, fieldset, legend, ul, li, text)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit exposing (BunUrmarit)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selection as Selection exposing (Selection)
 
@@ -22,8 +22,8 @@ type alias Callback msg =
     Sechestrare -> Cmd msg -> Sub msg -> msg
 
 
-new : List BunUrmarit -> Sechestrare
-new bunuri =
+fromItems : List BunUrmarit -> Sechestrare
+fromItems bunuri =
     Sechestrare
         { bunuri = bunuri
         , procesVerbal = ""
@@ -35,6 +35,11 @@ view : Sechestrare -> Callback msg -> Html msg
 view (Sechestrare data) callback =
     let
         this =
-            Selection.view data.bunuri BunUrmarit.view (\v -> callback (Sechestrare { data | bunuri = v }) Cmd.none Sub.none)
+            fieldset []
+                [ legend [] [ text "Selecteză bunurile de sechestrat sau " ]
+                , Selection.view (Selection.fromItems data.bunuri)
+                    BunUrmarit.view
+                    (\v -> callback (Sechestrare { data | selection = v }) Cmd.none Sub.none)
+                ]
     in
         this

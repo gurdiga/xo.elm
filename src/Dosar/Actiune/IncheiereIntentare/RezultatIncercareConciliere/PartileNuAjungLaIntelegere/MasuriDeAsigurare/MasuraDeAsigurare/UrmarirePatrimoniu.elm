@@ -35,10 +35,10 @@ view (UrmarirePatrimoniu data) callback =
             , button
                 [ onClick
                     (\_ ->
-                        c { data | sechestrare = BunuriUrmarite.bunuriUrmarite data.bunuriUrmarite |> Sechestrare.new |> Just }
+                        c { data | sechestrare = BunuriUrmarite.bunuriUrmarite data.bunuriUrmarite |> Sechestrare.fromItems |> Just }
                     )
                 ]
-                [ text "Aplică sechestrare 2.0" ]
+                [ text "Aplică sechestru 2.0" ]
             , case data.sechestrare of
                 Just sechestrare ->
                     Sechestrare.view sechestrare

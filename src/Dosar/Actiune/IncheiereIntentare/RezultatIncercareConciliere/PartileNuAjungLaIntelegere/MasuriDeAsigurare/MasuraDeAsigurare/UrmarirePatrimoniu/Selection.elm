@@ -2,11 +2,14 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
     exposing
         ( Selection
         , empty
+        , fromItems
         , view
         )
 
 import Html exposing (Html, ul, li, input, text)
 import Html.Attributes exposing (type_, checked)
+import Html.Events exposing (onCheck)
+import Utils.MyList as MyList
 
 
 type Selection a
@@ -25,16 +28,33 @@ empty =
     Selection []
 
 
-view : List a -> (a -> Html msg) -> (List a -> msg) -> Html msg
-view items itemRenderer callback =
+fromItems : List a -> Selection a
+fromItems items =
+    Selection
+        (List.map (\v -> SelectionItem { item = v, isSelected = False }) items)
+
+
+view : Selection a -> (a -> Html msg) -> (Selection a -> msg) -> Html msg
+view (Selection selectionItems) itemRenderer callback =
     let
         this =
-            ul [] (List.map renderItem items)
+            ul [] (List.indexedMap renderItem selectionItems)
 
-        renderItem item =
-            li [] [ checkbox, itemRenderer item ]
+        renderItem index (SelectionItem ({ item } as selectionItem)) =
+            li [] [ checkbox index selectionItem, itemRenderer item ]
 
-        checkbox =
-            input [ type_ "checkbox", checked True ] []
+        checkbox index selectionItem =
+            input
+                [ type_ "checkbox"
+                , checked selectionItem.isSelected
+                , onCheck (updateSelectionState index selectionItem)
+                ]
+                []
+
+        updateSelectionState index selectionItem v =
+            SelectionItem { selectionItem | isSelected = v }
+                |> MyList.replace selectionItems index
+                |> Selection
+                |> callback
     in
         this

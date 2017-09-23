@@ -1,4 +1,4 @@
-module Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNonNothing)
+module Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNonNothing, whenNothing)
 
 import Html exposing (Html, text)
 
@@ -10,6 +10,16 @@ whenNonNothing maybeV renderer =
             renderer v
 
         Nothing ->
+            text ""
+
+
+whenNothing : Maybe a -> (Maybe a -> Html msg) -> Html msg
+whenNothing maybeV renderer =
+    case maybeV of
+        Nothing ->
+            renderer Nothing
+
+        Just _ ->
             text ""
 
 

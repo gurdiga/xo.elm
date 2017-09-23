@@ -36,7 +36,7 @@ view (Sechestrare data) callback =
     let
         this =
             fieldset []
-                [ legend [] [ text "Selecteză bunurile de sechestrat sau " ]
+                [ legend [] [ text "Selecteză bunurile de sechestrat" ]
                 , Selection.view (Selection.fromItems data.bunuri)
                     BunUrmarit.view
                     (\v -> callback (Sechestrare { data | selection = v }) Cmd.none Sub.none)

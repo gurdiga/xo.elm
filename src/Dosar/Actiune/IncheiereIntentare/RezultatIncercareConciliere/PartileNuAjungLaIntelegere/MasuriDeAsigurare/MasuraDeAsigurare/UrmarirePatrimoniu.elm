@@ -37,15 +37,11 @@ view (UrmarirePatrimoniu data) callback =
                                         |> UrmarirePatrimoniu
                                         |> callback
                                 )
-                            , button
-                                [ onClick
-                                    (\_ ->
-                                        callback (UrmarirePatrimoniu { data | sechestrare = Nothing })
-                                            Cmd.none
-                                            Sub.none
-                                    )
-                                ]
-                                [ text "Anulează" ]
+                                (\v ->
+                                    { data | sechestrare = Nothing }
+                                        |> UrmarirePatrimoniu
+                                        |> callback
+                                )
                             ]
 
                     Nothing ->

@@ -5,7 +5,8 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, fieldset, legend, ul, li, text)
+import Html exposing (Html, fieldset, legend, ul, li, button, text)
+import Utils.MyHtmlEvents exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit exposing (BunUrmarit)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selection as Selection exposing (Selection)
 
@@ -31,15 +32,18 @@ fromItems bunuri =
         }
 
 
-view : Sechestrare -> Callback msg -> Html msg
-view (Sechestrare data) callback =
+view : Sechestrare -> Callback msg -> Callback msg -> Html msg
+view ((Sechestrare data) as sechestrare) submitCalllback cancelCallback =
     let
         this =
             fieldset []
-                [ legend [] [ text "Selecteză bunurile de sechestrat" ]
+                [ legend []
+                    [ text "Selecteză bunurile de sechestrat"
+                    , button [ onClick (\_ -> cancelCallback sechestrare Cmd.none Sub.none) ] [ text "×" ]
+                    ]
                 , Selection.view (Selection.fromItems data.bunuri)
                     BunUrmarit.view
-                    (\v -> callback (Sechestrare { data | selection = v }) Cmd.none Sub.none)
+                    (\v -> submitCalllback (Sechestrare { data | selection = v }) Cmd.none Sub.none)
                 ]
     in
         this

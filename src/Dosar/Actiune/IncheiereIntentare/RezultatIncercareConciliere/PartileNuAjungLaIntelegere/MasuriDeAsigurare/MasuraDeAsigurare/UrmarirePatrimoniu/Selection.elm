@@ -3,6 +3,8 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         ( Selection
         , empty
         , fromItems
+        , anyItemSelected
+        , selectedItems
         , view
         )
 
@@ -32,6 +34,18 @@ fromItems : List a -> Selection a
 fromItems items =
     Selection
         (List.map (\v -> SelectionItem { item = v, isSelected = False }) items)
+
+
+anyItemSelected : Selection a -> Bool
+anyItemSelected (Selection items) =
+    List.any (\(SelectionItem { isSelected }) -> isSelected) items
+
+
+selectedItems : Selection a -> List a
+selectedItems (Selection items) =
+    items
+        |> List.filter (\(SelectionItem { isSelected }) -> isSelected)
+        |> List.map (\(SelectionItem { item }) -> item)
 
 
 type alias Input a msg =

@@ -1,6 +1,6 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList
     exposing
-        ( EditableList(EditableList)
+        ( EditableList
         , fromItems
         , view
         )
@@ -9,24 +9,47 @@ import Html exposing (Html, h1, fieldset, legend, div, span, ul, li, p, button, 
 import Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNonNothing)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyList as MyList
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
 
 
-type EditableList
+type EditableList a
     = EditableList
-        { items : List BunUrmarit
-        , maybeItemToEdit : Maybe ItemToEdit
+        { items : List a
+        , maybeItemToEdit : Maybe (ItemToEdit a)
         }
 
 
-type ItemToEdit
+type ItemToEdit a
     = ItemToEdit
-        { item : BunUrmarit
+        { item : a
         , maybeIndex : Maybe Int
         }
 
 
-fromItems : List BunUrmarit -> EditableList
+type alias ItemView a msg =
+    a -> Html msg
+
+
+type alias ItemEditForm a msg =
+    a
+    -> UpdateItemCallback a msg
+    -> SubmitItemCallback a msg
+    -> CancellCallback a msg
+    -> Html msg
+
+
+type alias UpdateItemCallback a msg =
+    a -> msg
+
+
+type alias SubmitItemCallback a msg =
+    a -> msg
+
+
+type alias CancellCallback a msg =
+    a -> msg
+
+
+fromItems : List a -> EditableList a
 fromItems items =
     EditableList
         { items = items
@@ -34,7 +57,7 @@ fromItems items =
         }
 
 
-updateItem : EditableList -> BunUrmarit -> Maybe Int -> EditableList
+updateItem : EditableList a -> a -> Maybe Int -> EditableList a
 updateItem ((EditableList ({ items } as data)) as bunuriUrmarite) item maybeIndex =
     let
         newItems =
@@ -52,59 +75,60 @@ updateItem ((EditableList ({ items } as data)) as bunuriUrmarite) item maybeInde
             }
 
 
-resetItemToEdit : EditableList -> EditableList
+resetItemToEdit : EditableList a -> EditableList a
 resetItemToEdit (EditableList data) =
     EditableList { data | maybeItemToEdit = Nothing }
 
 
-updateItemToEdit : EditableList -> BunUrmarit -> Maybe Int -> EditableList
+updateItemToEdit : EditableList a -> a -> Maybe Int -> EditableList a
 updateItemToEdit (EditableList data) bunUrmarit maybeIndex =
     EditableList { data | maybeItemToEdit = Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }) }
 
 
-view : EditableList -> (EditableList -> msg) -> Html msg
-view ((EditableList { items, maybeItemToEdit }) as v) callback =
+view : EditableList a -> ItemEditForm a msg -> ItemView a msg -> a -> (EditableList a -> msg) -> Html msg
+view ((EditableList { items, maybeItemToEdit }) as v) itemEditFormView itemView newItem callback =
     let
         this =
             fieldset []
                 [ legend [] [ text "EditableList" ]
                 , whenNonEmpty items
                     (\items ->
-                        itemListView items
-                            (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> c)
+                        itemListView itemView
+                            items
+                            (\bunUrmarit index -> updateItemToEdit v bunUrmarit (Just index) |> callback)
                     )
                 , case maybeItemToEdit of
                     Just itemToEdit ->
-                        editItemForm itemToEdit
+                        itemEditForm itemToEdit
 
                     Nothing ->
                         addItemButton
                 ]
 
-        c bunuriUrmarite =
-            callback bunuriUrmarite
-
-        editItemForm (ItemToEdit { item, maybeIndex }) =
-            BunUrmarit.editForm item
-                (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> c)
-                (\bunUrmarit -> updateItem v bunUrmarit maybeIndex |> c)
-                (\bunUrmarit -> resetItemToEdit v |> c)
+        itemEditForm (ItemToEdit { item, maybeIndex }) =
+            itemEditFormView item
+                (\bunUrmarit -> updateItemToEdit v bunUrmarit maybeIndex |> callback)
+                (\bunUrmarit -> updateItem v bunUrmarit maybeIndex |> callback)
+                (\bunUrmarit -> resetItemToEdit v |> callback)
 
         addItemButton =
             button
-                [ onClick (\_ -> updateItemToEdit v BunUrmarit.empty Nothing |> c) ]
+                [ onClick (\_ -> updateItemToEdit v newItem Nothing |> callback) ]
                 [ text "Adaugă bun" ]
     in
         this
 
 
-itemListView : List BunUrmarit -> (BunUrmarit -> Int -> msg) -> Html msg
-itemListView items editCallback =
+itemListView : ItemView a msg -> List a -> (a -> Int -> msg) -> Html msg
+itemListView itemView items editCallback =
     let
+        this =
+            ul [] (List.indexedMap renderItem items)
+
         renderItem index item =
             li []
-                [ BunUrmarit.view item
+                [ itemView item
                 , button [ onClick (\_ -> editCallback item index) ] [ text "Edit" ]
                 ]
     in
-        ul [] (List.indexedMap renderItem items)
+        this

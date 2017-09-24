@@ -4,7 +4,7 @@ import Html exposing (Html, fieldset, legend, div, button, text)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyHtml exposing (whenNonNothing, whenNothing)
 import Utils.Money as Money exposing (Money(Money), Currency(EUR, USD))
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList as EditableList exposing (EditableList(EditableList))
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList as EditableList exposing (EditableList)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestrare as Sechestrare exposing (Sechestrare)
 
@@ -12,7 +12,7 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 type UrmarirePatrimoniu
     = UrmarirePatrimoniu
         { bunuriUrmarite : List BunUrmarit
-        , editare : Maybe EditableList
+        , editare : Maybe (EditableList BunUrmarit)
         , sechestrare : Maybe Sechestrare
         }
 
@@ -56,9 +56,10 @@ view (UrmarirePatrimoniu data) callback =
                 , whenNonNothing data.editare
                     (\editare ->
                         EditableList.view editare
-                            (\v ->
-                                callback (UrmarirePatrimoniu { data | editare = Just v }) Cmd.none Sub.none
-                            )
+                            BunUrmarit.editForm
+                            BunUrmarit.view
+                            BunUrmarit.empty
+                            (\v -> callback (UrmarirePatrimoniu { data | editare = Just v }) Cmd.none Sub.none)
                     )
                 , actionButtons
                 ]

@@ -12,7 +12,7 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 type UrmarirePatrimoniu
     = UrmarirePatrimoniu
         { bunuriUrmarite : List BunUrmarit
-        , editare : Maybe (EditableList BunUrmarit)
+        , editableList : Maybe (EditableList BunUrmarit)
         , sechestrare : Maybe Sechestrare
         }
 
@@ -21,9 +21,14 @@ empty : UrmarirePatrimoniu
 empty =
     UrmarirePatrimoniu
         { bunuriUrmarite = someItems
-        , editare = Just (EditableList.fromItems someItems)
+        , editableList = initialEditableList someItems
         , sechestrare = Nothing
         }
+
+
+initialEditableList : List BunUrmarit -> Maybe (EditableList BunUrmarit)
+initialEditableList items =
+    Just (EditableList.fromItems someItems)
 
 
 someItems : List BunUrmarit
@@ -42,27 +47,28 @@ view (UrmarirePatrimoniu data) callback =
                 , whenNonNothing data.sechestrare
                     (\sechestrare ->
                         Sechestrare.view sechestrare
+                            (\v -> c { data | sechestrare = Just v })
                             (\v ->
-                                { data | sechestrare = Just v }
-                                    |> UrmarirePatrimoniu
-                                    |> callback
-                            )
-                            (\v ->
-                                { data | sechestrare = Nothing }
-                                    |> UrmarirePatrimoniu
-                                    |> callback
+                                c
+                                    { data
+                                        | sechestrare = Nothing
+                                        , editableList = initialEditableList data.bunuriUrmarite
+                                    }
                             )
                     )
-                , whenNonNothing data.editare
-                    (\editare ->
-                        EditableList.view editare
+                , whenNonNothing data.editableList
+                    (\editableList ->
+                        EditableList.view editableList
                             BunUrmarit.editForm
                             BunUrmarit.view
                             BunUrmarit.empty
-                            (\v -> callback (UrmarirePatrimoniu { data | editare = Just v }) Cmd.none Sub.none)
+                            (\v -> c { data | editableList = Just v } Cmd.none Sub.none)
                     )
                 , actionButtons
                 ]
+
+        c data =
+            callback (UrmarirePatrimoniu data)
 
         actionButtons =
             div [] [ butonAplicareSechestru ]
@@ -71,15 +77,11 @@ view (UrmarirePatrimoniu data) callback =
             button
                 [ onClick
                     (\_ ->
-                        callback
-                            (UrmarirePatrimoniu
-                                { data
-                                    | sechestrare =
-                                        data.bunuriUrmarite
-                                            |> Sechestrare.fromItems
-                                            |> Just
-                                }
-                            )
+                        c
+                            { data
+                                | editableList = Nothing
+                                , sechestrare = Just (Sechestrare.fromItems data.bunuriUrmarite)
+                            }
                             Cmd.none
                             Sub.none
                     )

@@ -85,26 +85,38 @@ updateItemToEdit (EditableList data) item maybeIndex =
     EditableList { data | maybeItemToEdit = Just (ItemToEdit { item = item, maybeIndex = maybeIndex }) }
 
 
-view : EditableList a -> ItemEditForm a msg -> ItemView a msg -> a -> (EditableList a -> msg) -> Html msg
-view ((EditableList { items, maybeItemToEdit }) as v) itemEditFormView itemView newItem callback =
+type alias Input a msg =
+    { editableList : EditableList a
+    , editItemView : ItemEditForm a msg
+    , displayItemView : ItemView a msg
+    , newItem : a
+    , callback : EditableList a -> msg
+    }
+
+
+view : Input a msg -> Html msg
+view { editableList, editItemView, displayItemView, newItem, callback } =
     let
         this =
             div []
                 [ whenNonEmpty items
-                    (itemListView itemView (\item index -> updateItemToEdit v item (Just index) |> callback))
+                    (itemListView displayItemView (\item index -> updateItemToEdit editableList item (Just index) |> callback))
                 , whenNonNothing maybeItemToEdit itemEditForm
                 , whenNothing maybeItemToEdit addItemButton
                 ]
 
+        (EditableList { items, maybeItemToEdit }) =
+            editableList
+
         itemEditForm (ItemToEdit { item, maybeIndex }) =
-            itemEditFormView item
-                (\item -> updateItemToEdit v item maybeIndex |> callback)
-                (\item -> submitItem v item maybeIndex |> callback)
-                (\item -> resetItemToEdit v |> callback)
+            editItemView item
+                (\item -> updateItemToEdit editableList item maybeIndex |> callback)
+                (\item -> submitItem editableList item maybeIndex |> callback)
+                (\item -> resetItemToEdit editableList |> callback)
 
         addItemButton _ =
             button
-                [ onClick (\_ -> updateItemToEdit v newItem Nothing |> callback) ]
+                [ onClick (\_ -> updateItemToEdit editableList newItem Nothing |> callback) ]
                 [ text "Adaugă" ]
     in
         this

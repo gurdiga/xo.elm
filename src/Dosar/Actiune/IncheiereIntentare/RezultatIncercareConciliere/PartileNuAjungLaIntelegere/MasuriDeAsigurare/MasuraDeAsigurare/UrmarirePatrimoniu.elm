@@ -58,11 +58,13 @@ view (UrmarirePatrimoniu data) callback =
                     )
                 , whenNonNothing data.editableList
                     (\editableList ->
-                        EditableList.view editableList
-                            BunUrmarit.editForm
-                            BunUrmarit.view
-                            BunUrmarit.empty
-                            (\v -> c { data | editableList = Just v } Cmd.none Sub.none)
+                        EditableList.view
+                            { editableList = editableList
+                            , editItemView = BunUrmarit.editForm
+                            , displayItemView = BunUrmarit.view
+                            , newItem = BunUrmarit.empty
+                            , callback = (\v -> c { data | editableList = Just v } Cmd.none Sub.none)
+                            }
                     )
                 , actionButtons
                 ]

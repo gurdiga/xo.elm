@@ -2,14 +2,17 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 import Html exposing (Html, fieldset, legend, div, button, text)
 import Utils.MyHtmlEvents exposing (onClick)
-import Utils.MyHtml exposing (whenNothing)
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite as BunuriUrmarite exposing (BunuriUrmarite(BunuriUrmarite))
+import Utils.MyHtml exposing (whenNonNothing, whenNothing)
+import Utils.Money as Money exposing (Money(Money), Currency(EUR, USD))
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList as EditableList exposing (EditableList(EditableList))
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestrare as Sechestrare exposing (Sechestrare)
 
 
 type UrmarirePatrimoniu
     = UrmarirePatrimoniu
-        { bunuriUrmarite : BunuriUrmarite
+        { bunuriUrmarite : List BunUrmarit
+        , editare : Maybe EditableList
         , sechestrare : Maybe Sechestrare
         }
 
@@ -17,9 +20,17 @@ type UrmarirePatrimoniu
 empty : UrmarirePatrimoniu
 empty =
     UrmarirePatrimoniu
-        { bunuriUrmarite = BunuriUrmarite.empty
+        { bunuriUrmarite = someItems
+        , editare = Just (EditableList.fromItems someItems)
         , sechestrare = Nothing
         }
+
+
+someItems : List BunUrmarit
+someItems =
+    [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
+    , BunUrmarit { denumire = "Automobil Porche", valoare = Money 250000 USD, note = "Yeah!" }
+    ]
 
 
 view : UrmarirePatrimoniu -> (UrmarirePatrimoniu -> Cmd msg -> Sub msg -> msg) -> Html msg
@@ -28,30 +39,28 @@ view (UrmarirePatrimoniu data) callback =
         this =
             fieldset []
                 [ legend [] [ text "UrmarirePatrimoniu" ]
-                , case data.sechestrare of
-                    Just sechestrare ->
-                        div []
-                            [ Sechestrare.view sechestrare
-                                (\v ->
-                                    { data | sechestrare = Just v }
-                                        |> UrmarirePatrimoniu
-                                        |> callback
-                                )
-                                (\v ->
-                                    { data | sechestrare = Nothing }
-                                        |> UrmarirePatrimoniu
-                                        |> callback
-                                )
-                            ]
-
-                    Nothing ->
-                        BunuriUrmarite.view data.bunuriUrmarite
+                , whenNonNothing data.sechestrare
+                    (\sechestrare ->
+                        Sechestrare.view sechestrare
                             (\v ->
-                                { data | bunuriUrmarite = v }
+                                { data | sechestrare = Just v }
                                     |> UrmarirePatrimoniu
                                     |> callback
                             )
-                , whenNothing data.sechestrare (\_ -> actionButtons)
+                            (\v ->
+                                { data | sechestrare = Nothing }
+                                    |> UrmarirePatrimoniu
+                                    |> callback
+                            )
+                    )
+                , whenNonNothing data.editare
+                    (\editare ->
+                        EditableList.view editare
+                            (\v ->
+                                callback (UrmarirePatrimoniu { data | editare = Just v }) Cmd.none Sub.none
+                            )
+                    )
+                , actionButtons
                 ]
 
         actionButtons =
@@ -65,7 +74,7 @@ view (UrmarirePatrimoniu data) callback =
                             (UrmarirePatrimoniu
                                 { data
                                     | sechestrare =
-                                        BunuriUrmarite.bunuriUrmarite data.bunuriUrmarite
+                                        data.bunuriUrmarite
                                             |> Sechestrare.fromItems
                                             |> Just
                                 }

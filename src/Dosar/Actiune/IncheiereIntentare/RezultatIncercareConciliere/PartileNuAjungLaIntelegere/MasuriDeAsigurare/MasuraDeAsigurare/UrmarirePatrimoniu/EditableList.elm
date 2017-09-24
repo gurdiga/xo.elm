@@ -1,24 +1,19 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList
     exposing
-        ( BunuriUrmarite(BunuriUrmarite)
-        , empty
+        ( EditableList(EditableList)
+        , fromItems
         , view
-        , bunuriUrmarite
         )
 
 import Html exposing (Html, h1, fieldset, legend, div, span, ul, li, p, button, input, text, strong, br)
 import Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNonNothing)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyList as MyList
-import Utils.Money as Money exposing (Money(Money), Currency(EUR, USD))
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite.BunUrmarit as BunUrmarit
-    exposing
-        ( BunUrmarit(BunUrmarit)
-        )
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
 
 
-type BunuriUrmarite
-    = BunuriUrmarite
+type EditableList
+    = EditableList
         { items : List BunUrmarit
         , maybeItemToEdit : Maybe ItemToEdit
         }
@@ -31,23 +26,16 @@ type ItemToEdit
         }
 
 
-empty : BunuriUrmarite
-empty =
-    BunuriUrmarite
-        { items = someItems
+fromItems : List BunUrmarit -> EditableList
+fromItems items =
+    EditableList
+        { items = items
         , maybeItemToEdit = Nothing
         }
 
 
-someItems : List BunUrmarit
-someItems =
-    [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
-    , BunUrmarit { denumire = "Automobil Porche", valoare = Money 250000 USD, note = "Yeah!" }
-    ]
-
-
-updateItem : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
-updateItem ((BunuriUrmarite ({ items } as data)) as bunuriUrmarite) item maybeIndex =
+updateItem : EditableList -> BunUrmarit -> Maybe Int -> EditableList
+updateItem ((EditableList ({ items } as data)) as bunuriUrmarite) item maybeIndex =
     let
         newItems =
             case maybeIndex of
@@ -57,38 +45,29 @@ updateItem ((BunuriUrmarite ({ items } as data)) as bunuriUrmarite) item maybeIn
                 Nothing ->
                     items ++ [ item ]
     in
-        BunuriUrmarite
+        EditableList
             { data
                 | items = newItems
                 , maybeItemToEdit = Nothing
             }
 
 
-resetItemToEdit : BunuriUrmarite -> BunuriUrmarite
-resetItemToEdit (BunuriUrmarite data) =
-    BunuriUrmarite { data | maybeItemToEdit = Nothing }
+resetItemToEdit : EditableList -> EditableList
+resetItemToEdit (EditableList data) =
+    EditableList { data | maybeItemToEdit = Nothing }
 
 
-updateItemToEdit : BunuriUrmarite -> BunUrmarit -> Maybe Int -> BunuriUrmarite
-updateItemToEdit (BunuriUrmarite data) bunUrmarit maybeIndex =
-    BunuriUrmarite { data | maybeItemToEdit = Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }) }
+updateItemToEdit : EditableList -> BunUrmarit -> Maybe Int -> EditableList
+updateItemToEdit (EditableList data) bunUrmarit maybeIndex =
+    EditableList { data | maybeItemToEdit = Just (ItemToEdit { item = bunUrmarit, maybeIndex = maybeIndex }) }
 
 
-bunuriUrmarite : BunuriUrmarite -> List BunUrmarit
-bunuriUrmarite (BunuriUrmarite { items }) =
-    items
-
-
-type alias Callback msg =
-    BunuriUrmarite -> Cmd msg -> Sub msg -> msg
-
-
-view : BunuriUrmarite -> Callback msg -> Html msg
-view ((BunuriUrmarite ({ items, maybeItemToEdit } as data)) as v) callback =
+view : EditableList -> (EditableList -> msg) -> Html msg
+view ((EditableList { items, maybeItemToEdit }) as v) callback =
     let
         this =
             fieldset []
-                [ legend [] [ text "BunuriUrmarite" ]
+                [ legend [] [ text "EditableList" ]
                 , whenNonEmpty items
                     (\items ->
                         itemListView items
@@ -103,7 +82,7 @@ view ((BunuriUrmarite ({ items, maybeItemToEdit } as data)) as v) callback =
                 ]
 
         c bunuriUrmarite =
-            callback bunuriUrmarite Cmd.none Sub.none
+            callback bunuriUrmarite
 
         editItemForm (ItemToEdit { item, maybeIndex }) =
             BunUrmarit.editForm item

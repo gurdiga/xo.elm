@@ -48,9 +48,11 @@ view { sechestrare, submitCalllback, cancelCallback } =
                     [ text "Selecteză bunurile de sechestrat"
                     , button [ onClick (\_ -> cancelCallback sechestrare Cmd.none Sub.none) ] [ text "×" ]
                     ]
-                , Selection.view (Selection.fromItems data.bunuri)
-                    BunUrmarit.view
-                    (\v -> submitCalllback (Sechestrare { data | selection = v }) Cmd.none Sub.none)
+                , Selection.view
+                    { selection = (Selection.fromItems data.bunuri)
+                    , itemDisplayView = BunUrmarit.view
+                    , callback = (\v -> submitCalllback (Sechestrare { data | selection = v }) Cmd.none Sub.none)
+                    }
                 ]
 
         (Sechestrare data) =

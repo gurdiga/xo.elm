@@ -34,14 +34,24 @@ fromItems items =
         (List.map (\v -> SelectionItem { item = v, isSelected = False }) items)
 
 
-view : Selection a -> (a -> Html msg) -> (Selection a -> msg) -> Html msg
-view (Selection selectionItems) itemRenderer callback =
+type alias Input a msg =
+    { selection : Selection a
+    , itemDisplayView : a -> Html msg
+    , callback : Selection a -> msg
+    }
+
+
+view : Input a msg -> Html msg
+view { selection, itemDisplayView, callback } =
     let
         this =
             ul [] (List.indexedMap renderItem selectionItems)
 
+        (Selection selectionItems) =
+            selection
+
         renderItem index (SelectionItem ({ item } as selectionItem)) =
-            li [] [ checkbox index selectionItem, itemRenderer item ]
+            li [] [ checkbox index selectionItem, itemDisplayView item ]
 
         checkbox index selectionItem =
             input

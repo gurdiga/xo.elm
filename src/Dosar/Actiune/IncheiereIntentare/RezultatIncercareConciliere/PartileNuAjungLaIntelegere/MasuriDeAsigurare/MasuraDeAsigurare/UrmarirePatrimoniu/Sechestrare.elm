@@ -19,10 +19,6 @@ type Sechestrare
         }
 
 
-type alias Callback msg =
-    Sechestrare -> Cmd msg -> Sub msg -> msg
-
-
 fromItems : List BunUrmarit -> Sechestrare
 fromItems bunuri =
     Sechestrare
@@ -32,8 +28,19 @@ fromItems bunuri =
         }
 
 
-view : Sechestrare -> Callback msg -> Callback msg -> Html msg
-view ((Sechestrare data) as sechestrare) submitCalllback cancelCallback =
+type alias Input msg =
+    { sechestrare : Sechestrare
+    , submitCalllback : Callback msg
+    , cancelCallback : Callback msg
+    }
+
+
+type alias Callback msg =
+    Sechestrare -> Cmd msg -> Sub msg -> msg
+
+
+view : Input msg -> Html msg
+view { sechestrare, submitCalllback, cancelCallback } =
     let
         this =
             fieldset []
@@ -45,5 +52,8 @@ view ((Sechestrare data) as sechestrare) submitCalllback cancelCallback =
                     BunUrmarit.view
                     (\v -> submitCalllback (Sechestrare { data | selection = v }) Cmd.none Sub.none)
                 ]
+
+        (Sechestrare data) =
+            sechestrare
     in
         this

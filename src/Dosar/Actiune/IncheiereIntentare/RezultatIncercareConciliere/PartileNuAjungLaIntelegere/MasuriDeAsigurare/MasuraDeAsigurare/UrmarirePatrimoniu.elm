@@ -46,15 +46,18 @@ view (UrmarirePatrimoniu data) callback =
                 [ legend [] [ text "UrmarirePatrimoniu" ]
                 , whenNonNothing data.sechestrare
                     (\sechestrare ->
-                        Sechestrare.view sechestrare
-                            (\v -> c { data | sechestrare = Just v })
-                            (\v ->
-                                c
-                                    { data
-                                        | sechestrare = Nothing
-                                        , editableList = initialEditableList data.bunuriUrmarite
-                                    }
-                            )
+                        Sechestrare.view
+                            { sechestrare = sechestrare
+                            , submitCalllback = (\v -> c { data | sechestrare = Just v })
+                            , cancelCallback =
+                                (\v ->
+                                    c
+                                        { data
+                                            | sechestrare = Nothing
+                                            , editableList = initialEditableList data.bunuriUrmarite
+                                        }
+                                )
+                            }
                     )
                 , whenNonNothing data.editableList
                     (\editableList ->

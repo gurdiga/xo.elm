@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList
     exposing
         ( EditableList
-        , fromItems
+        , new
         , view
         )
 
@@ -15,6 +15,8 @@ type EditableList a
     = EditableList
         { items : List a
         , maybeItemToEdit : Maybe (ItemToEdit a)
+        , inAddMode : Bool
+        , hasExternalAddTrigger : Bool
         }
 
 
@@ -49,11 +51,13 @@ type alias CancellCallback a msg =
     a -> msg
 
 
-fromItems : List a -> EditableList a
-fromItems items =
+new : { items : List a, inAddMode : Bool, hasExternalAddTrigger : Bool } -> EditableList a
+new { items, inAddMode, hasExternalAddTrigger } =
     EditableList
         { items = items
         , maybeItemToEdit = Nothing
+        , inAddMode = inAddMode
+        , hasExternalAddTrigger = hasExternalAddTrigger
         }
 
 
@@ -105,7 +109,7 @@ view { editableList, editItemView, displayItemView, newItem, callback } =
                 , whenNothing maybeItemToEdit addItemButton
                 ]
 
-        (EditableList { items, maybeItemToEdit }) =
+        (EditableList { items, maybeItemToEdit, hasExternalAddTrigger }) =
             editableList
 
         itemEditForm (ItemToEdit { item, maybeIndex }) =
@@ -115,9 +119,12 @@ view { editableList, editItemView, displayItemView, newItem, callback } =
                 (\item -> resetItemToEdit editableList |> callback)
 
         addItemButton _ =
-            button
-                [ onClick (\_ -> updateItemToEdit editableList newItem Nothing |> callback) ]
-                [ text "Adaugă" ]
+            if hasExternalAddTrigger then
+                text ""
+            else
+                button
+                    [ onClick (\_ -> updateItemToEdit editableList newItem Nothing |> callback) ]
+                    [ text "Adaugă" ]
     in
         this
 

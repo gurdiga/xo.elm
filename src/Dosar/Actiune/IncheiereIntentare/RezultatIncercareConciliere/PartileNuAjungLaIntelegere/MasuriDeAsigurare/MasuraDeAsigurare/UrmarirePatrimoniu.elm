@@ -1,13 +1,8 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu
-    exposing
-        ( UrmarirePatrimoniu
-        , new
-        , view
-        )
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu exposing (UrmarirePatrimoniu, empty, view)
 
-import Html exposing (Html, fieldset, legend, div, p, button, text)
+import Html exposing (Html, fieldset, legend, div, button, text)
 import Utils.MyHtmlEvents exposing (onClick)
-import Utils.MyHtml exposing (whenNonNothing, whenNothing, whenNonEmpty)
+import Utils.MyHtml exposing (whenNonNothing, whenNothing)
 import Utils.Money as Money exposing (Money(Money), Currency(EUR, USD))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList as EditableList exposing (EditableList)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
@@ -18,48 +13,29 @@ type UrmarirePatrimoniu
     = UrmarirePatrimoniu
         { bunuriUrmarite : List BunUrmarit
         , editableList : Maybe (EditableList BunUrmarit)
-        , regim : Regim
         , sechestrare : Maybe Sechestrare
         }
 
 
-type Regim
-    = Listare
-    | Adaugare
-    | Sechestrare
+empty : UrmarirePatrimoniu
+empty =
+    UrmarirePatrimoniu
+        { bunuriUrmarite = someItems
+        , editableList = initialEditableList someItems
+        , sechestrare = Nothing
+        }
 
 
-new : UrmarirePatrimoniu
-new =
-    let
-        this =
-            UrmarirePatrimoniu
-                { bunuriUrmarite = someItems
-                , editableList = initialEditableList someItems inAddMode
-                , sechestrare = Nothing
-                , regim = Listare
-                }
-
-        inAddMode =
-            False
-    in
-        this
-
-
-initialEditableList : List BunUrmarit -> Bool -> Maybe (EditableList BunUrmarit)
-initialEditableList items inAddMode =
-    Just
-        (EditableList.new
-            { items = someItems
-            , inAddMode = inAddMode
-            , hasExternalAddTrigger = True
-            }
-        )
+initialEditableList : List BunUrmarit -> Maybe (EditableList BunUrmarit)
+initialEditableList items =
+    Just (EditableList.fromItems someItems)
 
 
 someItems : List BunUrmarit
 someItems =
-    []
+    [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
+    , BunUrmarit { denumire = "Automobil Porche", valoare = Money 250000 USD, note = "Yeah!" }
+    ]
 
 
 view : UrmarirePatrimoniu -> (UrmarirePatrimoniu -> Cmd msg -> Sub msg -> msg) -> Html msg
@@ -68,17 +44,6 @@ view (UrmarirePatrimoniu data) callback =
         this =
             fieldset []
                 [ legend [] [ text "UrmarirePatrimoniu" ]
-                , maybeHelpCopy data.bunuriUrmarite
-                , whenNonNothing data.editableList
-                    (\editableList ->
-                        EditableList.view
-                            { editableList = data.editableList
-                            , editItemView = BunUrmarit.editForm
-                            , displayItemView = BunUrmarit.view
-                            , newItem = BunUrmarit.empty
-                            , callback = (\v -> c { data | editableList = Just v } Cmd.none Sub.none)
-                            }
-                    )
                 , whenNonNothing data.sechestrare
                     (\sechestrare ->
                         Sechestrare.view
@@ -89,53 +54,43 @@ view (UrmarirePatrimoniu data) callback =
                                     c
                                         { data
                                             | sechestrare = Nothing
-                                            , editableList = initialEditableList data.bunuriUrmarite inAddMode
+                                            , editableList = initialEditableList data.bunuriUrmarite
                                         }
                                 )
+                            }
+                    )
+                , whenNonNothing data.editableList
+                    (\editableList ->
+                        EditableList.view
+                            { editableList = editableList
+                            , editItemView = BunUrmarit.editForm
+                            , displayItemView = BunUrmarit.view
+                            , newItem = BunUrmarit.empty
+                            , callback = (\v -> c { data | editableList = Just v } Cmd.none Sub.none)
                             }
                     )
                 , actionButtons
                 ]
 
-        inAddMode =
-            data.regim == Adaugare
-
         c data =
             callback (UrmarirePatrimoniu data)
 
         actionButtons =
-            div [] [ butonAdaugareBun, butonAplicareSechestru ]
-
-        butonAdaugareBun =
-            if data.regim == Listare then
-                button [ onClick (\_ -> c { data | regim = Adaugare } Cmd.none Sub.none) ] [ text "Adaugați bun" ]
-            else
-                text ""
+            div [] [ butonAplicareSechestru ]
 
         butonAplicareSechestru =
-            if List.isEmpty data.bunuriUrmarite then
-                text ""
-            else
-                button
-                    [ onClick
-                        (\_ ->
-                            c
-                                { data
-                                    | editableList = Nothing
-                                    , sechestrare = Just (Sechestrare.fromItems data.bunuriUrmarite)
-                                }
-                                Cmd.none
-                                Sub.none
-                        )
-                    ]
-                    [ text "Aplică sechestru" ]
+            button
+                [ onClick
+                    (\_ ->
+                        c
+                            { data
+                                | editableList = Nothing
+                                , sechestrare = Just (Sechestrare.fromItems data.bunuriUrmarite)
+                            }
+                            Cmd.none
+                            Sub.none
+                    )
+                ]
+                [ text "Aplică sechestru" ]
     in
         this
-
-
-maybeHelpCopy : List BunUrmarit -> Html msg
-maybeHelpCopy bunuriUrmarite =
-    if List.isEmpty bunuriUrmarite then
-        p [] [ text "Încă nu ați introdus bunuri urmărite." ]
-    else
-        text ""

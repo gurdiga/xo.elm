@@ -21,7 +21,7 @@ type MasuraDeAsigurare
 
 empty : MasuraDeAsigurare
 empty =
-    UrmarirePatrimoniu UrmarirePatrimoniu.new
+    UrmarirePatrimoniu UrmarirePatrimoniu.empty
 
 
 addView : (MasuraDeAsigurare -> msg) -> Html msg
@@ -29,7 +29,7 @@ addView callback =
     div []
         [ text "Adaugă măsură:"
         , ul []
-            [ li [] [ button [ onClick (\_ -> callback << UrmarirePatrimoniu <| UrmarirePatrimoniu.new) ] [ text "UrmarirePatrimoniu" ] ]
+            [ li [] [ button [ onClick (\_ -> callback << UrmarirePatrimoniu <| UrmarirePatrimoniu.empty) ] [ text "UrmarirePatrimoniu" ] ]
             , li [] [ button [ onClick (\_ -> callback Evacuare) ] [ text "Evacuare" ] ]
             , li [] [ button [ onClick (\_ -> callback EfectuareActeObligatorii) ] [ text "EfectuareActeObligatorii" ] ]
             , li [] [ button [ onClick (\_ -> callback RestabilireSalariat) ] [ text "RestabilireSalariat" ] ]

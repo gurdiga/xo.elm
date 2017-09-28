@@ -11,6 +11,7 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 type UrmarirePatrimoniu
     = UrmarirePatrimoniu
         { bunuriUrmarite : List BunUrmarit
+        , sechestre : List Sechestru
         , regim : Regim
         }
 
@@ -24,6 +25,7 @@ empty : UrmarirePatrimoniu
 empty =
     UrmarirePatrimoniu
         { bunuriUrmarite = someItems
+        , sechestre = []
         , regim = Editare (EditableList.fromItems someItems)
         }
 
@@ -59,8 +61,16 @@ view (UrmarirePatrimoniu data) callback =
                     Sechestrare sechestru ->
                         Sechestru.view
                             { sechestru = sechestru
-                            , submitCalllback = (\v -> c { data | regim = Sechestrare v })
-                            , cancelCallback = (\v -> c { data | regim = Editare (EditableList.fromItems data.bunuriUrmarite) })
+                            , updateCallback = (\sechestru -> c { data | regim = Sechestrare sechestru })
+                            , submitCallback =
+                                (\sechestru ->
+                                    c
+                                        { data
+                                            | regim = Editare (EditableList.fromItems data.bunuriUrmarite)
+                                            , sechestre = data.sechestre ++ [ sechestru ]
+                                        }
+                                )
+                            , cancelCallback = (\_ -> c { data | regim = Editare (EditableList.fromItems data.bunuriUrmarite) })
                             }
                 , actionButtons
                 ]

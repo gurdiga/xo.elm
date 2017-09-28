@@ -32,7 +32,8 @@ fromItems bunuri =
 
 type alias Input msg =
     { sechestru : Sechestru
-    , submitCalllback : Callback msg
+    , updateCallback : Callback msg
+    , submitCallback : Callback msg
     , cancelCallback : Callback msg
     }
 
@@ -42,7 +43,7 @@ type alias Callback msg =
 
 
 view : Input msg -> Html msg
-view { sechestru, submitCalllback, cancelCallback } =
+view { sechestru, updateCallback, submitCallback, cancelCallback } =
     let
         this =
             fieldset []
@@ -53,7 +54,7 @@ view { sechestru, submitCalllback, cancelCallback } =
                 , Selection.view
                     { selection = data.selection
                     , itemDisplayView = BunUrmarit.view
-                    , callback = (\v -> submitCalllback (Sechestru { data | selection = v }) Cmd.none Sub.none)
+                    , callback = (\v -> updateCallback (Sechestru { data | selection = v }) Cmd.none Sub.none)
                     }
                 , whenTrue anyItemSelected genereazaProcesVerbal
                 ]
@@ -68,8 +69,8 @@ view { sechestru, submitCalllback, cancelCallback } =
             RichTextEditor.view
                 { buttonLabel = "Genereaza proces verbal"
                 , content = templateProcesVerbal (Selection.selectedItems data.selection)
-                , onOpen = submitCalllback sechestru
-                , onResponse = (\s -> submitCalllback (Sechestru { data | procesVerbal = s }) Cmd.none Sub.none)
+                , onOpen = updateCallback sechestru
+                , onResponse = (\s -> submitCallback (Sechestru { data | procesVerbal = s }) Cmd.none Sub.none)
                 }
     in
         this

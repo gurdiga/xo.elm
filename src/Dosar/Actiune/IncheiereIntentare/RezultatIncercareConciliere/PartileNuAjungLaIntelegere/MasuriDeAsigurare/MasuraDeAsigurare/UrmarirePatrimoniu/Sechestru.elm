@@ -1,6 +1,6 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestrare
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestru
     exposing
-        ( Sechestrare
+        ( Sechestru
         , fromItems
         , view
         )
@@ -13,17 +13,17 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selection as Selection exposing (Selection)
 
 
-type Sechestrare
-    = Sechestrare
+type Sechestru
+    = Sechestru
         { bunuri : List BunUrmarit
         , procesVerbal : String
         , selection : Selection BunUrmarit
         }
 
 
-fromItems : List BunUrmarit -> Sechestrare
+fromItems : List BunUrmarit -> Sechestru
 fromItems bunuri =
-    Sechestrare
+    Sechestru
         { bunuri = bunuri
         , procesVerbal = ""
         , selection = Selection.fromItems bunuri
@@ -31,35 +31,35 @@ fromItems bunuri =
 
 
 type alias Input msg =
-    { sechestrare : Sechestrare
+    { sechestru : Sechestru
     , submitCalllback : Callback msg
     , cancelCallback : Callback msg
     }
 
 
 type alias Callback msg =
-    Sechestrare -> Cmd msg -> Sub msg -> msg
+    Sechestru -> Cmd msg -> Sub msg -> msg
 
 
 view : Input msg -> Html msg
-view { sechestrare, submitCalllback, cancelCallback } =
+view { sechestru, submitCalllback, cancelCallback } =
     let
         this =
             fieldset []
                 [ legend []
                     [ text "Selecteză bunurile de sechestrat"
-                    , button [ onClick (\_ -> cancelCallback sechestrare Cmd.none Sub.none) ] [ text "×" ]
+                    , button [ onClick (\_ -> cancelCallback sechestru Cmd.none Sub.none) ] [ text "×" ]
                     ]
                 , Selection.view
                     { selection = data.selection
                     , itemDisplayView = BunUrmarit.view
-                    , callback = (\v -> submitCalllback (Sechestrare { data | selection = v }) Cmd.none Sub.none)
+                    , callback = (\v -> submitCalllback (Sechestru { data | selection = v }) Cmd.none Sub.none)
                     }
                 , whenTrue anyItemSelected genereazaProcesVerbal
                 ]
 
-        (Sechestrare data) =
-            sechestrare
+        (Sechestru data) =
+            sechestru
 
         anyItemSelected =
             Selection.anyItemSelected data.selection
@@ -68,8 +68,8 @@ view { sechestrare, submitCalllback, cancelCallback } =
             RichTextEditor.view
                 { buttonLabel = "Genereaza proces verbal"
                 , content = templateProcesVerbal (Selection.selectedItems data.selection)
-                , onOpen = submitCalllback sechestrare
-                , onResponse = (\s -> submitCalllback (Sechestrare { data | procesVerbal = s }) Cmd.none Sub.none)
+                , onOpen = submitCalllback sechestru
+                , onResponse = (\s -> submitCalllback (Sechestru { data | procesVerbal = s }) Cmd.none Sub.none)
                 }
     in
         this
@@ -78,6 +78,6 @@ view { sechestrare, submitCalllback, cancelCallback } =
 templateProcesVerbal : List BunUrmarit -> List (Html msg)
 templateProcesVerbal items =
     -- TODO: template?
-    [ h1 [] [ text "Proces verbal de sechestrare" ]
+    [ h1 [] [ text "Proces verbal de sechestru" ]
     , items |> toString |> text
     ]

@@ -5,7 +5,7 @@ import Utils.MyHtmlEvents exposing (onClick)
 import Utils.Money as Money exposing (Money(Money), Currency(EUR, USD))
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList as EditableList exposing (EditableList)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestrare as Sechestrare exposing (Sechestrare)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestru as Sechestru exposing (Sechestru)
 
 
 type UrmarirePatrimoniu
@@ -17,7 +17,7 @@ type UrmarirePatrimoniu
 
 type Regim
     = Editare (EditableList BunUrmarit)
-    | Sechestrare Sechestrare
+    | Sechestrare Sechestru
 
 
 empty : UrmarirePatrimoniu
@@ -56,9 +56,9 @@ view (UrmarirePatrimoniu data) callback =
                             , callback = (\v -> c { data | regim = Editare v } Cmd.none Sub.none)
                             }
 
-                    Sechestrare sechestrare ->
-                        Sechestrare.view
-                            { sechestrare = sechestrare
+                    Sechestrare sechestru ->
+                        Sechestru.view
+                            { sechestru = sechestru
                             , submitCalllback = (\v -> c { data | regim = Sechestrare v })
                             , cancelCallback = (\v -> c { data | regim = Editare (EditableList.fromItems data.bunuriUrmarite) })
                             }
@@ -73,7 +73,7 @@ view (UrmarirePatrimoniu data) callback =
 
         butonAplicareSechestru =
             button
-                [ onClick (\_ -> c { data | regim = Sechestrare (Sechestrare.fromItems data.bunuriUrmarite) } Cmd.none Sub.none) ]
+                [ onClick (\_ -> c { data | regim = Sechestrare (Sechestru.fromItems data.bunuriUrmarite) } Cmd.none Sub.none) ]
                 [ text "Aplică sechestru" ]
     in
         this

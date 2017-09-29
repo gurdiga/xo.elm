@@ -72,6 +72,13 @@ view (UrmarirePatrimoniu data) callback =
                                 )
                             , cancelCallback = (\_ -> c { data | regim = Editare (EditableList.fromItems data.bunuriUrmarite) })
                             }
+                , EditableList.view
+                    { editableList = EditableList.fromItems data.sechestre
+                    , editItemView = (\v updateCallback submitCallback cancelCallback -> toString v |> text)
+                    , displayItemView = (toString >> text)
+                    , newItem = Sechestru.fromItems data.bunuriUrmarite
+                    , callback = (\editableList -> c data Cmd.none Sub.none)
+                    }
                 , actionButtons
                 ]
 

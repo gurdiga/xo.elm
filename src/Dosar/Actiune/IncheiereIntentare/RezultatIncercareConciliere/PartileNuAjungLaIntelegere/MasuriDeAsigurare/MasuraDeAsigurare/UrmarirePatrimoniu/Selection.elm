@@ -3,6 +3,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         ( Selection
         , empty
         , fromItems
+        , withItemsSelected
         , anyItemSelected
         , selectedItems
         , view
@@ -34,6 +35,16 @@ fromItems : List a -> Selection a
 fromItems items =
     Selection
         (List.map (\v -> SelectionItem { item = v, isSelected = False }) items)
+
+
+
+--- for coding conveninece only
+
+
+withItemsSelected : List a -> Selection a
+withItemsSelected items =
+    Selection
+        (List.map (\v -> SelectionItem { item = v, isSelected = True }) items)
 
 
 anyItemSelected : Selection a -> Bool

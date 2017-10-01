@@ -2,7 +2,9 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
     exposing
         ( Sechestru
         , fromItems
+        , withItemsSelected
         , view
+        , editView
         )
 
 import Html exposing (Html, h1, fieldset, legend, ul, li, button, text)
@@ -30,6 +32,19 @@ fromItems bunuri =
         }
 
 
+
+-- for coding convenience only
+
+
+withItemsSelected : List BunUrmarit -> Sechestru
+withItemsSelected bunuri =
+    Sechestru
+        { bunuri = bunuri
+        , procesVerbal = ""
+        , selection = Selection.withItemsSelected bunuri
+        }
+
+
 type alias Input msg =
     { sechestru : Sechestru
     , updateCallback : Callback msg
@@ -42,8 +57,8 @@ type alias Callback msg =
     Sechestru -> Cmd msg -> Sub msg -> msg
 
 
-view : Input msg -> Html msg
-view { sechestru, updateCallback, submitCallback, cancelCallback } =
+editView : Input msg -> Html msg
+editView { sechestru, updateCallback, submitCallback, cancelCallback } =
     let
         this =
             fieldset []
@@ -82,3 +97,11 @@ templateProcesVerbal items =
     [ h1 [] [ text "Proces verbal de sechestru" ]
     , items |> toString |> text
     ]
+
+
+view : Sechestru -> Html msg
+view (Sechestru { selection }) =
+    Selection.selectedItems selection
+        |> List.map BunUrmarit.view
+        |> List.map (\itemView -> li [] [ itemView ])
+        |> ul []

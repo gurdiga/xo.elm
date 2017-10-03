@@ -12,8 +12,13 @@ type UrmarirePatrimoniu
     = UrmarirePatrimoniu
         { bunuriUrmarite : List BunUrmarit
         , sechestre : List Sechestru
-        , regim : Regim
+        , view : View
         }
+
+
+type alias View =
+    { regim : Regim
+    }
 
 
 type Regim
@@ -26,7 +31,9 @@ empty =
     UrmarirePatrimoniu
         { bunuriUrmarite = someBunuriUrmarite
         , sechestre = someSechestre
-        , regim = Editare (EditableList.fromItems someBunuriUrmarite)
+        , view =
+            { regim = Editare (EditableList.fromItems someBunuriUrmarite)
+            }
         }
 
 
@@ -43,12 +50,12 @@ someSechestre =
 
 
 view : UrmarirePatrimoniu -> (UrmarirePatrimoniu -> Cmd msg -> Sub msg -> msg) -> Html msg
-view (UrmarirePatrimoniu data) callback =
+view (UrmarirePatrimoniu ({ view } as data)) callback =
     let
         this =
             fieldset []
                 [ legend [] [ text "UrmarirePatrimoniu" ]
-                , case data.regim of
+                , case view.regim of
                     Editare editableList ->
                         listaBunuri editableList
 
@@ -69,23 +76,23 @@ view (UrmarirePatrimoniu data) callback =
                     , editItemView = BunUrmarit.editForm
                     , displayItemView = BunUrmarit.view
                     , newItem = BunUrmarit.empty
-                    , callback = (\v -> c { data | regim = Editare v } Cmd.none Sub.none)
+                    , callback = (\v -> c { data | view = { view | regim = Editare v } } Cmd.none Sub.none)
                     }
                 ]
 
         formularSechestru sechestru =
             Sechestru.editView
                 { sechestru = sechestru
-                , updateCallback = (\sechestru -> c { data | regim = Sechestrare sechestru })
+                , updateCallback = (\sechestru -> c { data | view = { view | regim = Sechestrare sechestru } })
                 , submitCallback =
                     (\sechestru ->
                         c
                             { data
-                                | regim = Editare (EditableList.fromItems data.bunuriUrmarite)
-                                , sechestre = data.sechestre ++ [ sechestru ]
+                                | sechestre = data.sechestre ++ [ sechestru ]
+                                , view = { view | regim = Editare (EditableList.fromItems data.bunuriUrmarite) }
                             }
                     )
-                , cancelCallback = (\_ -> c { data | regim = Editare (EditableList.fromItems data.bunuriUrmarite) })
+                , cancelCallback = (\_ -> c { data | view = { view | regim = Editare (EditableList.fromItems data.bunuriUrmarite) } })
                 }
 
         listaSechestre =
@@ -105,7 +112,7 @@ view (UrmarirePatrimoniu data) callback =
 
         butonAplicareSechestru =
             button
-                [ onClick (\_ -> c { data | regim = Sechestrare (Sechestru.fromItems data.bunuriUrmarite) } Cmd.none Sub.none) ]
+                [ onClick (\_ -> c { data | view = { view | regim = Sechestrare (Sechestru.fromItems data.bunuriUrmarite) } } Cmd.none Sub.none) ]
                 [ text "Aplică sechestru" ]
     in
         this

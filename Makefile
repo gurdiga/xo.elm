@@ -1,4 +1,6 @@
-default: rich-text-editor compile
+OTHER=rich-text-editor material
+
+default: ${OTHER} compile
 
 test: elm-test
 	elm-test
@@ -29,8 +31,9 @@ pre-commit: compile test rich-text-editor check-untracked
 check-untracked:
 	test `git ls-files --other --directory --exclude-standard | wc -c` == '0'
 
-.PHONY: rich-text-editor
-rich-text-editor:
+
+.PHONY: ${OTHER}
+${OTHER}:
 	@make -C $@
 
 .EXPORT_ALL_VARIABLES:

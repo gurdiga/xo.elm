@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereRefuz.CauzaRefuz exposing (CauzaRefuz, empty, view)
 
 import Html exposing (Html, div, label, text)
-import Widgets.Select as Select
+import MyMaterial.Select as Select
 
 
 -- Articolul 61. Refuzul de a intenta procedura de executare
@@ -54,5 +54,10 @@ empty =
 view : CauzaRefuz -> (CauzaRefuz -> msg) -> Html msg
 view cauzaRefuz callback =
     div []
-        [ Select.view "Cauza refuzului:" valuesWithLabels cauzaRefuz callback
+        [ Select.view
+            { labelText = "Cauza refuzului:"
+            , valuesWithLabels = valuesWithLabels
+            , defaultValue = cauzaRefuz
+            , callback = callback
+            }
         ]

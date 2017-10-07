@@ -1,7 +1,7 @@
 module Dosar.DemersInstanta.Pricina exposing (Pricina, empty, view)
 
 import Html exposing (Html, div, label, p, text)
-import Widgets.Select as Select
+import MyMaterial.Select as Select
 
 
 type
@@ -111,7 +111,12 @@ empty =
 view : Pricina -> (Pricina -> msg) -> Html msg
 view pricina callback =
     div []
-        [ Select.view "Pricina:" valuesWithLabels pricina callback
+        [ Select.view
+            { labelText = "Pricina:"
+            , valuesWithLabels = valuesWithLabels
+            , defaultValue = pricina
+            , callback = callback
+            }
         , p [] [ text ("TODO: collect details of " ++ toString pricina) ]
         ]
 

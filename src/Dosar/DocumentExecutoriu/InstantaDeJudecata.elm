@@ -1,7 +1,7 @@
 module Dosar.DocumentExecutoriu.InstantaDeJudecata exposing (InstantaDeJudecata, empty, view)
 
 import Html exposing (Html, label, text)
-import Widgets.Select as Select
+import MyMaterial.Select as Select
 
 
 type InstantaDeJudecata
@@ -34,7 +34,12 @@ empty =
 
 view : InstantaDeJudecata -> (InstantaDeJudecata -> msg) -> Html msg
 view instantaDeJudecata callback =
-    Select.view "Instanța de judecată:" valuesWithLabels empty callback
+    Select.view
+        { labelText = "Instanța de judecată:"
+        , valuesWithLabels = valuesWithLabels
+        , defaultValue = empty
+        , callback = callback
+        }
 
 
 valuesWithLabels : List ( InstantaDeJudecata, String )

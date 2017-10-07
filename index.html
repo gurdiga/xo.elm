@@ -4,33 +4,39 @@
 		<meta charset="UTF-8"/>
 		<meta name="viewport" content="width=device-width,initial-scale=1"/>
 		<title>XO</title>
+		<link href="material/node_modules/material-design-icons/iconfont/material-icons.css" rel="stylesheet"/>
 		<link href="material/node_modules/material-components-web/dist/material-components-web.min.css" rel="stylesheet"/>
 		<link href="rich-text-editor/node_modules/quill/dist/quill.snow.css" rel="stylesheet"/>
 		<link href="rich-text-editor/node_modules/quill/dist/quill.bubble.css" rel="stylesheet"/>
 	</head>
 
 	<body>
-		<button type="submit" class="mdc-button mdc-button--raised mdc-button--primary mdc-ripple-surface" data-mdc-auto-init="MDCRipple">
-      A Material Button
-    </button>
+		<header class="mdc-toolbar mdc-toolbar--fixed">
+			<div class="mdc-toolbar__row">
+				<section class="mdc-toolbar__section mdc-toolbar__section--align-start">
+					<span class="mdc-toolbar__title">Title</span>
+				</section>
+			</div>
+		</header>
+		<main class="mdc-toolbar-fixed-adjust">
+			<div id="main"></div>
 
-		<div id="main"></div>
+			<script src="material/node_modules/material-components-web/dist/material-components-web.min.js"></script>
+			<script>window.mdc.autoInit();</script>
 
-		<script src="material/node_modules/material-components-web/dist/material-components-web.min.js"></script>
-		<script>window.mdc.autoInit();</script>
+			<script src="rich-text-editor/node_modules/quill/dist/quill.js"></script>
+			<script src="rich-text-editor/dist/main.js"></script>
+			<script src="dist/Main.js"></script>
+			<script>
+				var node = document.getElementById('main');
+				var app = Elm.Main.embed(node);
 
-		<script src="rich-text-editor/node_modules/quill/dist/quill.js"></script>
-		<script src="rich-text-editor/dist/main.js"></script>
-		<script src="dist/Main.js"></script>
-		<script>
-			var node = document.getElementById('main');
-			var app = Elm.Main.embed(node);
-
-			RichTextEditor.init({
-				sendContent: app.ports.richTextEditorSendContent.subscribe,
-				receiveResponse: app.ports.richTextEditorOnReceiveResponse.send
-			});
-		</script>
+				RichTextEditor.init({
+					sendContent: app.ports.richTextEditorSendContent.subscribe,
+					receiveResponse: app.ports.richTextEditorOnReceiveResponse.send
+				});
+			</script>
+		</main>
 
 	</body>
 </html>

@@ -4,6 +4,7 @@ import Html exposing (Html, ul, li)
 import Utils.MyDate as MyDate exposing (MyDate)
 import Widgets.Fields exposing (textField, largeTextField)
 import Utils.MyDate as MyDate
+import MyMaterial.Textfield as Textfield
 
 
 type alias PersoanaFizica =
@@ -30,7 +31,13 @@ empty =
 view : PersoanaFizica -> (PersoanaFizica -> msg) -> Html msg
 view p callback =
     ul []
-        [ li [] [ textField "Nume:" p.nume (\v -> callback { p | nume = v }) ]
+        [ li []
+            [ Textfield.view
+                { labelText = "Nume:"
+                , defaultValue = p.nume
+                , callback = (\v -> callback { p | nume = v })
+                }
+            ]
         , li [] [ textField "Prenume:" p.prenume (\v -> callback { p | prenume = v }) ]
         , li [] [ MyDate.view "Data nasterii:" p.dataNasterii (\v -> callback { p | dataNasterii = v }) ]
         , li [] [ textField "CNP:" p.cnp (\v -> callback { p | cnp = v }) ]

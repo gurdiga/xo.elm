@@ -41,8 +41,11 @@ view (Dosar data) callback =
             , actionButtons = []
             , children =
                 [ -- Commenting these out for now, just to save some scrolling.
-                  -- , Temei.view data.temei (\v -> c { data | temei = v })
-                  -- , DocumentExecutoriu.view data.documentExecutoriu (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
-                  Actiune.view data.actiune (\v -> c { data | actiune = v })
+                  Temei.view data.temei (\v -> c { data | temei = v })
+                , DocumentExecutoriu.view data.documentExecutoriu
+                    (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
+                , Actiune.view
+                    data.actiune
+                    (\v -> c { data | actiune = v })
                 ]
             }

@@ -1,7 +1,7 @@
 module Dosar.DocumentExecutoriu.Pricina exposing (Pricina, empty, view)
 
 import Html exposing (Html, label, text)
-import MyMaterial.Select as Select
+import Widgets.Select as Select
 
 
 type
@@ -95,9 +95,4 @@ empty =
 
 view : Pricina -> (Pricina -> msg) -> Html msg
 view pricina callback =
-    Select.view
-        { labelText = "Pricina:"
-        , valuesWithLabels = valuesWithLabels
-        , defaultValue = empty
-        , callback = callback
-        }
+    Select.view "Pricina:" valuesWithLabels empty callback

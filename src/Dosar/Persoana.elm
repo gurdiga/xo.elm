@@ -3,7 +3,7 @@ module Dosar.Persoana exposing (Persoana, empty, view)
 import Html exposing (Html, fieldset, legend, label, text)
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica exposing (PersoanaFizica)
 import Dosar.Persoana.PersoanaJuridica as PersoanaJuridica exposing (PersoanaJuridica)
-import MyMaterial.Select as Select
+import Widgets.Select as Select
 
 
 type Persoana
@@ -29,12 +29,7 @@ view persoana callback =
     in
         fieldset []
             [ legend [] [ text "Persoana" ]
-            , Select.view
-                { labelText = "Gen persoana:"
-                , valuesWithLabels = valuesWithLabels
-                , defaultValue = (defaultValueFor persoana)
-                , callback = callback
-                }
+            , Select.view "Gen persoana:" valuesWithLabels (defaultValueFor persoana) callback
             , fields persoana callback
             ]
 

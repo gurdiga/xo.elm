@@ -1,7 +1,6 @@
 module Dosar exposing (Dosar, empty, view)
 
 import Html exposing (Html, h1, div, text)
-import MyMaterial.Card as Card
 import Dosar.Temei as Temei exposing (Temei)
 import Dosar.Actiune as Actiune exposing (Actiune)
 import Dosar.DocumentExecutoriu as DocumentExecutoriu exposing (DocumentExecutoriu)
@@ -35,17 +34,11 @@ view (Dosar data) callback =
         c data =
             callback (Dosar data)
     in
-        Card.view
-            { title = "Dosar nou"
-            , maybeSubTitle = Nothing
-            , actionButtons = []
-            , children =
-                [ -- Commenting these out for now, just to save some scrolling.
-                  Temei.view data.temei (\v -> c { data | temei = v })
-                , DocumentExecutoriu.view data.documentExecutoriu
-                    (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
-                , Actiune.view
-                    data.actiune
-                    (\v -> c { data | actiune = v })
-                ]
-            }
+        div []
+            [ h1 [] [ text "Dosar nou" ]
+
+            -- Commenting these out for now, just to save some scrolling.
+            -- , Temei.view data.temei (\v -> c { data | temei = v })
+            -- , DocumentExecutoriu.view data.documentExecutoriu (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
+            , Actiune.view data.actiune (\v -> c { data | actiune = v })
+            ]

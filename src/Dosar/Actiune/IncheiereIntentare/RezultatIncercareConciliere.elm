@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (RezultatIncercareConciliere, empty, view)
 
 import Html exposing (Html, fieldset, legend, label, div, text)
-import MyMaterial.Select as Select
+import Widgets.Select as Select
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere as PartileAjungLaIntelegere exposing (PartileAjungLaIntelegere)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere as PartileNuAjungLaIntelegere exposing (PartileNuAjungLaIntelegere)
 
@@ -26,12 +26,7 @@ view rezultatIncercareConciliere callback =
 
 dropdown : RezultatIncercareConciliere -> (RezultatIncercareConciliere -> msg) -> Html msg
 dropdown rezultatIncercareConciliere callback =
-    Select.view
-        { labelText = "RezultatIncercareConciliere:"
-        , valuesWithLabels = valuesWithLabels
-        , defaultValue = (defaultValue rezultatIncercareConciliere)
-        , callback = callback
-        }
+    Select.view "RezultatIncercareConciliere:" valuesWithLabels (defaultValue rezultatIncercareConciliere) callback
 
 
 fields : RezultatIncercareConciliere -> (RezultatIncercareConciliere -> Cmd msg -> Sub msg -> msg) -> Html msg

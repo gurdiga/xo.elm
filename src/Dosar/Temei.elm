@@ -1,7 +1,7 @@
 module Dosar.Temei exposing (..)
 
 import Html exposing (Html, div, label, text)
-import MyMaterial.Select as Select
+import Widgets.Select as Select
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
@@ -28,12 +28,7 @@ view temei callback =
 
 dropdown : Temei -> (Temei -> msg) -> Html msg
 dropdown temei callback =
-    Select.view
-        { labelText = "Temei:"
-        , valuesWithLabels = valuesWithLabels
-        , defaultValue = (defaultValue temei)
-        , callback = callback
-        }
+    Select.view "Temei:" valuesWithLabels (defaultValue temei) callback
 
 
 fields : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg

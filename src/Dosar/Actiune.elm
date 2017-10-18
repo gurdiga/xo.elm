@@ -3,7 +3,7 @@ module Dosar.Actiune exposing (Actiune, empty, view)
 import Dosar.Actiune.IncheiereIntentare as IncheiereIntentare exposing (IncheiereIntentare)
 import Dosar.Actiune.IncheiereRefuz as IncheiereRefuz exposing (IncheiereRefuz)
 import Html exposing (Html, div, label, text)
-import MyMaterial.Select as Select
+import Widgets.Select as Select
 
 
 type Actiune
@@ -37,12 +37,7 @@ view actiune callback =
 
 dropdown : Actiune -> Callback msg -> Html msg
 dropdown actiune callback =
-    Select.view
-        { labelText = "Actiune:"
-        , valuesWithLabels = valuesWithLabels
-        , defaultValue = empty
-        , callback = (\v -> callback v Cmd.none Sub.none)
-        }
+    Select.view "Actiune:" valuesWithLabels empty (\v -> callback v Cmd.none Sub.none)
 
 
 fields : Actiune -> Callback msg -> Html msg

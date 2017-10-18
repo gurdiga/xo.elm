@@ -5,9 +5,8 @@ port module Utils.RichTextEditor exposing (view)
 
 import Html exposing (Html, div, button, text)
 import Utils.MyHtmlEvents exposing (onClick)
-import Html.Attributes exposing (style, id, class)
+import Html.Attributes exposing (style, id)
 import FNV as HashingUtility
-import MyMaterial.Button as Button
 
 
 type alias Input msg =
@@ -40,7 +39,7 @@ view { buttonLabel, content, onOpen, onResponse } =
         editorSub =
             richTextEditorOnReceiveResponse onResponse
     in
-        Button.view
+        button
             [ onClick (\_ -> onOpen editorCmd editorSub) ]
             [ text buttonLabel
             , contentPreparedForEditor

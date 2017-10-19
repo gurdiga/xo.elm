@@ -5,16 +5,18 @@
 		<title>XO</title>
 		<link href="rich-text-editor/node_modules/quill/dist/quill.snow.css" rel="stylesheet"/>
 		<link href="rich-text-editor/node_modules/quill/dist/quill.bubble.css" rel="stylesheet"/>
+		<link href="assets/fonts.css" rel="stylesheet"/>
+
 	</head>
 
-	<body>
-		<div id="main"></div>
+	<body style="margin: 0">
+		<div id="app"></div>
 
 		<script src="rich-text-editor/node_modules/quill/dist/quill.js"></script>
 		<script src="rich-text-editor/dist/main.js"></script>
 		<script src="dist/Main.js"></script>
 		<script>
-			var node = document.getElementById('main');
+			var node = document.getElementById('app');
 			var app = Elm.Main.embed(node);
 
 			RichTextEditor.init({

@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Html exposing (Html, div, pre, text)
 import Html.Attributes exposing (value, selected, style)
+import UI.Layout as Layout
 import Dosar exposing (Dosar)
 
 
@@ -48,10 +49,12 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ dosarView model
-        , pre [ style [ ( "white-space", "normal" ), ( "margin-bottom", "5em" ) ] ] [ text (toString model) ]
-        ]
+    Layout.view
+        { content =
+            [ dosarView model
+            , pre [ style [ ( "white-space", "normal" ), ( "margin-bottom", "5em" ) ] ] [ text (toString model) ]
+            ]
+        }
 
 
 dosarView : Model -> Html Msg

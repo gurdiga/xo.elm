@@ -3,6 +3,7 @@ module UI.Styles
         ( appBar
         , appBarHeight
         , card
+        , display1
         )
 
 
@@ -15,7 +16,7 @@ appBar =
     , ( "box-shadow", "0 " ++ (toString appBarShadowVerticalSpread) ++ "px 5px rgba(0,0,0,0.26)" )
     , ( "padding", (toString appBarVerticalPadding) ++ "px 16px" )
     , ( "font-family", "Alegreya SC" )
-    , ( "font-size", "22px" )
+    , ( "font-size", "20px" )
     , ( "line-height", (toString appBarLineHeight) ++ "px" )
     , ( "color", "white" )
     , ( "background-color", "#ad1457" )
@@ -49,4 +50,12 @@ card =
     , ( "border-radius", "2px" )
     , ( "box-sizing", "border-box" )
     , ( "padding", "16px" )
+    , ( "background", "white" )
+    ]
+
+
+display1 : List ( String, String )
+display1 =
+    [ ( "font-size", "34px" )
+    , ( "margin", "0 0 8px 0" )
     ]

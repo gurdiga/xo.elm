@@ -37,7 +37,7 @@ view (Dosar data) callback =
             callback (Dosar data)
     in
         section [ cardStyles ]
-            [ h1 [] [ Html.text "Dosar nou" ]
+            [ h1 [ style Styles.display1 ] [ text "Dosar nou" ]
 
             -- Commenting these out for now, just to save some scrolling.
             -- , Temei.view data.temei (\v -> c { data | temei = v })

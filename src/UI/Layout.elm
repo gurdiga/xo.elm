@@ -32,14 +32,15 @@ container content =
             node "main" [ style localStyle ] content
 
         localStyle =
-            [ ( "margin-top", (toString (Styles.appBarHeight + containerMarginTop)) ++ "px" )
-            , ( "padding", "0 20px" )
+            [ ( "padding", "0 24px" )
+            , ( "padding-top", (toString (Styles.appBarHeight + appBarSpacingBottom)) ++ "px" )
             , ( "font-family", "Alegreya Sans" )
+            , ( "background-color", "#fffde7" )
             ]
     in
         this
 
 
-containerMarginTop : Int
-containerMarginTop =
-    25
+appBarSpacingBottom : Int
+appBarSpacingBottom =
+    24

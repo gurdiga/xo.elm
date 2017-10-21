@@ -35,7 +35,7 @@ container content =
             [ ( "padding", "0 24px" )
             , ( "padding-top", (toString (Styles.appBarHeight + appBarSpacingBottom)) ++ "px" )
             , ( "font-family", "Alegreya Sans" )
-            , ( "background-color", "#fffde7" )
+            , ( "background-image", "url(assets/images/bg.png)" )
             ]
     in
         this

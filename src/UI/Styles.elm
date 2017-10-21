@@ -19,7 +19,9 @@ appBar =
     , ( "font-size", "20px" )
     , ( "line-height", (toString appBarLineHeight) ++ "px" )
     , ( "color", "white" )
-    , ( "background-color", "#ad1457" )
+    , ( "background-color", "black" )
+    , ( "opacity", "0.2" )
+    , ( "transition", "opacity 250ms ease-in-out" )
     ]
 
 

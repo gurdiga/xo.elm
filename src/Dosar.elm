@@ -1,10 +1,11 @@
 module Dosar exposing (Dosar, empty, view)
 
-import Html exposing (Html, h1, div, text)
+import Html exposing (Html, h1, section, div, text)
 import Html.Attributes exposing (style)
 import Dosar.Temei as Temei exposing (Temei)
 import Dosar.Actiune as Actiune exposing (Actiune)
 import Dosar.DocumentExecutoriu as DocumentExecutoriu exposing (DocumentExecutoriu)
+import UI.Styles as Styles
 
 
 type Dosar
@@ -35,7 +36,7 @@ view (Dosar data) callback =
         c data =
             callback (Dosar data)
     in
-        div [ cardStyles ]
+        section [ cardStyles ]
             [ h1 [] [ Html.text "Dosar nou" ]
 
             -- Commenting these out for now, just to save some scrolling.
@@ -47,8 +48,11 @@ view (Dosar data) callback =
 
 cardStyles : Html.Attribute msg
 cardStyles =
-    style
-        [ ( "width", "600px" )
-        , ( "box-shadow", "0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)" )
-        , ( "transition", "box-shadow 250ms ease-in-out 0s" )
-        ]
+    let
+        this =
+            style (localStyle ++ Styles.card)
+
+        localStyle =
+            [ ( "width", "800px" ) ]
+    in
+        this

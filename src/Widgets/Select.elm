@@ -1,14 +1,15 @@
 module Widgets.Select exposing (view, unlabeledView)
 
-import Html exposing (Html, label, select, option, text)
-import Html.Attributes exposing (selected)
+import Html exposing (Html, label, select, option, span, text)
+import Html.Attributes exposing (style, selected)
 import Html.Events exposing (onInput)
+import UI.Styles as Styles
 
 
 view : String -> List ( a, String ) -> a -> (a -> msg) -> Html msg
 view labelText valuesWithLabels defaultValue callback =
     label []
-        [ text labelText
+        [ span [ style Styles.fieldLabel ] [ text labelText ]
         , unlabeledView valuesWithLabels defaultValue callback
         ]
 

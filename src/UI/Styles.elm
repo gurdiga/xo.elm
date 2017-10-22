@@ -4,6 +4,7 @@ module UI.Styles
         , appBarHeight
         , card
         , display1
+        , fieldLabel
         )
 
 
@@ -61,3 +62,8 @@ display1 =
     [ ( "font-size", "34px" )
     , ( "margin", "0 0 8px 0" )
     ]
+
+
+fieldLabel : List ( String, String )
+fieldLabel =
+    [ ( "margin-right", "8px" ) ]

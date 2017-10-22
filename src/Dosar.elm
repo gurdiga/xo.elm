@@ -33,26 +33,22 @@ empty =
 view : Dosar -> (Dosar -> Cmd msg -> Sub msg -> msg) -> Html msg
 view (Dosar data) callback =
     let
-        c data =
-            callback (Dosar data)
-    in
-        section [ cardStyles ]
-            [ h1 [ style Styles.display1 ] [ text "Dosar nou" ]
-
-            -- Commenting these out for now, just to save some scrolling.
-            -- , Temei.view data.temei (\v -> c { data | temei = v })
-            -- , DocumentExecutoriu.view data.documentExecutoriu (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
-            , Actiune.view data.actiune (\v -> c { data | actiune = v })
-            ]
-
-
-cardStyles : Html.Attribute msg
-cardStyles =
-    let
         this =
-            style (localStyle ++ Styles.card)
+            section [ style (Styles.card ++ localStyle) ]
+                [ h1 [ style Styles.display1 ] [ text "Dosar nou" ]
+
+                -- Commenting these out for now, just to save some scrolling.
+                -- , Temei.view data.temei (\v -> c { data | temei = v })
+                -- , DocumentExecutoriu.view data.documentExecutoriu (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
+                , Actiune.view data.actiune (\v -> c { data | actiune = v })
+                ]
 
         localStyle =
-            [ ( "width", "800px" ) ]
+            [ ( "width", "800px" )
+            , ( "padding", "48px" )
+            ]
+
+        c data =
+            callback (Dosar data)
     in
         this

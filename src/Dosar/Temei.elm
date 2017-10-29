@@ -1,7 +1,9 @@
 module Dosar.Temei exposing (..)
 
-import Html exposing (Html, div, label, text)
+import Html exposing (Html, node, section, div, label, text)
+import Html.Attributes exposing (style)
 import Widgets.Select as Select
+import UI.Styles as Styles
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
@@ -20,15 +22,21 @@ empty =
 
 view : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg
 view temei callback =
-    div []
-        [ dropdown temei (\v -> callback v Cmd.none Sub.none)
+    section []
+        [ sectionTitle temei callback
         , fields temei callback
         ]
 
 
-dropdown : Temei -> (Temei -> msg) -> Html msg
-dropdown temei callback =
-    Select.view "Temei:" valuesWithLabels (defaultValue temei) callback
+sectionTitle : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg
+sectionTitle temei callback =
+    node "hgroup"
+        [ style Styles.sectionTitle ]
+        [ Select.view "Temei:"
+            valuesWithLabels
+            (defaultValue temei)
+            (\v -> callback v Cmd.none Sub.none)
+        ]
 
 
 fields : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg

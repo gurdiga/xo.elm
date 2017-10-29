@@ -5,6 +5,8 @@ module UI.Styles
         , card
         , display1
         , fieldLabel
+        , inheritFont
+        , sectionTitle
         )
 
 
@@ -67,3 +69,24 @@ display1 =
 fieldLabel : List ( String, String )
 fieldLabel =
     [ ( "margin-right", "8px" ) ]
+
+
+inheritFont : List ( String, String )
+inheritFont =
+    [ ( "font-family", "inherit" )
+    , ( "font-size", "inherit" )
+    , ( "font-weight", "inherit" )
+    , ( "font-style", "inherit" )
+    , ( "color", "inherit" )
+    , ( "line-height", "inherit" )
+    , ( "background-color", "inherit" )
+    ]
+
+
+sectionTitle : List ( String, String )
+sectionTitle =
+    [ ( "padding", "16px" )
+    , ( "color", "white" )
+    , ( "background-color", "#666" )
+    , ( "font-size", "20px" )
+    ]

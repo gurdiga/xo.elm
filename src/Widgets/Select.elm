@@ -8,7 +8,7 @@ import UI.Styles as Styles
 
 view : String -> List ( a, String ) -> a -> (a -> msg) -> Html msg
 view labelText valuesWithLabels defaultValue callback =
-    label []
+    label [ style Styles.inheritFont ]
         [ span [ style Styles.fieldLabel ] [ text labelText ]
         , unlabeledView valuesWithLabels defaultValue callback
         ]
@@ -17,6 +17,13 @@ view labelText valuesWithLabels defaultValue callback =
 unlabeledView : List ( a, String ) -> a -> (a -> msg) -> Html msg
 unlabeledView valuesWithLabels defaultValue callback =
     let
+        this =
+            select
+                [ onInput (callback << valueFromLabel)
+                , style (Styles.inheritFont)
+                ]
+                (options valuesWithLabels defaultValue)
+
         options valuesWithLabels defaultValue =
             List.map optionForTuple valuesWithLabels
 
@@ -35,6 +42,4 @@ unlabeledView valuesWithLabels defaultValue callback =
             List.filter (\( value, label ) -> label == l) valuesWithLabels
                 |> List.head
     in
-        select
-            [ onInput (callback << valueFromLabel) ]
-            (options valuesWithLabels defaultValue)
+        this

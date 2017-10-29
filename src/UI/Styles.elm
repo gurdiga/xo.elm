@@ -85,8 +85,9 @@ inheritFont =
 
 sectionTitle : List ( String, String )
 sectionTitle =
-    [ ( "padding", "16px" )
+    [ ( "padding", "8px" )
     , ( "color", "white" )
     , ( "background-color", "#666" )
     , ( "font-size", "20px" )
+    , ( "font-weight", "bold" )
     ]

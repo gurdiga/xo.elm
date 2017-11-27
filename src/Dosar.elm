@@ -2,7 +2,7 @@ module Dosar exposing (Dosar, empty, view)
 
 import Html exposing (Html, h1, section, div, text)
 import Html.Attributes exposing (style)
-import Dosar.Temei as Temei exposing (Temei)
+import Dosar.Temei as Temei exposing (Model)
 import Dosar.Actiune as Actiune exposing (Actiune)
 import Dosar.DocumentExecutoriu as DocumentExecutoriu exposing (DocumentExecutoriu)
 import UI.Styles as Styles
@@ -14,7 +14,7 @@ type Dosar
 
 type alias Data =
     { id : String
-    , temei : Temei
+    , temei : Temei.Model
     , documentExecutoriu : DocumentExecutoriu
     , actiune : Actiune
     }

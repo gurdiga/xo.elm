@@ -1,11 +1,27 @@
-module Dosar.Temei exposing (..)
+module Dosar.Temei
+    exposing
+        ( Model
+        , empty
+        , view
+        )
 
 import Html exposing (Html, node, section, div, label, text)
 import Html.Attributes exposing (style)
-import Widgets.Select as Select
+import Widgets.Select3 as Select3
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
+
+
+type alias Model =
+    { data : Temei
+    , ui : Ui
+    }
+
+
+type alias Ui =
+    { select : Select3.Model Temei
+    }
 
 
 type Temei
@@ -14,29 +30,46 @@ type Temei
     | PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat
 
 
-empty : Temei
+empty : Model
 empty =
-    CerereCreditor CerereCreditor.empty
+    { data = CerereCreditor CerereCreditor.empty
+    , ui =
+        { select = Select3.init valuesWithLabels
+        }
+    }
 
 
-view : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg
-view temei callback =
+view : Model -> (Model -> Cmd msg -> Sub msg -> msg) -> Html msg
+view model callback =
     section []
-        [ sectionTitle temei callback
-        , fields temei callback
+        [ sectionTitle model.ui.select
+            -- TODO: Clean this up, maybe extract it into an update function
+            (\v ->
+                let
+                    this =
+                        callback { model | ui = { ui | select = v } } Cmd.none Sub.none
+
+                    ui =
+                        model.ui
+                in
+                    this
+            )
+        , fields model.data (\v -> callback { model | data = v })
         ]
 
 
-sectionTitle : Temei -> (Temei -> Cmd msg -> Sub msg -> msg) -> Html msg
-sectionTitle temei callback =
+sectionTitle : Select3.Model Temei -> (Select3.Model Temei -> msg) -> Html msg
+sectionTitle select3Model callback =
     let
         this =
             node "hgroup"
                 [ style styles ]
-                [ Select.view "Temei:"
-                    valuesWithLabels
-                    (defaultValue temei)
-                    (\v -> callback v Cmd.none Sub.none)
+                [ Select3.view select3Model callback
+
+                -- [ Select.view "Temei:"
+                --     valuesWithLabels
+                --     (defaultValue temei)
+                --     (\v -> callback v Cmd.none Sub.none)
                 ]
 
         styles =

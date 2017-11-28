@@ -32,9 +32,9 @@ type Temei
 
 empty : Model
 empty =
-    { data = CerereCreditor CerereCreditor.empty
+    { data = defaultValue
     , ui =
-        { select = Select3.init valuesWithLabels
+        { select = Select3.init defaultValue valuesWithLabels
         }
     }
 
@@ -43,7 +43,9 @@ view : Model -> (Model -> Cmd msg -> Sub msg -> msg) -> Html msg
 view model callback =
     section []
         [ sectionTitle model.ui.select
-            -- TODO: Clean this up, maybe extract it into an update function
+            -- TODO:
+            --   - Clean this up, maybe extract it into an update-like function
+            --   - Also update model.data based on the new model.ui.select value
             (\v ->
                 let
                     this =
@@ -64,7 +66,7 @@ sectionTitle select3Model callback =
         this =
             node "hgroup"
                 [ style styles ]
-                [ Select3.view select3Model callback
+                [ Select3.view "Temei:" select3Model callback
 
                 -- [ Select.view "Temei:"
                 --     valuesWithLabels
@@ -113,14 +115,6 @@ valuesWithLabels =
     ]
 
 
-defaultValue : Temei -> Temei
-defaultValue temei =
-    case temei of
-        CerereCreditor _ ->
-            CerereCreditor CerereCreditor.empty
-
-        DemersInstanta _ ->
-            DemersInstanta DemersInstanta.empty
-
-        PreluareDocumentExecutoriuStramutat _ ->
-            PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.empty
+defaultValue : Temei
+defaultValue =
+    CerereCreditor CerereCreditor.empty

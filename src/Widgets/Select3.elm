@@ -3,11 +3,12 @@ module Widgets.Select3 exposing (Model, init, view)
 import Html exposing (Html, label, text)
 import Html.Attributes exposing (attribute, style)
 import UI.Styles as Styles
+import Utils.MyHtmlEvents exposing (onClick)
 
 
 type alias Model a =
     { valuesWithLabels : ValuesWithLabels a
-    , defaultValue : a
+    , selectedValue : a
     , isOpened : Bool
     }
 
@@ -17,9 +18,9 @@ type alias ValuesWithLabels a =
 
 
 init : a -> ValuesWithLabels a -> Model a
-init defaultValue valuesWithLabels =
+init selectedValue valuesWithLabels =
     { valuesWithLabels = valuesWithLabels
-    , defaultValue = defaultValue
+    , selectedValue = selectedValue
     , isOpened = False
     }
 
@@ -32,12 +33,12 @@ view labelText model callback =
                 [ label labelText
                 , listboxContainer
                     [ input selectedOptionLabel
-                    , listbox model.valuesWithLabels
+                    , listbox model.valuesWithLabels (\v -> callback { model | selectedValue = v })
                     ]
                 ]
 
         selectedOptionLabel =
-            case findValueWithLabelForValue model.defaultValue of
+            case findValueWithLabelForValue model.selectedValue of
                 Just ( v, label ) ->
                     label
 
@@ -132,8 +133,8 @@ input s =
         this
 
 
-listbox : List ( a, String ) -> Html msg
-listbox valuesWithLabels =
+listbox : List ( a, String ) -> (a -> msg) -> Html msg
+listbox valuesWithLabels callback =
     let
         this =
             Html.ul
@@ -145,7 +146,9 @@ listbox valuesWithLabels =
 
         listboxOption ( a, label ) =
             Html.option
-                [ attribute "role" "option" ]
+                [ attribute "role" "option"
+                , onClick (\_ -> callback a)
+                ]
                 [ Html.text label ]
 
         styles =

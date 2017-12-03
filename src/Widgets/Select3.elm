@@ -18,6 +18,10 @@ type alias ValuesWithLabels a =
     List ( a, String )
 
 
+type alias Callback a msg =
+    Model a -> msg
+
+
 init : a -> ValuesWithLabels a -> Model a
 init selectedValue valuesWithLabels =
     { valuesWithLabels = valuesWithLabels
@@ -27,7 +31,7 @@ init selectedValue valuesWithLabels =
     }
 
 
-view : String -> Model a -> (Model a -> msg) -> Html msg
+view : String -> Model a -> Callback a msg -> Html msg
 view labelText model callback =
     let
         this =
@@ -35,13 +39,7 @@ view labelText model callback =
                 [ label labelText
                 , listboxContainer
                     [ input selectedOptionLabel
-                    , listbox
-                        { valuesWithLabels = model.valuesWithLabels
-                        , hoveredValue = model.hoveredValue
-                        , selectedValue = model.selectedValue
-                        , onSelect = (\v -> callback { model | selectedValue = v })
-                        , onHover = (\v -> callback { model | hoveredValue = v })
-                        }
+                    , listbox model callback
                     ]
                 ]
 
@@ -141,17 +139,8 @@ input s =
         this
 
 
-type alias ListboxInput a msg =
-    { valuesWithLabels : List ( a, String )
-    , hoveredValue : Maybe a
-    , selectedValue : a
-    , onSelect : a -> msg
-    , onHover : Maybe a -> msg
-    }
-
-
-listbox : ListboxInput a msg -> Html msg
-listbox { valuesWithLabels, hoveredValue, selectedValue, onSelect, onHover } =
+listbox : Model a -> Callback a msg -> Html msg
+listbox model callback =
     let
         this =
             Html.ul
@@ -159,34 +148,17 @@ listbox { valuesWithLabels, hoveredValue, selectedValue, onSelect, onHover } =
                 , attribute "id" "combobox-N-listbox"
                 , style styles
                 ]
-                (List.map listboxOption valuesWithLabels)
+                (List.map renderOption model.valuesWithLabels)
 
-        listboxOption ( value, label ) =
-            Html.option
-                [ attribute "role" "option"
-                , style ((hoverStyles value) ++ (selectedStyles value))
-                , onClick (\_ -> onSelect value)
-                , onMouseOver (\_ -> onHover (Just value))
-                , onMouseOut (\_ -> onHover Nothing)
-                ]
-                [ Html.text label ]
-
-        hoverStyles value =
-            case hoveredValue of
-                Just v ->
-                    if v == value then
-                        [ ( "background", "black" ) ]
-                    else
-                        []
-
-                Nothing ->
-                    []
-
-        selectedStyles value =
-            if selectedValue == value then
-                [ ( "background", "blue" ) ]
-            else
-                []
+        renderOption ( value, label ) =
+            listboxOption
+                { value = value
+                , label = label
+                , isSelected = value == model.selectedValue
+                , isHovered = Just value == model.hoveredValue
+                , onSelect = (\v -> callback { model | selectedValue = v })
+                , onHover = (\v -> callback { model | hoveredValue = v })
+                }
 
         styles =
             [ ( "position", "absolute" )
@@ -196,5 +168,46 @@ listbox { valuesWithLabels, hoveredValue, selectedValue, onSelect, onHover } =
             , ( "display", "block" )
             ]
                 ++ Styles.inheritFont
+    in
+        this
+
+
+type alias OptionInput a msg =
+    { value : a
+    , label : String
+    , isSelected : Bool
+    , isHovered : Bool
+    , onSelect : a -> msg
+    , onHover : Maybe a -> msg
+    }
+
+
+listboxOption : OptionInput a msg -> Html msg
+listboxOption { value, label, isSelected, isHovered, onSelect, onHover } =
+    let
+        this =
+            Html.option
+                [ attribute "role" "option"
+                , style (styles ++ optionHoverStyles ++ optionSelectedStyles)
+                , onClick (\_ -> onSelect value)
+                , onMouseOver (\_ -> onHover (Just value))
+                , onMouseOut (\_ -> onHover Nothing)
+                ]
+                [ Html.text label ]
+
+        styles =
+            [ ( "cursor", "pointer" ) ]
+
+        optionHoverStyles =
+            if isHovered then
+                [ ( "background", "black" ) ]
+            else
+                []
+
+        optionSelectedStyles =
+            if isSelected then
+                [ ( "background", "blue" ) ]
+            else
+                []
     in
         this

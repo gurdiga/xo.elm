@@ -232,12 +232,9 @@ listbox valuesWithLabels isOpen =
 
 listboxOption : String -> Html msg
 listboxOption s =
-    Html.option optionAttributes [ Html.text s ]
-
-
-optionAttributes : List (Html.Attribute msg)
-optionAttributes =
-    [ attribute "role" "option" ]
+    Html.option
+        [ attribute "role" "option" ]
+        [ Html.text s ]
 
 
 

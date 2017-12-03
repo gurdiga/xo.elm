@@ -7,6 +7,7 @@ vmap gC gcgpgq
 
 autocmd BufWritePost *.elm silent !rm tags; ctags -R src &
 autocmd BufEnter *.elm syntax keyword elmTodo TODO LATER contained
+autocmd BufWritePost *.elm !make
 
 
 source rich-text-editor/.vimrc

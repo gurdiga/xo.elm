@@ -32,8 +32,7 @@ view labelText model callback =
                 [ label labelText
                 , listboxContainer
                     [ input selectedOptionLabel
-
-                    -- TODO: add the list-box
+                    , listbox model.valuesWithLabels
                     ]
                 ]
 
@@ -129,5 +128,33 @@ input s =
              ]
                 ++ Styles.inheritFont
             )
+    in
+        this
+
+
+listbox : List ( a, String ) -> Html msg
+listbox valuesWithLabels =
+    let
+        this =
+            Html.ul
+                [ attribute "role" "listbox"
+                , attribute "id" "combobox-N-listbox"
+                , style styles
+                ]
+                (List.map listboxOption valuesWithLabels)
+
+        listboxOption ( a, label ) =
+            Html.option
+                [ attribute "role" "option" ]
+                [ Html.text label ]
+
+        styles =
+            [ ( "position", "absolute" )
+            , ( "margin", "0" )
+            , ( "padding", "0" )
+            , ( "list-style-type", "none" )
+            , ( "display", "block" )
+            ]
+                ++ Styles.inheritFont
     in
         this

@@ -3,12 +3,13 @@ module Widgets.Select3 exposing (Model, init, view)
 import Html exposing (Html, label, text)
 import Html.Attributes exposing (attribute, style)
 import UI.Styles as Styles
-import Utils.MyHtmlEvents exposing (onClick)
+import Utils.MyHtmlEvents exposing (onClick, onMouseOver, onMouseOut)
 
 
 type alias Model a =
     { valuesWithLabels : ValuesWithLabels a
     , selectedValue : a
+    , hoveredValue : Maybe a
     , isOpened : Bool
     }
 
@@ -21,6 +22,7 @@ init : a -> ValuesWithLabels a -> Model a
 init selectedValue valuesWithLabels =
     { valuesWithLabels = valuesWithLabels
     , selectedValue = selectedValue
+    , hoveredValue = Nothing
     , isOpened = False
     }
 
@@ -33,7 +35,11 @@ view labelText model callback =
                 [ label labelText
                 , listboxContainer
                     [ input selectedOptionLabel
-                    , listbox model.valuesWithLabels (\v -> callback { model | selectedValue = v })
+                    , listbox
+                        model.valuesWithLabels
+                        model.hoveredValue
+                        (\v -> callback { model | selectedValue = v })
+                        (\v -> callback { model | hoveredValue = v })
                     ]
                 ]
 
@@ -133,8 +139,8 @@ input s =
         this
 
 
-listbox : List ( a, String ) -> (a -> msg) -> Html msg
-listbox valuesWithLabels callback =
+listbox : List ( a, String ) -> Maybe a -> (a -> msg) -> (Maybe a -> msg) -> Html msg
+listbox valuesWithLabels hoveredValue onSelect onHover =
     let
         this =
             Html.ul
@@ -144,10 +150,23 @@ listbox valuesWithLabels callback =
                 ]
                 (List.map listboxOption valuesWithLabels)
 
-        listboxOption ( a, label ) =
+        listboxOption ( value, label ) =
             Html.option
                 [ attribute "role" "option"
-                , onClick (\_ -> callback a)
+                , style
+                    (case hoveredValue of
+                        Just v ->
+                            if v == value then
+                                [ ( "background", "black" ) ]
+                            else
+                                []
+
+                        Nothing ->
+                            []
+                    )
+                , onClick (\_ -> onSelect value)
+                , onMouseOver (\_ -> onHover (Just value))
+                , onMouseOut (\_ -> onHover Nothing)
                 ]
                 [ Html.text label ]
 

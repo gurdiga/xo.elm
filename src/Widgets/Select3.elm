@@ -186,7 +186,10 @@ listboxOption : OptionInput a msg -> Html msg
 listboxOption { value, label, isSelected, isHovered, onSelect, onHover } =
     let
         this =
-            Html.option
+            -- TODO: Huh?!!?
+            -- Why don’t the event listeners work on li, span, p, a, b, div, var, pre, code
+            -- but DO work with option, button, textarea, input?
+            Html.input
                 [ attribute "role" "option"
                 , style (styles ++ optionHoverStyles ++ optionSelectedStyles)
                 , onClick (\_ -> onSelect value)

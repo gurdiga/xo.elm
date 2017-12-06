@@ -1,6 +1,8 @@
 module Dosar.Temei
     exposing
         ( Model
+        , Msg
+        , update
         , empty
         , view
         )
@@ -11,6 +13,17 @@ import Widgets.Select3 as Select3
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
+
+
+type Msg
+    = Click (Cmd Msg) (Sub Msg)
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Click cmd msg ->
+            model
 
 
 type alias Model =
@@ -39,8 +52,13 @@ empty =
     }
 
 
-view : Model -> (Model -> Cmd msg -> Sub msg -> msg) -> Html msg
-view model callback =
+view : Model -> Html msg
+view model =
+    text "Temei"
+
+
+view1 : Model -> (Model -> Cmd msg -> Sub msg -> msg) -> Html msg
+view1 model callback =
     section []
         [ sectionTitle model.ui.select
             -- TODO:

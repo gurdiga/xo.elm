@@ -33,18 +33,9 @@ initialModel =
 
 type Msg
     = Update Model (Cmd Msg) (Sub Msg)
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        Update model cmd sub ->
-            ( { model | subscription = sub }, cmd )
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch [ model.subscription ]
+    | DeschideDosar Dosar (Cmd Msg) (Sub Msg)
+    | InchideDosarDeschis (Cmd Msg) (Sub Msg)
+    | DosarMsg Dosar.Msg (Cmd Msg) (Sub Msg)
 
 
 view : Model -> Html Msg
@@ -64,4 +55,30 @@ dosarView model =
             text ""
 
         Just dosar ->
-            Dosar.view dosar (\v -> Update { model | dosarDeschis = Just v })
+            Dosar.view dosar DosarMsg
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        Update model cmd sub ->
+            ( { model | subscription = sub }, cmd )
+
+        DeschideDosar dosar cmd sub ->
+            ( { model | dosarDeschis = Just dosar }, cmd )
+
+        InchideDosarDeschis cmd sub ->
+            ( { model | dosarDeschis = Nothing }, cmd )
+
+        DosarMsg msg cmd sub ->
+            case model.dosarDeschis of
+                Just dosar ->
+                    ( { model | dosarDeschis = Just (Dosar.update msg dosar) }, cmd )
+
+                Nothing ->
+                    ( { model | dosarDeschis = Nothing }, cmd )
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch [ model.subscription ]

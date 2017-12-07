@@ -55,9 +55,21 @@ view (Dosar data) tagger =
         this =
             section [ style (Styles.card ++ localStyle) ]
                 [ h1 [ style Styles.display1 ] [ text "Dosar nou" ]
-
-                -- TODO: wire this up
-                , Temei.view data.temei
+                , Temei.view data.temei TemeiMsg
+                    -- TODO: Figure this out.
+                    --
+                    -- This compiles, but there is one thing that’s bothering me about this solution:
+                    -- HTML.map docs say:
+                    --
+                    -- > This should not come in handy too often. Definitely
+                    -- > read this before deciding if this[1] is what you want.
+                    -- > [1] https://guide.elm-lang.org/reuse/
+                    --
+                    -- And I’d like to make this right.
+                    --
+                    -- I went this whole one-message-elm way not to have to map messages, and
+                    -- now I’m back to square one. :-\
+                    |> Html.map (\v -> tagger v Cmd.none Sub.none)
 
                 -- , DocumentExecutoriu.view data.documentExecutoriu (\v -> c { data | documentExecutoriu = v } Cmd.none Sub.none)
                 -- , Actiune.view data.actiune (\v -> c { data | actiune = v })

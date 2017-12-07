@@ -52,8 +52,8 @@ empty =
     }
 
 
-view : Model -> Html msg
-view model =
+view : Model -> (Msg -> Cmd msg -> Sub msg -> msg) -> Html msg
+view model tagger =
     text "Temei"
 
 

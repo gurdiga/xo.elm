@@ -49,11 +49,13 @@ view model =
 dosarView : Model -> Html Msg
 dosarView model =
     case model.dosarDeschis of
+        Just dosar ->
+            -- TODO: Begin again
+            -- Inline Dosar.view and see what happens. Hold extraction until it’s obvious.
+            Dosar.view dosar DosarMsg
+
         Nothing ->
             text ""
-
-        Just dosar ->
-            Dosar.view dosar DosarMsg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

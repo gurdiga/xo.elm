@@ -41,11 +41,9 @@ type Msg
 view : Model -> Html Msg
 view model =
     Layout.view
-        { content =
-            [ dosarView model
-            , pre [ style [ ( "white-space", "normal" ), ( "margin-bottom", "5em" ) ] ] [ text (toString model) ]
-            ]
-        }
+        [ dosarView model
+        , pre [ style [ ( "white-space", "normal" ), ( "margin-bottom", "5em" ) ] ] [ text (toString model) ]
+        ]
 
 
 dosarView : Model -> Html Msg

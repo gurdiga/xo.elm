@@ -1,9 +1,10 @@
 module Main exposing (..)
 
-import Html exposing (Html, div, pre, text)
+import Html exposing (Html, h1, section, div, pre, text, select, option, node)
 import Html.Attributes exposing (value, selected, style)
+import Html.Events exposing (onInput)
 import UI.Layout as Layout
-import Dosar exposing (Dosar)
+import Dosar.Css
 
 
 main : Program Never Model Msg
@@ -17,68 +18,121 @@ main =
 
 
 type alias Model =
-    { dosare : List Dosar
-    , dosarDeschis : Maybe Dosar
-    , subscription : Sub Msg
+    { dosar : Maybe Dosar
     }
+
+
+type alias Dosar =
+    { temei : Temei
+    }
+
+
+emptyDosar : Dosar
+emptyDosar =
+    { temei = defaultTemei
+    }
+
+
+type Temei
+    = CerereCreditor
+    | DemersInstanta
+    | PreluareDocumentExecutoriuStramutat
+
+
+defaultTemei : Temei
+defaultTemei =
+    CerereCreditor
 
 
 initialModel : Model
 initialModel =
-    { dosare = []
-    , dosarDeschis = Just Dosar.empty
-    , subscription = Sub.none
+    { dosar = Just emptyDosar
     }
 
 
 type Msg
-    = Update Model (Cmd Msg) (Sub Msg)
-    | DeschideDosar Dosar (Cmd Msg) (Sub Msg)
-    | InchideDosarDeschis (Cmd Msg) (Sub Msg)
-    | DosarMsg Dosar.Msg (Cmd Msg) (Sub Msg)
+    = SetTemei String
 
 
 view : Model -> Html Msg
 view model =
     Layout.view
-        [ dosarView model
+        [ model.dosar |> Maybe.map dosarView |> Maybe.withDefault (text "")
         , pre [ style [ ( "white-space", "normal" ), ( "margin-bottom", "5em" ) ] ] [ text (toString model) ]
         ]
 
 
-dosarView : Model -> Html Msg
-dosarView model =
-    case model.dosarDeschis of
-        Just dosar ->
-            -- TODO: Begin again
-            -- Inline Dosar.view and see what happens. Hold extraction until it’s obvious.
-            Dosar.view dosar DosarMsg
+dosarView : Dosar -> Html Msg
+dosarView dosar =
+    node "main"
+        [ style Dosar.Css.formular ]
+        [ h1 [] [ text "Dosar deschis" ]
+        , section []
+            [ node "hgroup"
+                []
+                [ text "Temei:"
+                , temeiDropdown dosar.temei
+                ]
+            ]
+        ]
 
-        Nothing ->
-            text ""
+
+temeiDropdown : Temei -> Html Msg
+temeiDropdown temei =
+    select [ onInput SetTemei ]
+        (temeiValuesWithLabels |> List.map (temeiDropdownOption temei))
+
+
+temeiDropdownOption : Temei -> ( Temei, String ) -> Html Msg
+temeiDropdownOption selectedTemei ( temei, label ) =
+    option [ selected (selectedTemei == temei) ] [ text label ]
+
+
+temeiLabelFromValue : Temei -> String
+temeiLabelFromValue temei =
+    temeiValuesWithLabels
+        |> List.filter (\( t, l ) -> t == temei)
+        |> List.head
+        |> Maybe.map Tuple.second
+        |> Maybe.withDefault "cerere creditor"
+
+
+temeiValueFromLabel : String -> Temei
+temeiValueFromLabel temeiLabel =
+    temeiValuesWithLabels
+        |> List.filter (\( t, l ) -> l == temeiLabel)
+        |> List.head
+        |> Maybe.map Tuple.first
+        |> Maybe.withDefault defaultTemei
+
+
+temeiValuesWithLabels : List ( Temei, String )
+temeiValuesWithLabels =
+    [ ( CerereCreditor, "cerere creditor" )
+    , ( DemersInstanta, "demers instanță" )
+    , ( PreluareDocumentExecutoriuStramutat, "preluare document executoriu strămutat" )
+    ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        Update model cmd sub ->
-            ( { model | subscription = sub }, cmd )
+        SetTemei temeiLabel ->
+            let
+                dosar =
+                    model.dosar
 
-        DeschideDosar dosar cmd sub ->
-            ( { model | dosarDeschis = Just dosar }, cmd )
+                newDosar =
+                    case dosar of
+                        Just d ->
+                            Just { d | temei = temeiValueFromLabel temeiLabel }
 
-        InchideDosarDeschis cmd sub ->
-            ( { model | dosarDeschis = Nothing }, cmd )
-
-        DosarMsg msg cmd sub ->
-            case model.dosarDeschis of
-                Just dosar ->
-                    ( { model | dosarDeschis = Just (Dosar.update msg dosar) }, cmd )
-
-                Nothing ->
-                    ( { model | dosarDeschis = Nothing }, cmd )
+                        Nothing ->
+                            dosar
+            in
+                ( { model | dosar = newDosar }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ model.subscription ]
+    Sub.batch []

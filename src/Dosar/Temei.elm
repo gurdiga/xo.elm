@@ -20,32 +20,40 @@ import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecut
 
 type Msg
     = Click (Cmd Msg) (Sub Msg)
-    | Select3Msg (Select3.Model Temei)
+    | Select3Msg (Select3.Msg Temei)
 
 
 update : Msg -> Model -> Model
-update msg model =
+update msg (Model model) =
     case msg of
         Click cmd msg ->
-            model
+            Model model
 
-        Select3Msg select ->
-            model
-                |> setData (Debug.log "selectedValue" select.selectedValue)
-                |> setUiSelect select
+        Select3Msg select3Msg ->
+            let
+                this =
+                    Model
+                        { model
+                            | data = temei
+                            , ui = (\ui -> { ui | select = Select3.update select3Msg ui.select }) model.ui
+                        }
 
-
-setData : Temei -> Model -> Model
-setData temei (Model model) =
-    Model { model | data = temei }
-
-
-setUiSelect : Select3.Model Temei -> Model -> Model
-setUiSelect select (Model model) =
-    Model
-        { model
-            | ui = (\ui select -> { ui | select = select }) model.ui select
-        }
+                -- TODO: figure this out
+                --
+                -- To get this to work as it is, I should expose Select3.Msg
+                -- members and pattern-match on one of them here, say Select a.
+                -- But this would be an abstraction leak.
+                --
+                -- I need a way to get the selected value from select3Msg.
+                -- Should it have a specific message to emit the selected
+                -- value?
+                --
+                -- I’m assuming that Select3.view can only emit one Msg.
+                --
+                (Select3.Msg temei) =
+                    select3Msg
+            in
+                this
 
 
 type Model

@@ -1,4 +1,4 @@
-module Widgets.Select3 exposing (Model, initialModel, view)
+module Widgets.Select3 exposing (Model, initialModel, update, Msg, view)
 
 import Html exposing (Html, label, text)
 import Html.Attributes exposing (attribute, style)
@@ -6,12 +6,24 @@ import UI.Styles as Styles
 import Utils.MyHtmlEvents exposing (onClick, onMouseOver, onMouseOut)
 
 
-type alias Model a =
-    { valuesWithLabels : ValuesWithLabels a
-    , selectedValue : a
-    , hoveredValue : Maybe a
-    , isOpened : Bool
-    }
+type Msg a
+    = Select a
+
+
+update : Msg a -> Model a -> Model a
+update msg (Model model) =
+    case msg of
+        Select v ->
+            Model { model | selectedValue = v }
+
+
+type Model a
+    = Model
+        { valuesWithLabels : ValuesWithLabels a
+        , selectedValue : a
+        , hoveredValue : Maybe a
+        , isOpened : Bool
+        }
 
 
 type alias ValuesWithLabels a =
@@ -24,22 +36,23 @@ type alias Callback a msg =
 
 initialModel : a -> ValuesWithLabels a -> Model a
 initialModel selectedValue valuesWithLabels =
-    { valuesWithLabels = valuesWithLabels
-    , selectedValue = selectedValue
-    , hoveredValue = Nothing
-    , isOpened = False
-    }
+    Model
+        { valuesWithLabels = valuesWithLabels
+        , selectedValue = selectedValue
+        , hoveredValue = Nothing
+        , isOpened = False
+        }
 
 
 view : String -> Model a -> Callback a msg -> Html msg
-view labelText model callback =
+view labelText (Model model) callback =
     let
         this =
             container
                 [ label labelText
                 , listboxContainer
                     [ input selectedOptionLabel
-                    , listbox model callback
+                    , listbox (Model model) callback
                     ]
                 ]
 
@@ -140,7 +153,7 @@ input s =
 
 
 listbox : Model a -> Callback a msg -> Html msg
-listbox model callback =
+listbox (Model model) callback =
     let
         this =
             Html.ul
@@ -156,8 +169,8 @@ listbox model callback =
                 , label = label
                 , isSelected = value == model.selectedValue
                 , isHovered = Just value == model.hoveredValue
-                , onSelect = (\v -> callback { model | selectedValue = v })
-                , onHover = (\v -> callback { model | hoveredValue = v })
+                , onSelect = (\v -> callback (Model { model | selectedValue = v }))
+                , onHover = (\v -> callback (Model { model | hoveredValue = v }))
                 }
 
         styles =

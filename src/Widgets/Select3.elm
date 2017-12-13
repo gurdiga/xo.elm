@@ -1,20 +1,53 @@
-module Widgets.Select3 exposing (Model, initialModel, update, Msg, view)
+module Widgets.Select3 exposing (Model, initialModel, update, selectedValueFromMsg, Msg, view)
 
-import Html exposing (Html, label, text)
+import Html exposing (Html, label, text, button)
 import Html.Attributes exposing (attribute, style)
+import Html.Events exposing (onClick)
 import UI.Styles as Styles
-import Utils.MyHtmlEvents exposing (onClick, onMouseOver, onMouseOut)
+
+
+-- import Utils.MyHtmlEvents exposing (onMouseOver, onMouseOut)
+
+
+view : String -> Model a -> Html (Msg a)
+view labelText (Model model) =
+    let
+        this =
+            container
+                [ label labelText
+                , button [ onClick (Select (Model model)) ] [ text "OK" ]
+                , listboxContainer
+                    [ input selectedOptionLabel
+
+                    -- TODO: add the listbox
+                    ]
+                ]
+
+        selectedOptionLabel =
+            case findValueWithLabelForValue model.selectedValue of
+                Just ( v, label ) ->
+                    label
+
+                Nothing ->
+                    ""
+
+        findValueWithLabelForValue value =
+            model.valuesWithLabels
+                |> List.filter (\( v, l ) -> v == value)
+                |> List.head
+    in
+        this
 
 
 type Msg a
-    = Select a
+    = Select (Model a)
 
 
 update : Msg a -> Model a -> Model a
 update msg (Model model) =
     case msg of
-        Select v ->
-            Model { model | selectedValue = v }
+        Select model ->
+            Debug.log "update Select" model
 
 
 type Model a
@@ -44,35 +77,40 @@ initialModel selectedValue valuesWithLabels =
         }
 
 
-view : String -> Model a -> Callback a msg -> Html msg
-view labelText (Model model) callback =
-    let
-        this =
-            container
-                [ label labelText
-                , listboxContainer
-                    [ input selectedOptionLabel
-                    , listbox (Model model) callback
-                    ]
-                ]
-
-        selectedOptionLabel =
-            case findValueWithLabelForValue model.selectedValue of
-                Just ( v, label ) ->
-                    label
-
-                Nothing ->
-                    ""
-
-        findValueWithLabelForValue value =
-            model.valuesWithLabels
-                |> List.filter (\( v, l ) -> v == value)
-                |> List.head
-    in
-        this
+selectedValueFromMsg : Msg a -> a
+selectedValueFromMsg msg =
+    case msg of
+        Select (Model model) ->
+            model.selectedValue
 
 
-container : List (Html msg) -> Html msg
+
+-- view1 : String -> Model a -> (Model a -> Msg a) -> Html (Msg a)
+-- view1 labelText (Model model) callback =
+--     let
+--         this =
+--             container
+--                 [ label labelText
+--                 , listboxContainer
+--                     [ input selectedOptionLabel
+--                     , listbox (Model model) callback
+--                     ]
+--                 ]
+--         selectedOptionLabel =
+--             case findValueWithLabelForValue model.selectedValue of
+--                 Just ( v, label ) ->
+--                     label
+--                 Nothing ->
+--                     ""
+--         findValueWithLabelForValue value =
+--             model.valuesWithLabels
+--                 |> List.filter (\( v, l ) -> v == value)
+--                 |> List.head
+--     in
+--         this
+
+
+container : List (Html (Msg a)) -> Html (Msg a)
 container =
     let
         this =
@@ -94,7 +132,7 @@ container =
         this
 
 
-listboxContainer : List (Html msg) -> Html msg
+listboxContainer : List (Html (Msg a)) -> Html (Msg a)
 listboxContainer =
     let
         this =
@@ -113,7 +151,7 @@ listboxContainer =
         this
 
 
-label : String -> Html msg
+label : String -> Html (Msg a)
 label s =
     Html.label
         [ attribute "id" "combobox-N-label"
@@ -123,7 +161,7 @@ label s =
         [ Html.text s ]
 
 
-input : String -> Html msg
+input : String -> Html (Msg a)
 input s =
     let
         this =
@@ -152,75 +190,67 @@ input s =
         this
 
 
-listbox : Model a -> Callback a msg -> Html msg
-listbox (Model model) callback =
-    let
-        this =
-            Html.ul
-                [ attribute "role" "listbox"
-                , attribute "id" "combobox-N-listbox"
-                , style styles
-                ]
-                (List.map renderOption model.valuesWithLabels)
 
-        renderOption ( value, label ) =
-            listboxOption
-                { value = value
-                , label = label
-                , isSelected = value == model.selectedValue
-                , isHovered = Just value == model.hoveredValue
-                , onSelect = (\v -> callback (Model { model | selectedValue = v }))
-                , onHover = (\v -> callback (Model { model | hoveredValue = v }))
-                }
-
-        styles =
-            [ ( "position", "absolute" )
-            , ( "margin", "0" )
-            , ( "padding", "0" )
-            , ( "list-style-type", "none" )
-            , ( "display", "block" )
-            ]
-                ++ Styles.inheritFont
-    in
-        this
-
-
-type alias OptionInput a msg =
-    { value : a
-    , label : String
-    , isSelected : Bool
-    , isHovered : Bool
-    , onSelect : a -> msg
-    , onHover : Maybe a -> msg
-    }
-
-
-listboxOption : OptionInput a msg -> Html msg
-listboxOption { value, label, isSelected, isHovered, onSelect, onHover } =
-    let
-        this =
-            Html.li
-                [ attribute "role" "option"
-                , style (styles ++ optionHoverStyles ++ optionSelectedStyles)
-                , onClick (\_ -> onSelect value)
-                , onMouseOver (\_ -> onHover (Just value))
-                , onMouseOut (\_ -> onHover Nothing)
-                ]
-                [ Html.text label ]
-
-        styles =
-            [ ( "cursor", "pointer" ) ]
-
-        optionHoverStyles =
-            if isHovered then
-                [ ( "background", "black" ) ]
-            else
-                []
-
-        optionSelectedStyles =
-            if isSelected then
-                [ ( "background", "blue" ) ]
-            else
-                []
-    in
-        this
+-- listbox : Model a -> (Model a -> Msg a) -> Html (Msg a)
+-- listbox (Model model) callback =
+--     let
+--         this =
+--             Html.ul
+--                 [ attribute "role" "listbox"
+--                 , attribute "id" "combobox-N-listbox"
+--                 , style styles
+--                 ]
+--                 (List.map renderOption model.valuesWithLabels)
+--         renderOption ( value, label ) =
+--             listboxOption
+--                 { value = value
+--                 , label = label
+--                 , isSelected = value == model.selectedValue
+--                 , isHovered = Just value == model.hoveredValue
+--                 , onSelect = (\v -> callback (Model { model | selectedValue = v }))
+--                 , onHover = (\v -> callback (Model { model | hoveredValue = v }))
+--                 }
+--         styles =
+--             [ ( "position", "absolute" )
+--             , ( "margin", "0" )
+--             , ( "padding", "0" )
+--             , ( "list-style-type", "none" )
+--             , ( "display", "block" )
+--             ]
+--                 ++ Styles.inheritFont
+--     in
+--         this
+-- type alias OptionInput a msg =
+--     { value : a
+--     , label : String
+--     , isSelected : Bool
+--     , isHovered : Bool
+--     , onSelect : a -> msg
+--     , onHover : Maybe a -> msg
+--     }
+-- listboxOption : OptionInput a msg -> Html msg
+-- listboxOption { value, label, isSelected, isHovered, onSelect, onHover } =
+--     let
+--         this =
+--             Html.li
+--                 [ attribute "role" "option"
+--                 , style (styles ++ optionHoverStyles ++ optionSelectedStyles)
+--                 , onClick (\_ -> onSelect value)
+--                 , onMouseOver (\_ -> onHover (Just value))
+--                 , onMouseOut (\_ -> onHover Nothing)
+--                 ]
+--                 [ Html.text label ]
+--         styles =
+--             [ ( "cursor", "pointer" ) ]
+--         optionHoverStyles =
+--             if isHovered then
+--                 [ ( "background", "black" ) ]
+--             else
+--                 []
+--         optionSelectedStyles =
+--             if isSelected then
+--                 [ ( "background", "blue" ) ]
+--             else
+--                 []
+--     in
+--         this

@@ -34,24 +34,9 @@ update msg (Model model) =
                 this =
                     Model
                         { model
-                            | data = temei
+                            | data = Select3.selectedValueFromMsg select3Msg
                             , ui = (\ui -> { ui | select = Select3.update select3Msg ui.select }) model.ui
                         }
-
-                -- TODO: figure this out
-                --
-                -- To get this to work as it is, I should expose Select3.Msg
-                -- members and pattern-match on one of them here, say Select a.
-                -- But this would be an abstraction leak.
-                --
-                -- I need a way to get the selected value from select3Msg.
-                -- Should it have a specific message to emit the selected
-                -- value?
-                --
-                -- I’m assuming that Select3.view can only emit one Msg.
-                --
-                (Select3.Msg temei) =
-                    select3Msg
             in
                 this
 
@@ -73,7 +58,9 @@ type Temei
 
 view : Model -> Html Msg
 view (Model model) =
-    section [] [ Select3.view "Temei:" model.ui.select Select3Msg ]
+    section []
+        [ Select3.view "Temei:" model.ui.select |> Html.map Select3Msg
+        ]
 
 
 

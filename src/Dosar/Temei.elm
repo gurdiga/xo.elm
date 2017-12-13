@@ -11,8 +11,8 @@ import Html exposing (Html, node, section, div, label, text)
 
 
 -- import Html.Attributes exposing (style)
--- import Widgets.Select3 as Select3
 
+import Widgets.Select3 as Select3
 import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
@@ -20,6 +20,7 @@ import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecut
 
 type Msg
     = Click (Cmd Msg) (Sub Msg)
+    | Select3Msg (Select3.Model Temei)
 
 
 update : Msg -> Model -> Model
@@ -28,20 +29,32 @@ update msg model =
         Click cmd msg ->
             model
 
+        Select3Msg select ->
+            model
+                |> setData (Debug.log "selectedValue" select.selectedValue)
+                |> setUiSelect select
+
+
+setData : Temei -> Model -> Model
+setData temei (Model model) =
+    Model { model | data = temei }
+
+
+setUiSelect : Select3.Model Temei -> Model -> Model
+setUiSelect select (Model model) =
+    Model
+        { model
+            | ui = (\ui select -> { ui | select = select }) model.ui select
+        }
+
 
 type Model
     = Model
         { data : Temei
-
-        -- , ui : Ui
+        , ui :
+            { select : Select3.Model Temei
+            }
         }
-
-
-
--- type Ui
---     = Ui
---         { select : Select3.Model Temei
---         }
 
 
 type Temei
@@ -50,9 +63,9 @@ type Temei
     | PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat
 
 
-view : Model -> (Msg -> Cmd msg -> Sub msg -> msg) -> Html msg
-view model tagger =
-    text "Temei"
+view : Model -> Html Msg
+view (Model model) =
+    section [] [ Select3.view "Temei:" model.ui.select Select3Msg ]
 
 
 
@@ -107,20 +120,32 @@ view model tagger =
 --         PreluareDocumentExecutoriuStramutat preluareDocumentExecutoriuStramutat ->
 --             PreluareDocumentExecutoriuStramutat.view preluareDocumentExecutoriuStramutat
 --                 (\v -> callback (PreluareDocumentExecutoriuStramutat v))
--- valuesWithLabels : List ( Temei, String )
--- valuesWithLabels =
---     [ ( CerereCreditor CerereCreditor.empty
---       , "cerere a creditorului"
---       )
---     , ( DemersInstanta DemersInstanta.empty
---       , "demersul instanţei de judecata"
---       )
---     , ( PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.empty
---       , "preluarea unui document executoriu stramutat"
---       )
---     ]
+
+
+valuesWithLabels : List ( Temei, String )
+valuesWithLabels =
+    [ ( CerereCreditor CerereCreditor.empty
+      , "cerere a creditorului"
+      )
+    , ( DemersInstanta DemersInstanta.empty
+      , "demersul instanţei de judecata"
+      )
+    , ( PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.empty
+      , "preluarea unui document executoriu stramutat"
+      )
+    ]
 
 
 initialModel : Model
 initialModel =
-    Model { data = CerereCreditor CerereCreditor.empty }
+    Model
+        { data = initialTemei
+        , ui =
+            { select = Select3.initialModel initialTemei valuesWithLabels
+            }
+        }
+
+
+initialTemei : Temei
+initialTemei =
+    CerereCreditor CerereCreditor.empty

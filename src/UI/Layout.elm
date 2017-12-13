@@ -13,7 +13,7 @@ view children =
         styles =
             [ ( "padding", "24px" )
             , ( "font-family", "Alegreya Sans" )
-            , ( "background-image", "url(/assets/images/bg.png)" )
+            , ( "background-image", "url(assets/images/bg.png)" )
             ]
     in
         this

@@ -1,4 +1,4 @@
-module Widgets.Select3 exposing (Model, init, view)
+module Widgets.Select3 exposing (Model, initialModel, view)
 
 import Html exposing (Html, label, text)
 import Html.Attributes exposing (attribute, style)
@@ -22,8 +22,8 @@ type alias Callback a msg =
     Model a -> msg
 
 
-init : a -> ValuesWithLabels a -> Model a
-init selectedValue valuesWithLabels =
+initialModel : a -> ValuesWithLabels a -> Model a
+initialModel selectedValue valuesWithLabels =
     { valuesWithLabels = valuesWithLabels
     , selectedValue = selectedValue
     , hoveredValue = Nothing

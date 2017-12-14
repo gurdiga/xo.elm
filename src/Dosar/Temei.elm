@@ -34,9 +34,12 @@ update msg (Model model) =
                 this =
                     Model
                         { model
-                            | data = Select3.selectedValueFromMsg select3Msg
-                            , ui = (\ui -> { ui | select = Select3.update select3Msg ui.select }) model.ui
+                            | ui = (\ui -> { ui | select = newSelect }) model.ui
+                            , data = Select3.selectedValue newSelect
                         }
+
+                newSelect =
+                    Select3.update select3Msg model.ui.select
             in
                 this
 

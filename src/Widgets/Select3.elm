@@ -2,12 +2,17 @@ module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg
 
 import Html exposing (Html, label, text, button)
 import Html.Attributes exposing (attribute, style)
-import Html.Events exposing (onClick, onMouseOver, onMouseOut)
+import Html.Events exposing (onClick, onMouseOver, onMouseOut, onFocus, onBlur)
 import UI.Styles as Styles
 
 
+-- TODO: give it a unique ID to be able to link ARIA-related attributes?
+
+
 type Msg a
-    = OptionSelected a
+    = Open
+    | Close
+    | OptionSelected a
     | OptionMouseOver a
     | OptionMouseOut
 
@@ -48,7 +53,7 @@ view labelText (Model model) =
                 [ label labelText
                 , listboxContainer
                     [ input selectedOptionLabel
-                    , listbox model.valuesWithLabels model.selectedValue model.hoveredValue
+                    , listbox model.isOpened model.valuesWithLabels model.selectedValue model.hoveredValue
                     ]
                 ]
 
@@ -65,6 +70,12 @@ view labelText (Model model) =
 update : Msg a -> Model a -> Model a
 update msg (Model model) =
     case msg of
+        Open ->
+            Model { model | isOpened = True }
+
+        Close ->
+            Model { model | isOpened = False }
+
         OptionSelected value ->
             Model { model | selectedValue = value }
 
@@ -138,6 +149,8 @@ input s =
                 , attribute "aria-activedescendant" "combobox-N-selected-option"
                 , attribute "value" s
                 , style styles
+                , onFocus Open
+                , onBlur Close
                 ]
                 []
 
@@ -155,8 +168,8 @@ input s =
         this
 
 
-listbox : ValuesWithLabels a -> a -> Maybe a -> Html (Msg a)
-listbox valuesWithLabels selectedValue hoveredValue =
+listbox : Bool -> ValuesWithLabels a -> a -> Maybe a -> Html (Msg a)
+listbox isOpened valuesWithLabels selectedValue hoveredValue =
     let
         this =
             Html.ul
@@ -181,9 +194,15 @@ listbox valuesWithLabels selectedValue hoveredValue =
             , ( "margin", "0" )
             , ( "padding", "0" )
             , ( "list-style-type", "none" )
-            , ( "display", "block" )
             ]
                 ++ Styles.inheritFont
+                ++ visibilityStyles
+
+        visibilityStyles =
+            if isOpened then
+                [ ( "display", "block" ) ]
+            else
+                [ ( "display", "none" ) ]
     in
         this
 

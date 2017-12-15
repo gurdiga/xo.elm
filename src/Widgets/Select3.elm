@@ -4,9 +4,10 @@ import Html exposing (Html, label, text, button)
 import Html.Attributes exposing (attribute, style)
 import Html.Events exposing (onClick, onMouseOver, onMouseOut, onFocus, onBlur)
 import UI.Styles as Styles
+import FNV as HashingUtility
 
 
--- TODO: give it a unique ID to be able to link ARIA-related attributes?
+-- TODO: extract Widget.Select3.Css
 
 
 type Msg a
@@ -23,6 +24,7 @@ type Model a
         , selectedValue : a
         , hoveredValue : Maybe a
         , isOpened : Bool
+        , id : String
         }
 
 
@@ -37,6 +39,7 @@ initialModel selectedValue valuesWithLabels =
         , selectedValue = selectedValue
         , hoveredValue = Nothing
         , isOpened = False
+        , id = valuesWithLabels |> toString |> HashingUtility.hashString |> toString
         }
 
 
@@ -46,20 +49,20 @@ selectedValue (Model { selectedValue }) =
 
 
 view : String -> Model a -> Html (Msg a)
-view labelText (Model model) =
+view labelText (Model { valuesWithLabels, selectedValue, hoveredValue, isOpened, id }) =
     let
         this =
-            container
-                [ label labelText
+            container id
+                [ label id labelText
                 , listboxContainer
-                    [ input selectedOptionLabel
-                    , listbox model.isOpened model.valuesWithLabels model.selectedValue model.hoveredValue
+                    [ input id selectedOptionLabel
+                    , listbox id isOpened valuesWithLabels selectedValue hoveredValue
                     ]
                 ]
 
         selectedOptionLabel =
-            model.valuesWithLabels
-                |> List.filter (\( v, l ) -> v == model.selectedValue)
+            valuesWithLabels
+                |> List.filter (\( v, l ) -> v == selectedValue)
                 |> List.head
                 |> Maybe.map Tuple.second
                 |> Maybe.withDefault ""
@@ -86,13 +89,13 @@ update msg (Model model) =
             Model { model | hoveredValue = Nothing }
 
 
-container : List (Html (Msg a)) -> Html (Msg a)
-container =
+container : String -> List (Html (Msg a)) -> Html (Msg a)
+container id =
     let
         this =
             Html.div
                 [ attribute "role" "combobox"
-                , attribute "aria-labelledby" "combobox-N-label"
+                , attribute "aria-labelledby" ("combobox-" ++ id ++ "-label")
                 , attribute "aria-expanded" "true"
                 , attribute "aria-haspopup" "listbox"
                 , style styles
@@ -127,27 +130,27 @@ listboxContainer =
         this
 
 
-label : String -> Html (Msg a)
-label s =
+label : String -> String -> Html (Msg a)
+label id labelText =
     Html.label
-        [ attribute "id" "combobox-N-label"
-        , attribute "for" "combobox-N"
+        [ attribute "id" ("combobox-" ++ id ++ "-label")
+        , attribute "for" ("combobox-" ++ id)
         , style [ ( "margin-right", "0.25em" ) ]
         ]
-        [ Html.text s ]
+        [ Html.text labelText ]
 
 
-input : String -> Html (Msg a)
-input s =
+input : String -> String -> Html (Msg a)
+input id label =
     let
         this =
             Html.input
-                [ attribute "id" "combobox-N"
+                [ attribute "id" ("combobox-" ++ id)
                 , attribute "type" "text"
                 , attribute "aria-autocomplete" "list"
-                , attribute "aria-controls" "combobox-N-listbox"
-                , attribute "aria-activedescendant" "combobox-N-selected-option"
-                , attribute "value" s
+                , attribute "aria-controls" ("combobox-" ++ id ++ "-listbox")
+                , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
+                , attribute "value" label
                 , style styles
                 , onFocus Open
                 , onBlur Close
@@ -168,13 +171,13 @@ input s =
         this
 
 
-listbox : Bool -> ValuesWithLabels a -> a -> Maybe a -> Html (Msg a)
-listbox isOpened valuesWithLabels selectedValue hoveredValue =
+listbox : String -> Bool -> ValuesWithLabels a -> a -> Maybe a -> Html (Msg a)
+listbox id isOpened valuesWithLabels selectedValue hoveredValue =
     let
         this =
             Html.ul
                 [ attribute "role" "listbox"
-                , attribute "id" "combobox-N-listbox"
+                , attribute "id" ("combobox-" ++ id ++ "-listbox")
                 , style styles
                 ]
                 options

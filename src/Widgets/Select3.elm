@@ -4,10 +4,12 @@ import Html exposing (Html, label, text, button)
 import Html.Attributes exposing (attribute, style)
 import Html.Events exposing (onClick, onMouseOver, onMouseOut, onFocus, onBlur)
 import UI.Styles as Styles
+import Widgets.Select3.Css as Css
 import FNV as HashingUtility
 
 
--- TODO: extract Widget.Select3.Css
+-- TODO: Ceck elm-css. Why? How would it be better besides less cluttered HTML
+-- in the browser console?
 
 
 type Msg a
@@ -91,43 +93,21 @@ update msg (Model model) =
 
 container : String -> List (Html (Msg a)) -> Html (Msg a)
 container id =
-    let
-        this =
-            Html.div
-                [ attribute "role" "combobox"
-                , attribute "aria-labelledby" ("combobox-" ++ id ++ "-label")
-                , attribute "aria-expanded" "true"
-                , attribute "aria-haspopup" "listbox"
-                , style styles
-                ]
-
-        styles =
-            [ ( "position", "relative" )
-            , ( "display", "flex" )
-            , ( "width", "100%" )
-            ]
-                ++ Styles.inheritFont
-    in
-        this
+    Html.div
+        [ attribute "role" "combobox"
+        , attribute "aria-labelledby" ("combobox-" ++ id ++ "-label")
+        , attribute "aria-expanded" "true"
+        , attribute "aria-haspopup" "listbox"
+        , style (Css.container ++ Styles.inheritFont)
+        ]
 
 
 listboxContainer : List (Html (Msg a)) -> Html (Msg a)
 listboxContainer =
-    let
-        this =
-            Html.div
-                [ attribute "class" "combobox-listbox-container"
-                , style styles
-                ]
-
-        styles =
-            [ ( "display", "inline-block" )
-            , ( "position", "relative" )
-            , ( "flex-grow", "1" )
-            ]
-                ++ Styles.inheritFont
-    in
-        this
+    Html.div
+        [ attribute "class" "combobox-listbox-container"
+        , style (Css.listboxContainer ++ Styles.inheritFont)
+        ]
 
 
 label : String -> String -> Html (Msg a)
@@ -135,40 +115,25 @@ label id labelText =
     Html.label
         [ attribute "id" ("combobox-" ++ id ++ "-label")
         , attribute "for" ("combobox-" ++ id)
-        , style [ ( "margin-right", "0.25em" ) ]
+        , style Css.label
         ]
         [ Html.text labelText ]
 
 
 input : String -> String -> Html (Msg a)
 input id label =
-    let
-        this =
-            Html.input
-                [ attribute "id" ("combobox-" ++ id)
-                , attribute "type" "text"
-                , attribute "aria-autocomplete" "list"
-                , attribute "aria-controls" ("combobox-" ++ id ++ "-listbox")
-                , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
-                , attribute "value" label
-                , style styles
-                , onFocus Open
-                , onBlur Close
-                ]
-                []
-
-        styles =
-            ([ ( "border-style", "solid" )
-             , ( "border-width", "1px" )
-             , ( "padding", "0 0.25em" )
-             , ( "margin-top", "-1px" )
-             , ( "width", "100%" )
-             , ( "box-sizing", "border-box" )
-             ]
-                ++ Styles.inheritFont
-            )
-    in
-        this
+    Html.input
+        [ attribute "id" ("combobox-" ++ id)
+        , attribute "type" "text"
+        , attribute "aria-autocomplete" "list"
+        , attribute "aria-controls" ("combobox-" ++ id ++ "-listbox")
+        , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
+        , attribute "value" label
+        , style (Css.input ++ Styles.inheritFont)
+        , onFocus Open
+        , onBlur Close
+        ]
+        []
 
 
 listbox : String -> Bool -> ValuesWithLabels a -> a -> Maybe a -> Html (Msg a)
@@ -178,7 +143,7 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
             Html.ul
                 [ attribute "role" "listbox"
                 , attribute "id" ("combobox-" ++ id ++ "-listbox")
-                , style styles
+                , style (Css.listbox ++ Styles.inheritFont ++ visibilityStyles)
                 ]
                 options
 
@@ -191,15 +156,6 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
             , isSelected = value == selectedValue
             , isHovered = Just value == hoveredValue
             }
-
-        styles =
-            [ ( "position", "absolute" )
-            , ( "margin", "0" )
-            , ( "padding", "0" )
-            , ( "list-style-type", "none" )
-            ]
-                ++ Styles.inheritFont
-                ++ visibilityStyles
 
         visibilityStyles =
             if isOpened then
@@ -224,15 +180,12 @@ listboxOption { value, label, isSelected, isHovered } =
         this =
             Html.li
                 [ attribute "role" "option"
-                , style (styles ++ optionHoverStyles ++ optionSelectedStyles)
+                , style (Css.listboxOption ++ optionHoverStyles ++ optionSelectedStyles)
                 , onClick (OptionSelected value)
                 , onMouseOver (OptionMouseOver value)
                 , onMouseOut (OptionMouseOut)
                 ]
                 [ Html.text label ]
-
-        styles =
-            [ ( "cursor", "pointer" ) ]
 
         optionHoverStyles =
             if isHovered then

@@ -1,11 +1,4 @@
-module Dosar.Temei
-    exposing
-        ( Model
-        , Msg
-        , initialModel
-        , update
-        , view
-        )
+module Dosar.Temei exposing (Model, Msg, initialModel, update, view, subscriptions)
 
 import Html exposing (Html, node, section, div, label, text)
 
@@ -147,3 +140,9 @@ initialModel =
 initialTemei : Temei
 initialTemei =
     CerereCreditor CerereCreditor.empty
+
+
+subscriptions : List (Sub Msg)
+subscriptions =
+    Select3.subscriptions
+        |> List.map (Sub.map Select3Msg)

@@ -32,7 +32,7 @@ initialModel =
 
 type Msg
     = CreateDosar
-    | UpdateDosarDeschis Dosar.Msg
+    | DosarMsg Dosar.Msg
 
 
 view : Model -> Html Msg
@@ -47,7 +47,7 @@ view (Model model) =
 
 dosarView : Dosar.Model -> Html Msg
 dosarView dosar =
-    Dosar.view dosar |> Html.map UpdateDosarDeschis
+    Dosar.view dosar |> Html.map DosarMsg
 
 
 createDosarButton : Html Msg
@@ -61,7 +61,7 @@ update msg (Model model) =
         CreateDosar ->
             ( Model { model | dosarDeschis = Just Dosar.initialModel }, Cmd.none )
 
-        UpdateDosarDeschis dosarMsg ->
+        DosarMsg dosarMsg ->
             case model.dosarDeschis of
                 Just dosar ->
                     ( Model { model | dosarDeschis = Just (Dosar.update dosarMsg dosar) }, Cmd.none )
@@ -72,4 +72,6 @@ update msg (Model model) =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch []
+    Dosar.subscriptions
+        |> List.map (Sub.map DosarMsg)
+        |> Sub.batch

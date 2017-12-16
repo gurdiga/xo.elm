@@ -1,4 +1,4 @@
-module Dosar exposing (Model, initialModel, update, Msg, view)
+module Dosar exposing (Model, initialModel, update, Msg, view, subscriptions)
 
 import Dosar.Css
 import Html exposing (Html, h1, section, div, select, option, button, text, node)
@@ -37,12 +37,12 @@ initialModel =
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        UpdateTemei temeiMsg ->
+        TemeiMsg temeiMsg ->
             Model { model | temei = Temei.update temeiMsg model.temei }
 
 
 type Msg
-    = UpdateTemei Temei.Msg
+    = TemeiMsg Temei.Msg
 
 
 view : Model -> Html Msg
@@ -53,6 +53,12 @@ view (Model model) =
         , section []
             [ node "hgroup"
                 []
-                [ Temei.view model.temei |> Html.map UpdateTemei ]
+                [ Temei.view model.temei |> Html.map TemeiMsg ]
             ]
         ]
+
+
+subscriptions : List (Sub Msg)
+subscriptions =
+    Temei.subscriptions
+        |> List.map (Sub.map TemeiMsg)

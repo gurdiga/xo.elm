@@ -2,6 +2,7 @@ module Utils.MyList
     exposing
         ( replace
         , find
+        , dropUntil
         )
 
 
@@ -22,3 +23,16 @@ find predicate list =
     list
         |> List.filter predicate
         |> List.head
+
+
+dropUntil : (a -> Bool) -> List a -> List a
+dropUntil predicate xs =
+    case xs of
+        [] ->
+            []
+
+        x :: xs ->
+            if predicate x then
+                xs
+            else
+                dropUntil predicate xs

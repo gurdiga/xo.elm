@@ -1,15 +1,14 @@
-module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg, view)
+module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg, view, subscriptions)
 
 import Html exposing (Html, label, text, button)
 import Html.Attributes exposing (attribute, style)
 import Html.Events exposing (onClick, onMouseOver, onMouseOut, onFocus, onBlur)
+import FNV as HashingUtility
+import Keyboard
 import UI.Styles as Styles
 import Widgets.Select3.Css as Css
-import FNV as HashingUtility
-
-
--- TODO: Ceck elm-css. Why? How would it be better besides less cluttered HTML
--- in the browser console?
+import Utils.MyList as MyList
+import Utils.MyHtmlEvents exposing (onKeyDown)
 
 
 type Msg a
@@ -18,6 +17,7 @@ type Msg a
     | OptionSelected a
     | OptionMouseOver a
     | OptionMouseOut
+    | KeyDown Keyboard.KeyCode
 
 
 type Model a
@@ -90,6 +90,62 @@ update msg (Model model) =
         OptionMouseOut ->
             Model { model | hoveredValue = Nothing }
 
+        KeyDown keyCode ->
+            case keyCode of
+                -- down
+                40 ->
+                    if model.isOpened then
+                        Model
+                            { model
+                                | selectedValue = nextValue model.selectedValue model.valuesWithLabels
+                                , isOpened = True
+                            }
+                    else
+                        Model { model | isOpened = True }
+
+                -- up
+                38 ->
+                    if model.isOpened then
+                        Model
+                            { model
+                                | selectedValue = previousValue model.selectedValue model.valuesWithLabels
+                                , isOpened = True
+                            }
+                    else
+                        Model model
+
+                -- Enter
+                13 ->
+                    Model { model | isOpened = False }
+
+                -- Esc
+                27 ->
+                    Model { model | isOpened = False }
+
+                _ ->
+                    Model model
+
+
+nextValue : a -> ValuesWithLabels a -> a
+nextValue selectedValue valuesWithLabels =
+    valuesWithLabels
+        |> MyList.dropUntil (\( v, l ) -> v == selectedValue)
+        |> List.head
+        |> Maybe.map Tuple.first
+        |> Maybe.withDefault
+            (valuesWithLabels
+                |> List.head
+                |> Maybe.map Tuple.first
+                |> Maybe.withDefault selectedValue
+            )
+
+
+previousValue : a -> ValuesWithLabels a -> a
+previousValue selectedValue valuesWithLabels =
+    valuesWithLabels
+        |> List.reverse
+        |> nextValue selectedValue
+
 
 container : String -> List (Html (Msg a)) -> Html (Msg a)
 container id =
@@ -132,6 +188,7 @@ input id label =
         , style (Css.input ++ Styles.inheritFont)
         , onFocus Open
         , onBlur Close
+        , onKeyDown KeyDown
         ]
         []
 
@@ -180,12 +237,19 @@ listboxOption { value, label, isSelected, isHovered } =
         this =
             Html.li
                 [ attribute "role" "option"
+                , ariaSelectedState
                 , style (Css.listboxOption ++ optionHoverStyles ++ optionSelectedStyles)
                 , onClick (OptionSelected value)
                 , onMouseOver (OptionMouseOver value)
                 , onMouseOut (OptionMouseOut)
                 ]
                 [ Html.text label ]
+
+        ariaSelectedState =
+            if isSelected then
+                attribute "aria-selected" "true"
+            else
+                attribute "aria-selected" "false"
 
         optionHoverStyles =
             if isHovered then
@@ -200,3 +264,8 @@ listboxOption { value, label, isSelected, isHovered } =
                 []
     in
         this
+
+
+subscriptions : List (Sub (Msg a))
+subscriptions =
+    []

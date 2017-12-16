@@ -4,6 +4,7 @@ module Utils.MyHtmlEvents
         , onFocus
         , onMouseOver
         , onMouseOut
+        , onKeyDown
         )
 
 import Json.Decode
@@ -29,3 +30,8 @@ onMouseOver callback =
 onMouseOut : (String -> msg) -> Html.Attribute msg
 onMouseOut callback =
     Html.Events.on "mouseout" (Json.Decode.map callback Html.Events.targetValue)
+
+
+onKeyDown : (Int -> msg) -> Html.Attribute msg
+onKeyDown tagger =
+    Html.Events.on "keydown" (Json.Decode.map tagger Html.Events.keyCode)

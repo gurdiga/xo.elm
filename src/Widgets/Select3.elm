@@ -31,7 +31,11 @@ type Model a
 
 
 type alias ValuesWithLabels a =
-    List ( a, String )
+    List (ValueWithLabel a)
+
+
+type alias ValueWithLabel a =
+    ( a, String )
 
 
 initialModel : a -> ValuesWithLabels a -> Model a
@@ -64,12 +68,17 @@ view labelText (Model { valuesWithLabels, selectedValue, hoveredValue, isOpened,
 
         selectedOptionLabel =
             valuesWithLabels
-                |> List.filter (\( v, l ) -> v == selectedValue)
+                |> List.filter (valueIs selectedValue)
                 |> List.head
                 |> Maybe.map Tuple.second
                 |> Maybe.withDefault ""
     in
         this
+
+
+valueIs : a -> ValueWithLabel a -> Bool
+valueIs v ( vx, _ ) =
+    vx == v
 
 
 update : Msg a -> Model a -> Model a
@@ -91,45 +100,50 @@ update msg (Model model) =
             Model { model | hoveredValue = Nothing }
 
         KeyDown keyCode ->
-            case keyCode of
-                -- down
-                40 ->
-                    if model.isOpened then
-                        Model
-                            { model
-                                | selectedValue = nextValue model.selectedValue model.valuesWithLabels
-                                , isOpened = True
-                            }
-                    else
-                        Model { model | isOpened = True }
+            handleKeyDowns keyCode (Model model)
 
-                -- up
-                38 ->
-                    if model.isOpened then
-                        Model
-                            { model
-                                | selectedValue = previousValue model.selectedValue model.valuesWithLabels
-                                , isOpened = True
-                            }
-                    else
-                        Model model
 
-                -- Enter
-                13 ->
-                    Model { model | isOpened = False }
+handleKeyDowns : Keyboard.KeyCode -> Model a -> Model a
+handleKeyDowns keyCode (Model model) =
+    case keyCode of
+        -- down
+        40 ->
+            if model.isOpened then
+                Model
+                    { model
+                        | selectedValue = nextValue model.selectedValue model.valuesWithLabels
+                        , isOpened = True
+                    }
+            else
+                Model { model | isOpened = True }
 
-                -- Esc
-                27 ->
-                    Model { model | isOpened = False }
+        -- up
+        38 ->
+            if model.isOpened then
+                Model
+                    { model
+                        | selectedValue = previousValue model.selectedValue model.valuesWithLabels
+                        , isOpened = True
+                    }
+            else
+                Model model
 
-                _ ->
-                    Model model
+        -- Enter
+        13 ->
+            Model { model | isOpened = False }
+
+        -- Esc
+        27 ->
+            Model { model | isOpened = False }
+
+        _ ->
+            Model model
 
 
 nextValue : a -> ValuesWithLabels a -> a
 nextValue selectedValue valuesWithLabels =
     valuesWithLabels
-        |> MyList.dropUntil (\( v, l ) -> v == selectedValue)
+        |> MyList.dropUntil (valueIs selectedValue)
         |> List.head
         |> Maybe.map Tuple.first
         |> Maybe.withDefault
@@ -185,6 +199,7 @@ input id label =
         , attribute "aria-controls" ("combobox-" ++ id ++ "-listbox")
         , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
         , attribute "value" label
+        , attribute "readonly" "readonly"
         , style (Css.input ++ Styles.inheritFont)
         , onFocus Open
         , onBlur Close

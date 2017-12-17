@@ -26,10 +26,20 @@ input : List ( String, String )
 input =
     [ ( "border-style", "solid" )
     , ( "border-width", "1px" )
-    , ( "padding", "0 0.25em" )
+    , ( "padding", "0 1.25em 0 0.25em" )
     , ( "margin-top", "-1px" )
     , ( "width", "100%" )
     , ( "box-sizing", "border-box" )
+    , ( "cursor", "default" )
+    ]
+
+
+dropdownSymbol : List ( String, String )
+dropdownSymbol =
+    [ ( "position", "absolute" )
+    , ( "width", "1em" )
+    , ( "margin-left", "-1em" )
+    , ( "pointer-events", "none" )
     ]
 
 
@@ -39,9 +49,28 @@ listbox =
     , ( "margin", "0" )
     , ( "padding", "0" )
     , ( "list-style-type", "none" )
+    , ( "background-color", "white" )
+
+    -- Thank you https://debois.github.io/elm-mdl/#select
+    , ( "box-shadow", "0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12)" )
     ]
 
 
 listboxOption : List ( String, String )
 listboxOption =
-    [ ( "cursor", "pointer" ) ]
+    [ ( "cursor", "pointer" )
+    , ( "padding", "0px 0.25em 0px 1em" )
+    ]
+
+
+optionSelectedMarker : List ( String, String )
+optionSelectedMarker =
+    [ ( "position", "absolute" )
+    , ( "margin-left", "-1em" )
+    ]
+
+
+optionHoverStyles : List ( String, String )
+optionHoverStyles =
+    [ ( "background", "#eee" )
+    ]

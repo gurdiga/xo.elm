@@ -1,7 +1,6 @@
 module Main exposing (..)
 
-import Html exposing (Html, h1, section, div, pre, text, select, option, node, button)
-import Html.Attributes exposing (value, selected, style)
+import Html exposing (Html, h1, section, div, text, select, option, node, button)
 import Html.Events exposing (onClick)
 import UI.Layout as Layout
 import Dosar
@@ -41,7 +40,6 @@ view (Model model) =
         [ model.dosarDeschis
             |> Maybe.map dosarView
             |> Maybe.withDefault createDosarButton
-        , pre [ style [ ( "white-space", "normal" ), ( "margin-bottom", "5em" ) ] ] [ text (toString model) ]
         ]
 
 

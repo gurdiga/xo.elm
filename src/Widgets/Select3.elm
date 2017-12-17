@@ -2,22 +2,13 @@ module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg
 
 import Html exposing (Html, label, text, button)
 import Html.Attributes exposing (attribute, style)
-import Html.Events exposing (onClick, onMouseOver, onMouseOut, onFocus, onBlur)
+import Html.Events exposing (onMouseDown, onClick, onMouseOver, onMouseOut, onBlur)
 import FNV as HashingUtility
 import Keyboard
 import UI.Styles as Styles
 import Widgets.Select3.Css as Css
 import Utils.MyList as MyList
 import Utils.MyHtmlEvents exposing (onKeyDown)
-
-
-type Msg a
-    = Open
-    | Close
-    | OptionSelected a
-    | OptionMouseOver a
-    | OptionMouseOut
-    | KeyDown Keyboard.KeyCode
 
 
 type Model a
@@ -54,6 +45,16 @@ selectedValue (Model { selectedValue }) =
     selectedValue
 
 
+type Msg a
+    = Open
+    | Close
+    | Toggle
+    | OptionSelected a
+    | OptionMouseOver a
+    | OptionMouseOut
+    | KeyDown Keyboard.KeyCode
+
+
 view : String -> Model a -> Html (Msg a)
 view labelText (Model { valuesWithLabels, selectedValue, hoveredValue, isOpened, id }) =
     let
@@ -62,23 +63,32 @@ view labelText (Model { valuesWithLabels, selectedValue, hoveredValue, isOpened,
                 [ label id labelText
                 , listboxContainer
                     [ input id selectedOptionLabel
+                    , dropdownSymbol
                     , listbox id isOpened valuesWithLabels selectedValue hoveredValue
                     ]
                 ]
 
         selectedOptionLabel =
             valuesWithLabels
-                |> List.filter (valueIs selectedValue)
+                |> List.filter (valueIs (Just selectedValue))
                 |> List.head
                 |> Maybe.map Tuple.second
                 |> Maybe.withDefault ""
+
+        dropdownSymbol =
+            Html.span [ style Css.dropdownSymbol ] [ text "▾" ]
     in
         this
 
 
-valueIs : a -> ValueWithLabel a -> Bool
-valueIs v ( vx, _ ) =
-    vx == v
+valueIs : Maybe a -> ValueWithLabel a -> Bool
+valueIs maybeV ( vx, _ ) =
+    case maybeV of
+        Nothing ->
+            False
+
+        Just v ->
+            vx == v
 
 
 update : Msg a -> Model a -> Model a
@@ -89,6 +99,9 @@ update msg (Model model) =
 
         Close ->
             Model { model | isOpened = False }
+
+        Toggle ->
+            Model { model | isOpened = not model.isOpened }
 
         OptionSelected value ->
             Model { model | selectedValue = value }
@@ -111,7 +124,7 @@ handleKeyDowns keyCode (Model model) =
             if model.isOpened then
                 Model
                     { model
-                        | selectedValue = nextValue model.selectedValue model.valuesWithLabels
+                        | hoveredValue = nextValue model.hoveredValue model.valuesWithLabels
                         , isOpened = True
                     }
             else
@@ -122,7 +135,7 @@ handleKeyDowns keyCode (Model model) =
             if model.isOpened then
                 Model
                     { model
-                        | selectedValue = previousValue model.selectedValue model.valuesWithLabels
+                        | hoveredValue = previousValue model.hoveredValue model.valuesWithLabels
                         , isOpened = True
                     }
             else
@@ -130,7 +143,12 @@ handleKeyDowns keyCode (Model model) =
 
         -- Enter
         13 ->
-            Model { model | isOpened = False }
+            case model.hoveredValue of
+                Just v ->
+                    Model { model | selectedValue = v, isOpened = False }
+
+                Nothing ->
+                    Model model
 
         -- Esc
         27 ->
@@ -140,25 +158,27 @@ handleKeyDowns keyCode (Model model) =
             Model model
 
 
-nextValue : a -> ValuesWithLabels a -> a
-nextValue selectedValue valuesWithLabels =
-    valuesWithLabels
-        |> MyList.dropUntil (valueIs selectedValue)
-        |> List.head
-        |> Maybe.map Tuple.first
-        |> Maybe.withDefault
+nextValue : Maybe a -> ValuesWithLabels a -> Maybe a
+nextValue maybeHoveredValue valuesWithLabels =
+    case maybeHoveredValue of
+        Nothing ->
             (valuesWithLabels
                 |> List.head
                 |> Maybe.map Tuple.first
-                |> Maybe.withDefault selectedValue
             )
 
+        Just v ->
+            valuesWithLabels
+                |> MyList.dropUntil (valueIs (Just v))
+                |> List.head
+                |> Maybe.map Tuple.first
 
-previousValue : a -> ValuesWithLabels a -> a
-previousValue selectedValue valuesWithLabels =
+
+previousValue : Maybe a -> ValuesWithLabels a -> Maybe a
+previousValue maybeHoveredValue valuesWithLabels =
     valuesWithLabels
         |> List.reverse
-        |> nextValue selectedValue
+        |> nextValue maybeHoveredValue
 
 
 container : String -> List (Html (Msg a)) -> Html (Msg a)
@@ -168,7 +188,7 @@ container id =
         , attribute "aria-labelledby" ("combobox-" ++ id ++ "-label")
         , attribute "aria-expanded" "true"
         , attribute "aria-haspopup" "listbox"
-        , style (Css.container ++ Styles.inheritFont)
+        , style (Styles.inheritFont ++ Css.container)
         ]
 
 
@@ -176,7 +196,7 @@ listboxContainer : List (Html (Msg a)) -> Html (Msg a)
 listboxContainer =
     Html.div
         [ attribute "class" "combobox-listbox-container"
-        , style (Css.listboxContainer ++ Styles.inheritFont)
+        , style (Styles.inheritFont ++ Css.listboxContainer)
         ]
 
 
@@ -200,9 +220,9 @@ input id label =
         , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
         , attribute "value" label
         , attribute "readonly" "readonly"
-        , style (Css.input ++ Styles.inheritFont)
-        , onFocus Open
+        , style (Styles.inheritFont ++ Css.input)
         , onBlur Close
+        , onClick Toggle
         , onKeyDown KeyDown
         ]
         []
@@ -215,7 +235,7 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
             Html.ul
                 [ attribute "role" "listbox"
                 , attribute "id" ("combobox-" ++ id ++ "-listbox")
-                , style (Css.listbox ++ Styles.inheritFont ++ visibilityStyles)
+                , style (Styles.inheritFont ++ Css.listbox ++ visibilityStyles)
                 ]
                 options
 
@@ -253,12 +273,14 @@ listboxOption { value, label, isSelected, isHovered } =
             Html.li
                 [ attribute "role" "option"
                 , ariaSelectedState
-                , style (Css.listboxOption ++ optionHoverStyles ++ optionSelectedStyles)
-                , onClick (OptionSelected value)
+                , style (Css.listboxOption ++ optionHoverStyles)
+                , onMouseDown (OptionSelected value)
                 , onMouseOver (OptionMouseOver value)
                 , onMouseOut (OptionMouseOut)
                 ]
-                [ Html.text label ]
+                [ optionSelectedMarker
+                , Html.text label
+                ]
 
         ariaSelectedState =
             if isSelected then
@@ -268,15 +290,20 @@ listboxOption { value, label, isSelected, isHovered } =
 
         optionHoverStyles =
             if isHovered then
-                [ ( "background", "black" ) ]
+                Css.optionHoverStyles
             else
                 []
 
-        optionSelectedStyles =
-            if isSelected then
-                [ ( "background", "blue" ) ]
-            else
-                []
+        optionSelectedMarker =
+            Html.span
+                [ style Css.optionSelectedMarker ]
+                [ text
+                    (if isSelected then
+                        "✓"
+                     else
+                        ""
+                    )
+                ]
     in
         this
 

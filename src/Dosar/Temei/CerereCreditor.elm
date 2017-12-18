@@ -3,7 +3,10 @@ module Dosar.Temei.CerereCreditor exposing (CerereCreditor, empty, view)
 import Html exposing (Html, h1, fieldset, legend, div, ul, li, text)
 import Dosar.Persoana as Persoana exposing (Persoana)
 import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
-import Utils.RichTextEditor as RichTextEditor
+
+
+-- import Utils.RichTextEditor as RichTextEditor
+
 import Utils.MyDate as MyDate exposing (MyDate)
 
 
@@ -29,25 +32,26 @@ empty =
         }
 
 
-view : CerereCreditor -> (CerereCreditor -> Cmd msg -> Sub msg -> msg) -> Html msg
-view ((CerereCreditor data) as cerereCreditor) callback =
+view : CerereCreditor -> Html msg
+view ((CerereCreditor data) as cerereCreditor) =
     let
-        c data =
-            callback (CerereCreditor data) Cmd.none Sub.none
+        this =
+            fieldset []
+                [ legend [] [ text "CerereCreditor" ]
+
+                -- , MyDate.view "Data depunerii:" data.dataDepunere (\v -> c { data | dataDepunere = v })
+                -- , Persoana.view data.creditor (\v -> c { data | creditor = v })
+                -- , RichTextEditor.view
+                --     { buttonLabel = "Formează cerere" -- TODO: make it printable
+                --     , content = templateCerere data
+                --     , onOpen = callback cerereCreditor
+                --     , onResponse = (\s -> c { data | html = s })
+                --     }
+                -- , DocumenteContractIpoteca.view data.documenteContractIpoteca
+                --     (\v -> c { data | documenteContractIpoteca = v })
+                ]
     in
-        fieldset []
-            [ legend [] [ text "CerereCreditor" ]
-            , MyDate.view "Data depunerii:" data.dataDepunere (\v -> c { data | dataDepunere = v })
-            , Persoana.view data.creditor (\v -> c { data | creditor = v })
-            , RichTextEditor.view
-                { buttonLabel = "Formează cerere" -- TODO: make it printable
-                , content = templateCerere data
-                , onOpen = callback cerereCreditor
-                , onResponse = (\s -> c { data | html = s })
-                }
-            , DocumenteContractIpoteca.view data.documenteContractIpoteca
-                (\v -> c { data | documenteContractIpoteca = v })
-            ]
+        this
 
 
 templateCerere : Data -> List (Html msg)

@@ -7,11 +7,11 @@ import Html.Attributes exposing (style)
 
 -- import Html.Events exposing (onInput)
 
-import Dosar.Temei as Temei exposing (Model)
+import Dosar.Temei as Temei
 import Dosar.Actiune as Actiune exposing (Actiune)
-import Dosar.DocumentExecutoriu as DocumentExecutoriu exposing (DocumentExecutoriu)
 
 
+-- import Dosar.DocumentExecutoriu as DocumentExecutoriu
 -- import UI.Styles as Styles
 
 
@@ -19,7 +19,8 @@ type Model
     = Model
         { id : String
         , temei : Temei.Model
-        , documentExecutoriu : DocumentExecutoriu
+
+        -- , documentExecutoriu : DocumentExecutoriu.Model
         , actiune : Actiune
         }
 
@@ -29,7 +30,8 @@ initialModel =
     Model
         { id = "001"
         , temei = Temei.initialModel
-        , documentExecutoriu = DocumentExecutoriu.empty
+
+        -- , documentExecutoriu = DocumentExecutoriu.empty
         , actiune = Actiune.empty
         }
 

@@ -235,7 +235,7 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
             Html.ul
                 [ attribute "role" "listbox"
                 , attribute "id" ("combobox-" ++ id ++ "-listbox")
-                , style (Styles.inheritFont ++ Css.listbox ++ visibilityStyles)
+                , style (Css.listbox ++ visibilityStyles)
                 ]
                 options
 

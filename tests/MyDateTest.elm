@@ -2,7 +2,7 @@ module MyDateTest exposing (..)
 
 import Test exposing (..)
 import Expect
-import Utils.MyDate as MyDate exposing (MyDate(MyDate))
+import Utils.MyDate as MyDate
 import Date exposing (Date)
 
 
@@ -10,32 +10,28 @@ suite : Test
 suite =
     let
         parseDateString s =
-            let
-                (MyDate data) =
-                    MyDate.parse s
-            in
-                data
+            MyDate.parse s
     in
         describe "MyDate"
             [ describe "parse"
                 [ test "handles invalid strings" <|
                     \_ ->
-                        Expect.equal (parseDateString "magic").validationMessage "Data trebuie sa aiba formatul DD.LL.AAAA"
+                        Expect.equal (MyDate.validationMessage (parseDateString "magic")) "Data trebuie sa aiba formatul DD.LL.AAAA"
                 , test "handles clearly invalid date days" <|
                     \_ ->
-                        Expect.equal (parseDateString "42.07.2007").validationMessage "Ziua datei este incorecta: 42"
+                        Expect.equal (MyDate.validationMessage (parseDateString "42.07.2007")) "Ziua datei este incorecta: 42"
                 , test "handles subtly invalid date days" <|
                     \_ ->
-                        Expect.equal (parseDateString "29.02.2007").validationMessage "Luna februarie are 28 de zile in 2007"
+                        Expect.equal (MyDate.validationMessage (parseDateString "29.02.2007")) "Luna februarie are 28 de zile in 2007"
                 , test "handles invalid date months" <|
                     \_ ->
-                        Expect.equal (parseDateString "29.42.2007").validationMessage "Luna datei este incorecta: 42"
+                        Expect.equal (MyDate.validationMessage (parseDateString "29.42.2007")) "Luna datei este incorecta: 42"
                 , test "years up to 9999 are considered valid" <|
                     \_ ->
-                        Expect.equal (parseDateString "01.01.9999").date (Result.toMaybe (Date.fromString "9999-01-01"))
+                        Expect.equal (MyDate.date (parseDateString "01.01.9999")) (Result.toMaybe (Date.fromString "9999-01-01"))
                 , test "handles valid strings" <|
                     \_ ->
-                        Expect.equal (parseDateString "24.07.2007").date (Result.toMaybe (Date.fromString "2007-07-24"))
+                        Expect.equal (MyDate.date (parseDateString "24.07.2007")) (Result.toMaybe (Date.fromString "2007-07-24"))
                 ]
             , describe "format"
                 [ test "returns a string of representation of the given date" <|

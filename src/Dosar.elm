@@ -8,9 +8,9 @@ import Html.Attributes exposing (style)
 -- import Html.Events exposing (onInput)
 
 import Dosar.Temei as Temei
-import Dosar.Actiune as Actiune exposing (Actiune)
 
 
+-- import Dosar.Actiune as Actiune exposing (Actiune)
 -- import Dosar.DocumentExecutoriu as DocumentExecutoriu
 -- import UI.Styles as Styles
 
@@ -21,7 +21,7 @@ type Model
         , temei : Temei.Model
 
         -- , documentExecutoriu : DocumentExecutoriu.Model
-        , actiune : Actiune
+        -- , actiune : Actiune
         }
 
 
@@ -32,7 +32,7 @@ initialModel =
         , temei = Temei.initialModel
 
         -- , documentExecutoriu = DocumentExecutoriu.empty
-        , actiune = Actiune.empty
+        -- , actiune = Actiune.empty
         }
 
 

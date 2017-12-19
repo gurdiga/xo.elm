@@ -1,45 +1,61 @@
-module Dosar.Temei.CerereCreditor exposing (CerereCreditor, empty, view)
+module Dosar.Temei.CerereCreditor exposing (Model, empty, view, Msg, update)
 
 import Html exposing (Html, h1, fieldset, legend, div, ul, li, text)
-import Dosar.Persoana as Persoana exposing (Persoana)
-import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
 
 
+-- import Dosar.Persoana as Persoana exposing (Persoana)
+-- import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
 -- import Utils.RichTextEditor as RichTextEditor
 
-import Utils.MyDate as MyDate exposing (MyDate)
+import Utils.MyDate as MyDate
 
 
-type CerereCreditor
-    = CerereCreditor Data
+type Model
+    = Model
+        { dataDepunere : MyDate.Model
 
+        -- , creditor : Persoana
+        , html : String
 
-type alias Data =
-    { dataDepunere : MyDate
-    , creditor : Persoana
-    , html : String
-    , documenteContractIpoteca : Maybe DocumenteContractIpoteca
-    }
-
-
-empty : CerereCreditor
-empty =
-    CerereCreditor
-        { dataDepunere = MyDate.empty
-        , creditor = Persoana.empty
-        , html = ""
-        , documenteContractIpoteca = Nothing
+        -- , documenteContractIpoteca : Maybe DocumenteContractIpoteca
         }
 
 
-view : CerereCreditor -> Html msg
-view ((CerereCreditor data) as cerereCreditor) =
+empty : Model
+empty =
+    Model
+        { dataDepunere = MyDate.empty
+
+        -- , creditor = Persoana.empty
+        , html = ""
+
+        -- , documenteContractIpoteca = Nothing
+        }
+
+
+type Msg
+    = MyDateMsg MyDate.Msg
+
+
+update : Msg -> Model -> Model
+update msg (Model model) =
+    case msg of
+        MyDateMsg myDateMsg ->
+            Model { model | dataDepunere = MyDate.update myDateMsg model.dataDepunere }
+
+
+view : Model -> Html Msg
+view ((Model data) as model) =
     let
         this =
             fieldset []
                 [ legend [] [ text "CerereCreditor" ]
+                , MyDate.view "Data depunerii:" data.dataDepunere |> Html.map MyDateMsg
 
-                -- , MyDate.view "Data depunerii:" data.dataDepunere (\v -> c { data | dataDepunere = v })
+                --
+                -- TODO: continue here:
+                --
+                --
                 -- , Persoana.view data.creditor (\v -> c { data | creditor = v })
                 -- , RichTextEditor.view
                 --     { buttonLabel = "Formează cerere" -- TODO: make it printable
@@ -54,9 +70,9 @@ view ((CerereCreditor data) as cerereCreditor) =
         this
 
 
-templateCerere : Data -> List (Html msg)
-templateCerere data =
+templateCerere : Model -> List (Html msg)
+templateCerere (Model model) =
     -- TODO: template?
     [ h1 [] [ text "Cerere de intentare" ]
-    , data |> toString |> text
+    , model |> toString |> text
     ]

@@ -1,6 +1,6 @@
 module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg, view, subscriptions)
 
-import Html exposing (Html, label, text, button)
+import Html exposing (Html, text)
 import Html.Attributes exposing (attribute, style)
 import Html.Events exposing (onMouseDown, onClick, onMouseOver, onMouseOut, onBlur)
 import FNV as HashingUtility

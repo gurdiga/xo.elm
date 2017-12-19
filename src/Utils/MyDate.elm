@@ -1,45 +1,66 @@
-module Utils.MyDate exposing (MyDate(MyDate), empty, view, viewUnlabeled, parse, format)
+module Utils.MyDate exposing (Model, empty, validationMessage, date, view, viewUnlabeled, parse, format, Msg, update)
 
-import Html exposing (Html, label, input, text)
+import Html exposing (Html, text)
 import Html.Attributes exposing (value)
 import Html.Events exposing (onInput)
 import Date exposing (Date)
 import Regex exposing (regex)
 
 
+-- TODO: add Css
 -- LATER: add the ability to validate
 
 
-type MyDate
-    = MyDate Data
+type Msg
+    = Input String
 
 
-type alias Data =
-    { string : String
-    , date : Maybe Date
-    , validationMessage : String
-    }
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Input v ->
+            parse v
 
 
-empty : MyDate
+type Model
+    = Model
+        { string : String
+        , date : Maybe Date
+        , validationMessage : String
+        }
+
+
+empty : Model
 empty =
-    MyDate
+    Model
         { string = ""
         , date = Nothing
         , validationMessage = ""
         }
 
 
-view : String -> MyDate -> (MyDate -> msg) -> Html msg
-view labelText defaultValue callback =
-    label []
-        (text labelText
-            :: viewUnlabeled defaultValue callback
-        )
+validationMessage : Model -> String
+validationMessage (Model model) =
+    model.validationMessage
 
 
-viewUnlabeled : MyDate -> (MyDate -> msg) -> List (Html msg)
-viewUnlabeled ((MyDate data) as defaultValue) callback =
+date : Model -> Maybe Date
+date (Model model) =
+    model.date
+
+
+view : String -> Model -> Html Msg
+view labelText defaultValue =
+    label labelText (viewUnlabeled defaultValue)
+
+
+label : String -> List (Html Msg) -> Html Msg
+label labelText children =
+    Html.label [] (text labelText :: children)
+
+
+viewUnlabeled : Model -> List (Html Msg)
+viewUnlabeled ((Model model) as defaultValue) =
     let
         ( inputText, validationMessage ) =
             case format defaultValue of
@@ -47,22 +68,21 @@ viewUnlabeled ((MyDate data) as defaultValue) callback =
                     ( dateString, "OK" )
 
                 Err errorMessage ->
-                    ( data.string, errorMessage )
+                    ( model.string, errorMessage )
     in
-        [ input
+        [ Html.input
             [ value inputText
-            , onInput (\v -> callback (parse v))
+            , onInput Input
             ]
             []
         , text validationMessage
         ]
 
 
-parse : String -> MyDate
+parse : String -> Model
 parse dateString =
     let
-        data : Data
-        data =
+        model =
             { string = dateString
             , date = Nothing
             , validationMessage = ""
@@ -70,9 +90,9 @@ parse dateString =
     in
         -- LATER: How do I model this as a series of transformations? Split,
         -- then look at each piece, etc. ??
-        MyDate
+        Model
             (if not (Regex.contains (regex "^\\d{2}\\.\\d{2}\\.\\d{4}$") dateString) then
-                { data | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
+                { model | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
              else
                 let
                     dayString =
@@ -97,18 +117,18 @@ parse dateString =
                         )
                     of
                         ( Err e, _, _ ) ->
-                            { data | validationMessage = "Ziua datei este incorecta: " ++ dayString }
+                            { model | validationMessage = "Ziua datei este incorecta: " ++ dayString }
 
                         ( Ok _, Err e, _ ) ->
-                            { data | validationMessage = "Luna datei este incorecta: " ++ monthString }
+                            { model | validationMessage = "Luna datei este incorecta: " ++ monthString }
 
                         ( Ok _, Ok _, Err e ) ->
-                            { data | validationMessage = "Anul datei este incorect: " ++ yearString }
+                            { model | validationMessage = "Anul datei este incorect: " ++ yearString }
 
                         ( Ok day, Ok month, Ok year ) ->
                             case validateDayForMonthAndYear day month year of
                                 Err errorMessage ->
-                                    { data | validationMessage = errorMessage }
+                                    { model | validationMessage = errorMessage }
 
                                 Ok day ->
                                     let
@@ -117,10 +137,10 @@ parse dateString =
                                     in
                                         case Date.fromString isoDateString of
                                             Ok date ->
-                                                { data | date = Just date }
+                                                { model | date = Just date }
 
                                             Err errorMessage ->
-                                                { data | validationMessage = errorMessage }
+                                                { model | validationMessage = errorMessage }
             )
 
 
@@ -204,9 +224,9 @@ isLeapYear year =
         False
 
 
-format : MyDate -> Result String String
-format (MyDate data) =
-    case data.date of
+format : Model -> Result String String
+format (Model model) =
+    case model.date of
         Just date ->
             Ok
                 ((String.padLeft 2 '0' (toString (Date.day date)))
@@ -217,12 +237,12 @@ format (MyDate data) =
                 )
 
         Nothing ->
-            if data.string == "" then
+            if model.string == "" then
                 Err ""
-            else if data.validationMessage == "" then
-                Err ("Data invalida: " ++ data.string)
+            else if model.validationMessage == "" then
+                Err ("Data invalida: " ++ model.string)
             else
-                Err data.validationMessage
+                Err model.validationMessage
 
 
 monthNumber : Date -> Int

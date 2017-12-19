@@ -4,7 +4,7 @@ import Html exposing (Html, node, section, div, label, text)
 import Html.Attributes exposing (style)
 import Widgets.Select3 as Select3
 import Dosar.Temei.Css as Css
-import Dosar.Temei.CerereCreditor as CerereCreditor exposing (CerereCreditor)
+import Dosar.Temei.CerereCreditor as CerereCreditor
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
 
@@ -22,7 +22,7 @@ type Model
 
 
 type Temei
-    = CerereCreditor CerereCreditor
+    = CerereCreditor CerereCreditor.Model
     | DemersInstanta DemersInstanta
     | PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat
 
@@ -46,11 +46,11 @@ sectionTitle select =
         ]
 
 
-fields : Temei -> Html msg
+fields : Temei -> Html Msg
 fields temei =
     case temei of
         CerereCreditor cerereCreditor ->
-            CerereCreditor.view cerereCreditor
+            CerereCreditor.view cerereCreditor |> Html.map CerereCreditorMsg
 
         DemersInstanta demersInstanta ->
             text "DemersInstanta.view"
@@ -97,6 +97,7 @@ subscriptions =
 type Msg
     = UpdateTemei Temei
     | Select3Msg (Select3.Msg Temei)
+    | CerereCreditorMsg CerereCreditor.Msg
 
 
 update : Msg -> Model -> Model
@@ -115,6 +116,15 @@ update msg (Model model) =
                     Select3.update select3Msg model.ui.select
             in
                 this
+
+        CerereCreditorMsg cerereCreditorMsg ->
+            -- TODO: Figure out how to do this cleanly, without the need for another `case` here.
+            case model.temei of
+                CerereCreditor cerereCreditor ->
+                    Model { model | temei = CerereCreditor (CerereCreditor.update cerereCreditorMsg cerereCreditor) }
+
+                _ ->
+                    Model model
 
         UpdateTemei temei ->
             Model { model | temei = temei }

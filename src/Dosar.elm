@@ -53,10 +53,7 @@ view (Model model) =
         [ style Dosar.Css.formular ]
         [ h1 [] [ text "Dosar deschis" ]
         , section []
-            [ node "hgroup"
-                []
-                [ Temei.view model.temei |> Html.map TemeiMsg ]
-            ]
+            [ Temei.view model.temei |> Html.map TemeiMsg ]
         ]
 
 

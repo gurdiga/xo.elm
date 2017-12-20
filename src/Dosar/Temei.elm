@@ -38,8 +38,8 @@ view (Model model) =
 sectionTitle : Select3.Model Temei -> Html Msg
 sectionTitle select =
     node "hgroup"
-        [ -- maybe let Css.sectionTitle contain the `style` call so that I
-          -- don’t have to import Html.Attributes onmy for style?
+        [ -- TODO: consider letting Css.sectionTitle contain the `style` call
+          -- so that I don’t have to import Html.Attributes onmy for style?
           style Css.sectionTitle
         ]
         [ Select3.view "Temei:" select |> Html.map Select3Msg

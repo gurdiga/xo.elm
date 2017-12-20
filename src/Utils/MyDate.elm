@@ -1,10 +1,11 @@
 module Utils.MyDate exposing (Model, empty, validationMessage, date, view, viewUnlabeled, parse, format, Msg, update)
 
 import Html exposing (Html, text)
-import Html.Attributes exposing (value)
+import Html.Attributes exposing (value, style)
 import Html.Events exposing (onInput)
 import Date exposing (Date)
 import Regex exposing (regex)
+import Utils.MyDate.Css as Css
 
 
 -- TODO: add Css
@@ -73,6 +74,7 @@ viewUnlabeled ((Model model) as defaultValue) =
         [ Html.input
             [ value inputText
             , onInput Input
+            , style Css.input
             ]
             []
         , text validationMessage

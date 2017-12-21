@@ -1,11 +1,11 @@
-module Dosar.Temei.CerereCreditor exposing (Model, empty, view, Msg, update)
+module Dosar.Temei.CerereCreditor exposing (Model, initialModel, view, Msg, update)
 
 import Html exposing (Html, h1, fieldset, legend, div, ul, li, text)
 import Html.Attributes exposing (style)
 import Dosar.Temei.CerereCreditor.Css as Css
+import Dosar.Persoana as Persoana
 
 
--- import Dosar.Persoana as Persoana exposing (Persoana)
 -- import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
 -- import Utils.RichTextEditor as RichTextEditor
 
@@ -15,20 +15,18 @@ import Utils.MyDate as MyDate
 type Model
     = Model
         { dataDepunere : MyDate.Model
-
-        -- , creditor : Persoana
+        , creditor : Persoana.Model
         , html : String
 
         -- , documenteContractIpoteca : Maybe DocumenteContractIpoteca
         }
 
 
-empty : Model
-empty =
+initialModel : Model
+initialModel =
     Model
         { dataDepunere = MyDate.empty
-
-        -- , creditor = Persoana.empty
+        , creditor = Persoana.initialModel
         , html = ""
 
         -- , documenteContractIpoteca = Nothing
@@ -36,26 +34,30 @@ empty =
 
 
 type Msg
-    = MyDateMsg MyDate.Msg
+    = UpdateDataDepunere MyDate.Msg
+    | UpdateCreditor Persoana.Msg
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        MyDateMsg myDateMsg ->
+        UpdateDataDepunere myDateMsg ->
             Model { model | dataDepunere = MyDate.update myDateMsg model.dataDepunere }
+
+        UpdateCreditor persoanaMsg ->
+            Model { model | creditor = Persoana.update persoanaMsg model.creditor }
 
 
 view : Model -> Html Msg
-view ((Model data) as model) =
+view (Model model) =
     fieldset [ style Css.fieldset ]
-        [ MyDate.view "Data depunerii:" data.dataDepunere |> Html.map MyDateMsg
+        [ MyDate.view "Data depunerii:" model.dataDepunere |> Html.map UpdateDataDepunere
+        , Persoana.view model.creditor |> Html.map UpdateCreditor
 
         --
         -- TODO: continue here:
         --
         --
-        -- , Persoana.view data.creditor (\v -> c { data | creditor = v })
         -- , RichTextEditor.view
         --     { buttonLabel = "Formează cerere" -- TODO: make it printable
         --     , content = templateCerere data

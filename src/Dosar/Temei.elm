@@ -61,7 +61,7 @@ fields temei =
 
 valuesWithLabels : List ( Temei, String )
 valuesWithLabels =
-    [ ( CerereCreditor CerereCreditor.empty
+    [ ( CerereCreditor CerereCreditor.initialModel
       , "cerere a creditorului"
       )
     , ( DemersInstanta DemersInstanta.empty
@@ -85,7 +85,7 @@ initialModel =
 
 initialTemei : Temei
 initialTemei =
-    CerereCreditor CerereCreditor.empty
+    CerereCreditor CerereCreditor.initialModel
 
 
 subscriptions : List (Sub Msg)

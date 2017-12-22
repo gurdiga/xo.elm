@@ -17,7 +17,9 @@ update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
         PersoanaFizicaMsg persoanaFizicaMsg ->
-            Model model
+            case model.persoana of
+                PersoanaFizica persoanaFizica ->
+                    Model { model | persoana = PersoanaFizica (PersoanaFizica.update persoanaFizicaMsg persoanaFizica) }
 
 
 type Model
@@ -52,23 +54,21 @@ initialPersoana =
 
 view : Model -> Html Msg
 view (Model model) =
-    -- TODO: Continue here.
-    let
-        defaultValueFor persoana =
-            case persoana of
-                PersoanaFizica _ ->
-                    PersoanaFizica PersoanaFizica.empty
+    -- let
+    --     defaultValueFor persoana =
+    --         case persoana of
+    --             PersoanaFizica _ ->
+    --                 PersoanaFizica PersoanaFizica.empty
+    --                 PersoanaJuridica _ ->
+    --                     PersoanaJuridica PersoanaJuridica.empty
+    -- in
+    fieldset []
+        [ legend [] [ text "Persoana" ]
 
-        --                 PersoanaJuridica _ ->
-        --                     PersoanaJuridica PersoanaJuridica.empty
-    in
-        fieldset []
-            [ legend [] [ text "Persoana" ]
-
-            -- , Select3.view "Gen persoana:" valuesWithLabels (defaultValueFor persoana)
-            -- , Select3.view "Gen persoana:" select |> Html.map Select3Msg
-            , fields model.persoana
-            ]
+        -- , Select3.view "Gen persoana:" valuesWithLabels (defaultValueFor persoana)
+        -- , Select3.view "Gen persoana:" select |> Html.map Select3Msg
+        , fields model.persoana
+        ]
 
 
 valuesWithLabels : List ( Persoana, String )

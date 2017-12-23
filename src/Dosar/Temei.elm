@@ -29,7 +29,7 @@ type Temei
 
 view : Model -> Html Msg
 view (Model model) =
-    section []
+    section [ style Css.section ]
         [ sectionTitle model.ui.select
         , fields model.temei
         ]
@@ -38,12 +38,8 @@ view (Model model) =
 sectionTitle : Select3.Model Temei -> Html Msg
 sectionTitle select =
     node "hgroup"
-        [ -- TODO: consider letting Css.sectionTitle contain the `style` call
-          -- so that I don’t have to import Html.Attributes onmy for style?
-          style Css.sectionTitle
-        ]
-        [ Select3.view "Temei:" select |> Html.map Select3Msg
-        ]
+        [ style Css.sectionTitle ]
+        [ Select3.view "Temei:" select |> Html.map Select3Msg ]
 
 
 fields : Temei -> Html Msg

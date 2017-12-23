@@ -1,6 +1,12 @@
 module Dosar.Temei.Css exposing (..)
 
 
+section : List ( String, String )
+section =
+    [ ( "width", "400px" )
+    ]
+
+
 sectionTitle : List ( String, String )
 sectionTitle =
     [ ( "padding", "8px" )
@@ -8,6 +14,5 @@ sectionTitle =
     , ( "background-color", "#666" )
     , ( "font-size", "23px" )
     , ( "font-weight", "bold" )
-    , ( "width", "400px" )
     , ( "display", "flex" )
     ]

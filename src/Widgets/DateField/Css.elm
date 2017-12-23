@@ -1,4 +1,4 @@
-module Utils.MyDate.Css exposing (..)
+module Widgets.DateField.Css exposing (..)
 
 
 input : List ( String, String )

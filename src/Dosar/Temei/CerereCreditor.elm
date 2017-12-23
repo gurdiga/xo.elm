@@ -4,6 +4,7 @@ import Html exposing (Html, h1, fieldset, legend, div, ul, li, text)
 import Html.Attributes exposing (style)
 import Dosar.Temei.CerereCreditor.Css as Css
 import Dosar.Persoana as Persoana
+import Widgets.DateField as DateField
 
 
 -- import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
@@ -34,15 +35,15 @@ initialModel =
 
 
 type Msg
-    = UpdateDataDepunere MyDate.Msg
+    = UpdateDataDepunere DateField.Msg
     | UpdateCreditor Persoana.Msg
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        UpdateDataDepunere myDateMsg ->
-            Model { model | dataDepunere = MyDate.update myDateMsg model.dataDepunere }
+        UpdateDataDepunere dateFieldMsg ->
+            Model { model | dataDepunere = DateField.update dateFieldMsg model.dataDepunere }
 
         UpdateCreditor persoanaMsg ->
             Model { model | creditor = Persoana.update persoanaMsg model.creditor }
@@ -51,7 +52,7 @@ update msg (Model model) =
 view : Model -> Html Msg
 view (Model model) =
     fieldset [ style Css.fieldset ]
-        [ MyDate.view "Data depunerii:" model.dataDepunere |> Html.map UpdateDataDepunere
+        [ DateField.view "Data depunerii:" model.dataDepunere |> Html.map UpdateDataDepunere
         , Persoana.view model.creditor |> Html.map UpdateCreditor
 
         --

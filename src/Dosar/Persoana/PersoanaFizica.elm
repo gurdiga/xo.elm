@@ -6,27 +6,27 @@ import Html exposing (Html, ul, li)
 -- import Widgets.Fields exposing (textField, largeTextField)
 
 import Widgets.TextField as TextField
+import Widgets.DateField as DateField
 import Utils.MyDate as MyDate
 
 
 type Msg
     = UpdateNume TextField.Msg
     | UpdatePrenume TextField.Msg
-    | UpdateDataNasterii MyDate.Msg
+    | UpdateDataNasterii DateField.Msg
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
         UpdateNume textFieldMsg ->
-            Model
-                { model | nume = TextField.update textFieldMsg model.nume }
+            Model { model | nume = TextField.update textFieldMsg model.nume }
 
         UpdatePrenume textFieldMsg ->
             Model { model | prenume = TextField.update textFieldMsg model.prenume }
 
-        UpdateDataNasterii myDateMsg ->
-            Model { model | dataNasterii = MyDate.update myDateMsg model.dataNasterii }
+        UpdateDataNasterii dateFieldMsg ->
+            Model { model | dataNasterii = DateField.update dateFieldMsg model.dataNasterii }
 
 
 type Model
@@ -57,7 +57,7 @@ view (Model model) =
     ul []
         [ li [] [ TextField.view "Nume:" model.nume |> Html.map UpdateNume ]
         , li [] [ TextField.view "Prenume:" model.prenume |> Html.map UpdatePrenume ]
-        , li [] [ MyDate.view "Data nasterii:" model.dataNasterii |> Html.map UpdateDataNasterii ]
+        , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> Html.map UpdateDataNasterii ]
 
         --
         -- TODO: Continue here.

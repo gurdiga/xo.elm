@@ -1,26 +1,10 @@
-module Utils.MyDate exposing (Model, empty, validationMessage, date, view, viewUnlabeled, parse, format, Msg, update)
+module Utils.MyDate exposing (Model, empty, validationMessage, date, string, parse, format)
 
-import Html exposing (Html, text)
-import Html.Attributes exposing (value, style)
-import Html.Events exposing (onInput)
 import Date exposing (Date)
 import Regex exposing (regex)
-import Utils.MyDate.Css as Css
 
 
--- TODO: add Css
 -- LATER: add the ability to validate
-
-
-type Msg
-    = Input String
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        Input v ->
-            parse v
 
 
 type Model
@@ -50,35 +34,9 @@ date (Model model) =
     model.date
 
 
-view : String -> Model -> Html Msg
-view labelText defaultValue =
-    label labelText (viewUnlabeled defaultValue)
-
-
-label : String -> List (Html Msg) -> Html Msg
-label labelText children =
-    Html.label [] (text labelText :: children)
-
-
-viewUnlabeled : Model -> List (Html Msg)
-viewUnlabeled ((Model model) as defaultValue) =
-    let
-        ( inputText, validationMessage ) =
-            case format defaultValue of
-                Ok dateString ->
-                    ( dateString, "OK" )
-
-                Err errorMessage ->
-                    ( model.string, errorMessage )
-    in
-        [ Html.input
-            [ value inputText
-            , onInput Input
-            , style Css.input
-            ]
-            []
-        , text validationMessage
-        ]
+string : Model -> String
+string (Model model) =
+    model.string
 
 
 parse : String -> Model

@@ -11,18 +11,23 @@ import Utils.MyDate as MyDate
 
 type Msg
     = UpdateNume TextField.Msg
+    | UpdatePrenume TextField.Msg
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
         UpdateNume textFieldMsg ->
-            Model { model | nume = TextField.update textFieldMsg model.nume }
+            Model
+                { model | nume = TextField.update textFieldMsg model.nume }
+
+        UpdatePrenume textFieldMsg ->
+            Model { model | prenume = TextField.update textFieldMsg model.prenume }
 
 
 type Model
     = Model
-        { nume : TextField.Model
+        { nume : String
         , prenume : String
         , dataNasterii : MyDate.Model
         , cnp : String
@@ -34,7 +39,7 @@ type Model
 empty : Model
 empty =
     Model
-        { nume = TextField.initialModel
+        { nume = ""
         , prenume = ""
         , dataNasterii = MyDate.empty
         , cnp = ""
@@ -47,11 +52,11 @@ view : Model -> Html Msg
 view (Model model) =
     ul []
         [ li [] [ TextField.view "Nume:" model.nume |> Html.map UpdateNume ]
+        , li [] [ TextField.view "Prenume:" model.prenume |> Html.map UpdatePrenume ]
 
         --
         -- TODO: Continue here.
         --
-        -- , li [] [ textField "Prenume:" p.prenume (\v -> callback { p | prenume = v }) ]
         -- , li [] [ MyDate.view "Data nasterii:" p.dataNasterii (\v -> callback { p | dataNasterii = v }) ]
         -- , li [] [ textField "CNP:" p.cnp (\v -> callback { p | cnp = v }) ]
         -- , li [] [ largeTextField "Adresa:" p.adresa (\v -> callback { p | adresa = v }) ]

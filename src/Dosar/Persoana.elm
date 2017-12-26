@@ -4,25 +4,34 @@ import Html exposing (Html, fieldset)
 import Html.Attributes exposing (style)
 import Dosar.Persoana.Css as Css
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica
-
-
--- import Dosar.Persoana.PersoanaJuridica as PersoanaJuridica exposing (PersoanaJuridica)
-
+import Dosar.Persoana.PersoanaJuridica as PersoanaJuridica
 import Widgets.Select3 as Select3
 
 
 type Msg
-    = UpdateFields PersoanaFizica.Msg
+    = SetPersoanaFizica PersoanaFizica.Msg
+    | SetPersoanaJuridica PersoanaJuridica.Msg
     | UpdateGenPersoana (Select3.Msg Persoana)
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        UpdateFields persoanaFizicaMsg ->
+        SetPersoanaFizica persoanaFizicaMsg ->
             case model.persoana of
                 PersoanaFizica persoanaFizica ->
                     Model { model | persoana = PersoanaFizica (PersoanaFizica.update persoanaFizicaMsg persoanaFizica) }
+
+                _ ->
+                    Model model
+
+        SetPersoanaJuridica persoanaJuridicaMsg ->
+            case model.persoana of
+                PersoanaJuridica persoanaJuridica ->
+                    Model { model | persoana = PersoanaJuridica (PersoanaJuridica.update persoanaJuridicaMsg persoanaJuridica) }
+
+                _ ->
+                    Model model
 
         UpdateGenPersoana select3Msg ->
             let
@@ -50,10 +59,7 @@ type Model
 
 type Persoana
     = PersoanaFizica PersoanaFizica.Model
-
-
-
--- | PersoanaJuridica PersoanaJuridica
+    | PersoanaJuridica PersoanaJuridica.Model
 
 
 initialModel : Model
@@ -82,8 +88,7 @@ view (Model model) =
 valuesWithLabels : List ( Persoana, String )
 valuesWithLabels =
     [ ( PersoanaFizica PersoanaFizica.empty, "fizica" )
-
-    -- , ( PersoanaJuridica PersoanaJuridica.empty, "juridica" )
+    , ( PersoanaJuridica PersoanaJuridica.empty, "juridica" )
     ]
 
 
@@ -91,9 +96,7 @@ fields : Persoana -> Html Msg
 fields persoana =
     case persoana of
         PersoanaFizica persoanaFizica ->
-            PersoanaFizica.view persoanaFizica |> Html.map UpdateFields
+            PersoanaFizica.view persoanaFizica |> Html.map SetPersoanaFizica
 
-
-
---         PersoanaJuridica p ->
---             PersoanaJuridica.view p (\v -> callback (PersoanaJuridica v))
+        PersoanaJuridica persoanaJuridica ->
+            PersoanaJuridica.view persoanaJuridica |> Html.map SetPersoanaJuridica

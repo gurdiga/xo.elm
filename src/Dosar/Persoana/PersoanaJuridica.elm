@@ -1,34 +1,66 @@
-module Dosar.Persoana.PersoanaJuridica exposing (PersoanaJuridica, empty, view)
+module Dosar.Persoana.PersoanaJuridica exposing (Model, empty, view, Msg, update)
 
 import Html exposing (Html, ul, li)
-import Widgets.Fields exposing (textField, largeTextField)
+import Html.Attributes exposing (style)
+import Widgets.TextField as TextField
+import Widgets.LargeTextField as LargeTextField
+import Dosar.Persoana.PersoanaJuridica.Css as Css
 
 
-type alias PersoanaJuridica =
-    { denumire : String
-    , codFiscal : String
-    , dateBancare : String
-    , adresa : String
-    , note : String
-    }
+type Msg
+    = UpdateDenumire TextField.Msg
+    | UpdateCodFiscal TextField.Msg
+    | UpdateRechiziteBancare LargeTextField.Msg
+    | UpdateAdresa LargeTextField.Msg
+    | UpdateNote LargeTextField.Msg
 
 
-empty : PersoanaJuridica
+update : Msg -> Model -> Model
+update msg (Model model) =
+    case msg of
+        UpdateDenumire textFieldMsg ->
+            Model { model | denumire = TextField.update textFieldMsg model.denumire }
+
+        UpdateCodFiscal textFieldMsg ->
+            Model { model | codFiscal = TextField.update textFieldMsg model.codFiscal }
+
+        UpdateRechiziteBancare largeTextFieldMsg ->
+            Model { model | rechiziteBancare = LargeTextField.update largeTextFieldMsg model.rechiziteBancare }
+
+        UpdateAdresa largeTextFieldMsg ->
+            Model { model | adresa = LargeTextField.update largeTextFieldMsg model.adresa }
+
+        UpdateNote largeTextFieldMsg ->
+            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
+
+
+type Model
+    = Model
+        { denumire : String
+        , codFiscal : String
+        , rechiziteBancare : String
+        , adresa : String
+        , note : String
+        }
+
+
+empty : Model
 empty =
-    { denumire = ""
-    , codFiscal = ""
-    , dateBancare = ""
-    , adresa = ""
-    , note = ""
-    }
+    Model
+        { denumire = ""
+        , codFiscal = ""
+        , rechiziteBancare = ""
+        , adresa = ""
+        , note = ""
+        }
 
 
-view : PersoanaJuridica -> (PersoanaJuridica -> msg) -> Html msg
-view p callback =
-    ul []
-        [ li [] [ textField "Denumire:" p.denumire (\v -> callback { p | denumire = v }) ]
-        , li [] [ textField "Cod fiscal:" p.codFiscal (\v -> callback { p | codFiscal = v }) ]
-        , li [] [ largeTextField "Date bancare:" p.dateBancare (\v -> callback { p | dateBancare = v }) ]
-        , li [] [ largeTextField "Adresa:" p.adresa (\v -> callback { p | adresa = v }) ]
-        , li [] [ largeTextField "Note:" p.note (\v -> callback { p | note = v }) ]
+view : Model -> Html Msg
+view (Model model) =
+    ul [ style Css.ul ]
+        [ li [] [ TextField.view "Denumire:" model.denumire |> Html.map UpdateDenumire ]
+        , li [] [ TextField.view "Cod fiscal:" model.codFiscal |> Html.map UpdateCodFiscal ]
+        , li [] [ LargeTextField.view "Date bancare:" model.rechiziteBancare |> Html.map UpdateRechiziteBancare ]
+        , li [] [ LargeTextField.view "Adresa:" model.adresa |> Html.map UpdateAdresa ]
+        , li [] [ LargeTextField.view "Note:" model.note |> Html.map UpdateNote ]
         ]

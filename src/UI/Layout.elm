@@ -14,6 +14,8 @@ view children =
             [ ( "padding", "24px" )
             , ( "font-family", "Alegreya Sans" )
             , ( "background-image", "url(assets/images/bg.png)" )
+            , ( "box-sizing", "border-box" )
+            , ( "height", "100vh" )
             ]
     in
         this

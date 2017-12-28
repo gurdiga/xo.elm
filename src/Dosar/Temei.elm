@@ -15,10 +15,13 @@ import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecut
 type Model
     = Model
         { temei : Temei
-        , ui :
-            { select : Select3.Model Temei
-            }
+        , ui : Ui
         }
+
+
+type alias Ui =
+    { select : Select3.Model Temei
+    }
 
 
 type Temei
@@ -39,14 +42,14 @@ sectionTitle : Select3.Model Temei -> Html Msg
 sectionTitle select =
     node "hgroup"
         [ style Css.sectionTitle ]
-        [ Select3.view "Temei:" select |> Html.map Select3Msg ]
+        [ Select3.view "Temei:" select |> Html.map SetTemei ]
 
 
 fields : Temei -> Html Msg
 fields temei =
     case temei of
         CerereCreditor cerereCreditor ->
-            CerereCreditor.view cerereCreditor |> Html.map CerereCreditorMsg
+            CerereCreditor.view cerereCreditor |> Html.map (CerereCreditorMsg cerereCreditor)
 
         DemersInstanta demersInstanta ->
             text "DemersInstanta.view"
@@ -87,40 +90,33 @@ initialTemei =
 subscriptions : List (Sub Msg)
 subscriptions =
     Select3.subscriptions
-        |> List.map (Sub.map Select3Msg)
+        |> List.map (Sub.map SetTemei)
 
 
 type Msg
-    = UpdateTemei Temei
-    | Select3Msg (Select3.Msg Temei)
-    | CerereCreditorMsg CerereCreditor.Msg
+    = SetTemei (Select3.Msg Temei)
+    | CerereCreditorMsg CerereCreditor.Model CerereCreditor.Msg
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        Select3Msg select3Msg ->
-            let
-                this =
-                    Model
-                        { model
-                            | ui = (\ui -> { ui | select = newSelect }) model.ui
-                            , temei = Select3.selectedValue newSelect
-                        }
+        SetTemei select3Msg ->
+            receiveSelectedValue (Model model) (Select3.update select3Msg model.ui.select)
 
-                newSelect =
-                    Select3.update select3Msg model.ui.select
-            in
-                this
+        CerereCreditorMsg cerereCreditor cerereCreditorMsg ->
+            Model { model | temei = CerereCreditor (CerereCreditor.update cerereCreditorMsg cerereCreditor) }
 
-        CerereCreditorMsg cerereCreditorMsg ->
-            -- TODO: Figure out how to do this cleanly, without the need for another `case` here.
-            case model.temei of
-                CerereCreditor cerereCreditor ->
-                    Model { model | temei = CerereCreditor (CerereCreditor.update cerereCreditorMsg cerereCreditor) }
 
-                _ ->
-                    Model model
+receiveSelectedValue : Model -> Select3.Model Temei -> Model
+receiveSelectedValue (Model model) newSelect =
+    Model
+        { model
+            | ui = setSelect model.ui newSelect
+            , temei = Select3.selectedValue newSelect
+        }
 
-        UpdateTemei temei ->
-            Model { model | temei = temei }
+
+setSelect : Ui -> Select3.Model Temei -> Ui
+setSelect ui select =
+    { ui | select = select }

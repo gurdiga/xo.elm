@@ -9,52 +9,48 @@ import Widgets.Select3 as Select3
 
 
 type Msg
-    = SetPersoanaFizica PersoanaFizica.Msg
-    | SetPersoanaJuridica PersoanaJuridica.Msg
-    | UpdateGenPersoana (Select3.Msg Persoana)
+    = SetPersoanaFizica PersoanaFizica.Model PersoanaFizica.Msg
+    | SetPersoanaJuridica PersoanaJuridica.Model PersoanaJuridica.Msg
+    | SetGenPersoana (Select3.Msg Persoana)
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        SetPersoanaFizica persoanaFizicaMsg ->
-            case model.persoana of
-                PersoanaFizica persoanaFizica ->
-                    Model { model | persoana = PersoanaFizica (PersoanaFizica.update persoanaFizicaMsg persoanaFizica) }
+        SetPersoanaFizica persoanaFizica persoanaFizicaMsg ->
+            Model { model | persoana = PersoanaFizica (PersoanaFizica.update persoanaFizicaMsg persoanaFizica) }
 
-                _ ->
-                    Model model
+        SetPersoanaJuridica persoanaJuridica persoanaJuridicaMsg ->
+            Model { model | persoana = PersoanaJuridica (PersoanaJuridica.update persoanaJuridicaMsg persoanaJuridica) }
 
-        SetPersoanaJuridica persoanaJuridicaMsg ->
-            case model.persoana of
-                PersoanaJuridica persoanaJuridica ->
-                    Model { model | persoana = PersoanaJuridica (PersoanaJuridica.update persoanaJuridicaMsg persoanaJuridica) }
-
-                _ ->
-                    Model model
-
-        UpdateGenPersoana select3Msg ->
-            let
-                this =
-                    Model
-                        { model
-                            | ui = (\ui -> { ui | select = newSelect }) model.ui
-                            , persoana = Select3.selectedValue newSelect
-                        }
-
-                newSelect =
-                    Select3.update select3Msg model.ui.select
-            in
-                this
+        SetGenPersoana select3Msg ->
+            receiveSelectedValue (Model model) (Select3.update select3Msg model.ui.select)
 
 
 type Model
     = Model
         { persoana : Persoana
-        , ui :
-            { select : Select3.Model Persoana
-            }
+        , ui : Ui
         }
+
+
+type alias Ui =
+    { select : Select3.Model Persoana
+    }
+
+
+receiveSelectedValue : Model -> Select3.Model Persoana -> Model
+receiveSelectedValue (Model model) newSelect =
+    Model
+        { model
+            | ui = setSelect model.ui newSelect
+            , persoana = Select3.selectedValue newSelect
+        }
+
+
+setSelect : Ui -> Select3.Model Persoana -> Ui
+setSelect ui select =
+    { ui | select = select }
 
 
 type Persoana
@@ -80,7 +76,7 @@ initialPersoana =
 view : Model -> Html Msg
 view (Model model) =
     fieldset [ style Css.fieldset ]
-        [ Select3.view "Gen persoana:" model.ui.select |> Html.map UpdateGenPersoana
+        [ Select3.view "Gen persoana:" model.ui.select |> Html.map SetGenPersoana
         , fields model.persoana
         ]
 
@@ -96,7 +92,7 @@ fields : Persoana -> Html Msg
 fields persoana =
     case persoana of
         PersoanaFizica persoanaFizica ->
-            PersoanaFizica.view persoanaFizica |> Html.map SetPersoanaFizica
+            PersoanaFizica.view persoanaFizica |> Html.map (SetPersoanaFizica persoanaFizica)
 
         PersoanaJuridica persoanaJuridica ->
-            PersoanaJuridica.view persoanaJuridica |> Html.map SetPersoanaJuridica
+            PersoanaJuridica.view persoanaJuridica |> Html.map (SetPersoanaJuridica persoanaJuridica)

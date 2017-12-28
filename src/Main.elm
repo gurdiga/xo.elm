@@ -70,6 +70,4 @@ update msg (Model model) =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Dosar.subscriptions
-        |> List.map (Sub.map SetDosar)
-        |> Sub.batch
+    Sub.none

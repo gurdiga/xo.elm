@@ -1,4 +1,4 @@
-module Dosar.Temei exposing (Model, Msg, initialModel, update, view, subscriptions)
+module Dosar.Temei exposing (Model, Msg, initialModel, update, view)
 
 import Html exposing (Html, node, section, div, label, text)
 import Html.Attributes exposing (style)
@@ -7,9 +7,6 @@ import Dosar.Temei.Css as Css
 import Dosar.Temei.CerereCreditor as CerereCreditor
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
-
-
--- TODO: review and make a plan for housekeeping
 
 
 type Model
@@ -85,12 +82,6 @@ initialModel =
 initialTemei : Temei
 initialTemei =
     CerereCreditor CerereCreditor.initialModel
-
-
-subscriptions : List (Sub Msg)
-subscriptions =
-    Select3.subscriptions
-        |> List.map (Sub.map SetTemei)
 
 
 type Msg

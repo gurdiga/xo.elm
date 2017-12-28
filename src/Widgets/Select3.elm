@@ -1,4 +1,4 @@
-module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg, view, subscriptions)
+module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg, view)
 
 import Html exposing (Html, text)
 import Html.Attributes exposing (attribute, style)
@@ -306,8 +306,3 @@ listboxOption { value, label, isSelected, isHovered } =
                 ]
     in
         this
-
-
-subscriptions : List (Sub (Msg a))
-subscriptions =
-    []

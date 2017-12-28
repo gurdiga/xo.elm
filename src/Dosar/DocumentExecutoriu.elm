@@ -1,44 +1,85 @@
-module Dosar.DocumentExecutoriu exposing (DocumentExecutoriu, empty, view)
+module Dosar.DocumentExecutoriu exposing (Model, empty, view, Msg, update)
 
 import Html exposing (Html, fieldset, legend, div, button, br, text)
-import Utils.MyHtmlEvents exposing (onClick)
-import Utils.MyDate as MyDate exposing (MyDate)
-import Utils.MyList as MyList
-import Widgets.Fields exposing (largeTextField)
-import Dosar.Persoana as Persoana exposing (Persoana)
+
+
+-- import Utils.MyHtmlEvents exposing (onClick)
+
+import Utils.MyDate as MyDate
+
+
+-- import Utils.MyList as MyList
+-- import Widgets.Fields exposing (largeTextField)
+
+import Widgets.DateField as DateField
+import Widgets.LargeTextField as LargeTextField
+import Dosar.Persoana as Persoana
 import Dosar.DocumentExecutoriu.Pricina as Pricina exposing (Pricina)
 import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata exposing (InstantaDeJudecata)
 import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare)
 
 
-type DocumentExecutoriu
-    = DocumentExecutoriu Data
+type Msg
+    = SetDataPronuntareHotarire DateField.Msg
+    | SetDispozitivul LargeTextField.Msg
+    | SetDataRamineriiDefinitive DateField.Msg
+    | SetDataEliberarii DateField.Msg
+      -- | SetDebitor Int Persoana.Msg
+    | SetMentiuniPrivindPatrundereaFortata LargeTextField.Msg
+    | SetLocPastrareBunuriSechestrate LargeTextField.Msg
+    | SetNote LargeTextField.Msg
 
 
-type alias Data =
-    { instantaEmitatoare : InstantaDeJudecata
-    , pricina : Pricina
-    , dataPronuntareHotarire : MyDate
-    , dispozitivul : String
-    , dataRamineriiDefinitive : MyDate
-    , debitori : List Persoana
-    , dataEliberarii : MyDate
-    , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
-    , mentiuniPrivindPatrundereaFortata : String
-    , locPastrareBunuriSechestrate : String
-    , note : String
-    }
+update : Msg -> Model -> Model
+update msg (Model model) =
+    case msg of
+        SetDataPronuntareHotarire dateFieldMsg ->
+            Model { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
+
+        SetDispozitivul largeTextFieldMsg ->
+            Model { model | dispozitivul = LargeTextField.update largeTextFieldMsg model.dispozitivul }
+
+        SetDataRamineriiDefinitive dateFieldMsg ->
+            Model { model | dataRamineriiDefinitive = DateField.update dateFieldMsg model.dataRamineriiDefinitive }
+
+        SetDataEliberarii dateFieldMsg ->
+            Model { model | dataEliberarii = DateField.update dateFieldMsg model.dataEliberarii }
+
+        SetMentiuniPrivindPatrundereaFortata largeTextFieldMsg ->
+            Model { model | mentiuniPrivindPatrundereaFortata = LargeTextField.update largeTextFieldMsg model.mentiuniPrivindPatrundereaFortata }
+
+        SetLocPastrareBunuriSechestrate largeTextFieldMsg ->
+            Model { model | locPastrareBunuriSechestrate = LargeTextField.update largeTextFieldMsg model.locPastrareBunuriSechestrate }
+
+        SetNote largeTextFieldMsg ->
+            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
 
 
-empty : DocumentExecutoriu
+type Model
+    = Model
+        { instantaEmitatoare : InstantaDeJudecata
+        , pricina : Pricina
+        , dataPronuntareHotarire : MyDate.Model
+        , dispozitivul : String
+        , dataRamineriiDefinitive : MyDate.Model
+        , debitori : List Persoana.Model
+        , dataEliberarii : MyDate.Model
+        , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
+        , mentiuniPrivindPatrundereaFortata : String
+        , locPastrareBunuriSechestrate : String
+        , note : String
+        }
+
+
+empty : Model
 empty =
-    DocumentExecutoriu
+    Model
         { instantaEmitatoare = InstantaDeJudecata.empty
         , pricina = Pricina.empty
         , dataPronuntareHotarire = MyDate.empty
         , dispozitivul = ""
         , dataRamineriiDefinitive = MyDate.empty
-        , debitori = [ Persoana.empty ]
+        , debitori = [ Persoana.initialModel ]
         , dataEliberarii = MyDate.empty
         , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.empty
         , mentiuniPrivindPatrundereaFortata = ""
@@ -47,49 +88,47 @@ empty =
         }
 
 
-view : DocumentExecutoriu -> (DocumentExecutoriu -> msg) -> Html msg
-view documentExecutoriu callback =
-    let
-        (DocumentExecutoriu data) =
-            documentExecutoriu
-
-        c data =
-            callback (DocumentExecutoriu data)
-    in
-        fieldset []
-            [ legend [] [ text "DocumentExecutoriu" ]
-            , InstantaDeJudecata.view data.instantaEmitatoare (\v -> c { data | instantaEmitatoare = v })
-            , br [] []
-            , Pricina.view data.pricina (\v -> c { data | pricina = v })
-            , br [] []
-            , MyDate.view "Data pronunțării hotărîrii:" data.dataPronuntareHotarire (\v -> c { data | dataPronuntareHotarire = v })
-            , br [] []
-            , largeTextField "Dispozitivul:" data.dispozitivul (\v -> c { data | dispozitivul = v })
-            , br [] []
-            , MyDate.view "Data rămînerii definitive:" data.dataRamineriiDefinitive (\v -> c { data | dataRamineriiDefinitive = v })
-            , debitoriView data.debitori (\v -> c { data | debitori = v })
-            , MyDate.view "Data eliberării:" data.dataEliberarii (\v -> c { data | dataEliberarii = v })
-            , DocumenteAplicareMasuriAsigurare.view
-                data.documenteAplicareMasuriAsigurare
-                (\v -> c { data | documenteAplicareMasuriAsigurare = v })
-            , largeTextField "Mențiuni privind autorizarea pătrunderii forțate:"
-                data.mentiuniPrivindPatrundereaFortata
-                (\v -> c { data | mentiuniPrivindPatrundereaFortata = v })
-            , br [] []
-            , largeTextField "Locul de păstrare a bunurilor sechestrate:" data.note (\v -> c { data | note = v })
-            , br [] []
-            , largeTextField "Note:" data.note (\v -> c { data | note = v })
-            ]
-
-
-debitoriView : List Persoana -> (List Persoana -> msg) -> Html msg
-debitoriView debitori callback =
+view : Model -> Html Msg
+view (Model model) =
     fieldset []
-        ([ legend [] [ text "Debitori" ] ]
-            ++ List.indexedMap
-                (\i debitor ->
-                    Persoana.view debitor (\v -> callback (MyList.replace debitori i v))
-                )
-                debitori
-            ++ [ button [ onClick (\_ -> callback (debitori ++ [ Persoana.empty ])) ] [ text "+" ] ]
-        )
+        [ legend [] [ text "DocumentExecutoriu" ]
+
+        --
+        -- TODO: Check elm-css because it’s getting repetitive to define the fieldset style again and again. :-/
+        --
+        --
+        -- InstantaDeJudecata.view model.instantaEmitatoare (\v -> c { model | instantaEmitatoare = v })
+        -- , br [] []
+        -- , Pricina.view model.pricina (\v -> c { model | pricina = v })
+        -- , br [] []
+        , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> Html.map SetDataPronuntareHotarire
+        , LargeTextField.view "Dispozitivul:" model.dispozitivul |> Html.map SetDispozitivul
+        , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> Html.map SetDataRamineriiDefinitive
+
+        -- , debitoriView model.debitori (\v -> c { model | debitori = v })
+        , DateField.view "Data eliberării:" model.dataEliberarii |> Html.map SetDataEliberarii
+
+        -- , DocumenteAplicareMasuriAsigurare.view
+        --     model.documenteAplicareMasuriAsigurare
+        --     (\v -> c { model | documenteAplicareMasuriAsigurare = v })
+        , LargeTextField.view "Mențiuni privind autorizarea pătrunderii forțate:" model.mentiuniPrivindPatrundereaFortata
+            |> Html.map SetMentiuniPrivindPatrundereaFortata
+        , LargeTextField.view "Locul de păstrare a bunurilor sechestrate:" model.locPastrareBunuriSechestrate
+            |> Html.map SetLocPastrareBunuriSechestrate
+        , LargeTextField.view "Note:" model.note |> Html.map SetNote
+        ]
+
+
+
+-- debitoriView : List Persoana.Model -> (List Persoana.Model -> msg) -> Html msg
+-- debitoriView debitori callback =
+--     fieldset []
+--         ([ legend [] [ text "Debitori" ] ]
+--             ++ List.indexedMap
+--                 (\i debitor ->
+--                     Persoana.view debitor |> Html.map (SetDebitor i)
+--                  -- (\v -> callback (MyList.replace debitori i v))
+--                 )
+--                 debitori
+--             ++ [ button [ onClick (\_ -> callback (debitori ++ [ Persoana.initialModel ])) ] [ text "+" ] ]
+--         )

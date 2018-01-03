@@ -1,6 +1,7 @@
 module Dosar.DocumentExecutoriu exposing (Model, empty, view, Msg, update)
 
 import Html exposing (Html, fieldset, legend, div, button, br, text)
+import Widgets.Select3 as Select3
 
 
 -- import Utils.MyHtmlEvents exposing (onClick)
@@ -15,12 +16,13 @@ import Widgets.DateField as DateField
 import Widgets.LargeTextField as LargeTextField
 import Dosar.Persoana as Persoana
 import Dosar.DocumentExecutoriu.Pricina as Pricina exposing (Pricina)
-import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata exposing (InstantaDeJudecata)
+import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata
 import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare)
 
 
 type Msg
-    = SetDataPronuntareHotarire DateField.Msg
+    = SetInstantaEmitatoare (Select3.Msg InstantaDeJudecata.Model)
+    | SetDataPronuntareHotarire DateField.Msg
     | SetDispozitivul LargeTextField.Msg
     | SetDataRamineriiDefinitive DateField.Msg
     | SetDataEliberarii DateField.Msg
@@ -33,6 +35,9 @@ type Msg
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
+        SetInstantaEmitatoare select3Msg ->
+            receiveSelectedValue (Model model) (Select3.update select3Msg model.ui.selectInstantaEmitatoare)
+
         SetDataPronuntareHotarire dateFieldMsg ->
             Model { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
 
@@ -55,9 +60,23 @@ update msg (Model model) =
             Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
 
 
+receiveSelectedValue : Model -> Select3.Model InstantaDeJudecata.Model -> Model
+receiveSelectedValue (Model model) newSelect =
+    Model
+        { model
+            | ui = setSelectInstantaEmitatoare model.ui newSelect
+            , instantaEmitatoare = Select3.selectedValue newSelect
+        }
+
+
+setSelectInstantaEmitatoare : Ui -> Select3.Model InstantaDeJudecata.Model -> Ui
+setSelectInstantaEmitatoare ui select =
+    { ui | selectInstantaEmitatoare = select }
+
+
 type Model
     = Model
-        { instantaEmitatoare : InstantaDeJudecata
+        { instantaEmitatoare : InstantaDeJudecata.Model
         , pricina : Pricina
         , dataPronuntareHotarire : MyDate.Model
         , dispozitivul : String
@@ -68,13 +87,19 @@ type Model
         , mentiuniPrivindPatrundereaFortata : String
         , locPastrareBunuriSechestrate : String
         , note : String
+        , ui : Ui
         }
+
+
+type alias Ui =
+    { selectInstantaEmitatoare : Select3.Model InstantaDeJudecata.Model
+    }
 
 
 empty : Model
 empty =
     Model
-        { instantaEmitatoare = InstantaDeJudecata.empty
+        { instantaEmitatoare = InstantaDeJudecata.initialModel
         , pricina = Pricina.empty
         , dataPronuntareHotarire = MyDate.empty
         , dispozitivul = ""
@@ -85,6 +110,9 @@ empty =
         , mentiuniPrivindPatrundereaFortata = ""
         , locPastrareBunuriSechestrate = ""
         , note = ""
+        , ui =
+            { selectInstantaEmitatoare = Select3.initialModel InstantaDeJudecata.initialModel InstantaDeJudecata.valuesWithLabels
+            }
         }
 
 
@@ -92,12 +120,8 @@ view : Model -> Html Msg
 view (Model model) =
     fieldset []
         [ legend [] [ text "DocumentExecutoriu" ]
+        , Select3.view "Instanța de judecată:" model.ui.selectInstantaEmitatoare |> Html.map SetInstantaEmitatoare
 
-        --
-        -- TODO: Check elm-css because it’s getting repetitive to define the fieldset style again and again. :-/
-        --
-        --
-        -- InstantaDeJudecata.view model.instantaEmitatoare (\v -> c { model | instantaEmitatoare = v })
         -- , br [] []
         -- , Pricina.view model.pricina (\v -> c { model | pricina = v })
         -- , br [] []

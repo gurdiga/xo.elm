@@ -1,10 +1,7 @@
-module Dosar.DocumentExecutoriu.InstantaDeJudecata exposing (InstantaDeJudecata, empty, view)
-
-import Html exposing (Html, label, text)
-import Widgets.Select as Select
+module Dosar.DocumentExecutoriu.InstantaDeJudecata exposing (Model, initialModel, valuesWithLabels)
 
 
-type InstantaDeJudecata
+type Model
     = CurteaSupremaDeJustitie
     | CurteaDeApelChisinau
     | CurteaDeApelBalti
@@ -27,17 +24,12 @@ type InstantaDeJudecata
     | JudecatoriaChisinau
 
 
-empty : InstantaDeJudecata
-empty =
+initialModel : Model
+initialModel =
     CurteaSupremaDeJustitie
 
 
-view : InstantaDeJudecata -> (InstantaDeJudecata -> msg) -> Html msg
-view instantaDeJudecata callback =
-    Select.view "Instanța de judecată:" valuesWithLabels empty callback
-
-
-valuesWithLabels : List ( InstantaDeJudecata, String )
+valuesWithLabels : List ( Model, String )
 valuesWithLabels =
     [ ( CurteaSupremaDeJustitie, "Curtea Supremă de Justiție" )
     , ( CurteaDeApelChisinau, "Curtea de Apel Chișinău" )

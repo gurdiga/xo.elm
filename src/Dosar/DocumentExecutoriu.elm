@@ -15,13 +15,14 @@ import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
 import Widgets.LargeTextField as LargeTextField
 import Dosar.Persoana as Persoana
-import Dosar.DocumentExecutoriu.Pricina as Pricina exposing (Pricina)
+import Dosar.DocumentExecutoriu.Pricina as Pricina
 import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata
 import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare)
 
 
 type Msg
     = SetInstantaEmitatoare (Select3.Msg InstantaDeJudecata.Model)
+    | SetPricina (Select3.Msg Pricina.Model)
     | SetDataPronuntareHotarire DateField.Msg
     | SetDispozitivul LargeTextField.Msg
     | SetDataRamineriiDefinitive DateField.Msg
@@ -36,7 +37,10 @@ update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
         SetInstantaEmitatoare select3Msg ->
-            receiveSelectedValue (Model model) (Select3.update select3Msg model.ui.selectInstantaEmitatoare)
+            receiveInstantaEmitatoare (Model model) (Select3.update select3Msg model.ui.instantaEmitatoare)
+
+        SetPricina select3Msg ->
+            receivePricina (Model model) (Select3.update select3Msg model.ui.pricina)
 
         SetDataPronuntareHotarire dateFieldMsg ->
             Model { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
@@ -60,24 +64,28 @@ update msg (Model model) =
             Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
 
 
-receiveSelectedValue : Model -> Select3.Model InstantaDeJudecata.Model -> Model
-receiveSelectedValue (Model model) newSelect =
+receiveInstantaEmitatoare : Model -> Select3.Model InstantaDeJudecata.Model -> Model
+receiveInstantaEmitatoare (Model ({ ui } as model)) newSelect =
     Model
         { model
-            | ui = setSelectInstantaEmitatoare model.ui newSelect
+            | ui = { ui | instantaEmitatoare = newSelect }
             , instantaEmitatoare = Select3.selectedValue newSelect
         }
 
 
-setSelectInstantaEmitatoare : Ui -> Select3.Model InstantaDeJudecata.Model -> Ui
-setSelectInstantaEmitatoare ui select =
-    { ui | selectInstantaEmitatoare = select }
+receivePricina : Model -> Select3.Model Pricina.Model -> Model
+receivePricina (Model ({ ui } as model)) newSelect =
+    Model
+        { model
+            | ui = { ui | pricina = newSelect }
+            , pricina = Select3.selectedValue newSelect
+        }
 
 
 type Model
     = Model
         { instantaEmitatoare : InstantaDeJudecata.Model
-        , pricina : Pricina
+        , pricina : Pricina.Model
         , dataPronuntareHotarire : MyDate.Model
         , dispozitivul : String
         , dataRamineriiDefinitive : MyDate.Model
@@ -92,7 +100,8 @@ type Model
 
 
 type alias Ui =
-    { selectInstantaEmitatoare : Select3.Model InstantaDeJudecata.Model
+    { instantaEmitatoare : Select3.Model InstantaDeJudecata.Model
+    , pricina : Select3.Model Pricina.Model
     }
 
 
@@ -100,7 +109,7 @@ empty : Model
 empty =
     Model
         { instantaEmitatoare = InstantaDeJudecata.initialModel
-        , pricina = Pricina.empty
+        , pricina = Pricina.initialModel
         , dataPronuntareHotarire = MyDate.empty
         , dispozitivul = ""
         , dataRamineriiDefinitive = MyDate.empty
@@ -111,7 +120,8 @@ empty =
         , locPastrareBunuriSechestrate = ""
         , note = ""
         , ui =
-            { selectInstantaEmitatoare = Select3.initialModel InstantaDeJudecata.initialModel InstantaDeJudecata.valuesWithLabels
+            { instantaEmitatoare = Select3.initialModel InstantaDeJudecata.initialModel InstantaDeJudecata.valuesWithLabels
+            , pricina = Select3.initialModel Pricina.initialModel Pricina.valuesWithLabels
             }
         }
 
@@ -120,11 +130,8 @@ view : Model -> Html Msg
 view (Model model) =
     fieldset []
         [ legend [] [ text "DocumentExecutoriu" ]
-        , Select3.view "Instanța de judecată:" model.ui.selectInstantaEmitatoare |> Html.map SetInstantaEmitatoare
-
-        -- , br [] []
-        -- , Pricina.view model.pricina (\v -> c { model | pricina = v })
-        -- , br [] []
+        , Select3.view "Instanța de judecată:" model.ui.instantaEmitatoare |> Html.map SetInstantaEmitatoare
+        , Select3.view "Pricina:" model.ui.pricina |> Html.map SetPricina
         , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> Html.map SetDataPronuntareHotarire
         , LargeTextField.view "Dispozitivul:" model.dispozitivul |> Html.map SetDispozitivul
         , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> Html.map SetDataRamineriiDefinitive

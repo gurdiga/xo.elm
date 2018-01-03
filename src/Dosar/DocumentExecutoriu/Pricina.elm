@@ -1,11 +1,8 @@
-module Dosar.DocumentExecutoriu.Pricina exposing (Pricina, empty, view)
-
-import Html exposing (Html, label, text)
-import Widgets.Select as Select
+module Dosar.DocumentExecutoriu.Pricina exposing (Model, initialModel, valuesWithLabels)
 
 
 type
-    Pricina
+    Model
     -- Articolul 145. Categoriile de creanţe
     -- (1) Se stabilesc 3 categorii de creanţe.
     -- (2) La categoria intii de creanţe sint atribuite creanţele privind:
@@ -40,7 +37,7 @@ type
       Alte
 
 
-valuesWithLabels : List ( Pricina, String )
+valuesWithLabels : List ( Model, String )
 valuesWithLabels =
     [ ( PensieIntretinere
       , "plata pensiei de intreţinere"
@@ -88,11 +85,6 @@ valuesWithLabels =
     ]
 
 
-empty : Pricina
-empty =
+initialModel : Model
+initialModel =
     PensieIntretinere
-
-
-view : Pricina -> (Pricina -> msg) -> Html msg
-view pricina callback =
-    Select.view "Pricina:" valuesWithLabels empty callback

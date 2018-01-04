@@ -5,6 +5,7 @@ import Html.Attributes exposing (attribute, style)
 import Html.Events exposing (onMouseDown, onClick, onMouseOver, onMouseOut, onBlur)
 import FNV as HashingUtility
 import Keyboard
+import Char
 import UI.Styles as Styles
 import Widgets.Select3.Css as Css
 import Utils.MyList as MyList
@@ -155,7 +156,39 @@ handleKeyDowns keyCode (Model model) =
             Model { model | isOpened = False }
 
         _ ->
-            Model model
+            tryQuickSearch keyCode (Model model)
+
+
+tryQuickSearch : Keyboard.KeyCode -> Model a -> Model a
+tryQuickSearch keyCode (Model model) =
+    let
+        this =
+            Model
+                { model
+                    | selectedValue = tryFindByLabelFirstChar c |> Maybe.withDefault model.selectedValue
+                    , isOpened = False
+                }
+
+        tryFindByLabelFirstChar c =
+            model.valuesWithLabels
+                |> List.filter (labelBeginsWith c)
+                |> List.head
+                |> Maybe.map Tuple.first
+
+        c =
+            keyCode
+                |> Char.fromCode
+                |> Char.toLower
+
+        labelBeginsWith c =
+            Tuple.second
+                >> String.slice 0 1
+                >> String.toList
+                >> List.head
+                >> Maybe.map (Char.toLower >> (==) c)
+                >> Maybe.withDefault False
+    in
+        this
 
 
 nextValue : Maybe a -> ValuesWithLabels a -> Maybe a

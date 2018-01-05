@@ -46,7 +46,7 @@ view (Model model) =
 
 dosarView : Dosar.Model -> Html Msg
 dosarView dosar =
-    Dosar.view dosar |> Html.map SetDosar |> fromUnstyled
+    Dosar.view dosar |> Html.Styled.map SetDosar
 
 
 createDosarButtonView : Html Msg

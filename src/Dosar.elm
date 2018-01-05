@@ -1,8 +1,8 @@
 module Dosar exposing (Model, initialModel, update, Msg, view)
 
-import Dosar.Css
-import Html exposing (Html, h1, section, div, select, option, button, text, node)
-import Html.Attributes exposing (style)
+import Html
+import Html.Styled exposing (toUnstyled, fromUnstyled, Html, h1, section, div, text, select, option, node, button)
+import Dosar.Styles as Styles
 
 
 -- import Html.Events exposing (onInput)
@@ -58,10 +58,10 @@ update msg (Model model) =
 view : Model -> Html Msg
 view (Model model) =
     node "main"
-        [ style Dosar.Css.formular ]
+        [ Styles.formular ]
         [ h1 [] [ text "Dosar deschis" ]
         , section []
-            [ Temei.view model.temei |> Html.map SetTemei
-            , DocumentExecutoriu.view model.documentExecutoriu |> Html.map SetDocumentExecutoriu
+            [ Temei.view model.temei |> Html.map SetTemei |> fromUnstyled
+            , DocumentExecutoriu.view model.documentExecutoriu |> Html.map SetDocumentExecutoriu |> fromUnstyled
             ]
         ]

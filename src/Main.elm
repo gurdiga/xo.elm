@@ -1,7 +1,8 @@
 module Main exposing (..)
 
-import Html exposing (Html, h1, section, div, text, select, option, node, button)
-import Html.Events exposing (onClick)
+import Html
+import Html.Styled exposing (toUnstyled, fromUnstyled, Html, h1, section, div, text, select, option, node, button)
+import Html.Styled.Events exposing (onClick)
 import UI.Layout as Layout
 import Dosar
 
@@ -10,7 +11,7 @@ main : Program Never Model Msg
 main =
     Html.program
         { init = ( initialModel, Cmd.none )
-        , view = view
+        , view = view >> toUnstyled
         , update = update
         , subscriptions = subscriptions
         }
@@ -39,17 +40,17 @@ view (Model model) =
     Layout.view
         [ model.dosarDeschis
             |> Maybe.map dosarView
-            |> Maybe.withDefault createDosarButton
+            |> Maybe.withDefault createDosarButtonView
         ]
 
 
 dosarView : Dosar.Model -> Html Msg
 dosarView dosar =
-    Dosar.view dosar |> Html.map SetDosar
+    Dosar.view dosar |> Html.map SetDosar |> fromUnstyled
 
 
-createDosarButton : Html Msg
-createDosarButton =
+createDosarButtonView : Html Msg
+createDosarButtonView =
     button [ onClick CreateDosar ] [ text "Crează dosar nou" ]
 
 

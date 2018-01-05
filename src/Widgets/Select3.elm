@@ -156,37 +156,37 @@ handleKeyDowns keyCode (Model model) =
             Model { model | isOpened = False }
 
         _ ->
-            tryQuickSearch keyCode (Model model)
-
-
-tryQuickSearch : Keyboard.KeyCode -> Model a -> Model a
-tryQuickSearch keyCode (Model model) =
-    let
-        this =
             Model
                 { model
-                    | selectedValue = tryFindByLabelFirstChar c |> Maybe.withDefault model.selectedValue
-                    , isOpened = False
+                    | selectedValue =
+                        findByLabelFistChar keyCode (Model model)
+                            |> Maybe.withDefault model.selectedValue
                 }
 
-        tryFindByLabelFirstChar c =
+
+findByLabelFistChar : Keyboard.KeyCode -> Model a -> Maybe a
+findByLabelFistChar keyCode (Model model) =
+    let
+        this =
             model.valuesWithLabels
-                |> List.filter (labelBeginsWith c)
+                |> List.filter (labelBeginsWith char)
                 |> List.head
                 |> Maybe.map Tuple.first
 
-        c =
+        char =
             keyCode
                 |> Char.fromCode
                 |> Char.toLower
 
-        labelBeginsWith c =
-            Tuple.second
-                >> String.slice 0 1
-                >> String.toList
-                >> List.head
-                >> Maybe.map (Char.toLower >> (==) c)
-                >> Maybe.withDefault False
+        labelBeginsWith : Char -> ValueWithLabel a -> Bool
+        labelBeginsWith char tuple =
+            tuple
+                |> Tuple.second
+                |> String.slice 0 1
+                |> String.toList
+                |> List.head
+                |> Maybe.map (\c -> Char.toLower c == char)
+                |> Maybe.withDefault False
     in
         this
 

@@ -15,6 +15,9 @@ compile:
 clean:
 	rm -rf elm-stuff/build-artifacts/0.18.0/user/project
 
+clean-hard:
+	rm -rf elm-stuff
+
 open:
 	open index.html
 

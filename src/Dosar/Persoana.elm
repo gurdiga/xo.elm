@@ -1,8 +1,8 @@
 module Dosar.Persoana exposing (Model, initialModel, view, update, Msg)
 
-import Html exposing (Html, fieldset)
-import Html.Styled exposing (map, toUnstyled)
-import Html.Attributes exposing (style)
+import Html
+import Html.Styled exposing (map, toUnstyled, fromUnstyled, Html, fieldset)
+import Html.Styled.Attributes exposing (css)
 import Dosar.Persoana.Css as Css
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica
 import Dosar.Persoana.PersoanaJuridica as PersoanaJuridica
@@ -76,9 +76,9 @@ initialPersoana =
 
 view : Model -> Html Msg
 view (Model model) =
-    fieldset [ style Css.fieldset ]
-        [ Select3.view "Gen persoana:" model.ui.select |> map SetGenPersoana |> toUnstyled
-        , fields model.persoana
+    fieldset [ css [ Css.fieldset ] ]
+        [ Select3.view "Gen persoana:" model.ui.select |> map SetGenPersoana
+        , fieldsView model.persoana
         ]
 
 
@@ -89,11 +89,11 @@ valuesWithLabels =
     ]
 
 
-fields : Persoana -> Html Msg
-fields persoana =
+fieldsView : Persoana -> Html Msg
+fieldsView persoana =
     case persoana of
         PersoanaFizica persoanaFizica ->
-            PersoanaFizica.view persoanaFizica |> Html.map (SetPersoanaFizica persoanaFizica)
+            PersoanaFizica.view persoanaFizica |> Html.map (SetPersoanaFizica persoanaFizica) |> fromUnstyled
 
         PersoanaJuridica persoanaJuridica ->
-            PersoanaJuridica.view persoanaJuridica |> Html.map (SetPersoanaJuridica persoanaJuridica)
+            PersoanaJuridica.view persoanaJuridica |> Html.map (SetPersoanaJuridica persoanaJuridica) |> fromUnstyled

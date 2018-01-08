@@ -1,6 +1,6 @@
 module Dosar.DocumentExecutoriu exposing (Model, empty, view, Msg, update)
 
-import Html.Styled exposing (map, fromUnstyled, Html, fieldset, legend, div, button, br, text)
+import Html.Styled exposing (map, Html, fieldset, legend, div, button, br, text)
 import Widgets.Select3 as Select3
 
 

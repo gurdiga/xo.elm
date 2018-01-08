@@ -2,7 +2,6 @@ module Widgets.Select3.Css exposing (..)
 
 import Css exposing (..)
 import Css.Colors exposing (..)
-import MyCss.Mixins
 
 
 container : Style

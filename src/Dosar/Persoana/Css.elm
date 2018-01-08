@@ -6,7 +6,7 @@ import Css exposing (..)
 fieldset : Style
 fieldset =
     Css.batch
-        [ border (px 0)
+        [ borderStyle none
         , padding zero
         , margin zero
         ]

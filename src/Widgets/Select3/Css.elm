@@ -2,6 +2,7 @@ module Widgets.Select3.Css exposing (..)
 
 import Css exposing (..)
 import Css.Colors exposing (..)
+import MyCss.Mixins
 
 
 container : Style
@@ -87,16 +88,6 @@ optionSelectedMarker =
     Css.batch
         [ position absolute
         , marginLeft (em -1)
-        ]
-
-
-inheritFont : Style
-inheritFont =
-    Css.batch
-        [ fontFamily inherit
-        , fontSize inherit
-        , fontWeight inherit
-        , fontStyle inherit
         ]
 
 

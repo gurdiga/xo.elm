@@ -1,7 +1,7 @@
 module Dosar.Persoana exposing (Model, initialModel, view, update, Msg)
 
 import Html exposing (Html, fieldset)
-import Html.Styled exposing (toUnstyled)
+import Html.Styled exposing (map, toUnstyled)
 import Html.Attributes exposing (style)
 import Dosar.Persoana.Css as Css
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica
@@ -77,7 +77,7 @@ initialPersoana =
 view : Model -> Html Msg
 view (Model model) =
     fieldset [ style Css.fieldset ]
-        [ Select3.view "Gen persoana:" model.ui.select |> Html.Styled.map SetGenPersoana |> toUnstyled
+        [ Select3.view "Gen persoana:" model.ui.select |> map SetGenPersoana |> toUnstyled
         , fields model.persoana
         ]
 

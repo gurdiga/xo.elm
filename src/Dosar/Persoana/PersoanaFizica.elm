@@ -1,7 +1,7 @@
 module Dosar.Persoana.PersoanaFizica exposing (Model, empty, view, Msg, update)
 
 import Html exposing (Html, ul, li)
-import Html.Styled exposing (toUnstyled)
+import Html.Styled exposing (map, toUnstyled)
 import Html.Attributes exposing (style)
 import Widgets.TextField as TextField
 import Widgets.LargeTextField as LargeTextField
@@ -69,8 +69,8 @@ view (Model model) =
     ul [ style Css.ul ]
         [ li [] [ TextField.view "Nume:" model.nume |> Html.map UpdateNume ]
         , li [] [ TextField.view "Prenume:" model.prenume |> Html.map UpdatePrenume ]
-        , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> Html.Styled.map UpdateDataNasterii |> toUnstyled ]
+        , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map UpdateDataNasterii |> toUnstyled ]
         , li [] [ TextField.view "CNP:" model.cnp |> Html.map UpdateCnp ]
-        , li [] [ LargeTextField.view "Adresa:" model.adresa |> Html.map UpdateAdresa ]
-        , li [] [ LargeTextField.view "Note:" model.note |> Html.map UpdateNote ]
+        , li [] [ LargeTextField.view "Adresa:" model.adresa |> map UpdateAdresa |> toUnstyled ]
+        , li [] [ LargeTextField.view "Note:" model.note |> map UpdateNote |> toUnstyled ]
         ]

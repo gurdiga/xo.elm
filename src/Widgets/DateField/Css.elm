@@ -1,14 +1,12 @@
 module Widgets.DateField.Css exposing (..)
 
 import Css exposing (..)
+import MyCss.Mixins
 
 
 input : Style
 input =
     Css.batch
         [ marginLeft (em 0.5)
-        , fontFamily inherit
-        , fontSize inherit
-        , fontWeight inherit
-        , fontStyle inherit
+        , MyCss.Mixins.inheritFont
         ]

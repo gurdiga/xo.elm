@@ -1,7 +1,7 @@
 module Dosar.Temei.CerereCreditor exposing (Model, initialModel, view, Msg, update)
 
 import Html
-import Html.Styled exposing (fromUnstyled, Html, h1, fieldset, legend, div, ul, li, text)
+import Html.Styled exposing (map, fromUnstyled, Html, h1, fieldset, legend, div, ul, li, text)
 import Html.Styled.Attributes exposing (css)
 import Dosar.Temei.CerereCreditor.Css as Css
 import Dosar.Persoana as Persoana
@@ -53,7 +53,7 @@ update msg (Model model) =
 view : Model -> Html Msg
 view (Model model) =
     fieldset [ css [ Css.fieldset ] ]
-        [ DateField.view "Data depunerii:" model.dataDepunere |> Html.Styled.map UpdateDataDepunere
+        [ DateField.view "Data depunerii:" model.dataDepunere |> map UpdateDataDepunere
         , Persoana.view model.creditor |> Html.map UpdateCreditor |> fromUnstyled
 
         --

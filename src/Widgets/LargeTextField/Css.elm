@@ -1,9 +1,13 @@
 module Widgets.LargeTextField.Css exposing (..)
 
+import Css exposing (..)
+import MyCss.Mixins
 
-textarea : List ( String, String )
+
+textarea : Style
 textarea =
-    [ ( "display", "block" )
-    , ( "font", "inherit" )
-    , ( "resize", "none" )
-    ]
+    Css.batch
+        [ display block
+        , MyCss.Mixins.inheritFont
+        , resize none
+        ]

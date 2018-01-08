@@ -1,7 +1,7 @@
 module Main exposing (..)
 
 import Html
-import Html.Styled exposing (toUnstyled, fromUnstyled, Html, h1, section, div, text, select, option, node, button)
+import Html.Styled exposing (map, toUnstyled, fromUnstyled, Html, h1, section, div, text, select, option, node, button)
 import Html.Styled.Events exposing (onClick)
 import UI.Layout as Layout
 import Dosar
@@ -46,7 +46,7 @@ view (Model model) =
 
 dosarView : Dosar.Model -> Html Msg
 dosarView dosar =
-    Dosar.view dosar |> Html.Styled.map SetDosar
+    Dosar.view dosar |> map SetDosar
 
 
 createDosarButtonView : Html Msg

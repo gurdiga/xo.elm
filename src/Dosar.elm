@@ -1,6 +1,5 @@
 module Dosar exposing (Model, initialModel, update, Msg, view)
 
-import Html
 import Html.Styled exposing (toUnstyled, fromUnstyled, Html, h1, section, div, text, select, option, node, button)
 import Dosar.Styles as Styles
 
@@ -62,6 +61,6 @@ view (Model model) =
         [ h1 [] [ text "Dosar deschis" ]
         , section []
             [ Temei.view model.temei |> Html.Styled.map SetTemei
-            , DocumentExecutoriu.view model.documentExecutoriu |> Html.map SetDocumentExecutoriu |> fromUnstyled
+            , DocumentExecutoriu.view model.documentExecutoriu |> Html.Styled.map SetDocumentExecutoriu
             ]
         ]

@@ -1,6 +1,7 @@
 module Dosar.DocumentExecutoriu exposing (Model, empty, view, Msg, update)
 
-import Html exposing (Html, fieldset, legend, div, button, br, text)
+import Html
+import Html.Styled exposing (fromUnstyled, Html, fieldset, legend, div, button, br, text)
 import Widgets.Select3 as Select3
 
 
@@ -130,23 +131,25 @@ view : Model -> Html Msg
 view (Model model) =
     fieldset []
         [ legend [] [ text "DocumentExecutoriu" ]
-        , Select3.view "Instanța de judecată:" model.ui.instantaEmitatoare |> Html.map SetInstantaEmitatoare
-        , Select3.view "Pricina:" model.ui.pricina |> Html.map SetPricina
-        , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> Html.map SetDataPronuntareHotarire
-        , LargeTextField.view "Dispozitivul:" model.dispozitivul |> Html.map SetDispozitivul
-        , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> Html.map SetDataRamineriiDefinitive
+        , Select3.view "Instanța de judecată:" model.ui.instantaEmitatoare |> Html.map SetInstantaEmitatoare |> fromUnstyled
+        , Select3.view "Pricina:" model.ui.pricina |> Html.map SetPricina |> fromUnstyled
+        , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> Html.map SetDataPronuntareHotarire |> fromUnstyled
+        , LargeTextField.view "Dispozitivul:" model.dispozitivul |> Html.map SetDispozitivul |> fromUnstyled
+        , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> Html.map SetDataRamineriiDefinitive |> fromUnstyled
 
         -- , debitoriView model.debitori (\v -> c { model | debitori = v })
-        , DateField.view "Data eliberării:" model.dataEliberarii |> Html.map SetDataEliberarii
+        , DateField.view "Data eliberării:" model.dataEliberarii |> Html.map SetDataEliberarii |> fromUnstyled
 
         -- , DocumenteAplicareMasuriAsigurare.view
         --     model.documenteAplicareMasuriAsigurare
         --     (\v -> c { model | documenteAplicareMasuriAsigurare = v })
         , LargeTextField.view "Mențiuni privind autorizarea pătrunderii forțate:" model.mentiuniPrivindPatrundereaFortata
             |> Html.map SetMentiuniPrivindPatrundereaFortata
+            |> fromUnstyled
         , LargeTextField.view "Locul de păstrare a bunurilor sechestrate:" model.locPastrareBunuriSechestrate
             |> Html.map SetLocPastrareBunuriSechestrate
-        , LargeTextField.view "Note:" model.note |> Html.map SetNote
+            |> fromUnstyled
+        , LargeTextField.view "Note:" model.note |> Html.map SetNote |> fromUnstyled
         ]
 
 

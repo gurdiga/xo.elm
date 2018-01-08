@@ -1,9 +1,12 @@
 module Dosar.Temei.CerereCreditor.Css exposing (..)
 
+import Css exposing (..)
 
-fieldset : List ( String, String )
+
+fieldset : Style
 fieldset =
-    [ ( "border", "none" )
-    , ( "padding", "0" )
-    , ( "margin", "0" )
-    ]
+    Css.batch
+        [ border zero
+        , padding zero
+        , margin zero
+        ]

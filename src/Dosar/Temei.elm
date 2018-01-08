@@ -47,7 +47,7 @@ fields : Temei -> Html Msg
 fields temei =
     case temei of
         CerereCreditor cerereCreditor ->
-            CerereCreditor.view cerereCreditor |> Html.map (CerereCreditorMsg cerereCreditor) |> fromUnstyled
+            CerereCreditor.view cerereCreditor |> Html.Styled.map (CerereCreditorMsg cerereCreditor)
 
         DemersInstanta demersInstanta ->
             text "DemersInstanta.view"

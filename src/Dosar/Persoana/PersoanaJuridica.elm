@@ -1,8 +1,8 @@
 module Dosar.Persoana.PersoanaJuridica exposing (Model, empty, view, Msg, update)
 
-import Html exposing (Html, ul, li)
-import Html.Styled exposing (map, toUnstyled)
-import Html.Attributes exposing (style)
+import Html
+import Html.Styled exposing (map, fromUnstyled, Html, ul, li)
+import Html.Styled.Attributes exposing (css)
 import Widgets.TextField as TextField
 import Widgets.LargeTextField as LargeTextField
 import Dosar.Persoana.PersoanaJuridica.Css as Css
@@ -58,10 +58,10 @@ empty =
 
 view : Model -> Html Msg
 view (Model model) =
-    ul [ style Css.ul ]
-        [ li [] [ TextField.view "Denumire:" model.denumire |> Html.map UpdateDenumire ]
-        , li [] [ TextField.view "Cod fiscal:" model.codFiscal |> Html.map UpdateCodFiscal ]
-        , li [] [ LargeTextField.view "Date bancare:" model.rechiziteBancare |> map UpdateRechiziteBancare |> toUnstyled ]
-        , li [] [ LargeTextField.view "Adresa:" model.adresa |> map UpdateAdresa |> toUnstyled ]
-        , li [] [ LargeTextField.view "Note:" model.note |> map UpdateNote |> toUnstyled ]
+    ul [ css [ Css.ul ] ]
+        [ li [] [ TextField.view "Denumire:" model.denumire |> Html.map UpdateDenumire |> fromUnstyled ]
+        , li [] [ TextField.view "Cod fiscal:" model.codFiscal |> Html.map UpdateCodFiscal |> fromUnstyled ]
+        , li [] [ LargeTextField.view "Date bancare:" model.rechiziteBancare |> map UpdateRechiziteBancare ]
+        , li [] [ LargeTextField.view "Adresa:" model.adresa |> map UpdateAdresa ]
+        , li [] [ LargeTextField.view "Note:" model.note |> map UpdateNote ]
         ]

@@ -1,7 +1,6 @@
 module Dosar.Persoana exposing (Model, initialModel, view, update, Msg)
 
-import Html
-import Html.Styled exposing (map, toUnstyled, fromUnstyled, Html, fieldset)
+import Html.Styled exposing (map, Html, fieldset)
 import Html.Styled.Attributes exposing (css)
 import Dosar.Persoana.Css as Css
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica
@@ -96,4 +95,4 @@ fieldsView persoana =
             PersoanaFizica.view persoanaFizica |> map (SetPersoanaFizica persoanaFizica)
 
         PersoanaJuridica persoanaJuridica ->
-            PersoanaJuridica.view persoanaJuridica |> Html.map (SetPersoanaJuridica persoanaJuridica) |> fromUnstyled
+            PersoanaJuridica.view persoanaJuridica |> map (SetPersoanaJuridica persoanaJuridica)

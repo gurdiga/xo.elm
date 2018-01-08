@@ -1,7 +1,7 @@
 module Dosar.Persoana.PersoanaFizica exposing (Model, empty, view, Msg, update)
 
 import Html
-import Html.Styled exposing (map, toUnstyled, fromUnstyled, Html, ul, li)
+import Html.Styled exposing (map, fromUnstyled, Html, ul, li)
 import Html.Styled.Attributes exposing (css)
 import Widgets.TextField as TextField
 import Widgets.LargeTextField as LargeTextField

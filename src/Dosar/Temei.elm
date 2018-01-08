@@ -1,6 +1,5 @@
 module Dosar.Temei exposing (Model, Msg, initialModel, update, view)
 
-import Html
 import Html.Styled exposing (toUnstyled, fromUnstyled, Html, node, section, div, label, text)
 import Html.Styled.Attributes exposing (css)
 import Widgets.Select3 as Select3
@@ -40,7 +39,7 @@ sectionTitle : Select3.Model Temei -> Html Msg
 sectionTitle select =
     node "hgroup"
         [ css [ Css.sectionTitle ] ]
-        [ Select3.view "Temei:" select |> Html.map SetTemei |> fromUnstyled ]
+        [ Select3.view "Temei:" select |> Html.Styled.map SetTemei ]
 
 
 fields : Temei -> Html Msg

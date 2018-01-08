@@ -131,8 +131,8 @@ view : Model -> Html Msg
 view (Model model) =
     fieldset []
         [ legend [] [ text "DocumentExecutoriu" ]
-        , Select3.view "Instanța de judecată:" model.ui.instantaEmitatoare |> Html.map SetInstantaEmitatoare |> fromUnstyled
-        , Select3.view "Pricina:" model.ui.pricina |> Html.map SetPricina |> fromUnstyled
+        , Select3.view "Instanța de judecată:" model.ui.instantaEmitatoare |> Html.Styled.map SetInstantaEmitatoare
+        , Select3.view "Pricina:" model.ui.pricina |> Html.Styled.map SetPricina
         , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> Html.Styled.map SetDataPronuntareHotarire
         , LargeTextField.view "Dispozitivul:" model.dispozitivul |> Html.map SetDispozitivul |> fromUnstyled
         , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> Html.Styled.map SetDataRamineriiDefinitive

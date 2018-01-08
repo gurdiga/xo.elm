@@ -1,15 +1,14 @@
 module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg, view)
 
-import Html exposing (Html, text)
-import Html.Attributes exposing (attribute, style)
-import Html.Events exposing (onMouseDown, onClick, onMouseOver, onMouseOut, onBlur)
+import Html.Styled exposing (Html, div, ul, li, span, text)
+import Html.Styled.Attributes exposing (attribute, css)
+import Html.Styled.Events exposing (onMouseDown, onClick, onMouseOver, onMouseOut, onBlur, on)
+import Json.Decode
 import FNV as HashingUtility
 import Keyboard
 import Char
-import UI.Styles as Styles
 import Widgets.Select3.Css as Css
 import Utils.MyList as MyList
-import Utils.MyHtmlEvents exposing (onKeyDown)
 
 
 type Model a
@@ -77,7 +76,7 @@ view labelText (Model { valuesWithLabels, selectedValue, hoveredValue, isOpened,
                 |> Maybe.withDefault ""
 
         dropdownSymbol =
-            Html.span [ style Css.dropdownSymbol ] [ text "▾" ]
+            span [ css [ Css.dropdownSymbol ] ] [ text "▾" ]
     in
         this
 
@@ -216,36 +215,36 @@ previousValue maybeHoveredValue valuesWithLabels =
 
 container : String -> List (Html (Msg a)) -> Html (Msg a)
 container id =
-    Html.div
+    div
         [ attribute "role" "combobox"
         , attribute "aria-labelledby" ("combobox-" ++ id ++ "-label")
         , attribute "aria-expanded" "true"
         , attribute "aria-haspopup" "listbox"
-        , style (Styles.inheritFont ++ Css.container)
+        , css [ Css.inheritFont, Css.container ]
         ]
 
 
 listboxContainer : List (Html (Msg a)) -> Html (Msg a)
 listboxContainer =
-    Html.div
+    div
         [ attribute "class" "combobox-listbox-container"
-        , style (Styles.inheritFont ++ Css.listboxContainer)
+        , css [ Css.inheritFont, Css.listboxContainer ]
         ]
 
 
 label : String -> String -> Html (Msg a)
 label id labelText =
-    Html.label
+    Html.Styled.label
         [ attribute "id" ("combobox-" ++ id ++ "-label")
         , attribute "for" ("combobox-" ++ id)
-        , style Css.label
+        , css [ Css.label ]
         ]
-        [ Html.text labelText ]
+        [ text labelText ]
 
 
 input : String -> String -> Html (Msg a)
 input id label =
-    Html.input
+    Html.Styled.input
         [ attribute "id" ("combobox-" ++ id)
         , attribute "type" "text"
         , attribute "aria-autocomplete" "list"
@@ -253,7 +252,7 @@ input id label =
         , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
         , attribute "value" label
         , attribute "readonly" "readonly"
-        , style (Styles.inheritFont ++ Css.input)
+        , css [ Css.inheritFont, Css.input ]
         , onBlur Close
         , onClick Toggle
         , onKeyDown KeyDown
@@ -265,10 +264,10 @@ listbox : String -> Bool -> ValuesWithLabels a -> a -> Maybe a -> Html (Msg a)
 listbox id isOpened valuesWithLabels selectedValue hoveredValue =
     let
         this =
-            Html.ul
+            ul
                 [ attribute "role" "listbox"
                 , attribute "id" ("combobox-" ++ id ++ "-listbox")
-                , style (Css.listbox ++ visibilityStyles)
+                , css [ Css.listbox, visibilityStyles ]
                 ]
                 options
 
@@ -284,9 +283,9 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
 
         visibilityStyles =
             if isOpened then
-                [ ( "display", "block" ) ]
+                Css.isVisible
             else
-                [ ( "display", "none" ) ]
+                Css.isHidden
     in
         this
 
@@ -303,16 +302,16 @@ listboxOption : OptionModel a -> Html (Msg a)
 listboxOption { value, label, isSelected, isHovered } =
     let
         this =
-            Html.li
+            li
                 [ attribute "role" "option"
                 , ariaSelectedState
-                , style (Css.listboxOption ++ optionHoverStyles)
+                , css [ Css.listboxOption ]
                 , onMouseDown (OptionSelected value)
                 , onMouseOver (OptionMouseOver value)
                 , onMouseOut (OptionMouseOut)
                 ]
                 [ optionSelectedMarker
-                , Html.text label
+                , text label
                 ]
 
         ariaSelectedState =
@@ -321,15 +320,9 @@ listboxOption { value, label, isSelected, isHovered } =
             else
                 attribute "aria-selected" "false"
 
-        optionHoverStyles =
-            if isHovered then
-                Css.optionHoverStyles
-            else
-                []
-
         optionSelectedMarker =
-            Html.span
-                [ style Css.optionSelectedMarker ]
+            span
+                [ css [ Css.optionSelectedMarker ] ]
                 [ text
                     (if isSelected then
                         "✓"
@@ -339,3 +332,8 @@ listboxOption { value, label, isSelected, isHovered } =
                 ]
     in
         this
+
+
+onKeyDown : (Int -> msg) -> Html.Styled.Attribute msg
+onKeyDown tagger =
+    Html.Styled.Events.on "keydown" (Json.Decode.map tagger Html.Styled.Events.keyCode)

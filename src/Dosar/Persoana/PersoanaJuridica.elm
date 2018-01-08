@@ -1,7 +1,6 @@
 module Dosar.Persoana.PersoanaJuridica exposing (Model, empty, view, Msg, update)
 
-import Html
-import Html.Styled exposing (map, fromUnstyled, Html, ul, li)
+import Html.Styled exposing (map, Html, ul, li)
 import Html.Styled.Attributes exposing (css)
 import Widgets.TextField as TextField
 import Widgets.LargeTextField as LargeTextField
@@ -59,8 +58,8 @@ empty =
 view : Model -> Html Msg
 view (Model model) =
     ul [ css [ Css.ul ] ]
-        [ li [] [ TextField.view "Denumire:" model.denumire |> Html.map UpdateDenumire |> fromUnstyled ]
-        , li [] [ TextField.view "Cod fiscal:" model.codFiscal |> Html.map UpdateCodFiscal |> fromUnstyled ]
+        [ li [] [ TextField.view "Denumire:" model.denumire |> map UpdateDenumire ]
+        , li [] [ TextField.view "Cod fiscal:" model.codFiscal |> map UpdateCodFiscal ]
         , li [] [ LargeTextField.view "Date bancare:" model.rechiziteBancare |> map UpdateRechiziteBancare ]
         , li [] [ LargeTextField.view "Adresa:" model.adresa |> map UpdateAdresa ]
         , li [] [ LargeTextField.view "Note:" model.note |> map UpdateNote ]

@@ -1,8 +1,12 @@
 module Widgets.TextField.Css exposing (..)
 
+import Css exposing (..)
+import MyCss.Mixins
 
-input : List ( String, String )
+
+input : Style
 input =
-    [ ( "margin-left", "0.5em" )
-    , ( "font", "inherit" )
-    ]
+    Css.batch
+        [ marginLeft (em 0.5)
+        , MyCss.Mixins.inheritFont
+        ]

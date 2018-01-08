@@ -53,7 +53,7 @@ update msg (Model model) =
 view : Model -> Html Msg
 view (Model model) =
     fieldset [ css [ Css.fieldset ] ]
-        [ DateField.view "Data depunerii:" model.dataDepunere |> Html.map UpdateDataDepunere |> fromUnstyled
+        [ DateField.view "Data depunerii:" model.dataDepunere |> Html.Styled.map UpdateDataDepunere
         , Persoana.view model.creditor |> Html.map UpdateCreditor |> fromUnstyled
 
         --

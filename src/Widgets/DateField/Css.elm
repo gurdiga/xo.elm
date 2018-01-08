@@ -1,8 +1,14 @@
 module Widgets.DateField.Css exposing (..)
 
+import Css exposing (..)
 
-input : List ( String, String )
+
+input : Style
 input =
-    [ ( "margin-left", "0.5em" )
-    , ( "font", "inherit" )
-    ]
+    Css.batch
+        [ marginLeft (em 0.5)
+        , fontFamily inherit
+        , fontSize inherit
+        , fontWeight inherit
+        , fontStyle inherit
+        ]

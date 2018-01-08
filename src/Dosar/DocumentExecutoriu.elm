@@ -133,12 +133,12 @@ view (Model model) =
         [ legend [] [ text "DocumentExecutoriu" ]
         , Select3.view "Instanța de judecată:" model.ui.instantaEmitatoare |> Html.map SetInstantaEmitatoare |> fromUnstyled
         , Select3.view "Pricina:" model.ui.pricina |> Html.map SetPricina |> fromUnstyled
-        , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> Html.map SetDataPronuntareHotarire |> fromUnstyled
+        , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> Html.Styled.map SetDataPronuntareHotarire
         , LargeTextField.view "Dispozitivul:" model.dispozitivul |> Html.map SetDispozitivul |> fromUnstyled
-        , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> Html.map SetDataRamineriiDefinitive |> fromUnstyled
+        , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> Html.Styled.map SetDataRamineriiDefinitive
 
         -- , debitoriView model.debitori (\v -> c { model | debitori = v })
-        , DateField.view "Data eliberării:" model.dataEliberarii |> Html.map SetDataEliberarii |> fromUnstyled
+        , DateField.view "Data eliberării:" model.dataEliberarii |> Html.Styled.map SetDataEliberarii
 
         -- , DocumenteAplicareMasuriAsigurare.view
         --     model.documenteAplicareMasuriAsigurare

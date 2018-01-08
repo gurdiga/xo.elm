@@ -61,7 +61,7 @@ view (Model model) =
         [ Styles.formular ]
         [ h1 [] [ text "Dosar deschis" ]
         , section []
-            [ Temei.view model.temei |> Html.map SetTemei |> fromUnstyled
+            [ Temei.view model.temei |> Html.Styled.map SetTemei
             , DocumentExecutoriu.view model.documentExecutoriu |> Html.map SetDocumentExecutoriu |> fromUnstyled
             ]
         ]

@@ -1,18 +1,23 @@
 module Dosar.Temei.Css exposing (..)
 
+import Css exposing (..)
+import Css.Colors exposing (..)
 
-section : List ( String, String )
+
+section : Style
 section =
-    [ ( "width", "400px" )
-    ]
+    Css.batch
+        [ width (px 400)
+        ]
 
 
-sectionTitle : List ( String, String )
+sectionTitle : Style
 sectionTitle =
-    [ ( "padding", "8px" )
-    , ( "color", "white" )
-    , ( "background-color", "#666" )
-    , ( "font-size", "23px" )
-    , ( "font-weight", "bold" )
-    , ( "display", "flex" )
-    ]
+    Css.batch
+        [ padding (px 8)
+        , color white
+        , backgroundColor (hex "666666")
+        , fontSize (px 23)
+        , fontWeight bold
+        , displayFlex
+        ]

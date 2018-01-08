@@ -1,9 +1,12 @@
 module Dosar.Persoana.PersoanaFizica.Css exposing (..)
 
+import Css exposing (..)
 
-ul : List ( String, String )
+
+ul : Style
 ul =
-    [ ( "list-style-type", "none" )
-    , ( "margin", "0" )
-    , ( "padding", "0" )
-    ]
+    Css.batch
+        [ listStyleType none
+        , margin zero
+        , padding zero
+        ]

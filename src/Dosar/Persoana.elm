@@ -93,7 +93,7 @@ fieldsView : Persoana -> Html Msg
 fieldsView persoana =
     case persoana of
         PersoanaFizica persoanaFizica ->
-            PersoanaFizica.view persoanaFizica |> Html.map (SetPersoanaFizica persoanaFizica) |> fromUnstyled
+            PersoanaFizica.view persoanaFizica |> map (SetPersoanaFizica persoanaFizica)
 
         PersoanaJuridica persoanaJuridica ->
             PersoanaJuridica.view persoanaJuridica |> Html.map (SetPersoanaJuridica persoanaJuridica) |> fromUnstyled

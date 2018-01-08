@@ -1,8 +1,8 @@
 module Dosar.Persoana.PersoanaFizica exposing (Model, empty, view, Msg, update)
 
-import Html exposing (Html, ul, li)
-import Html.Styled exposing (map, toUnstyled)
-import Html.Attributes exposing (style)
+import Html
+import Html.Styled exposing (map, toUnstyled, fromUnstyled, Html, ul, li)
+import Html.Styled.Attributes exposing (css)
 import Widgets.TextField as TextField
 import Widgets.LargeTextField as LargeTextField
 import Widgets.DateField as DateField
@@ -66,11 +66,11 @@ empty =
 
 view : Model -> Html Msg
 view (Model model) =
-    ul [ style Css.ul ]
-        [ li [] [ TextField.view "Nume:" model.nume |> Html.map UpdateNume ]
-        , li [] [ TextField.view "Prenume:" model.prenume |> Html.map UpdatePrenume ]
-        , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map UpdateDataNasterii |> toUnstyled ]
-        , li [] [ TextField.view "CNP:" model.cnp |> Html.map UpdateCnp ]
-        , li [] [ LargeTextField.view "Adresa:" model.adresa |> map UpdateAdresa |> toUnstyled ]
-        , li [] [ LargeTextField.view "Note:" model.note |> map UpdateNote |> toUnstyled ]
+    ul [ css [ Css.ul ] ]
+        [ li [] [ TextField.view "Nume:" model.nume |> Html.map UpdateNume |> fromUnstyled ]
+        , li [] [ TextField.view "Prenume:" model.prenume |> Html.map UpdatePrenume |> fromUnstyled ]
+        , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map UpdateDataNasterii ]
+        , li [] [ TextField.view "CNP:" model.cnp |> Html.map UpdateCnp |> fromUnstyled ]
+        , li [] [ LargeTextField.view "Adresa:" model.adresa |> map UpdateAdresa ]
+        , li [] [ LargeTextField.view "Note:" model.note |> map UpdateNote ]
         ]

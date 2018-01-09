@@ -1,4 +1,4 @@
-module Utils.Money exposing (Money(..), Currency(..), format, currenciesWithLabels)
+module Utils.Money exposing (Currency(..), Money(..), currenciesWithLabels, format)
 
 import Utils.MyNumber as MyNumber
 
@@ -27,4 +27,4 @@ currenciesWithLabels =
 
 format : Money -> String
 format (Money amount currency) =
-    (MyNumber.format amount) ++ " " ++ (toString currency)
+    MyNumber.format amount ++ " " ++ toString currency

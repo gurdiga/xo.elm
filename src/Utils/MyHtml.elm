@@ -1,4 +1,4 @@
-module Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNonNothing, whenNothing)
+module Utils.MyHtml exposing (whenNonEmpty, whenNonNothing, whenNothing, whenTrue)
 
 import Html exposing (Html, text)
 

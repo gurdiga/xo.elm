@@ -2,8 +2,8 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior
     exposing
         ( ActEfectuatAnterior(ActEfectuatAnterior)
         , Data
-        , empty
         , data
+        , empty
         )
 
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)

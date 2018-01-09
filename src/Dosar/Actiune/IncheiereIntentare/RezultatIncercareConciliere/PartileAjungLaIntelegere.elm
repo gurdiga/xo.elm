@@ -5,10 +5,10 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
         , view
         )
 
-import Html exposing (Html, h1, div, p, text)
-import Utils.RichTextEditor as RichTextEditor
-import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare exposing (IncheiereIncetare)
+import Html exposing (Html, div, h1, p, text)
+import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
+import Utils.RichTextEditor as RichTextEditor
 
 
 type PartileAjungLaIntelegere
@@ -44,31 +44,31 @@ view partileAjungLaIntelegere callback =
         c data =
             callback (PartileAjungLaIntelegere data) Cmd.none Sub.none
     in
-        div []
-            [ RichTextEditor.view
-                { buttonLabel = "Formează proces-verbal de consemnare condițiilor de executare"
-                , content = templateProcesVerbalConsemnareConditiiExecutare data
-                , onOpen = callback partileAjungLaIntelegere
-                , onResponse = (\v -> c { data | procesVerbalConsemnareConditiiExecutare = v })
-                }
-            , DocumentScanat.view
-                { labelText = "Copia semnată a procesului-verbal de consemnare a condițiilor de executare"
-                , documentScanat = data.copieProcesVerbalConsemnareConditiiExecutare
-                , callback = (\v -> c { data | copieProcesVerbalConsemnareConditiiExecutare = v })
-                }
-            , RichTextEditor.view
-                { buttonLabel = "Formează proces-verbal de constatare a executării"
-                , content = templateProcesVerbalConstatareExecutare data
-                , onOpen = callback partileAjungLaIntelegere
-                , onResponse = (\v -> c { data | procesVerbalConstatareExecutare = v })
-                }
-            , DocumentScanat.view
-                { labelText = "Copia semnată a procesului-verbal de constatare a executării"
-                , documentScanat = data.copieProcesVerbalConstatareExecutare
-                , callback = (\v -> c { data | copieProcesVerbalConstatareExecutare = v })
-                }
-            , IncheiereIncetare.view data.incheiereIncetare (\v -> callback (PartileAjungLaIntelegere { data | incheiereIncetare = v }))
-            ]
+    div []
+        [ RichTextEditor.view
+            { buttonLabel = "Formează proces-verbal de consemnare condițiilor de executare"
+            , content = templateProcesVerbalConsemnareConditiiExecutare data
+            , onOpen = callback partileAjungLaIntelegere
+            , onResponse = \v -> c { data | procesVerbalConsemnareConditiiExecutare = v }
+            }
+        , DocumentScanat.view
+            { labelText = "Copia semnată a procesului-verbal de consemnare a condițiilor de executare"
+            , documentScanat = data.copieProcesVerbalConsemnareConditiiExecutare
+            , callback = \v -> c { data | copieProcesVerbalConsemnareConditiiExecutare = v }
+            }
+        , RichTextEditor.view
+            { buttonLabel = "Formează proces-verbal de constatare a executării"
+            , content = templateProcesVerbalConstatareExecutare data
+            , onOpen = callback partileAjungLaIntelegere
+            , onResponse = \v -> c { data | procesVerbalConstatareExecutare = v }
+            }
+        , DocumentScanat.view
+            { labelText = "Copia semnată a procesului-verbal de constatare a executării"
+            , documentScanat = data.copieProcesVerbalConstatareExecutare
+            , callback = \v -> c { data | copieProcesVerbalConstatareExecutare = v }
+            }
+        , IncheiereIncetare.view data.incheiereIncetare (\v -> callback (PartileAjungLaIntelegere { data | incheiereIncetare = v }))
+        ]
 
 
 templateProcesVerbalConsemnareConditiiExecutare : Data -> List (Html msg)

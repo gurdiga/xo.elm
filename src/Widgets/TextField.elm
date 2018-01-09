@@ -1,8 +1,8 @@
-module Widgets.TextField exposing (view, update, Msg)
+module Widgets.TextField exposing (Msg, update, view)
 
-import Html.Styled exposing (Html, label, input, text)
+import Html.Styled exposing (Html, input, label, text)
+import Html.Styled.Attributes exposing (css, value)
 import Html.Styled.Events exposing (onInput)
-import Html.Styled.Attributes exposing (value, css)
 import Widgets.TextField.Css as Css
 
 

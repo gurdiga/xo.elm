@@ -1,16 +1,14 @@
-module Dosar.Temei.CerereCreditor exposing (Model, initialModel, view, Msg, update)
-
-import Html.Styled exposing (map, fromUnstyled, Html, h1, fieldset, legend, div, ul, li, text)
-import Html.Styled.Attributes exposing (css)
-import Dosar.Temei.CerereCreditor.Css as Css
-import Dosar.Persoana as Persoana
-import Widgets.DateField as DateField
-
+module Dosar.Temei.CerereCreditor exposing (Model, Msg, initialModel, update, view)
 
 -- import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca exposing (DocumenteContractIpoteca)
 -- import Utils.RichTextEditor as RichTextEditor
 
+import Dosar.Persoana as Persoana
+import Dosar.Temei.CerereCreditor.Css as Css
+import Html.Styled exposing (Html, div, fieldset, fromUnstyled, h1, legend, li, map, text, ul)
+import Html.Styled.Attributes exposing (css)
 import Utils.MyDate as MyDate
+import Widgets.DateField as DateField
 
 
 type Model

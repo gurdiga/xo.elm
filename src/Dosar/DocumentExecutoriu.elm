@@ -1,23 +1,18 @@
-module Dosar.DocumentExecutoriu exposing (Model, empty, view, Msg, update)
-
-import Html.Styled exposing (map, Html, fieldset, legend, div, button, br, text)
-import Widgets.Select3 as Select3
-
+module Dosar.DocumentExecutoriu exposing (Model, Msg, empty, update, view)
 
 -- import Utils.MyHtmlEvents exposing (onClick)
-
-import Utils.MyDate as MyDate
-
-
 -- import Utils.MyList as MyList
 -- import Widgets.Fields exposing (largeTextField)
 
+import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare)
+import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata
+import Dosar.DocumentExecutoriu.Pricina as Pricina
+import Dosar.Persoana as Persoana
+import Html.Styled exposing (Html, br, button, div, fieldset, legend, map, text)
+import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
 import Widgets.LargeTextField as LargeTextField
-import Dosar.Persoana as Persoana
-import Dosar.DocumentExecutoriu.Pricina as Pricina
-import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata
-import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare)
+import Widgets.Select3 as Select3
 
 
 type Msg

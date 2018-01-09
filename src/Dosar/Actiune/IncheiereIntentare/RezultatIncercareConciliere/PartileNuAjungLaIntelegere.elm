@@ -5,10 +5,10 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, h1, div, p, text)
-import Utils.RichTextEditor as RichTextEditor
-import Utils.MyDate as MyDate exposing (MyDate)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare as MasuriDeAsigurare exposing (MasuriDeAsigurare)
+import Html exposing (Html, div, h1, p, text)
+import Utils.MyDate as MyDate exposing (MyDate)
+import Utils.RichTextEditor as RichTextEditor
 
 
 type PartileNuAjungLaIntelegere
@@ -44,31 +44,31 @@ view partileNuAjungLaIntelegere callback =
         c data =
             callback (PartileNuAjungLaIntelegere data) Cmd.none Sub.none
     in
-        div []
-            [ MyDate.view "Termen de executare:" data.termenDeExecutare (\v -> c { data | termenDeExecutare = v })
-            , RichTextEditor.view
-                { buttonLabel = "Formează proces-verbal de continuare"
-                , content = templateProcesVerbalContinuare data
-                , onOpen = callback partileNuAjungLaIntelegere
-                , onResponse = (\v -> c { data | procesVerbalContinuare = v })
-                }
-            , RichTextEditor.view
-                { buttonLabel = "Formează încheiere de continuare"
-                , content = templateIncheiereContinuare data
-                , onOpen = callback partileNuAjungLaIntelegere
-                , onResponse = (\v -> c { data | incheiereContinuare = v })
-                }
-            , RichTextEditor.view
-                { buttonLabel = "Formează borderou de calcul"
-                , content = templateBorderouDeCalcul data
-                , onOpen = callback partileNuAjungLaIntelegere
-                , onResponse = (\v -> c { data | borderouDeCalcul = v })
-                }
-            , MasuriDeAsigurare.view data.masuriDeAsigurare
-                (\v ->
-                    PartileNuAjungLaIntelegere { data | masuriDeAsigurare = v } |> callback
-                )
-            ]
+    div []
+        [ MyDate.view "Termen de executare:" data.termenDeExecutare (\v -> c { data | termenDeExecutare = v })
+        , RichTextEditor.view
+            { buttonLabel = "Formează proces-verbal de continuare"
+            , content = templateProcesVerbalContinuare data
+            , onOpen = callback partileNuAjungLaIntelegere
+            , onResponse = \v -> c { data | procesVerbalContinuare = v }
+            }
+        , RichTextEditor.view
+            { buttonLabel = "Formează încheiere de continuare"
+            , content = templateIncheiereContinuare data
+            , onOpen = callback partileNuAjungLaIntelegere
+            , onResponse = \v -> c { data | incheiereContinuare = v }
+            }
+        , RichTextEditor.view
+            { buttonLabel = "Formează borderou de calcul"
+            , content = templateBorderouDeCalcul data
+            , onOpen = callback partileNuAjungLaIntelegere
+            , onResponse = \v -> c { data | borderouDeCalcul = v }
+            }
+        , MasuriDeAsigurare.view data.masuriDeAsigurare
+            (\v ->
+                PartileNuAjungLaIntelegere { data | masuriDeAsigurare = v } |> callback
+            )
+        ]
 
 
 templateProcesVerbalContinuare : Data -> List (Html msg)

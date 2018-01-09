@@ -1,18 +1,18 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestru
     exposing
         ( Sechestru
-        , fromItems
-        , withItemsSelected
-        , view
         , editView
+        , fromItems
+        , view
+        , withItemsSelected
         )
 
-import Html exposing (Html, h1, fieldset, legend, ul, li, button, text)
-import Utils.MyHtmlEvents exposing (onClick)
-import Utils.MyHtml exposing (whenTrue)
-import Utils.RichTextEditor as RichTextEditor
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selection as Selection exposing (Selection)
+import Html exposing (Html, button, fieldset, h1, legend, li, text, ul)
+import Utils.MyHtml exposing (whenTrue)
+import Utils.MyHtmlEvents exposing (onClick)
+import Utils.RichTextEditor as RichTextEditor
 
 
 type Sechestru
@@ -69,7 +69,7 @@ editView { sechestru, updateCallback, submitCallback, cancelCallback } =
                 , Selection.view
                     { selection = data.selection
                     , itemDisplayView = BunUrmarit.view
-                    , callback = (\v -> updateCallback (Sechestru { data | selection = v }) Cmd.none Sub.none)
+                    , callback = \v -> updateCallback (Sechestru { data | selection = v }) Cmd.none Sub.none
                     }
                 , whenTrue anyItemSelected genereazaProcesVerbal
                 ]
@@ -85,10 +85,10 @@ editView { sechestru, updateCallback, submitCallback, cancelCallback } =
                 { buttonLabel = "Genereaza proces verbal"
                 , content = templateProcesVerbal (Selection.selectedItems data.selection)
                 , onOpen = updateCallback sechestru
-                , onResponse = (\s -> submitCallback (Sechestru { data | procesVerbal = s }) Cmd.none Sub.none)
+                , onResponse = \s -> submitCallback (Sechestru { data | procesVerbal = s }) Cmd.none Sub.none
                 }
     in
-        this
+    this
 
 
 templateProcesVerbal : List BunUrmarit -> List (Html msg)

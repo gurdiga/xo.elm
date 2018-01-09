@@ -2,14 +2,14 @@ module Utils.MyHtmlEvents
     exposing
         ( onClick
         , onFocus
-        , onMouseOver
-        , onMouseOut
         , onKeyDown
+        , onMouseOut
+        , onMouseOver
         )
 
-import Json.Decode
 import Html
 import Html.Events
+import Json.Decode
 
 
 onClick : (String -> msg) -> Html.Attribute msg

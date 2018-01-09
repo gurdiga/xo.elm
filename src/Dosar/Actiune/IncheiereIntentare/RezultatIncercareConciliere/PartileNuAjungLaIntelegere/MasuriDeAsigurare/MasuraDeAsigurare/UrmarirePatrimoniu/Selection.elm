@@ -1,16 +1,16 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Selection
     exposing
         ( Selection
+        , anyItemSelected
         , empty
         , fromItems
-        , withItemsSelected
-        , anyItemSelected
         , selectedItems
         , view
+        , withItemsSelected
         )
 
-import Html exposing (Html, ul, li, input, text)
-import Html.Attributes exposing (type_, checked)
+import Html exposing (Html, input, li, text, ul)
+import Html.Attributes exposing (checked, type_)
 import Html.Events exposing (onCheck)
 import Utils.MyList as MyList
 
@@ -92,4 +92,4 @@ view { selection, itemDisplayView, callback } =
                 |> Selection
                 |> callback
     in
-        this
+    this

@@ -1,7 +1,7 @@
 module Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios exposing (DeclaratieContractNonLitigios, empty, view)
 
-import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (ContractIpoteca)
+import Html exposing (Html, fieldset, legend, p, text)
 
 
 type DeclaratieContractNonLitigios

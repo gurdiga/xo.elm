@@ -1,11 +1,11 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat, empty, view)
 
-import Html exposing (Html, h1, fieldset, legend, ul, li, p, button, text)
-import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare exposing (CauzaStramutare)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior exposing (ActeEfectuateAnterior)
+import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare exposing (CauzaStramutare)
+import Html exposing (Html, button, fieldset, h1, legend, li, p, text, ul)
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
-import Widgets.Fields exposing (largeTextField)
 import Utils.RichTextEditor as RichTextEditor
+import Widgets.Fields exposing (largeTextField)
 
 
 type PreluareDocumentExecutoriuStramutat
@@ -38,29 +38,29 @@ view ((PreluareDocumentExecutoriuStramutat data) as preluareDocumentExecutoriuSt
         c data =
             callback (PreluareDocumentExecutoriuStramutat data) Cmd.none Sub.none
     in
-        fieldset []
-            [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
-            , ul []
-                [ li [] [ CauzaStramutare.view data.cauzaStramutare (\v -> c { data | cauzaStramutare = v }) ]
-                , li []
-                    [ DocumentScanat.view
-                        { labelText = "Copia încheierii:"
-                        , documentScanat = data.copieIncheiereStramutare
-                        , callback = (\v -> c { data | copieIncheiereStramutare = v })
-                        }
-                    ]
-                , li [] [ ActeEfectuateAnterior.view data.acteEfectuatAnterior (\v -> c { data | acteEfectuatAnterior = v }) ]
-                , li [] [ largeTextField "Note:" data.note (\v -> c { data | note = v }) ]
-                , li []
-                    [ RichTextEditor.view
-                        { buttonLabel = "Formează act preluare"
-                        , content = templateActPreluare data
-                        , onOpen = callback preluareDocumentExecutoriuStramutat
-                        , onResponse = (\s -> c { data | actPreluare = s })
-                        }
-                    ]
+    fieldset []
+        [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
+        , ul []
+            [ li [] [ CauzaStramutare.view data.cauzaStramutare (\v -> c { data | cauzaStramutare = v }) ]
+            , li []
+                [ DocumentScanat.view
+                    { labelText = "Copia încheierii:"
+                    , documentScanat = data.copieIncheiereStramutare
+                    , callback = \v -> c { data | copieIncheiereStramutare = v }
+                    }
+                ]
+            , li [] [ ActeEfectuateAnterior.view data.acteEfectuatAnterior (\v -> c { data | acteEfectuatAnterior = v }) ]
+            , li [] [ largeTextField "Note:" data.note (\v -> c { data | note = v }) ]
+            , li []
+                [ RichTextEditor.view
+                    { buttonLabel = "Formează act preluare"
+                    , content = templateActPreluare data
+                    , onOpen = callback preluareDocumentExecutoriuStramutat
+                    , onResponse = \s -> c { data | actPreluare = s }
+                    }
                 ]
             ]
+        ]
 
 
 templateActPreluare : Data -> List (Html msg)

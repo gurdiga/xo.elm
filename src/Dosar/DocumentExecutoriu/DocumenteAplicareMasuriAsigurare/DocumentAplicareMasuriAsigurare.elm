@@ -1,9 +1,9 @@
 module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicareMasuriAsigurare
     exposing
-        ( DocumentAplicareMasuriAsigurare(DocumentAplicareMasuriAsigurare)
-        , Data
-        , empty
+        ( Data
+        , DocumentAplicareMasuriAsigurare(DocumentAplicareMasuriAsigurare)
         , data
+        , empty
         )
 
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)

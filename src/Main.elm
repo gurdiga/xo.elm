@@ -1,10 +1,10 @@
 module Main exposing (..)
 
+import Dosar
 import Html
-import Html.Styled exposing (map, toUnstyled, fromUnstyled, Html, h1, section, div, text, select, option, node, button)
+import Html.Styled exposing (Html, button, div, fromUnstyled, h1, map, node, option, section, select, text, toUnstyled)
 import Html.Styled.Events exposing (onClick)
 import UI.Layout as Layout
-import Dosar
 
 
 main : Program Never Model Msg

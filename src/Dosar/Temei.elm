@@ -1,12 +1,12 @@
 module Dosar.Temei exposing (Model, Msg, initialModel, update, view)
 
-import Html.Styled exposing (map, toUnstyled, fromUnstyled, Html, node, section, div, label, text)
-import Html.Styled.Attributes exposing (css)
-import Widgets.Select3 as Select3
-import Dosar.Temei.Css as Css
 import Dosar.Temei.CerereCreditor as CerereCreditor
+import Dosar.Temei.Css as Css
 import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
+import Html.Styled exposing (Html, div, fromUnstyled, label, map, node, section, text, toUnstyled)
+import Html.Styled.Attributes exposing (css)
+import Widgets.Select3 as Select3
 
 
 type Model

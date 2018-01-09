@@ -1,10 +1,10 @@
-module Dosar.Persoana.PersoanaJuridica exposing (Model, empty, view, Msg, update)
+module Dosar.Persoana.PersoanaJuridica exposing (Model, Msg, empty, update, view)
 
-import Html.Styled exposing (map, Html, ul, li)
-import Html.Styled.Attributes exposing (css)
-import Widgets.TextField as TextField
-import Widgets.LargeTextField as LargeTextField
 import Dosar.Persoana.PersoanaJuridica.Css as Css
+import Html.Styled exposing (Html, li, map, ul)
+import Html.Styled.Attributes exposing (css)
+import Widgets.LargeTextField as LargeTextField
+import Widgets.TextField as TextField
 
 
 type Msg

@@ -1,4 +1,4 @@
-module Utils.MyDate exposing (Model, empty, validationMessage, date, string, parse, format)
+module Utils.MyDate exposing (Model, date, empty, format, parse, string, validationMessage)
 
 import Date exposing (Date)
 import Regex exposing (regex)
@@ -48,60 +48,60 @@ parse dateString =
             , validationMessage = ""
             }
     in
-        -- LATER: How do I model this as a series of transformations? Split,
-        -- then look at each piece, etc. ??
-        Model
-            (if not (Regex.contains (regex "^\\d{2}\\.\\d{2}\\.\\d{4}$") dateString) then
-                { model | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
-             else
-                let
-                    dayString =
-                        -- DD.LL.AAAA
-                        -- ^^
-                        String.slice 0 2 dateString
+    -- LATER: How do I model this as a series of transformations? Split,
+    -- then look at each piece, etc. ??
+    Model
+        (if not (Regex.contains (regex "^\\d{2}\\.\\d{2}\\.\\d{4}$") dateString) then
+            { model | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
+         else
+            let
+                dayString =
+                    -- DD.LL.AAAA
+                    -- ^^
+                    String.slice 0 2 dateString
 
-                    monthString =
-                        -- DD.LL.AAAA
-                        --    ^^
-                        String.slice 3 5 dateString
+                monthString =
+                    -- DD.LL.AAAA
+                    --    ^^
+                    String.slice 3 5 dateString
 
-                    yearString =
-                        -- DD.LL.AAAA
-                        --       ^^^^
-                        String.slice 6 10 dateString
-                in
-                    case
-                        ( validateDayString dayString
-                        , validateMonthString monthString
-                        , validateYearString yearString
-                        )
-                    of
-                        ( Err e, _, _ ) ->
-                            { model | validationMessage = "Ziua datei este incorecta: " ++ dayString }
+                yearString =
+                    -- DD.LL.AAAA
+                    --       ^^^^
+                    String.slice 6 10 dateString
+            in
+            case
+                ( validateDayString dayString
+                , validateMonthString monthString
+                , validateYearString yearString
+                )
+            of
+                ( Err e, _, _ ) ->
+                    { model | validationMessage = "Ziua datei este incorecta: " ++ dayString }
 
-                        ( Ok _, Err e, _ ) ->
-                            { model | validationMessage = "Luna datei este incorecta: " ++ monthString }
+                ( Ok _, Err e, _ ) ->
+                    { model | validationMessage = "Luna datei este incorecta: " ++ monthString }
 
-                        ( Ok _, Ok _, Err e ) ->
-                            { model | validationMessage = "Anul datei este incorect: " ++ yearString }
+                ( Ok _, Ok _, Err e ) ->
+                    { model | validationMessage = "Anul datei este incorect: " ++ yearString }
 
-                        ( Ok day, Ok month, Ok year ) ->
-                            case validateDayForMonthAndYear day month year of
+                ( Ok day, Ok month, Ok year ) ->
+                    case validateDayForMonthAndYear day month year of
+                        Err errorMessage ->
+                            { model | validationMessage = errorMessage }
+
+                        Ok day ->
+                            let
+                                isoDateString =
+                                    yearString ++ "-" ++ monthString ++ "-" ++ dayString
+                            in
+                            case Date.fromString isoDateString of
+                                Ok date ->
+                                    { model | date = Just date }
+
                                 Err errorMessage ->
                                     { model | validationMessage = errorMessage }
-
-                                Ok day ->
-                                    let
-                                        isoDateString =
-                                            yearString ++ "-" ++ monthString ++ "-" ++ dayString
-                                    in
-                                        case Date.fromString isoDateString of
-                                            Ok date ->
-                                                { model | date = Just date }
-
-                                            Err errorMessage ->
-                                                { model | validationMessage = errorMessage }
-            )
+        )
 
 
 validateDayString : String -> Result String Int
@@ -150,26 +150,26 @@ validateDayForMonthAndYear day month year =
         monthsWith30Days =
             [ 4, 6, 9, 11 ]
     in
-        if List.member month monthsWith31Days then
-            if day < 32 then
-                Ok day
-            else
-                Err ("Luna " ++ (toString month) ++ " are 31 de zile")
-        else if List.member month monthsWith30Days then
-            if day < 31 then
-                Ok day
-            else
-                Err ("Luna " ++ (toString month) ++ " are 30 de zile")
-        else if isLeapYear year then
-            -- February
-            if day < 30 then
-                Ok day
-            else
-                Err ("Luna februarie are 29 de zile in " ++ (toString year))
-        else if day < 29 then
+    if List.member month monthsWith31Days then
+        if day < 32 then
             Ok day
         else
-            Err ("Luna februarie are 28 de zile in " ++ (toString year))
+            Err ("Luna " ++ toString month ++ " are 31 de zile")
+    else if List.member month monthsWith30Days then
+        if day < 31 then
+            Ok day
+        else
+            Err ("Luna " ++ toString month ++ " are 30 de zile")
+    else if isLeapYear year then
+        -- February
+        if day < 30 then
+            Ok day
+        else
+            Err ("Luna februarie are 29 de zile in " ++ toString year)
+    else if day < 29 then
+        Ok day
+    else
+        Err ("Luna februarie are 28 de zile in " ++ toString year)
 
 
 isLeapYear : Int -> Bool
@@ -189,11 +189,11 @@ format (Model model) =
     case model.date of
         Just date ->
             Ok
-                ((String.padLeft 2 '0' (toString (Date.day date)))
+                (String.padLeft 2 '0' (toString (Date.day date))
                     ++ "."
-                    ++ (String.padLeft 2 '0' (toString (monthNumber date)))
+                    ++ String.padLeft 2 '0' (toString (monthNumber date))
                     ++ "."
-                    ++ (toString (Date.year date))
+                    ++ toString (Date.year date)
                 )
 
         Nothing ->

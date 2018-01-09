@@ -1,14 +1,14 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare
     exposing
         ( MasuraDeAsigurare
-        , empty
         , addView
+        , empty
         , view
         )
 
-import Html exposing (Html, div, fieldset, legend, ul, li, button, text)
-import Utils.MyHtmlEvents exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu as UrmarirePatrimoniu exposing (UrmarirePatrimoniu)
+import Html exposing (Html, button, div, fieldset, legend, li, text, ul)
+import Utils.MyHtmlEvents exposing (onClick)
 
 
 type MasuraDeAsigurare

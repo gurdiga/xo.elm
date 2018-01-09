@@ -1,6 +1,6 @@
 module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (ContractCreditBancar, empty, view)
 
-import Html exposing (Html, fieldset, legend, ul, li, text)
+import Html exposing (Html, fieldset, legend, li, text, ul)
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 import Widgets.Fields exposing (largeTextField)
 
@@ -27,7 +27,7 @@ view contractCreditBancar callback =
                 [ DocumentScanat.view
                     { labelText = "Copia:"
                     , documentScanat = contractCreditBancar.copia
-                    , callback = (\v -> callback { contractCreditBancar | copia = v })
+                    , callback = \v -> callback { contractCreditBancar | copia = v }
                     }
                 ]
             , li [] [ largeTextField "Note:" contractCreditBancar.note (\v -> callback { contractCreditBancar | note = v }) ]

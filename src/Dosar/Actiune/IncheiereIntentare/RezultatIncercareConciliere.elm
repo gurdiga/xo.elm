@@ -1,9 +1,9 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (RezultatIncercareConciliere, empty, view)
 
-import Html exposing (Html, fieldset, legend, label, div, text)
-import Widgets.Select as Select
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere as PartileAjungLaIntelegere exposing (PartileAjungLaIntelegere)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere as PartileNuAjungLaIntelegere exposing (PartileNuAjungLaIntelegere)
+import Html exposing (Html, div, fieldset, label, legend, text)
+import Widgets.Select as Select
 
 
 type RezultatIncercareConciliere

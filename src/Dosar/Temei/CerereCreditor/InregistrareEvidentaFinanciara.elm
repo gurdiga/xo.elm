@@ -1,10 +1,10 @@
-module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara), Data, empty, data, view)
+module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Data, InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara), data, empty, view)
 
-import Html exposing (Html, tr, td, text)
+import Html exposing (Html, td, text, tr)
 import Html.Attributes exposing (style)
-import Utils.Money as Money exposing (Money(Money), Currency(MDL))
+import Utils.Money as Money exposing (Currency(MDL), Money(Money))
 import Utils.MyDate as MyDate exposing (MyDate)
-import Widgets.Fields exposing (unlabeledMoneyField, unlabeledLargeTextField)
+import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledMoneyField)
 
 
 type InregistrareEvidentaFinanciara
@@ -38,8 +38,8 @@ view (InregistrareEvidentaFinanciara i) callback =
         tdStyle =
             style [ ( "border", "1px solid silver" ) ]
     in
-        tr []
-            [ td [ tdStyle ] <| MyDate.viewUnlabeled i.data (\v -> callback (InregistrareEvidentaFinanciara { i | data = v }))
-            , td [ tdStyle ] <| unlabeledMoneyField i.suma (\v -> callback (InregistrareEvidentaFinanciara { i | suma = v }))
-            , td [ tdStyle ] <| unlabeledLargeTextField i.note (\v -> callback (InregistrareEvidentaFinanciara { i | note = v }))
-            ]
+    tr []
+        [ td [ tdStyle ] <| MyDate.viewUnlabeled i.data (\v -> callback (InregistrareEvidentaFinanciara { i | data = v }))
+        , td [ tdStyle ] <| unlabeledMoneyField i.suma (\v -> callback (InregistrareEvidentaFinanciara { i | suma = v }))
+        , td [ tdStyle ] <| unlabeledLargeTextField i.note (\v -> callback (InregistrareEvidentaFinanciara { i | note = v }))
+        ]

@@ -1,8 +1,8 @@
-module Widgets.LargeTextField exposing (view, update, Msg)
+module Widgets.LargeTextField exposing (Msg, update, view)
 
-import Html.Styled exposing (Html, label, textarea, text)
+import Html.Styled exposing (Html, label, text, textarea)
+import Html.Styled.Attributes exposing (css, value)
 import Html.Styled.Events exposing (onInput)
-import Html.Styled.Attributes exposing (value, css)
 import Widgets.LargeTextField.Css as Css
 
 

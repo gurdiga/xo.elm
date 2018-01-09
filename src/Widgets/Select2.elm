@@ -1,7 +1,7 @@
-module Widgets.Select2 exposing (view, unlabeledView)
+module Widgets.Select2 exposing (unlabeledView, view)
 
-import Html exposing (Html, label, select, option, span, text)
-import Html.Attributes exposing (attribute, style, selected)
+import Html exposing (Html, label, option, select, span, text)
+import Html.Attributes exposing (attribute, selected, style)
 import Html.Events exposing (onInput)
 import UI.Styles as Styles
 import Utils.MyList as MyList
@@ -67,7 +67,7 @@ unlabeledView valuesWithLabels defaultValue callback =
             List.filter (\( value, label ) -> label == l) valuesWithLabels
                 |> List.head
     in
-        this
+    this
 
 
 type alias Model a =
@@ -103,9 +103,9 @@ widget model =
             MyList.find (withValue model.defaultValue) model.valuesWithLabels
 
         withValue v =
-            (\( value, label ) -> value == v)
+            \( value, label ) -> value == v
     in
-        this
+    this
 
 
 unlabeledWidget : Model a -> Html msg
@@ -135,7 +135,7 @@ container =
             ]
                 ++ Styles.inheritFont
     in
-        this
+    this
 
 
 label : String -> Html msg
@@ -164,7 +164,7 @@ listboxContainer =
             ]
                 ++ Styles.inheritFont
     in
-        this
+    this
 
 
 selectedOption : String
@@ -188,17 +188,16 @@ input s =
                 []
 
         styles =
-            ([ ( "border-style", "solid" )
-             , ( "border-width", "1px" )
-             , ( "padding", "0 0.25em" )
-             , ( "margin-top", "-1px" )
-             , ( "width", "100%" )
-             , ( "box-sizing", "border-box" )
-             ]
+            [ ( "border-style", "solid" )
+            , ( "border-width", "1px" )
+            , ( "padding", "0 0.25em" )
+            , ( "margin-top", "-1px" )
+            , ( "width", "100%" )
+            , ( "box-sizing", "border-box" )
+            ]
                 ++ Styles.inheritFont
-            )
     in
-        this
+    this
 
 
 listbox : List String -> Bool -> Html msg
@@ -227,7 +226,7 @@ listbox valuesWithLabels isOpen =
             else
                 "none"
     in
-        this
+    this
 
 
 listboxOption : String -> Html msg

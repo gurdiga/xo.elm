@@ -1,14 +1,14 @@
-module Widgets.Select3 exposing (Model, initialModel, update, selectedValue, Msg, view)
+module Widgets.Select3 exposing (Model, Msg, initialModel, selectedValue, update, view)
 
-import Html.Styled exposing (Html, div, ul, li, span, text)
-import Html.Styled.Attributes exposing (attribute, css)
-import Html.Styled.Events exposing (onMouseDown, onClick, onMouseOver, onMouseOut, onBlur, on)
-import Json.Decode
-import FNV as HashingUtility
-import Keyboard
 import Char
-import Widgets.Select3.Css as Css
+import FNV as HashingUtility
+import Html.Styled exposing (Html, div, li, span, text, ul)
+import Html.Styled.Attributes exposing (attribute, css)
+import Html.Styled.Events exposing (on, onBlur, onClick, onMouseDown, onMouseOut, onMouseOver)
+import Json.Decode
+import Keyboard
 import Utils.MyList as MyList
+import Widgets.Select3.Css as Css
 
 
 type Model a
@@ -78,7 +78,7 @@ view labelText (Model { valuesWithLabels, selectedValue, hoveredValue, isOpened,
         dropdownSymbol =
             span [ css [ Css.dropdownSymbol ] ] [ text "▾" ]
     in
-        this
+    this
 
 
 valueIs : Maybe a -> ValueWithLabel a -> Bool
@@ -187,17 +187,16 @@ findByLabelFistChar keyCode (Model model) =
                 |> Maybe.map (\c -> Char.toLower c == char)
                 |> Maybe.withDefault False
     in
-        this
+    this
 
 
 nextValue : Maybe a -> ValuesWithLabels a -> Maybe a
 nextValue maybeHoveredValue valuesWithLabels =
     case maybeHoveredValue of
         Nothing ->
-            (valuesWithLabels
+            valuesWithLabels
                 |> List.head
                 |> Maybe.map Tuple.first
-            )
 
         Just v ->
             valuesWithLabels
@@ -272,7 +271,7 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
                 options
 
         options =
-            (List.map (tupleToOptionModel >> listboxOption) valuesWithLabels)
+            List.map (tupleToOptionModel >> listboxOption) valuesWithLabels
 
         tupleToOptionModel ( value, label ) =
             { value = value
@@ -287,7 +286,7 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
             else
                 Css.isHidden
     in
-        this
+    this
 
 
 type alias OptionModel a =
@@ -308,7 +307,7 @@ listboxOption { value, label, isSelected, isHovered } =
                 , css [ Css.listboxOption ]
                 , onMouseDown (OptionSelected value)
                 , onMouseOver (OptionMouseOver value)
-                , onMouseOut (OptionMouseOut)
+                , onMouseOut OptionMouseOut
                 ]
                 [ optionSelectedMarker
                 , text label
@@ -331,7 +330,7 @@ listboxOption { value, label, isSelected, isHovered } =
                     )
                 ]
     in
-        this
+    this
 
 
 onKeyDown : (Int -> msg) -> Html.Styled.Attribute msg

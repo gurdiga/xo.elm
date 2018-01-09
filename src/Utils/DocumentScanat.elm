@@ -1,6 +1,6 @@
-module Utils.DocumentScanat exposing (DocumentScanat, empty, view, unlabeledView)
+module Utils.DocumentScanat exposing (DocumentScanat, empty, unlabeledView, view)
 
-import Html exposing (Html, div, label, input, text)
+import Html exposing (Html, div, input, label, text)
 import Html.Attributes exposing (type_)
 import Html.Events exposing (on)
 import Json.Decode as Json
@@ -38,9 +38,9 @@ view { labelText, documentScanat, callback } =
         (DocumentScanat data) =
             documentScanat
     in
-        div []
-            [ fileField labelText (\v -> callback (DocumentScanat { data | file = v }))
-            ]
+    div []
+        [ fileField labelText (\v -> callback (DocumentScanat { data | file = v }))
+        ]
 
 
 unlabeledView : DocumentScanat -> Callback msg -> Html msg
@@ -74,4 +74,4 @@ onFileSelect callback =
                 (\targetValue -> callback (File targetValue))
                 (Json.at [ "target", "value" ] Json.string)
     in
-        on "change" eventDecoder
+    on "change" eventDecoder

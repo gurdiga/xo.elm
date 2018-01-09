@@ -1,8 +1,8 @@
-module Widgets.DateField exposing (Model, view, update, Msg)
+module Widgets.DateField exposing (Model, Msg, update, view)
 
-import Html.Styled exposing (Html, label, input, text)
+import Html.Styled exposing (Html, input, label, text)
+import Html.Styled.Attributes exposing (css, value)
 import Html.Styled.Events exposing (onInput)
-import Html.Styled.Attributes exposing (value, css)
 import Utils.MyDate as MyDate
 import Widgets.DateField.Css as Css
 
@@ -34,7 +34,7 @@ view labelText model =
                 Err errorMessage ->
                     ( MyDate.string model, errorMessage )
     in
-        this
+    this
 
 
 type Msg

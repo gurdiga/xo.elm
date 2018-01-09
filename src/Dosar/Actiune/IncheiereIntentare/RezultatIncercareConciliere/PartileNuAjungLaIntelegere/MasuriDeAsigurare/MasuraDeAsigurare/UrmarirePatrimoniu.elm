@@ -1,11 +1,11 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu exposing (UrmarirePatrimoniu, empty, view)
 
-import Html exposing (Html, fieldset, legend, div, button, text)
-import Utils.MyHtmlEvents exposing (onClick)
-import Utils.Money as Money exposing (Money(Money), Currency(EUR, USD))
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList as EditableList exposing (EditableList)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList as EditableList exposing (EditableList)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestru as Sechestru exposing (Sechestru)
+import Html exposing (Html, button, div, fieldset, legend, text)
+import Utils.Money as Money exposing (Currency(EUR, USD), Money(Money))
+import Utils.MyHtmlEvents exposing (onClick)
 
 
 type UrmarirePatrimoniu
@@ -76,23 +76,22 @@ view (UrmarirePatrimoniu ({ view } as data)) callback =
                     , editItemView = BunUrmarit.editForm
                     , displayItemView = BunUrmarit.view
                     , newItem = BunUrmarit.empty
-                    , callback = (\v -> c { data | view = { view | regim = Editare v } } Cmd.none Sub.none)
+                    , callback = \v -> c { data | view = { view | regim = Editare v } } Cmd.none Sub.none
                     }
                 ]
 
         formularSechestru sechestru =
             Sechestru.editView
                 { sechestru = sechestru
-                , updateCallback = (\sechestru -> c { data | view = { view | regim = Sechestrare sechestru } })
+                , updateCallback = \sechestru -> c { data | view = { view | regim = Sechestrare sechestru } }
                 , submitCallback =
-                    (\sechestru ->
+                    \sechestru ->
                         c
                             { data
                                 | sechestre = data.sechestre ++ [ sechestru ]
                                 , view = { view | regim = Editare (EditableList.fromItems data.bunuriUrmarite) }
                             }
-                    )
-                , cancelCallback = (\_ -> c { data | view = { view | regim = Editare (EditableList.fromItems data.bunuriUrmarite) } })
+                , cancelCallback = \_ -> c { data | view = { view | regim = Editare (EditableList.fromItems data.bunuriUrmarite) } }
                 }
 
         listaSechestre =
@@ -100,10 +99,10 @@ view (UrmarirePatrimoniu ({ view } as data)) callback =
                 [ legend [] [ text "Lista de sechestre" ]
                 , EditableList.view
                     { editableList = EditableList.fromItems data.sechestre
-                    , editItemView = (\sechestru updateCallback submitCallback cancelCallback -> toString sechestru |> text)
+                    , editItemView = \sechestru updateCallback submitCallback cancelCallback -> toString sechestru |> text
                     , displayItemView = Sechestru.view
                     , newItem = Sechestru.fromItems data.bunuriUrmarite
-                    , callback = (\editableList -> c data Cmd.none Sub.none)
+                    , callback = \editableList -> c data Cmd.none Sub.none
                     }
                 ]
 
@@ -115,4 +114,4 @@ view (UrmarirePatrimoniu ({ view } as data)) callback =
                 [ onClick (\_ -> c { data | view = { view | regim = Sechestrare (Sechestru.fromItems data.bunuriUrmarite) } } Cmd.none Sub.none) ]
                 [ text "Aplică sechestru" ]
     in
-        this
+    this

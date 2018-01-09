@@ -1,17 +1,17 @@
 module Widgets.Fields
     exposing
-        ( textField
-        , unlabeledTextField
+        ( checkboxField
         , largeTextField
-        , unlabeledLargeTextField
-        , checkboxField
         , moneyField
+        , textField
+        , unlabeledLargeTextField
         , unlabeledMoneyField
+        , unlabeledTextField
         )
 
-import Html exposing (Html, label, input, textarea, text)
-import Html.Attributes exposing (value, checked, type_)
-import Html.Events exposing (onInput, onCheck)
+import Html exposing (Html, input, label, text, textarea)
+import Html.Attributes exposing (checked, type_, value)
+import Html.Events exposing (onCheck, onInput)
 import Utils.Money as Money exposing (Money(..))
 import Widgets.Select as Select
 

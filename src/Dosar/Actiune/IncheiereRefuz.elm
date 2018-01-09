@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereRefuz exposing (IncheiereRefuz, empty, view)
 
 import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz exposing (CauzaRefuz)
-import Html exposing (Html, fieldset, legend, div, h1, p, button, text)
+import Html exposing (Html, button, div, fieldset, h1, legend, p, text)
 import Utils.RichTextEditor as RichTextEditor
 
 
@@ -29,16 +29,16 @@ view ((IncheiereRefuz data) as incheiereRefuz) callback =
         c data =
             callback (IncheiereRefuz data) Cmd.none Sub.none
     in
-        fieldset []
-            [ legend [] [ text "IncheiereRefuz" ]
-            , CauzaRefuz.view data.cauza (\v -> c { data | cauza = v })
-            , RichTextEditor.view
-                { buttonLabel = "Editează"
-                , content = template data
-                , onOpen = callback incheiereRefuz
-                , onResponse = (\s -> c { data | html = s })
-                }
-            ]
+    fieldset []
+        [ legend [] [ text "IncheiereRefuz" ]
+        , CauzaRefuz.view data.cauza (\v -> c { data | cauza = v })
+        , RichTextEditor.view
+            { buttonLabel = "Editează"
+            , content = template data
+            , onOpen = callback incheiereRefuz
+            , onResponse = \s -> c { data | html = s }
+            }
+        ]
 
 
 template : Data -> List (Html msg)

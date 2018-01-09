@@ -5,8 +5,8 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, h1, fieldset, legend, div, span, ul, li, p, button, input, text, strong, br)
-import Utils.MyHtml exposing (whenTrue, whenNonEmpty, whenNothing, whenNonNothing)
+import Html exposing (Html, br, button, div, fieldset, h1, input, legend, li, p, span, strong, text, ul)
+import Utils.MyHtml exposing (whenNonEmpty, whenNonNothing, whenNothing, whenTrue)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyList as MyList
 
@@ -68,11 +68,11 @@ submitItem (EditableList ({ items } as data)) item maybeIndex =
                 Nothing ->
                     items ++ [ item ]
     in
-        EditableList
-            { data
-                | items = newItems
-                , maybeItemToEdit = Nothing
-            }
+    EditableList
+        { data
+            | items = newItems
+            , maybeItemToEdit = Nothing
+        }
 
 
 resetItemToEdit : EditableList a -> EditableList a
@@ -119,7 +119,7 @@ view { editableList, editItemView, displayItemView, newItem, callback } =
                 [ onClick (\_ -> updateItemToEdit editableList newItem Nothing |> callback) ]
                 [ text "Adaugă" ]
     in
-        this
+    this
 
 
 itemListView : ItemView a msg -> (a -> Int -> msg) -> List a -> Html msg
@@ -134,4 +134,4 @@ itemListView itemView editCallback items =
                 , button [ onClick (\_ -> editCallback item index) ] [ text "Editează" ]
                 ]
     in
-        this
+    this

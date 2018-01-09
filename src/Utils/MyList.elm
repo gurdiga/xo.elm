@@ -1,8 +1,8 @@
 module Utils.MyList
     exposing
-        ( replace
+        ( dropUntil
         , find
-        , dropUntil
+        , replace
         )
 
 
@@ -15,7 +15,7 @@ replace list index empty =
             else
                 v
     in
-        List.indexedMap mapper list
+    List.indexedMap mapper list
 
 
 find : (a -> Bool) -> List a -> Maybe a

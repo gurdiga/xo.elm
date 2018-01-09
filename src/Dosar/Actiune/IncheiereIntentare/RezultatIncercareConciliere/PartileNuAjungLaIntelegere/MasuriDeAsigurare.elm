@@ -5,10 +5,10 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
         , view
         )
 
-import Html exposing (Html, fieldset, legend, ul, li, button, text)
-import Utils.MyList as MyList
-import Utils.MyHtmlEvents exposing (onClick)
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare as MasuraDeAsigurare exposing (MasuraDeAsigurare)
+import Html exposing (Html, button, fieldset, legend, li, text, ul)
+import Utils.MyHtmlEvents exposing (onClick)
+import Utils.MyList as MyList
 
 
 type MasuriDeAsigurare
@@ -45,8 +45,8 @@ view (MasuriDeAsigurare items) callback =
                     [ text "Șterge" ]
                 ]
     in
-        fieldset []
-            [ legend [] [ text "MasuriDeAsigurare" ]
-            , ul [] (List.indexedMap itemView items)
-            , MasuraDeAsigurare.addView addItem
-            ]
+    fieldset []
+        [ legend [] [ text "MasuriDeAsigurare" ]
+        , ul [] (List.indexedMap itemView items)
+        , MasuraDeAsigurare.addView addItem
+        ]

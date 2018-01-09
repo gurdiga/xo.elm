@@ -1,10 +1,10 @@
 module Dosar.Temei.CerereCreditor.DocumenteContractIpoteca exposing (DocumenteContractIpoteca, empty, view)
 
-import Html exposing (Html, fieldset, legend, div, ul, li, text)
-import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (ContractIpoteca)
 import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar exposing (ContractCreditBancar)
-import Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara as ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara)
+import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (ContractIpoteca)
 import Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios as DeclaratieContractNonLitigios exposing (DeclaratieContractNonLitigios)
+import Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara as ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara)
+import Html exposing (Html, div, fieldset, legend, li, text, ul)
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 import Widgets.Fields exposing (checkboxField)
 
@@ -49,37 +49,37 @@ fields maybeDocumenteContractIpoteca callback =
                 just c d =
                     Just (DocumenteContractIpoteca c d)
             in
-                fieldset []
-                    [ legend [] [ text "DocumenteContractIpoteca" ]
-                    , ContractIpoteca.view
-                        contractIpoteca
-                        (\v -> callback (just v documenteContractIpoteca))
-                    , ContractCreditBancar.view
-                        documenteContractIpoteca.contractCreditBancar
-                        (\v -> callback (just contractIpoteca { documenteContractIpoteca | contractCreditBancar = v }))
-                    , ExtraseEvidentaFinanciara.view
-                        documenteContractIpoteca.extraseEvidentaFinanciara
-                        (\v -> callback (just contractIpoteca { documenteContractIpoteca | extraseEvidentaFinanciara = v }))
-                    , ul []
-                        [ li []
-                            [ DocumentScanat.view
-                                { labelText = "Notificare:"
-                                , documentScanat = documenteContractIpoteca.notificare
-                                , callback = (\v -> callback (just contractIpoteca { documenteContractIpoteca | notificare = v }))
-                                }
-                            ]
-                        , li []
-                            [ DocumentScanat.view
-                                { labelText = "Preaviz:"
-                                , documentScanat = documenteContractIpoteca.preaviz
-                                , callback = (\v -> callback (just contractIpoteca { documenteContractIpoteca | preaviz = v }))
-                                }
-                            ]
+            fieldset []
+                [ legend [] [ text "DocumenteContractIpoteca" ]
+                , ContractIpoteca.view
+                    contractIpoteca
+                    (\v -> callback (just v documenteContractIpoteca))
+                , ContractCreditBancar.view
+                    documenteContractIpoteca.contractCreditBancar
+                    (\v -> callback (just contractIpoteca { documenteContractIpoteca | contractCreditBancar = v }))
+                , ExtraseEvidentaFinanciara.view
+                    documenteContractIpoteca.extraseEvidentaFinanciara
+                    (\v -> callback (just contractIpoteca { documenteContractIpoteca | extraseEvidentaFinanciara = v }))
+                , ul []
+                    [ li []
+                        [ DocumentScanat.view
+                            { labelText = "Notificare:"
+                            , documentScanat = documenteContractIpoteca.notificare
+                            , callback = \v -> callback (just contractIpoteca { documenteContractIpoteca | notificare = v })
+                            }
                         ]
-                    , DeclaratieContractNonLitigios.view
-                        documenteContractIpoteca.declaratieContractNonLitigios
-                        (\v -> callback (just contractIpoteca { documenteContractIpoteca | declaratieContractNonLitigios = v }))
+                    , li []
+                        [ DocumentScanat.view
+                            { labelText = "Preaviz:"
+                            , documentScanat = documenteContractIpoteca.preaviz
+                            , callback = \v -> callback (just contractIpoteca { documenteContractIpoteca | preaviz = v })
+                            }
+                        ]
                     ]
+                , DeclaratieContractNonLitigios.view
+                    documenteContractIpoteca.declaratieContractNonLitigios
+                    (\v -> callback (just contractIpoteca { documenteContractIpoteca | declaratieContractNonLitigios = v }))
+                ]
 
         Nothing ->
             text ""

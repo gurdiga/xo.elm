@@ -1,10 +1,10 @@
 module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara, empty, view)
 
-import Html exposing (Html, fieldset, legend, p, text)
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara))
-import Widgets.Table as Table
-import Widgets.Fields exposing (unlabeledMoneyField, unlabeledLargeTextField)
+import Html exposing (Html, fieldset, legend, p, text)
 import Utils.MyDate as MyDate
+import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledMoneyField)
+import Widgets.Table as Table
 
 
 type ExtraseEvidentaFinanciara
@@ -24,9 +24,9 @@ view extraseEvidentaFinanciara callback =
             { recordList = data extraseEvidentaFinanciara
             , callback = callback << fromData
             , columns =
-                [ ( "Data", (\r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v })) )
-                , ( "Suma", (\r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v })) )
-                , ( "Note", (\r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })) )
+                [ ( "Data", \r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v }) )
+                , ( "Suma", \r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v }) )
+                , ( "Note", \r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }) )
                 ]
             , emptyView = emptyView
             , empty = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.empty

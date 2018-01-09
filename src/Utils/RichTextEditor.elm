@@ -3,10 +3,10 @@ port module Utils.RichTextEditor exposing (view)
 -- This widget assumes that there will be at most one instance of RTE open at
 -- any given time, and it will be closed before openeing another one.
 
-import Html exposing (Html, div, button, text)
-import Utils.MyHtmlEvents exposing (onClick)
-import Html.Attributes exposing (style, id)
 import FNV as HashingUtility
+import Html exposing (Html, button, div, text)
+import Html.Attributes exposing (id, style)
+import Utils.MyHtmlEvents exposing (onClick)
 
 
 type alias Input msg =
@@ -39,11 +39,11 @@ view { buttonLabel, content, onOpen, onResponse } =
         editorSub =
             richTextEditorOnReceiveResponse onResponse
     in
-        button
-            [ onClick (\_ -> onOpen editorCmd editorSub) ]
-            [ text buttonLabel
-            , contentPreparedForEditor
-            ]
+    button
+        [ onClick (\_ -> onOpen editorCmd editorSub) ]
+        [ text buttonLabel
+        , contentPreparedForEditor
+        ]
 
 
 port richTextEditorSendContent : String -> Cmd msg

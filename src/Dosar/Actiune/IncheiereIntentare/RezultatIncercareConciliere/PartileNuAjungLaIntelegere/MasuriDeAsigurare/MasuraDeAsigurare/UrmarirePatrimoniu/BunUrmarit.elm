@@ -2,17 +2,17 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
     exposing
         ( BunUrmarit(BunUrmarit)
         , Data
-        , empty
         , data
-        , view
         , editForm
+        , empty
+        , view
         )
 
-import Html exposing (Html, fieldset, legend, p, label, input, button, div, span, strong, small, text, br)
+import Html exposing (Html, br, button, div, fieldset, input, label, legend, p, small, span, strong, text)
 import Html.Attributes exposing (style)
+import Utils.Money as Money exposing (Currency(MDL), Money(Money))
 import Utils.MyHtmlEvents exposing (onClick)
-import Widgets.Fields exposing (textField, largeTextField, moneyField)
-import Utils.Money as Money exposing (Money(Money), Currency(MDL))
+import Widgets.Fields exposing (largeTextField, moneyField, textField)
 
 
 type BunUrmarit
@@ -49,17 +49,17 @@ editForm bunUrmarit updateCallback submitCallback cancelCallback =
         c =
             updateCallback << BunUrmarit
     in
-        fieldset []
-            [ legend [] [ text "Detalii bun:" ]
-            , textField "Denumire:" data.denumire (\v -> c { data | denumire = v })
-            , br [] []
-            , moneyField "Valoare:" data.valoare (\v -> c { data | valoare = v })
-            , br [] []
-            , largeTextField "Note:" data.note (\v -> c { data | note = v })
-            , br [] []
-            , button [ onClick (\_ -> submitCallback bunUrmarit) ] [ text "Submit" ]
-            , button [ onClick (\_ -> cancelCallback bunUrmarit) ] [ text "Cancel" ]
-            ]
+    fieldset []
+        [ legend [] [ text "Detalii bun:" ]
+        , textField "Denumire:" data.denumire (\v -> c { data | denumire = v })
+        , br [] []
+        , moneyField "Valoare:" data.valoare (\v -> c { data | valoare = v })
+        , br [] []
+        , largeTextField "Note:" data.note (\v -> c { data | note = v })
+        , br [] []
+        , button [ onClick (\_ -> submitCallback bunUrmarit) ] [ text "Submit" ]
+        , button [ onClick (\_ -> cancelCallback bunUrmarit) ] [ text "Cancel" ]
+        ]
 
 
 view : BunUrmarit -> Html msg
@@ -73,11 +73,11 @@ view (BunUrmarit { denumire, valoare, note }) =
             , ( "color", "gray" )
             ]
     in
-        div []
-            [ p [ style mainStyle ]
-                [ span [] [ text denumire ]
-                , text " "
-                , strong [] [ text (Money.format valoare) ]
-                ]
-            , p [ style noteStyle ] [ small [] [ text note ] ]
+    div []
+        [ p [ style mainStyle ]
+            [ span [] [ text denumire ]
+            , text " "
+            , strong [] [ text (Money.format valoare) ]
             ]
+        , p [ style noteStyle ] [ small [] [ text note ] ]
+        ]

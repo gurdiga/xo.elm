@@ -1,13 +1,11 @@
-module Dosar exposing (Model, initialModel, update, Msg, view)
-
-import Html.Styled exposing (map, toUnstyled, fromUnstyled, Html, h1, section, div, text, select, option, node, button)
-import Dosar.Styles as Styles
-
+module Dosar exposing (Model, Msg, initialModel, update, view)
 
 -- import Html.Events exposing (onInput)
 
-import Dosar.Temei as Temei
 import Dosar.DocumentExecutoriu as DocumentExecutoriu
+import Dosar.Styles as Styles
+import Dosar.Temei as Temei
+import Html.Styled exposing (Html, button, div, fromUnstyled, h1, map, node, option, section, select, text, toUnstyled)
 
 
 -- import Dosar.Actiune as Actiune exposing (Actiune)

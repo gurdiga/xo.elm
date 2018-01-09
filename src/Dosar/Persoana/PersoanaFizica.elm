@@ -1,12 +1,12 @@
-module Dosar.Persoana.PersoanaFizica exposing (Model, empty, view, Msg, update)
+module Dosar.Persoana.PersoanaFizica exposing (Model, Msg, empty, update, view)
 
-import Html.Styled exposing (map, Html, ul, li)
-import Html.Styled.Attributes exposing (css)
-import Widgets.TextField as TextField
-import Widgets.LargeTextField as LargeTextField
-import Widgets.DateField as DateField
-import Utils.MyDate as MyDate
 import Dosar.Persoana.PersoanaFizica.Css as Css
+import Html.Styled exposing (Html, li, map, ul)
+import Html.Styled.Attributes exposing (css)
+import Utils.MyDate as MyDate
+import Widgets.DateField as DateField
+import Widgets.LargeTextField as LargeTextField
+import Widgets.TextField as TextField
 
 
 type Msg

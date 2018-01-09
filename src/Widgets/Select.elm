@@ -1,7 +1,7 @@
-module Widgets.Select exposing (view, unlabeledView)
+module Widgets.Select exposing (unlabeledView, view)
 
-import Html exposing (Html, label, select, option, span, text)
-import Html.Attributes exposing (style, selected)
+import Html exposing (Html, label, option, select, span, text)
+import Html.Attributes exposing (selected, style)
 import Html.Events exposing (onInput)
 import UI.Styles as Styles
 
@@ -20,7 +20,7 @@ unlabeledView valuesWithLabels defaultValue callback =
         this =
             select
                 [ onInput (callback << valueFromLabel)
-                , style (Styles.inheritFont)
+                , style Styles.inheritFont
                 ]
                 (options valuesWithLabels defaultValue)
 
@@ -42,4 +42,4 @@ unlabeledView valuesWithLabels defaultValue callback =
             List.filter (\( value, label ) -> label == l) valuesWithLabels
                 |> List.head
     in
-        this
+    this

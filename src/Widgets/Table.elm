@@ -1,6 +1,6 @@
 module Widgets.Table exposing (view)
 
-import Html exposing (Html, div, table, thead, tbody, tr, th, td, button, text)
+import Html exposing (Html, button, div, table, tbody, td, text, th, thead, tr)
 import Html.Attributes exposing (style)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyList as MyList
@@ -66,7 +66,7 @@ headRows columns =
         actionColumnCells =
             [ th [ cellStyle ] [] ]
     in
-        [ tr [] (dataHeaderCells ++ actionColumnCells) ]
+    [ tr [] (dataHeaderCells ++ actionColumnCells) ]
 
 
 dataRows : List record -> ListCallback record msg -> Columns record msg -> List (Html msg)
@@ -74,7 +74,7 @@ dataRows recordList listCallback columns =
     let
         dataRow : Int -> record -> Html msg
         dataRow index record =
-            tr [] <| (dataCells index record) ++ (actionCells record)
+            tr [] <| dataCells index record ++ actionCells record
 
         dataCells index record =
             List.map (dataCell index record) dataCellRenderers
@@ -97,7 +97,7 @@ dataRows recordList listCallback columns =
         delete record =
             listCallback (List.filter ((/=) record) recordList)
     in
-        List.indexedMap dataRow recordList
+    List.indexedMap dataRow recordList
 
 
 appendView : List record -> record -> ListCallback record msg -> Html msg

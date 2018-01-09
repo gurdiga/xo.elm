@@ -1,10 +1,10 @@
-module Dosar.Persoana exposing (Model, initialModel, view, update, Msg)
+module Dosar.Persoana exposing (Model, Msg, initialModel, update, view)
 
-import Html.Styled exposing (map, Html, fieldset)
-import Html.Styled.Attributes exposing (css)
 import Dosar.Persoana.Css as Css
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica
 import Dosar.Persoana.PersoanaJuridica as PersoanaJuridica
+import Html.Styled exposing (Html, fieldset, map)
+import Html.Styled.Attributes exposing (css)
 import Widgets.Select3 as Select3
 
 
@@ -24,6 +24,7 @@ update msg (Model model) =
             Model { model | persoana = PersoanaJuridica (PersoanaJuridica.update persoanaJuridicaMsg persoanaJuridica) }
 
         SetGenPersoana select3Msg ->
+            -- TODO: Why doesn’t this work? Changing the selected value doesn’t change the field set.
             receiveSelectedValue (Model model) (Select3.update select3Msg model.ui.select)
 
 

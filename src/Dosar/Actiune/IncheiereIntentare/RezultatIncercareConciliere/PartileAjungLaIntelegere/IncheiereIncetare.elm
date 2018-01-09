@@ -5,9 +5,9 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
         , view
         )
 
-import Html exposing (Html, h1, fieldset, legend, p, text)
-import Utils.RichTextEditor as RichTextEditor
+import Html exposing (Html, fieldset, h1, legend, p, text)
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
+import Utils.RichTextEditor as RichTextEditor
 
 
 type IncheiereIncetare
@@ -37,20 +37,20 @@ view incheiereIntentare callback =
         c data =
             callback (IncheiereIncetare data) Cmd.none Sub.none
     in
-        fieldset []
-            [ legend [] [ text "IncheiereIncetare" ]
-            , RichTextEditor.view
-                { buttonLabel = "Formează încheiere încetare"
-                , content = template data
-                , onOpen = callback incheiereIntentare
-                , onResponse = (\v -> c { data | html = v })
-                }
-            , DocumentScanat.view
-                { labelText = "Copia încheierii de încetare:"
-                , documentScanat = data.copie
-                , callback = (\v -> c { data | copie = v })
-                }
-            ]
+    fieldset []
+        [ legend [] [ text "IncheiereIncetare" ]
+        , RichTextEditor.view
+            { buttonLabel = "Formează încheiere încetare"
+            , content = template data
+            , onOpen = callback incheiereIntentare
+            , onResponse = \v -> c { data | html = v }
+            }
+        , DocumentScanat.view
+            { labelText = "Copia încheierii de încetare:"
+            , documentScanat = data.copie
+            , callback = \v -> c { data | copie = v }
+            }
+        ]
 
 
 template : Data -> List (Html msg)

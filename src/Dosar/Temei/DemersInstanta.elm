@@ -1,7 +1,7 @@
 module Dosar.Temei.DemersInstanta exposing (DemersInstanta, empty, view)
 
-import Html exposing (Html, fieldset, legend, ul, li, text)
 import Dosar.DemersInstanta.Pricina as Pricina exposing (Pricina)
+import Html exposing (Html, fieldset, legend, li, text, ul)
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 
 
@@ -28,7 +28,7 @@ view demersInstanta callback =
                 [ DocumentScanat.view
                     { labelText = "Copia scanată:"
                     , documentScanat = demersInstanta.copia
-                    , callback = (\v -> callback { demersInstanta | copia = v })
+                    , callback = \v -> callback { demersInstanta | copia = v }
                     }
                 ]
             ]

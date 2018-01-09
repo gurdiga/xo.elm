@@ -2,6 +2,7 @@ module Widgets.Select3.Css exposing (..)
 
 import Css exposing (..)
 import Css.Colors exposing (..)
+import MyCss.Mixins
 
 
 container : Style
@@ -10,6 +11,7 @@ container =
         [ position relative
         , displayFlex
         , width (pct 100)
+        , MyCss.Mixins.inheritFont
         ]
 
 
@@ -19,6 +21,7 @@ listboxContainer =
         [ display inlineBlock
         , position relative
         , flexGrow (num 1)
+        , MyCss.Mixins.inheritFont
         ]
 
 
@@ -40,6 +43,15 @@ input =
         , cursor pointer
         , overflow hidden
         , textOverflow ellipsis
+        , inputTextStyle
+        ]
+
+
+inputTextStyle : Style
+inputTextStyle =
+    Css.batch
+        [ MyCss.Mixins.inheritFont
+        , color black
         ]
 
 
@@ -50,6 +62,7 @@ dropdownSymbol =
         , width (em 1)
         , marginLeft (em -1)
         , property "pointer-events" "none"
+        , inputTextStyle
         ]
 
 
@@ -64,6 +77,8 @@ listbox =
         , backgroundColor white
         , fontFamilies [ "Alegreya Sans" ]
         , fontSize (Css.rem 1)
+        , fontWeight normal
+        , fontStyle normal
         , zIndex (int 1)
 
         -- Thank you https://debois.github.io/elm-mdl/#select
@@ -75,7 +90,7 @@ listboxOption : Style
 listboxOption =
     Css.batch
         [ cursor pointer
-        , padding4 (em 0) (em 0.25) (em 0) (em 1)
+        , padding4 (em 0) (em 0.5) (em 0) (em 1)
         , hover
             [ backgroundColor (hex "eeeeee")
             ]

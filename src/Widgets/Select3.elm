@@ -9,7 +9,6 @@ import Keyboard
 import Char
 import Widgets.Select3.Css as Css
 import Utils.MyList as MyList
-import MyCss.Mixins
 
 
 type Model a
@@ -221,7 +220,7 @@ container id =
         , attribute "aria-labelledby" ("combobox-" ++ id ++ "-label")
         , attribute "aria-expanded" "true"
         , attribute "aria-haspopup" "listbox"
-        , css [ MyCss.Mixins.inheritFont, Css.container ]
+        , css [ Css.container ]
         ]
 
 
@@ -229,7 +228,7 @@ listboxContainer : List (Html (Msg a)) -> Html (Msg a)
 listboxContainer =
     div
         [ attribute "class" "combobox-listbox-container"
-        , css [ MyCss.Mixins.inheritFont, Css.listboxContainer ]
+        , css [ Css.listboxContainer ]
         ]
 
 
@@ -253,7 +252,7 @@ input id label =
         , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
         , attribute "value" label
         , attribute "readonly" "readonly"
-        , css [ MyCss.Mixins.inheritFont, Css.input ]
+        , css [ Css.input ]
         , onBlur Close
         , onClick Toggle
         , onKeyDown KeyDown

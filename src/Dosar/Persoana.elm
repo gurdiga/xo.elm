@@ -16,16 +16,26 @@ type Msg
 
 update : Msg -> Model -> Model
 update msg (Model model) =
-    case msg of
-        SetPersoanaFizica persoanaFizica persoanaFizicaMsg ->
-            Model { model | persoana = PersoanaFizica (PersoanaFizica.update persoanaFizicaMsg persoanaFizica) }
+    case Debug.log "----" msg of
+        SetPersoanaFizica p msg ->
+            Model { model | persoana = PersoanaFizica (PersoanaFizica.update msg p) }
 
-        SetPersoanaJuridica persoanaJuridica persoanaJuridicaMsg ->
-            Model { model | persoana = PersoanaJuridica (PersoanaJuridica.update persoanaJuridicaMsg persoanaJuridica) }
+        SetPersoanaJuridica p msg ->
+            Model { model | persoana = PersoanaJuridica (PersoanaJuridica.update msg p) }
 
         SetGenPersoana select3Msg ->
             -- TODO: Why doesn’t this work? Changing the selected value doesn’t change the field set.
-            receiveSelectedValue (Model model) (Select3.update select3Msg model.ui.select)
+            Debug.log "model" <|
+                receivePersoana (Model model) (Select3.update select3Msg model.ui.select)
+
+
+receivePersoana : Model -> Select3.Model Persoana -> Model
+receivePersoana (Model ({ ui } as model)) newSelect =
+    Model
+        { model
+            | ui = { ui | select = newSelect }
+            , persoana = Select3.selectedValue newSelect
+        }
 
 
 type Model
@@ -38,20 +48,6 @@ type Model
 type alias Ui =
     { select : Select3.Model Persoana
     }
-
-
-receiveSelectedValue : Model -> Select3.Model Persoana -> Model
-receiveSelectedValue (Model model) newSelect =
-    Model
-        { model
-            | ui = setSelect model.ui newSelect
-            , persoana = Select3.selectedValue newSelect
-        }
-
-
-setSelect : Ui -> Select3.Model Persoana -> Ui
-setSelect ui select =
-    { ui | select = select }
 
 
 type Persoana
@@ -77,23 +73,23 @@ initialPersoana =
 view : Model -> Html Msg
 view (Model model) =
     fieldset [ css [ Css.fieldset ] ]
-        [ Select3.view "Gen persoana:" model.ui.select |> map SetGenPersoana
+        [ Select3.view "Gen persoană:" model.ui.select |> map SetGenPersoana
         , fieldsView model.persoana
         ]
 
 
 valuesWithLabels : List ( Persoana, String )
 valuesWithLabels =
-    [ ( PersoanaFizica PersoanaFizica.empty, "fizica" )
-    , ( PersoanaJuridica PersoanaJuridica.empty, "juridica" )
+    [ ( PersoanaFizica PersoanaFizica.empty, "fizică" )
+    , ( PersoanaJuridica PersoanaJuridica.empty, "juridică" )
     ]
 
 
 fieldsView : Persoana -> Html Msg
 fieldsView persoana =
     case persoana of
-        PersoanaFizica persoanaFizica ->
-            PersoanaFizica.view persoanaFizica |> map (SetPersoanaFizica persoanaFizica)
+        PersoanaFizica p ->
+            PersoanaFizica.view p |> map (SetPersoanaFizica p)
 
-        PersoanaJuridica persoanaJuridica ->
-            PersoanaJuridica.view persoanaJuridica |> map (SetPersoanaJuridica persoanaJuridica)
+        PersoanaJuridica p ->
+            PersoanaJuridica.view p |> map (SetPersoanaJuridica p)

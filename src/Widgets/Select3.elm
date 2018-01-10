@@ -118,6 +118,7 @@ update msg (Model model) =
 
 handleKeyDowns : Keyboard.KeyCode -> Model a -> Model a
 handleKeyDowns keyCode (Model model) =
+    -- TODO: Why doesn’t up/down work as expected? Do I need unit tests here?
     case keyCode of
         -- down
         40 ->

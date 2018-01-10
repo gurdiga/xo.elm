@@ -93,21 +93,16 @@ update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
         SetTemei select3Msg ->
-            receiveSelectedValue (Model model) (Select3.update select3Msg model.ui.select)
+            receiveTemei (Model model) (Select3.update select3Msg model.ui.select)
 
         CerereCreditorMsg cerereCreditor cerereCreditorMsg ->
             Model { model | temei = CerereCreditor (CerereCreditor.update cerereCreditorMsg cerereCreditor) }
 
 
-receiveSelectedValue : Model -> Select3.Model Temei -> Model
-receiveSelectedValue (Model model) newSelect =
+receiveTemei : Model -> Select3.Model Temei -> Model
+receiveTemei (Model ({ ui } as model)) newSelect =
     Model
         { model
-            | ui = setSelect model.ui newSelect
+            | ui = { ui | select = newSelect }
             , temei = Select3.selectedValue newSelect
         }
-
-
-setSelect : Ui -> Select3.Model Temei -> Ui
-setSelect ui select =
-    { ui | select = select }

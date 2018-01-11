@@ -9,24 +9,32 @@ import Widgets.Select3 as Select3
 
 
 type Msg
-    = SetPersoanaFizica PersoanaFizica.Model PersoanaFizica.Msg
-    | SetPersoanaJuridica PersoanaJuridica.Model PersoanaJuridica.Msg
+    = SetPersoanaFizica PersoanaFizica.Msg
+    | SetPersoanaJuridica PersoanaJuridica.Msg
     | SetGenPersoana (Select3.Msg Persoana)
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
-    case Debug.log "----" msg of
-        SetPersoanaFizica p msg ->
-            Model { model | persoana = PersoanaFizica (PersoanaFizica.update msg p) }
+    case msg of
+        SetPersoanaFizica m ->
+            case model.persoana of
+                PersoanaFizica p ->
+                    Model { model | persoana = PersoanaFizica (PersoanaFizica.update m p) }
 
-        SetPersoanaJuridica p msg ->
-            Model { model | persoana = PersoanaJuridica (PersoanaJuridica.update msg p) }
+                _ ->
+                    Model model
+
+        SetPersoanaJuridica m ->
+            case model.persoana of
+                PersoanaJuridica p ->
+                    Model { model | persoana = PersoanaJuridica (PersoanaJuridica.update m p) }
+
+                _ ->
+                    Model model
 
         SetGenPersoana select3Msg ->
-            -- TODO: Why doesn’t this work? Changing the selected value doesn’t change the field set.
-            Debug.log "model" <|
-                receivePersoana (Model model) (Select3.update select3Msg model.ui.select)
+            receivePersoana (Model model) (Select3.update select3Msg model.ui.select)
 
 
 receivePersoana : Model -> Select3.Model Persoana -> Model
@@ -89,7 +97,7 @@ fieldsView : Persoana -> Html Msg
 fieldsView persoana =
     case persoana of
         PersoanaFizica p ->
-            PersoanaFizica.view p |> map (SetPersoanaFizica p)
+            PersoanaFizica.view p |> map SetPersoanaFizica
 
         PersoanaJuridica p ->
-            PersoanaJuridica.view p |> map (SetPersoanaJuridica p)
+            PersoanaJuridica.view p |> map SetPersoanaJuridica

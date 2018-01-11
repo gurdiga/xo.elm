@@ -46,7 +46,7 @@ fields : Temei -> Html Msg
 fields temei =
     case temei of
         CerereCreditor cerereCreditor ->
-            CerereCreditor.view cerereCreditor |> map (CerereCreditorMsg cerereCreditor)
+            CerereCreditor.view cerereCreditor |> map CerereCreditorMsg
 
         DemersInstanta demersInstanta ->
             text "DemersInstanta.view"
@@ -86,7 +86,7 @@ initialTemei =
 
 type Msg
     = SetTemei (Select3.Msg Temei)
-    | CerereCreditorMsg CerereCreditor.Model CerereCreditor.Msg
+    | CerereCreditorMsg CerereCreditor.Msg
 
 
 update : Msg -> Model -> Model
@@ -95,8 +95,13 @@ update msg (Model model) =
         SetTemei select3Msg ->
             receiveTemei (Model model) (Select3.update select3Msg model.ui.select)
 
-        CerereCreditorMsg cerereCreditor cerereCreditorMsg ->
-            Model { model | temei = CerereCreditor (CerereCreditor.update cerereCreditorMsg cerereCreditor) }
+        CerereCreditorMsg cerereCreditorMsg ->
+            case model.temei of
+                CerereCreditor c ->
+                    Model { model | temei = CerereCreditor (CerereCreditor.update cerereCreditorMsg c) }
+
+                _ ->
+                    Model model
 
 
 receiveTemei : Model -> Select3.Model Temei -> Model

@@ -60,6 +60,7 @@ view labelText (Model { valuesWithLabels, selectedValue, hoveredValue, isOpened,
     let
         this =
             container id
+                isOpened
                 [ label id labelText
                 , listboxContainer
                     [ input id selectedOptionLabel
@@ -213,12 +214,12 @@ previousValue maybeHoveredValue valuesWithLabels =
         |> nextValue maybeHoveredValue
 
 
-container : String -> List (Html (Msg a)) -> Html (Msg a)
-container id =
+container : String -> Bool -> List (Html (Msg a)) -> Html (Msg a)
+container id isOpened =
     div
         [ attribute "role" "combobox"
         , attribute "aria-labelledby" ("combobox-" ++ id ++ "-label")
-        , attribute "aria-expanded" "true"
+        , attribute "aria-expanded" (toString isOpened |> String.toLower)
         , attribute "aria-haspopup" "listbox"
         , css [ Css.container ]
         ]

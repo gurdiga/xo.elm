@@ -1,4 +1,19 @@
-module Widgets.Select3 exposing (Model, Msg, initialModel, selectedValue, update, view)
+module Widgets.Select3
+    exposing
+        ( Model
+        , Msg
+        , initialModel
+        , selectedValue
+        , triggerClose
+        , triggerKeyDown
+        , triggerOpen
+        , triggerOptionMouseOut
+        , triggerOptionMouseOver
+        , triggerOptionSelected
+        , triggerToggle
+        , update
+        , view
+        )
 
 import Char
 import FNV as HashingUtility
@@ -338,3 +353,63 @@ listboxOption { value, label, isSelected, isHovered } =
 onKeyDown : (Int -> msg) -> Html.Styled.Attribute msg
 onKeyDown tagger =
     Html.Styled.Events.on "keydown" (Json.Decode.map tagger Html.Styled.Events.keyCode)
+
+
+trigger : Msg a -> Model a -> Model a
+trigger msg =
+    case msg of
+        Open ->
+            triggerOpen
+
+        Close ->
+            triggerClose
+
+        Toggle ->
+            triggerToggle
+
+        OptionSelected a ->
+            triggerOptionSelected a
+
+        OptionMouseOver a ->
+            triggerOptionMouseOver a
+
+        OptionMouseOut ->
+            triggerOptionMouseOut
+
+        KeyDown keyCode ->
+            triggerKeyDown keyCode
+
+
+triggerOpen : Model a -> Model a
+triggerOpen model =
+    update Open model
+
+
+triggerClose : Model a -> Model a
+triggerClose model =
+    update Close model
+
+
+triggerToggle : Model a -> Model a
+triggerToggle model =
+    update Toggle model
+
+
+triggerOptionSelected : a -> Model a -> Model a
+triggerOptionSelected v model =
+    update (OptionSelected v) model
+
+
+triggerOptionMouseOver : a -> Model a -> Model a
+triggerOptionMouseOver v model =
+    update (OptionMouseOver v) model
+
+
+triggerOptionMouseOut : Model a -> Model a
+triggerOptionMouseOut model =
+    update OptionMouseOut model
+
+
+triggerKeyDown : Keyboard.KeyCode -> Model a -> Model a
+triggerKeyDown keyCode model =
+    update (KeyDown keyCode) model

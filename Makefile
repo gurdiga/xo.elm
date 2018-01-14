@@ -1,4 +1,4 @@
-default: rich-text-editor compile
+default: rich-text-editor compile test
 
 test: elm-test
 	elm-test

@@ -21,9 +21,10 @@ tests =
                             , Selector.attribute <| attribute "aria-expanded" "false"
                             , Selector.attribute <| attribute "aria-haspopup" "true"
 
-                            -- TODO: How to get the value of the DOM attribute
-                            -- value and do assertions on its string value and
-                            -- also use that value in the other related tests?
+                            -- TODO: Find how to get the value of the DOM
+                            -- attribute value and do assertions on its string
+                            -- value and also use that value in the other
+                            -- related tests?
                             ]
             , test "label" <|
                 \_ ->

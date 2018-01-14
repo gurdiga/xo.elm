@@ -103,13 +103,3 @@ optionSelectedMarker =
         [ position absolute
         , marginLeft (em -1)
         ]
-
-
-isVisible : Style
-isVisible =
-    display block
-
-
-isHidden : Style
-isHidden =
-    display none

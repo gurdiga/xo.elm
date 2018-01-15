@@ -253,14 +253,14 @@ label id labelText =
 
 
 input : String -> String -> Html (Msg a)
-input id label =
+input id optionLabel =
     Html.Styled.input
         [ attribute "id" ("combobox-" ++ id)
         , attribute "type" "text"
         , attribute "aria-autocomplete" "list"
         , attribute "aria-controls" ("combobox-" ++ id ++ "-listbox")
         , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
-        , attribute "value" label
+        , attribute "value" optionLabel
         , attribute "readonly" "readonly"
         , css [ Css.input ]
         , onBlur Close

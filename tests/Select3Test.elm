@@ -26,6 +26,15 @@ tests =
                     renderWithModel model
                         |> Query.find [ Selector.tag "label" ]
                         |> Query.has [ Selector.text "A dropdown:" ]
+            , test "input" <|
+                \_ ->
+                    renderWithModel model
+                        |> Query.find [ Selector.tag "input" ]
+                        |> Query.has
+                            [ Selector.attribute <| attribute "aria-autocomplete" "list"
+                            , Selector.attribute <| attribute "value" "one"
+                            , Selector.attribute <| attribute "readonly" "readonly"
+                            ]
             ]
         , describe "when clicking the field"
             [ test "emits a Toggle message" <|

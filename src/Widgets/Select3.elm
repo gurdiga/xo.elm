@@ -4,6 +4,7 @@ module Widgets.Select3
         , -- Msg constructors are exported for tests only.
           Msg(..)
         , initialModel
+        , isOpened
         , selectedValue
         , update
         , view
@@ -52,6 +53,11 @@ initialModel selectedValue valuesWithLabels =
 selectedValue : Model a -> a
 selectedValue (Model { selectedValue }) =
     selectedValue
+
+
+isOpened : Model a -> Bool
+isOpened (Model { isOpened }) =
+    isOpened
 
 
 type Msg a
@@ -278,7 +284,7 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
                 [ attribute "role" "listbox"
                 , attribute "id" ("combobox-" ++ id ++ "-listbox")
                 , css [ Css.listbox ]
-                , style [ visibilityStyle ]
+                , style [ ( "display", visibilityDisplay ) ]
                 ]
                 options
 
@@ -292,11 +298,11 @@ listbox id isOpened valuesWithLabels selectedValue hoveredValue =
             , isHovered = Just value == hoveredValue
             }
 
-        visibilityStyle =
+        visibilityDisplay =
             if isOpened then
-                ( "display", "block" )
+                "block"
             else
-                ( "display", "none" )
+                "none"
     in
     this
 

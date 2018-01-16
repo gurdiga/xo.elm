@@ -3,6 +3,7 @@ module Select3Test exposing (..)
 import Expect
 import Html.Attributes exposing (attribute)
 import Html.Styled
+import Json.Encode as Encode exposing (Value)
 import Test exposing (Test, describe, test)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
@@ -69,6 +70,30 @@ clickingTheField =
                         |> Query.has [ Selector.style [ ( "display", "block" ) ] ]
              ]
             )
+        ]
+
+
+keyboardSupport : Test
+keyboardSupport =
+    let
+        keyDownEvent keyCode =
+            Encode.object [ ( "keyCode", Encode.int keyCode ) ]
+                |> Event.custom "keydown"
+    in
+    describe "Keyboard interaction"
+        [ describe "down arrow"
+            [ test "emits a KeyDown message with the appropriate key code" <|
+                \_ ->
+                    renderWithModel model
+                        |> Query.find [ Selector.tag "input" ]
+                        |> Event.simulate (keyDownEvent 40)
+                        |> Event.expect (Select3.KeyDown 40)
+            , test "opens the dropdown" <|
+                \_ ->
+                    Select3.update (Select3.KeyDown 40) model
+                        |> Select3.isOpened
+                        |> Expect.equal True
+            ]
         ]
 
 

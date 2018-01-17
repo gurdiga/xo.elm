@@ -4,7 +4,7 @@ import Expect
 import Html.Attributes exposing (attribute)
 import Html.Styled
 import Json.Encode as Encode exposing (Value)
-import Test exposing (Test, describe, test)
+import Test exposing (Test, describe, test, todo)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
 import Test.Html.Selector as Selector exposing (all, tag)
@@ -88,11 +88,37 @@ keyboardSupport =
                         |> Query.find [ Selector.tag "input" ]
                         |> Event.simulate (keyDownEvent 40)
                         |> Event.expect (Select3.KeyDown 40)
-            , test "opens the dropdown" <|
+            , test "opens the dropdown, initially" <|
                 \_ ->
                     Select3.update (Select3.KeyDown 40) model
                         |> Select3.isOpened
                         |> Expect.equal True
+            , describe "when it’s opened, and there was initially no hovered option"
+                (let
+                    modelOpened =
+                        Select3.update Select3.Open model
+                 in
+                 [ test "sets the first option as the hovered one" <|
+                    \_ ->
+                        modelOpened
+                            |> Select3.update (Select3.KeyDown 40)
+                            |> Select3.hoveredValue
+                            |> Expect.equal (Just 1)
+                 , test "renders the hovered option as such" <|
+                    let
+                        modelHovered =
+                            modelOpened
+                                |> Select3.update (Select3.KeyDown 40)
+                    in
+                    \_ ->
+                        renderWithModel modelHovered
+                            |> Query.findAll [ Selector.tag "li", Selector.classes [ "test-hover" ] ]
+                            |> Expect.all
+                                [ Query.count (Expect.equal 1)
+                                , Query.first >> Query.has [ Selector.text "one" ]
+                                ]
+                 ]
+                )
             ]
         ]
 

@@ -3,6 +3,7 @@ module Widgets.Select3
         ( Model
         , -- Msg constructors are exported for tests only.
           Msg(..)
+        , hoveredValue
         , initialModel
         , isOpened
         , selectedValue
@@ -13,7 +14,7 @@ module Widgets.Select3
 import Char
 import FNV as HashingUtility
 import Html.Styled exposing (Html, div, li, span, text, ul)
-import Html.Styled.Attributes exposing (attribute, css, style)
+import Html.Styled.Attributes exposing (attribute, classList, css, style)
 import Html.Styled.Events exposing (on, onBlur, onClick, onMouseDown, onMouseOut, onMouseOver)
 import Json.Decode
 import Keyboard
@@ -53,6 +54,11 @@ initialModel selectedValue valuesWithLabels =
 selectedValue : Model a -> a
 selectedValue (Model { selectedValue }) =
     selectedValue
+
+
+hoveredValue : Model a -> Maybe a
+hoveredValue (Model { hoveredValue }) =
+    hoveredValue
 
 
 isOpened : Model a -> Bool
@@ -267,7 +273,8 @@ input id optionLabel =
         , attribute "aria-controls" ("combobox-" ++ id ++ "-listbox")
         , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
         , attribute "value" optionLabel
-        , attribute "readonly" "readonly"
+        , -- TODO: Maybe remove this because it causes the whole page to scroll when using arrow keys
+          attribute "readonly" "readonly"
         , css [ Css.input ]
         , onBlur Close
         , onClick Toggle
@@ -320,22 +327,29 @@ listboxOption { value, label, isSelected, isHovered } =
     let
         this =
             li
-                [ attribute "role" "option"
-                , ariaSelectedState
-                , css [ Css.listboxOption ]
-                , onMouseDown (OptionSelected value)
-                , onMouseOver (OptionMouseOver value)
-                , onMouseOut OptionMouseOut
-                ]
+                ([ attribute "role" "option"
+                 , attribute "aria-selected" (isSelected |> toString |> String.toLower)
+                 , css [ Css.listboxOption ]
+                 , onMouseDown (OptionSelected value)
+                 , onMouseOver (OptionMouseOver value)
+                 , onMouseOut OptionMouseOut
+                 ]
+                    ++ hoverRelatedAttributes
+                )
                 [ optionSelectedMarker
                 , text label
                 ]
 
-        ariaSelectedState =
-            if isSelected then
-                attribute "aria-selected" "true"
+        hoverRelatedAttributes =
+            [ css hoverCss
+            , classList [ ( "test-hover", isHovered ) ]
+            ]
+
+        hoverCss =
+            if isHovered then
+                Css.listboxOptionHover
             else
-                attribute "aria-selected" "false"
+                []
 
         optionSelectedMarker =
             span

@@ -91,10 +91,14 @@ listboxOption =
     Css.batch
         [ cursor pointer
         , padding4 (em 0) (em 0.5) (em 0) (em 1)
-        , hover
-            [ backgroundColor (hex "eeeeee")
-            ]
+        , hover listboxOptionHover
         ]
+
+
+listboxOptionHover : List Style
+listboxOptionHover =
+    [ backgroundColor (hex "eeeeee")
+    ]
 
 
 optionSelectedMarker : Style

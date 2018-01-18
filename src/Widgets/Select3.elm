@@ -15,7 +15,7 @@ import Char
 import FNV as HashingUtility
 import Html.Styled exposing (Html, div, li, span, text, ul)
 import Html.Styled.Attributes exposing (attribute, classList, css, style)
-import Html.Styled.Events exposing (on, onBlur, onClick, onMouseDown, onMouseOut, onMouseOver)
+import Html.Styled.Events exposing (on, onBlur, onClick, onMouseDown, onMouseOut, onMouseOver, onWithOptions)
 import Json.Decode
 import Keyboard
 import Utils.MyList as MyList
@@ -273,8 +273,7 @@ input id optionLabel =
         , attribute "aria-controls" ("combobox-" ++ id ++ "-listbox")
         , attribute "aria-activedescendant" ("combobox-" ++ id ++ "-selected-option")
         , attribute "value" optionLabel
-        , -- TODO: Maybe remove this because it causes the whole page to scroll when using arrow keys
-          attribute "readonly" "readonly"
+        , attribute "readonly" "readonly"
         , css [ Css.input ]
         , onBlur Close
         , onClick Toggle
@@ -367,4 +366,8 @@ listboxOption { value, label, isSelected, isHovered } =
 
 onKeyDown : (Int -> msg) -> Html.Styled.Attribute msg
 onKeyDown tagger =
-    Html.Styled.Events.on "keydown" (Json.Decode.map tagger Html.Styled.Events.keyCode)
+    Html.Styled.Events.onWithOptions "keydown"
+        { stopPropagation = True
+        , preventDefault = True
+        }
+        (Json.Decode.map tagger Html.Styled.Events.keyCode)

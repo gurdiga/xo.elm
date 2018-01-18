@@ -120,7 +120,7 @@ update msg (Model model) =
             Model { model | isOpened = True }
 
         Close ->
-            Model { model | isOpened = False }
+            Model { model | isOpened = False, hoveredValue = Nothing }
 
         Toggle ->
             Model { model | isOpened = not model.isOpened }

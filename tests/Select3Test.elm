@@ -117,6 +117,14 @@ keyboardSupport =
                                 [ Query.count (Expect.equal 1)
                                 , Query.first >> Query.has [ Selector.text "one" ]
                                 ]
+                 , test "the hover state is cleared when closed" <|
+                    \_ ->
+                        model
+                            |> Select3.update Select3.Open
+                            |> Select3.update (Select3.KeyDown 40)
+                            |> Select3.update Select3.Close
+                            |> Select3.hoveredValue
+                            |> Expect.equal Nothing
                  ]
                 )
             ]

@@ -10,33 +10,33 @@ import Widgets.TextField as TextField
 
 
 type Msg
-    = UpdateNume TextField.Msg
-    | UpdatePrenume TextField.Msg
-    | UpdateDataNasterii DateField.Msg
-    | UpdateCnp TextField.Msg
-    | UpdateAdresa LargeTextField.Msg
-    | UpdateNote LargeTextField.Msg
+    = SetNume TextField.Msg
+    | SetPrenume TextField.Msg
+    | SetDataNasterii DateField.Msg
+    | SetCnp TextField.Msg
+    | SetAdresa LargeTextField.Msg
+    | SetNote LargeTextField.Msg
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        UpdateNume textFieldMsg ->
+        SetNume textFieldMsg ->
             Model { model | nume = TextField.update textFieldMsg model.nume }
 
-        UpdatePrenume textFieldMsg ->
+        SetPrenume textFieldMsg ->
             Model { model | prenume = TextField.update textFieldMsg model.prenume }
 
-        UpdateDataNasterii dateFieldMsg ->
+        SetDataNasterii dateFieldMsg ->
             Model { model | dataNasterii = DateField.update dateFieldMsg model.dataNasterii }
 
-        UpdateCnp textFieldMsg ->
+        SetCnp textFieldMsg ->
             Model { model | cnp = TextField.update textFieldMsg model.cnp }
 
-        UpdateAdresa largeTextFieldMsg ->
+        SetAdresa largeTextFieldMsg ->
             Model { model | adresa = LargeTextField.update largeTextFieldMsg model.adresa }
 
-        UpdateNote largeTextFieldMsg ->
+        SetNote largeTextFieldMsg ->
             Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
 
 
@@ -66,10 +66,10 @@ empty =
 view : Model -> Html Msg
 view (Model model) =
     ul [ css [ Css.ul ] ]
-        [ li [] [ TextField.view "Nume:" model.nume |> map UpdateNume ]
-        , li [] [ TextField.view "Prenume:" model.prenume |> map UpdatePrenume ]
-        , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map UpdateDataNasterii ]
-        , li [] [ TextField.view "CNP:" model.cnp |> map UpdateCnp ]
-        , li [] [ LargeTextField.view "Adresa:" model.adresa |> map UpdateAdresa ]
-        , li [] [ LargeTextField.view "Note:" model.note |> map UpdateNote ]
+        [ li [] [ TextField.view "Nume:" model.nume |> map SetNume ]
+        , li [] [ TextField.view "Prenume:" model.prenume |> map SetPrenume ]
+        , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map SetDataNasterii ]
+        , li [] [ TextField.view "CNP:" model.cnp |> map SetCnp ]
+        , li [] [ LargeTextField.view "Adresa:" model.adresa |> map SetAdresa ]
+        , li [] [ LargeTextField.view "Note:" model.note |> map SetNote ]
         ]

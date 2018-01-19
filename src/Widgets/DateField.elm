@@ -19,7 +19,7 @@ view labelText model =
                 [ text labelText
                 , input
                     [ value inputText
-                    , onInput UpdateString
+                    , onInput SetString
                     , css [ Css.input ]
                     ]
                     []
@@ -38,11 +38,11 @@ view labelText model =
 
 
 type Msg
-    = UpdateString String
+    = SetString String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        UpdateString string ->
+        SetString string ->
             MyDate.parse string

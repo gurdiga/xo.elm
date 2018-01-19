@@ -15,7 +15,7 @@ view labelText model =
     label []
         [ text labelText
         , input
-            [ onInput UpdateValue
+            [ onInput SetValue
             , value model
             , css [ Css.input ]
             ]
@@ -24,11 +24,11 @@ view labelText model =
 
 
 type Msg
-    = UpdateValue Model
+    = SetValue Model
 
 
 update : Msg -> Model -> String
 update msg model =
     case msg of
-        UpdateValue value ->
+        SetValue value ->
             value

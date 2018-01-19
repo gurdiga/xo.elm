@@ -33,25 +33,25 @@ initialModel =
 
 
 type Msg
-    = UpdateDataDepunere DateField.Msg
-    | UpdateCreditor Persoana.Msg
+    = SetDataDepunere DateField.Msg
+    | SetCreditor Persoana.Msg
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        UpdateDataDepunere dateFieldMsg ->
+        SetDataDepunere dateFieldMsg ->
             Model { model | dataDepunere = DateField.update dateFieldMsg model.dataDepunere }
 
-        UpdateCreditor persoanaMsg ->
+        SetCreditor persoanaMsg ->
             Model { model | creditor = Persoana.update persoanaMsg model.creditor }
 
 
 view : Model -> Html Msg
 view (Model model) =
     fieldset [ css [ Css.fieldset ] ]
-        [ DateField.view "Data depunerii:" model.dataDepunere |> map UpdateDataDepunere
-        , Persoana.view model.creditor |> map UpdateCreditor
+        [ DateField.view "Data depunerii:" model.dataDepunere |> map SetDataDepunere
+        , Persoana.view model.creditor |> map SetCreditor
 
         --
         -- TODO: continue here:

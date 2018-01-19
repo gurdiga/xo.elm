@@ -30,16 +30,17 @@ type Temei
 view : Model -> Html Msg
 view (Model model) =
     section [ css [ Css.section ] ]
-        [ sectionTitle model.ui.select
+        [ sectionTitle
+        , Select3.view "Temei:" model.ui.select |> map SetTemei
         , fields model.temei
         ]
 
 
-sectionTitle : Select3.Model Temei -> Html Msg
-sectionTitle select =
+sectionTitle : Html Msg
+sectionTitle =
     node "hgroup"
         [ css [ Css.sectionTitle ] ]
-        [ Select3.view "Temei:" select |> map SetTemei ]
+        [ text "Temeiul" ]
 
 
 fields : Temei -> Html Msg

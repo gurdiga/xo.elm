@@ -20,4 +20,5 @@ sectionTitle =
         , fontSize (px 23)
         , fontWeight bold
         , displayFlex
+        , marginBottom (px 8)
         ]

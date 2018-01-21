@@ -21,9 +21,9 @@ type Model
         }
 
 
-initialModel : ContractIpoteca -> Model
-initialModel contractIpoteca =
-    Model contractIpoteca
+initialModel : Model
+initialModel =
+    Model ContractIpoteca.empty
         { contractCreditBancar = ContractCreditBancar.empty
 
         -- , extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.empty

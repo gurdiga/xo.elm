@@ -18,7 +18,13 @@ type Model
         , creditor : Persoana.Model
         , html : String
         , documenteContractIpoteca : Maybe DocumenteContractIpoteca.Model
+        , ui : Ui
         }
+
+
+type alias Ui =
+    { hasDocumenteContractIpoteca : CheckboxField.Model
+    }
 
 
 initialModel : Model
@@ -28,6 +34,9 @@ initialModel =
         , creditor = Persoana.initialModel
         , html = ""
         , documenteContractIpoteca = Nothing
+        , ui =
+            { hasDocumenteContractIpoteca = CheckboxField.initialModel False
+            }
         }
 
 
@@ -48,12 +57,30 @@ update msg (Model model) =
             Model { model | creditor = Persoana.update persoanaMsg model.creditor }
 
         ToggleDocumenteContractIpoteca checkboxFieldMsg ->
-            -- TODO: Figure this out
-            Model model
+            CheckboxField.update checkboxFieldMsg model.ui.hasDocumenteContractIpoteca
+                |> toggleDocumenteContractIpoteca (Model model)
 
         SetDocumenteContractIpoteca documenteContractIpotecaMsg ->
             -- TODO: Figure this out
             Model model
+
+
+toggleDocumenteContractIpoteca : Model -> CheckboxField.Model -> Model
+toggleDocumenteContractIpoteca (Model model) newCheckboxFieldModel =
+    Model
+        { model
+            | ui = setUiHasDocumenteContractIpoteca model.ui newCheckboxFieldModel
+            , documenteContractIpoteca =
+                if CheckboxField.isChecked newCheckboxFieldModel then
+                    Just DocumenteContractIpoteca.initialModel
+                else
+                    Nothing
+        }
+
+
+setUiHasDocumenteContractIpoteca : Ui -> CheckboxField.Model -> Ui
+setUiHasDocumenteContractIpoteca ui checkboxFieldModel =
+    { ui | hasDocumenteContractIpoteca = checkboxFieldModel }
 
 
 view : Model -> Html Msg
@@ -80,7 +107,9 @@ view (Model model) =
 documenteContractIpotecaView : Maybe DocumenteContractIpoteca.Model -> Html Msg
 documenteContractIpotecaView maybeDocumenteContractIpoteca =
     div []
-        [ CheckboxField.view "OK" True |> map ToggleDocumenteContractIpoteca
+        [ CheckboxField.view "in temeiul contractului de ipoteca"
+            (maybeToBool maybeDocumenteContractIpoteca)
+            |> map ToggleDocumenteContractIpoteca
         , maybeDocumenteContractIpoteca
             |> Maybe.map (DocumenteContractIpoteca.view >> map SetDocumenteContractIpoteca)
             |> Maybe.withDefault (text "no DocumenteContractIpoteca")
@@ -93,3 +122,13 @@ templateCerere (Model model) =
     [ h1 [] [ text "Cerere de intentare" ]
     , model |> toString |> text
     ]
+
+
+maybeToBool : Maybe a -> Bool
+maybeToBool maybeA =
+    case maybeA of
+        Just a ->
+            True
+
+        Nothing ->
+            False

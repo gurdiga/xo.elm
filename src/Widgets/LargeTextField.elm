@@ -1,4 +1,4 @@
-module Widgets.LargeTextField exposing (Msg, update, view)
+module Widgets.LargeTextField exposing (Model, Msg, update, view)
 
 import Html.Styled exposing (Html, label, text, textarea)
 import Html.Styled.Attributes exposing (css, value)

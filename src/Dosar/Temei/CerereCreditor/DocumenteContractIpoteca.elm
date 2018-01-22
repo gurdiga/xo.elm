@@ -5,13 +5,13 @@ module Dosar.Temei.CerereCreditor.DocumenteContractIpoteca exposing (Model, Msg,
 -- import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 
 import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar exposing (ContractCreditBancar)
-import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca exposing (ContractIpoteca)
-import Html.Styled exposing (Html, fieldset, legend, li, pre, text, ul)
+import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca
+import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
 
 
 type Model
     = Model
-        ContractIpoteca
+        ContractIpoteca.Model
         { contractCreditBancar : ContractCreditBancar
 
         -- , extraseEvidentaFinanciara : ExtraseEvidentaFinanciara
@@ -34,25 +34,26 @@ initialModel =
 
 
 type Msg
-    = SetContractCreditBancar
+    = SetContractIpoteca ContractIpoteca.Msg
+    | SetContractCreditBancar
 
 
 update : Msg -> Model -> Model
-update msg model =
-    case msg of
+update msg (Model contractIpoteca model) =
+    case Debug.log "DocumenteContractIpoteca msg" msg of
+        SetContractIpoteca contractIpotecaMsg ->
+            Model (ContractIpoteca.update contractIpotecaMsg contractIpoteca) model
+
         SetContractCreditBancar ->
-            model
+            Model contractIpoteca model
 
 
 view : Model -> Html Msg
 view (Model contractIpoteca model) =
     fieldset []
         [ legend [] [ text "DocumenteContractIpoteca" ]
-        , pre [] [ model |> toString |> text ]
+        , ContractIpoteca.view contractIpoteca |> map SetContractIpoteca
 
-        -- , ContractIpoteca.view
-        --     contractIpoteca
-        --     (\v -> callback (just v documenteContractIpoteca))
         -- , ContractCreditBancar.view
         --     documenteContractIpoteca.contractCreditBancar
         --     (\v -> callback (just contractIpoteca { documenteContractIpoteca | contractCreditBancar = v }))

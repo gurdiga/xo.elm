@@ -57,30 +57,28 @@ update msg (Model model) =
             Model { model | creditor = Persoana.update persoanaMsg model.creditor }
 
         ToggleDocumenteContractIpoteca checkboxFieldMsg ->
-            CheckboxField.update checkboxFieldMsg model.ui.hasDocumenteContractIpoteca
+            model.ui.hasDocumenteContractIpoteca
+                |> CheckboxField.update checkboxFieldMsg
                 |> toggleDocumenteContractIpoteca (Model model)
 
         SetDocumenteContractIpoteca documenteContractIpotecaMsg ->
-            -- TODO: Figure this out
-            Model model
+            model.documenteContractIpoteca
+                |> Maybe.withDefault DocumenteContractIpoteca.initialModel
+                |> DocumenteContractIpoteca.update documenteContractIpotecaMsg
+                |> (\v -> Model { model | documenteContractIpoteca = Just v })
 
 
 toggleDocumenteContractIpoteca : Model -> CheckboxField.Model -> Model
 toggleDocumenteContractIpoteca (Model model) newCheckboxFieldModel =
     Model
         { model
-            | ui = setUiHasDocumenteContractIpoteca model.ui newCheckboxFieldModel
+            | ui = (\ui -> { ui | hasDocumenteContractIpoteca = newCheckboxFieldModel }) model.ui
             , documenteContractIpoteca =
                 if CheckboxField.isChecked newCheckboxFieldModel then
                     Just DocumenteContractIpoteca.initialModel
                 else
                     Nothing
         }
-
-
-setUiHasDocumenteContractIpoteca : Ui -> CheckboxField.Model -> Ui
-setUiHasDocumenteContractIpoteca ui checkboxFieldModel =
-    { ui | hasDocumenteContractIpoteca = checkboxFieldModel }
 
 
 view : Model -> Html Msg

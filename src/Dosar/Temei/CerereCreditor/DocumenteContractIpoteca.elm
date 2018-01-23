@@ -40,7 +40,7 @@ type Msg
 
 update : Msg -> Model -> Model
 update msg (Model contractIpoteca model) =
-    case Debug.log "DocumenteContractIpoteca msg" msg of
+    case msg of
         SetContractIpoteca contractIpotecaMsg ->
             Model (ContractIpoteca.update contractIpotecaMsg contractIpoteca) model
 

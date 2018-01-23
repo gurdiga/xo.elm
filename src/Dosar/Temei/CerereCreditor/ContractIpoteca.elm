@@ -3,17 +3,22 @@ module Dosar.Temei.CerereCreditor.ContractIpoteca exposing (Model, Msg, empty, u
 import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.Money as Money exposing (Currency(..), Money(..))
 import Widgets.LargeTextField as LargeTextField
+import Widgets.MoneyField as MoneyField
 
 
 type Msg
     = SetObiect LargeTextField.Msg
+    | SetValoareBunDePiata MoneyField.Msg
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         SetObiect largeTextFieldMsg ->
-            { model | obiect = Debug.log "new obiect" (LargeTextField.update largeTextFieldMsg model.obiect) }
+            { model | obiect = LargeTextField.update largeTextFieldMsg model.obiect }
+
+        SetValoareBunDePiata moneyFieldMsg ->
+            { model | valoareBunDePiata = MoneyField.update moneyFieldMsg model.valoareBunDePiata }
 
 
 type alias Model =
@@ -41,12 +46,11 @@ view contractIpoteca =
         [ legend [] [ text "ContractIpoteca" ]
         , ul []
             [ li [] [ LargeTextField.view "Obiectul ipotecii:" contractIpoteca.obiect |> map SetObiect ]
+            , li [] [ MoneyField.view "Valoarea de piaţa a bunului:" contractIpoteca.valoareBunDePiata |> map SetValoareBunDePiata ]
 
-            -- , li []
-            --     [ moneyField "Valoarea de piaţa a bunului:"
-            --         contractIpoteca.valoareBunDePiata
-            --         (\v -> callback { contractIpoteca | valoareBunDePiata = v })
-            --     ]
+            -- TODO: Continue here.
+            --
+            --
             -- , li []
             --     [ moneyField "Valoarea de inlocuire a bunului:"
             --         contractIpoteca.valoareBunDeInlocuire

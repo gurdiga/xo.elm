@@ -1,35 +1,48 @@
-module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (ContractCreditBancar, empty, view)
+module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (Model, Msg, initialModel, update, view)
 
-import Html exposing (Html, fieldset, legend, li, text, ul)
-import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
-import Widgets.Fields exposing (largeTextField)
-
-
-type alias ContractCreditBancar =
-    { copia : DocumentScanat
-    , note : String
-    }
+import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
+import Utils.DocumentScanatTea as DocumentScanatTea
+import Widgets.LargeTextField as LargeTextField
 
 
-empty : ContractCreditBancar
-empty =
-    { copia = DocumentScanat.empty
-    , note = ""
-    }
+type Msg
+    = SetCopia DocumentScanatTea.Msg
+    | SetNote LargeTextField.Msg
 
 
-view : ContractCreditBancar -> (ContractCreditBancar -> msg) -> Html msg
-view contractCreditBancar callback =
+update : Msg -> Model -> Model
+update msg (Model model) =
+    case msg of
+        SetCopia documentScanatTeaMsg ->
+            Model { model | copia = DocumentScanatTea.update documentScanatTeaMsg model.copia }
+
+        SetNote largeTextFieldMsg ->
+            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
+
+
+type Model
+    = Model
+        { copia : DocumentScanatTea.Model
+        , note : String
+        }
+
+
+initialModel : Model
+initialModel =
+    Model
+        { copia = DocumentScanatTea.initialModel
+        , note = ""
+        }
+
+
+view : Model -> Html Msg
+view (Model model) =
     fieldset []
         [ legend [] [ text "ContractCreditBancar" ]
-        , ul []
-            [ li []
-                [ DocumentScanat.view
-                    { labelText = "Copia:"
-                    , documentScanat = contractCreditBancar.copia
-                    , callback = \v -> callback { contractCreditBancar | copia = v }
-                    }
-                ]
-            , li [] [ largeTextField "Note:" contractCreditBancar.note (\v -> callback { contractCreditBancar | note = v }) ]
-            ]
+        , DocumentScanatTea.view
+            { labelText = "Copia:"
+            , documentScanat = model.copia
+            }
+            |> map SetCopia
+        , LargeTextField.view "Note:" model.note |> map SetNote
         ]

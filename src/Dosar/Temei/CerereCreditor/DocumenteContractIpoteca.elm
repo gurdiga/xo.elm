@@ -4,7 +4,7 @@ module Dosar.Temei.CerereCreditor.DocumenteContractIpoteca exposing (Model, Msg,
 -- import Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara as ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara)
 -- import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 
-import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar exposing (ContractCreditBancar)
+import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca
 import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
 
@@ -12,7 +12,7 @@ import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
 type Model
     = Model
         ContractIpoteca.Model
-        { contractCreditBancar : ContractCreditBancar
+        { contractCreditBancar : ContractCreditBancar.Model
 
         -- , extraseEvidentaFinanciara : ExtraseEvidentaFinanciara
         -- , notificare : DocumentScanat
@@ -24,7 +24,7 @@ type Model
 initialModel : Model
 initialModel =
     Model ContractIpoteca.empty
-        { contractCreditBancar = ContractCreditBancar.empty
+        { contractCreditBancar = ContractCreditBancar.initialModel
 
         -- , extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.empty
         -- , notificare = DocumentScanat.empty
@@ -35,7 +35,7 @@ initialModel =
 
 type Msg
     = SetContractIpoteca ContractIpoteca.Msg
-    | SetContractCreditBancar
+    | SetContractCreditBancar ContractCreditBancar.Msg
 
 
 update : Msg -> Model -> Model
@@ -44,8 +44,8 @@ update msg (Model contractIpoteca model) =
         SetContractIpoteca contractIpotecaMsg ->
             Model (ContractIpoteca.update contractIpotecaMsg contractIpoteca) model
 
-        SetContractCreditBancar ->
-            Model contractIpoteca model
+        SetContractCreditBancar contractCreditBancarMsg ->
+            Model contractIpoteca { model | contractCreditBancar = ContractCreditBancar.update contractCreditBancarMsg model.contractCreditBancar }
 
 
 view : Model -> Html Msg
@@ -53,10 +53,10 @@ view (Model contractIpoteca model) =
     fieldset []
         [ legend [] [ text "DocumenteContractIpoteca" ]
         , ContractIpoteca.view contractIpoteca |> map SetContractIpoteca
+        , ContractCreditBancar.view model.contractCreditBancar |> map SetContractCreditBancar
 
-        -- , ContractCreditBancar.view
-        --     documenteContractIpoteca.contractCreditBancar
-        --     (\v -> callback (just contractIpoteca { documenteContractIpoteca | contractCreditBancar = v }))
+        -- TODO: continue here
+        --
         -- , ExtraseEvidentaFinanciara.view
         --     documenteContractIpoteca.extraseEvidentaFinanciara
         --     (\v -> callback (just contractIpoteca { documenteContractIpoteca | extraseEvidentaFinanciara = v }))

@@ -33,7 +33,7 @@ initialModel =
         { dataDepunere = MyDate.empty
         , creditor = Persoana.initialModel
         , html = ""
-        , documenteContractIpoteca = Nothing
+        , documenteContractIpoteca = Just DocumenteContractIpoteca.initialModel
         , ui =
             { hasDocumenteContractIpoteca = CheckboxField.initialModel False
             }

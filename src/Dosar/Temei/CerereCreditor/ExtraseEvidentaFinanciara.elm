@@ -1,47 +1,61 @@
-module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (ExtraseEvidentaFinanciara, empty, view)
+module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara))
-import Html exposing (Html, fieldset, legend, p, text)
-import Utils.MyDate as MyDate
-import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledMoneyField)
-import Widgets.Table as Table
+-- import Utils.MyDate as MyDate
+-- import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara exposing (InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara))
 
-
-type ExtraseEvidentaFinanciara
-    = ExtraseEvidentaFinanciara (List InregistrareEvidentaFinanciara)
+import Html.Styled exposing (Html, fieldset, legend, p, text)
 
 
-empty : ExtraseEvidentaFinanciara
-empty =
-    ExtraseEvidentaFinanciara []
+-- import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledMoneyField)
+-- import Widgets.Table as Table
 
 
-view : ExtraseEvidentaFinanciara -> (ExtraseEvidentaFinanciara -> msg) -> Html msg
-view extraseEvidentaFinanciara callback =
+type Msg
+    = Msg
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Msg ->
+            model
+
+
+type Model
+    = Model (List Int) --InregistrareEvidentaFinanciara
+
+
+initialModel : Model
+initialModel =
+    Model []
+
+
+view : Model -> Html Msg
+view extraseEvidentaFinanciara =
     fieldset []
         [ legend [] [ text "ExtraseEvidentaFinanciara" ]
-        , Table.view
-            { recordList = data extraseEvidentaFinanciara
-            , callback = callback << fromData
-            , columns =
-                [ ( "Data", \r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v }) )
-                , ( "Suma", \r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v }) )
-                , ( "Note", \r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }) )
-                ]
-            , emptyView = emptyView
-            , empty = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.empty
-            }
+
+        -- , Table.view
+        --     { recordList = data extraseEvidentaFinanciara
+        --     , callback = callback << fromData
+        --     , columns =
+        --         [ ( "Data", \r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v }) )
+        --         , ( "Suma", \r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v }) )
+        --         , ( "Note", \r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }) )
+        --         ]
+        --     , emptyView = emptyView
+        --     , empty = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.empty
+        --     }
         ]
 
 
-data : ExtraseEvidentaFinanciara -> List InregistrareEvidentaFinanciara.Data
-data (ExtraseEvidentaFinanciara list) =
-    List.map InregistrareEvidentaFinanciara.data list
 
-
-fromData : List InregistrareEvidentaFinanciara.Data -> ExtraseEvidentaFinanciara
-fromData =
-    ExtraseEvidentaFinanciara << List.map InregistrareEvidentaFinanciara
+-- data : Model -> List InregistrareEvidentaFinanciara.Data
+-- data (Model list) =
+--     List.map InregistrareEvidentaFinanciara.data list
+-- fromData : List InregistrareEvidentaFinanciara.Data -> Model
+-- fromData =
+--     Model << List.map InregistrareEvidentaFinanciara
 
 
 emptyView : Html msg

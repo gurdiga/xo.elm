@@ -1,45 +1,63 @@
-module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Data, InregistrareEvidentaFinanciara(InregistrareEvidentaFinanciara), data, empty, view)
+module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Data, Model, data, empty, view)
 
-import Html exposing (Html, td, text, tr)
-import Html.Attributes exposing (style)
+import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara.Css as Css
+import Html.Styled exposing (Html, map, td, text, tr)
+import Html.Styled.Attributes exposing (css)
 import Utils.Money as Money exposing (Currency(MDL), Money(Money))
-import Utils.MyDate as MyDate exposing (MyDate)
-import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledMoneyField)
+import Utils.MyDate as MyDate
+import Widgets.DateField as DateField
+import Widgets.LargeTextField as LargeTextField
+import Widgets.MoneyField as MoneyField
 
 
-type InregistrareEvidentaFinanciara
-    = InregistrareEvidentaFinanciara Data
+type Msg
+    = SetData DateField.Msg
+    | SetSuma MoneyField.Msg
+    | SetNote LargeTextField.Msg
+
+
+update : Msg -> Model -> Model
+update msg (Model model) =
+    case msg of
+        SetData dateFieldMsg ->
+            Model { model | data = DateField.update dateFieldMsg model.data }
+
+        SetSuma moneyFieldMsg ->
+            Model { model | suma = MoneyField.update moneyFieldMsg model.suma }
+
+        SetNote largeTextFieldMsg ->
+            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
+
+
+type Model
+    = Model Data
 
 
 type alias Data =
-    { data : MyDate
+    { data : MyDate.Model
     , suma : Money
     , note : String
     }
 
 
-empty : InregistrareEvidentaFinanciara
+empty : Model
 empty =
-    InregistrareEvidentaFinanciara
+    Model
         { data = MyDate.empty
         , suma = Money 0 MDL
         , note = ""
         }
 
 
-data : InregistrareEvidentaFinanciara -> Data
-data (InregistrareEvidentaFinanciara data) =
+data : Model -> Data
+data (Model data) =
     data
 
 
-view : InregistrareEvidentaFinanciara -> (InregistrareEvidentaFinanciara -> msg) -> Html msg
-view (InregistrareEvidentaFinanciara i) callback =
-    let
-        tdStyle =
-            style [ ( "border", "1px solid silver" ) ]
-    in
+view : Model -> Html Msg
+view (Model i) =
     tr []
-        [ td [ tdStyle ] <| MyDate.viewUnlabeled i.data (\v -> callback (InregistrareEvidentaFinanciara { i | data = v }))
-        , td [ tdStyle ] <| unlabeledMoneyField i.suma (\v -> callback (InregistrareEvidentaFinanciara { i | suma = v }))
-        , td [ tdStyle ] <| unlabeledLargeTextField i.note (\v -> callback (InregistrareEvidentaFinanciara { i | note = v }))
+        [ td [ css [ Css.td ] ] <| [ DateField.view "" i.data |> map SetData ]
+        , td [ css [ Css.td ] ] <| [ MoneyField.view "" i.suma |> map SetSuma ]
+        , td [ css [ Css.td ] ] <| [ LargeTextField.view "" i.note |> map SetNote ]
         ]

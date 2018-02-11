@@ -1,7 +1,7 @@
 module Utils.DocumentScanatTea exposing (Model, Msg, initialModel, update, view)
 
-import Html.Styled exposing (Html, div, input, label, text)
-import Html.Styled.Attributes exposing (type_)
+import Html.Styled exposing (Html, code, div, input, label, text)
+import Html.Styled.Attributes exposing (title, type_)
 import Html.Styled.Events exposing (on)
 import Json.Decode as Json
 import Utils.File as File exposing (File)
@@ -46,6 +46,7 @@ view { labelText, documentScanat } =
             , input
                 [ type_ "file"
                 , onFileSelect SetFile
+                , title (toString documentScanat)
                 ]
                 []
             ]

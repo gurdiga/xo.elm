@@ -6,9 +6,6 @@ import Html.Styled.Events exposing (onClick)
 import Utils.MyList as MyList
 
 
--- TODO: Continue here
-
-
 type Msg
     = SetInregistrareEvidentaFinanciara Int InregistrareEvidentaFinanciara.Msg
     | AddInregistrareEvidentaFinanciara
@@ -18,7 +15,7 @@ update : Msg -> Model -> Model
 update msg (Model list) =
     case msg of
         AddInregistrareEvidentaFinanciara ->
-            Model (list ++ [ InregistrareEvidentaFinanciara.empty ])
+            Model (list ++ [ InregistrareEvidentaFinanciara.initialModel ])
 
         SetInregistrareEvidentaFinanciara i inregistrareEvidentaFinanciaraMsg ->
             let

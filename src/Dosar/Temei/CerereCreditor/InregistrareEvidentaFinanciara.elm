@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Data, Model, Msg, empty, update, view)
+module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Data, Model, Msg, initialModel, update, view)
 
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara.Css as Css
 import Html.Styled exposing (Html, map, td, text, tr)
@@ -40,8 +40,8 @@ type alias Data =
     }
 
 
-empty : Model
-empty =
+initialModel : Model
+initialModel =
     Model
         { data = MyDate.empty
         , suma = Money 0 MDL

@@ -1,7 +1,5 @@
 module Dosar.Temei.CerereCreditor exposing (Model, Msg, initialModel, update, view)
 
--- import Utils.RichTextEditor as RichTextEditor
-
 import Dosar.Persoana as Persoana
 import Dosar.Temei.CerereCreditor.Css as Css
 import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca
@@ -33,7 +31,7 @@ initialModel =
         { dataDepunere = MyDate.empty
         , creditor = Persoana.initialModel
         , html = ""
-        , documenteContractIpoteca = Just DocumenteContractIpoteca.initialModel
+        , documenteContractIpoteca = Nothing
         , ui =
             { hasDocumenteContractIpoteca = CheckboxField.initialModel False
             }
@@ -87,18 +85,6 @@ view (Model model) =
         [ DateField.view "Data depunerii:" model.dataDepunere |> map SetDataDepunere
         , Persoana.view model.creditor |> map SetCreditor
         , documenteContractIpotecaView model.documenteContractIpoteca
-
-        --
-        -- TODO: continue here:
-        --
-        --
-        -- , RichTextEditor.view
-        --     { buttonLabel = "Formează cerere" -- TODO: make it printable
-        --     , content = templateCerere data
-        --     , onOpen = callback cerereCreditor
-        --     , onResponse = (\s -> c { data | html = s })
-        --     }
-        --     (\v -> c { data | documenteContractIpoteca = v })
         ]
 
 

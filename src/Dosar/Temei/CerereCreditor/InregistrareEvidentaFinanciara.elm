@@ -1,4 +1,4 @@
-module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Data, Model, data, empty, view)
+module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Data, Model, Msg, empty, update, view)
 
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara.Css as Css
 import Html.Styled exposing (Html, map, td, text, tr)
@@ -49,15 +49,10 @@ empty =
         }
 
 
-data : Model -> Data
-data (Model data) =
-    data
-
-
 view : Model -> Html Msg
-view (Model i) =
+view (Model model) =
     tr []
-        [ td [ css [ Css.td ] ] <| [ DateField.view "" i.data |> map SetData ]
-        , td [ css [ Css.td ] ] <| [ MoneyField.view "" i.suma |> map SetSuma ]
-        , td [ css [ Css.td ] ] <| [ LargeTextField.view "" i.note |> map SetNote ]
+        [ td [ css [ Css.td ] ] <| [ DateField.view "" model.data |> map SetData ]
+        , td [ css [ Css.td ] ] <| [ MoneyField.view "" model.suma |> map SetSuma ]
+        , td [ css [ Css.td ] ] <| [ LargeTextField.view "" model.note |> map SetNote ]
         ]

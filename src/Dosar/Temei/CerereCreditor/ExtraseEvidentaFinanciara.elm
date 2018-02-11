@@ -1,25 +1,42 @@
 module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara
-import Html.Styled exposing (Html, fieldset, legend, p, text)
-import Widgets.DateField as DateField
-import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledMoneyField)
-import Widgets.Table as Table
+import Html.Styled exposing (Html, button, fieldset, legend, map, p, table, text)
+import Html.Styled.Events exposing (onClick)
+import Utils.MyList as MyList
+
+
+-- TODO: Continue here
 
 
 type Msg
-    = Set
+    = SetInregistrareEvidentaFinanciara Int InregistrareEvidentaFinanciara.Msg
+    | AddInregistrareEvidentaFinanciara
 
 
 update : Msg -> Model -> Model
-update msg model =
+update msg (Model list) =
     case msg of
-        Msg ->
-            model
+        AddInregistrareEvidentaFinanciara ->
+            Model (list ++ [ InregistrareEvidentaFinanciara.empty ])
+
+        SetInregistrareEvidentaFinanciara i inregistrareEvidentaFinanciaraMsg ->
+            let
+                x =
+                    MyList.get list i
+            in
+            case x of
+                Just v ->
+                    InregistrareEvidentaFinanciara.update inregistrareEvidentaFinanciaraMsg v
+                        |> MyList.replace list i
+                        |> Model
+
+                Nothing ->
+                    Model list
 
 
 type Model
-    = Model (List Int) --InregistrareEvidentaFinanciara
+    = Model (List InregistrareEvidentaFinanciara.Model)
 
 
 initialModel : Model
@@ -28,31 +45,22 @@ initialModel =
 
 
 view : Model -> Html Msg
-view extraseEvidentaFinanciara =
+view (Model list) =
     fieldset []
         [ legend [] [ text "ExtraseEvidentaFinanciara" ]
-        , Table.view
-            { recordList = data extraseEvidentaFinanciara
-            , callback = callback << fromData
-            , columns =
-                [ ( "Data", \r c -> MyDate.viewUnlabeled r.data (\v -> c { r | data = v }) )
-                , ( "Suma", \r c -> unlabeledMoneyField r.suma (\v -> c { r | suma = v }) )
-                , ( "Note", \r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }) )
-                ]
-            , emptyView = emptyView
-            , empty = InregistrareEvidentaFinanciara.data InregistrareEvidentaFinanciara.empty
-            }
+        , if List.isEmpty list then
+            emptyView
+          else
+            entryListView list
+        , button [ onClick AddInregistrareEvidentaFinanciara ] [ text "Adaugați" ]
         ]
 
 
-data : Model -> List InregistrareEvidentaFinanciara.Data
-data (Model list) =
-    List.map InregistrareEvidentaFinanciara.data list
-
-
-fromData : List InregistrareEvidentaFinanciara.Data -> Model
-fromData =
-    Model << List.map InregistrareEvidentaFinanciara
+entryListView : List InregistrareEvidentaFinanciara.Model -> Html Msg
+entryListView list =
+    list
+        |> List.indexedMap (\i v -> InregistrareEvidentaFinanciara.view v |> map (SetInregistrareEvidentaFinanciara i))
+        |> table []
 
 
 emptyView : Html msg

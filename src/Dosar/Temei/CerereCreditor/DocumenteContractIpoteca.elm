@@ -1,12 +1,12 @@
 module Dosar.Temei.CerereCreditor.DocumenteContractIpoteca exposing (Model, Msg, initialModel, update, view)
 
 -- import Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios as DeclaratieContractNonLitigios exposing (DeclaratieContractNonLitigios)
--- import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 
 import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca
 import Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara as ExtraseEvidentaFinanciara
-import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
+import Html.Styled exposing (Html, fieldset, legend, li, map, pre, text, ul)
+import Utils.DocumentScanatTea as DocumentScanatTea
 
 
 type Model
@@ -14,9 +14,9 @@ type Model
         ContractIpoteca.Model
         { contractCreditBancar : ContractCreditBancar.Model
         , extraseEvidentaFinanciara : ExtraseEvidentaFinanciara.Model
+        , notificare : DocumentScanatTea.Model
+        , preaviz : DocumentScanatTea.Model
 
-        -- , notificare : DocumentScanat
-        -- , preaviz : DocumentScanat
         -- , declaratieContractNonLitigios : DeclaratieContractNonLitigios
         }
 
@@ -26,9 +26,9 @@ initialModel =
     Model ContractIpoteca.empty
         { contractCreditBancar = ContractCreditBancar.initialModel
         , extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.initialModel
+        , notificare = DocumentScanatTea.initialModel
+        , preaviz = DocumentScanatTea.initialModel
 
-        -- , notificare = DocumentScanat.empty
-        -- , preaviz = DocumentScanat.empty
         -- , declaratieContractNonLitigios = DeclaratieContractNonLitigios.empty contractIpoteca
         }
 
@@ -37,6 +37,8 @@ type Msg
     = SetContractIpoteca ContractIpoteca.Msg
     | SetContractCreditBancar ContractCreditBancar.Msg
     | SetExtraseEvidentaFinanciara ExtraseEvidentaFinanciara.Msg
+    | SetNotificare DocumentScanatTea.Msg
+    | SetPreaviz DocumentScanatTea.Msg
 
 
 update : Msg -> Model -> Model
@@ -48,8 +50,14 @@ update msg (Model contractIpoteca model) =
         SetContractCreditBancar contractCreditBancarMsg ->
             Model contractIpoteca { model | contractCreditBancar = ContractCreditBancar.update contractCreditBancarMsg model.contractCreditBancar }
 
-        SetExtraseEvidentaFinanciara msg ->
-            Model contractIpoteca { model | extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.update msg model.extraseEvidentaFinanciara }
+        SetExtraseEvidentaFinanciara extraseEvidentaFinanciaraMsg ->
+            Model contractIpoteca { model | extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.update extraseEvidentaFinanciaraMsg model.extraseEvidentaFinanciara }
+
+        SetNotificare documentScanatTeaMsg ->
+            Model contractIpoteca { model | notificare = DocumentScanatTea.update documentScanatTeaMsg model.notificare }
+
+        SetPreaviz documentScanatTeaMsg ->
+            Model contractIpoteca { model | preaviz = DocumentScanatTea.update documentScanatTeaMsg model.preaviz }
 
 
 view : Model -> Html Msg
@@ -59,25 +67,11 @@ view (Model contractIpoteca model) =
         , ContractIpoteca.view contractIpoteca |> map SetContractIpoteca
         , ContractCreditBancar.view model.contractCreditBancar |> map SetContractCreditBancar
         , ExtraseEvidentaFinanciara.view model.extraseEvidentaFinanciara |> map SetExtraseEvidentaFinanciara
+        , DocumentScanatTea.view { labelText = "Notificare:", documentScanat = model.notificare } |> map SetNotificare
+        , DocumentScanatTea.view { labelText = "Preaviz:", documentScanat = model.preaviz } |> map SetPreaviz
 
         -- TODO: continue here
         --
-        -- , ul []
-        --     [ li []
-        --         [ DocumentScanat.view
-        --             { labelText = "Notificare:"
-        --             , documentScanat = documenteContractIpoteca.notificare
-        --             , callback = \v -> callback (just contractIpoteca { documenteContractIpoteca | notificare = v })
-        --             }
-        --         ]
-        --     , li []
-        --         [ DocumentScanat.view
-        --             { labelText = "Preaviz:"
-        --             , documentScanat = documenteContractIpoteca.preaviz
-        --             , callback = \v -> callback (just contractIpoteca { documenteContractIpoteca | preaviz = v })
-        --             }
-        --         ]
-        --     ]
         -- , DeclaratieContractNonLitigios.view
         --     documenteContractIpoteca.declaratieContractNonLitigios
         --     (\v -> callback (just contractIpoteca { documenteContractIpoteca | declaratieContractNonLitigios = v }))

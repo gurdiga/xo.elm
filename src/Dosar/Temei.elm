@@ -2,7 +2,7 @@ module Dosar.Temei exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Temei.CerereCreditor as CerereCreditor
 import Dosar.Temei.Css as Css
-import Dosar.Temei.DemersInstanta as DemersInstanta exposing (DemersInstanta)
+import Dosar.Temei.DemersInstanta as DemersInstanta
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat exposing (PreluareDocumentExecutoriuStramutat)
 import Html.Styled exposing (Html, div, fromUnstyled, label, map, node, section, text, toUnstyled)
 import Html.Styled.Attributes exposing (css)
@@ -23,7 +23,7 @@ type alias Ui =
 
 type Temei
     = CerereCreditor CerereCreditor.Model
-    | DemersInstanta DemersInstanta
+    | DemersInstanta DemersInstanta.Model
     | PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat
 
 
@@ -47,10 +47,10 @@ fields : Temei -> Html Msg
 fields temei =
     case temei of
         CerereCreditor cerereCreditor ->
-            CerereCreditor.view cerereCreditor |> map CerereCreditorMsg
+            CerereCreditor.view cerereCreditor |> map SetCerereCreditor
 
         DemersInstanta demersInstanta ->
-            text "DemersInstanta.view"
+            DemersInstanta.view demersInstanta |> map SetDemersInstanta
 
         PreluareDocumentExecutoriuStramutat preluareDocumentExecutoriuStramutat ->
             text "PreluareDocumentExecutoriuStramutat.view"
@@ -61,7 +61,7 @@ valuesWithLabels =
     [ ( CerereCreditor CerereCreditor.initialModel
       , "cerere a creditorului"
       )
-    , ( DemersInstanta DemersInstanta.empty
+    , ( DemersInstanta DemersInstanta.initialModel
       , "demersul instanţei de judecată"
       )
     , ( PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.empty
@@ -82,12 +82,13 @@ initialModel =
 
 initialTemei : Temei
 initialTemei =
-    CerereCreditor CerereCreditor.initialModel
+    DemersInstanta DemersInstanta.initialModel
 
 
 type Msg
     = SetTemei (Select3.Msg Temei)
-    | CerereCreditorMsg CerereCreditor.Msg
+    | SetCerereCreditor CerereCreditor.Msg
+    | SetDemersInstanta DemersInstanta.Msg
 
 
 update : Msg -> Model -> Model
@@ -96,10 +97,18 @@ update msg (Model model) =
         SetTemei select3Msg ->
             receiveTemei (Model model) (Select3.update select3Msg model.ui.select)
 
-        CerereCreditorMsg cerereCreditorMsg ->
+        SetCerereCreditor cerereCreditorMsg ->
             case model.temei of
                 CerereCreditor c ->
                     Model { model | temei = CerereCreditor (CerereCreditor.update cerereCreditorMsg c) }
+
+                _ ->
+                    Model model
+
+        SetDemersInstanta demersInstantaMsg ->
+            case model.temei of
+                DemersInstanta demersInstanta ->
+                    Model { model | temei = DemersInstanta (DemersInstanta.update demersInstantaMsg demersInstanta) }
 
                 _ ->
                     Model model

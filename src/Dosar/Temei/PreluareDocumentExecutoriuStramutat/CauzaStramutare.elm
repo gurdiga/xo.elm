@@ -1,7 +1,4 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare exposing (CauzaStramutare, empty, view)
-
-import Html exposing (Html, label, text)
-import Widgets.Select as Select
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare exposing (Model, initialModel, valuesWithLabels)
 
 
 type
@@ -11,7 +8,7 @@ type
     -- judecătoresc din oficiu sau la cererea creditorului la un alt executor
     -- judecătoresc, stabilit în condiţiile art. 30  din prezentul cod,  în
     -- următoarele cazuri:
-    CauzaStramutare
+    Model
     = -- a) executorul judecătoresc nu mai este competent teritorial, în
       -- conformitate cu art. 30 din prezentul cod;
       IntrerupereCompetenta
@@ -22,19 +19,14 @@ type
       CerereaCreditorului
 
 
-empty : CauzaStramutare
-empty =
+initialModel : Model
+initialModel =
     IntrerupereCompetenta
 
 
-valuesWithLabels : List ( CauzaStramutare, String )
+valuesWithLabels : List ( Model, String )
 valuesWithLabels =
     [ ( IntrerupereCompetenta, "executorul judecătoresc nu mai este competent teritorial" )
     , ( IncalcareCompetenta, "documentul executoriu a fost primit cu încălcarea competenţei teritoriale" )
     , ( CerereaCreditorului, "cererea motivată a creditorului" )
     ]
-
-
-view : CauzaStramutare -> (CauzaStramutare -> msg) -> Html msg
-view cauzaStramutare callback =
-    Select.view "Cauza strămutării:" valuesWithLabels empty callback

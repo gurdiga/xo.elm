@@ -82,7 +82,7 @@ initialModel =
 
 initialTemei : Temei
 initialTemei =
-    DemersInstanta DemersInstanta.initialModel
+    PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.initialModel
 
 
 type Msg

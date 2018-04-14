@@ -1,4 +1,4 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 exposing (Model, empty, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 exposing (Model, Msg, update, initialModel, view)
 
 import Html.Styled exposing (Attribute, Html, div, input, label, text, map)
 import Html.Styled.Attributes exposing (type_)
@@ -7,56 +7,46 @@ import Json.Decode as Json
 import Utils.File as File exposing (File)
 
 
+type Msg
+    = SetValue File
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SetValue newFile ->
+            { model | file = newFile }
+
+
 type alias Model =
     { file : File
     }
 
 
-type alias Input msg =
+type alias Input =
     { labelText : String
     , initialModel : Model
-    , callback : Callback msg
     }
 
 
-type alias Callback msg =
-    Model -> msg
-
-
-empty : Model
-empty =
+initialModel : Model
+initialModel =
     { file = File.empty
     }
 
 
-view : Input msg -> Html msg
-view ({ labelText, initialModel, callback } as data) =
-    div []
-        [ fileField labelText (\v -> callback { initialModel | file = v })
-        ]
-
-
-fileField : String -> (File -> msg) -> Html msg
-fileField labelText callback =
+view : String -> Model -> Html Msg
+view labelText initialModel =
     label []
         [ text labelText
-        , unlabeledFileField callback
+        , input [ type_ "file", onFileSelect SetValue ] []
         ]
 
 
-unlabeledFileField : (File -> msg) -> Html msg
-unlabeledFileField callback =
-    input
-        [ type_ "file"
-        , onFileSelect callback
-        ]
-        []
-
-
-onFileSelect : (File -> msg) -> Attribute msg
+onFileSelect : (File -> Msg) -> Attribute Msg
 onFileSelect callback =
     let
-        eventDecoder : Json.Decoder msg
+        eventDecoder : Json.Decoder Msg
         eventDecoder =
             Json.map
                 (\targetValue -> callback (File targetValue))

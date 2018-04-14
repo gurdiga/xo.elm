@@ -5,7 +5,7 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (Model, Msg, ini
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior exposing (ActeEfectuateAnterior)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
-import Html.Styled exposing (Html, button, fieldset, h1, legend, li, map, p, text, ul)
+import Html.Styled exposing (Html, fieldset, h1, legend, li, map, p, text, ul)
 import Widgets.Select3 as Select3
 
 
@@ -14,71 +14,64 @@ import Widgets.Select3 as Select3
 
 type Msg
     = SetCauzaStramutare (Select3.Msg CauzaStramutare.Model)
-    | SetCopieIncheiereStramutare DocumentScanat2.Model
+    | SetCopieIncheiereStramutare DocumentScanat2.Msg
 
 
 update : Msg -> Model -> Model
-update msg (Model model) =
+update msg model =
     case msg of
         SetCauzaStramutare select3Msg ->
-            receiveCauzaStramutare (Model model) (Select3.update select3Msg model.ui.cauzaStramutareSelect)
+            receiveCauzaStramutare model (Select3.update select3Msg model.ui.cauzaStramutareSelect)
 
-        SetCopieIncheiereStramutare documentScanat ->
-            Model { model | copieIncheiereStramutare = documentScanat }
+        SetCopieIncheiereStramutare documentScanat2Msg ->
+            { model | copieIncheiereStramutare = (DocumentScanat2.update documentScanat2Msg model.ui.copieIncheiereStramutare) }
 
 
 receiveCauzaStramutare : Model -> Select3.Model CauzaStramutare.Model -> Model
-receiveCauzaStramutare (Model ({ ui } as model)) newSelect =
-    Model
-        { model
-            | ui = { ui | cauzaStramutareSelect = newSelect }
-            , cauzaStramutare = Select3.selectedValue newSelect
-        }
+receiveCauzaStramutare ({ ui } as model) newSelect =
+    { model
+        | ui = { ui | cauzaStramutareSelect = newSelect }
+        , cauzaStramutare = Select3.selectedValue newSelect
+    }
 
 
-type Model
-    = Model
-        { cauzaStramutare : CauzaStramutare.Model
-        , copieIncheiereStramutare : DocumentScanat2.Model
-        , acteEfectuatAnterior : ActeEfectuateAnterior
-        , note : String
-        , actPreluare : String
-        , ui : Ui
-        }
+type alias Model =
+    { cauzaStramutare : CauzaStramutare.Model
+    , copieIncheiereStramutare : DocumentScanat2.Model
+    , acteEfectuatAnterior : ActeEfectuateAnterior
+    , note : String
+    , actPreluare : String
+    , ui : Ui
+    }
 
 
 type alias Ui =
     { cauzaStramutareSelect : Select3.Model CauzaStramutare.Model
+    , copieIncheiereStramutare : DocumentScanat2.Model
     }
 
 
 initialModel : Model
 initialModel =
-    Model
-        { cauzaStramutare = CauzaStramutare.initialModel
-        , copieIncheiereStramutare = DocumentScanat2.empty
-        , acteEfectuatAnterior = ActeEfectuateAnterior.empty
-        , note = ""
-        , actPreluare = ""
-        , ui =
-            { cauzaStramutareSelect = Select3.initialModel CauzaStramutare.initialModel CauzaStramutare.valuesWithLabels
-            }
+    { cauzaStramutare = CauzaStramutare.initialModel
+    , copieIncheiereStramutare = DocumentScanat2.initialModel
+    , acteEfectuatAnterior = ActeEfectuateAnterior.empty
+    , note = ""
+    , actPreluare = ""
+    , ui =
+        { cauzaStramutareSelect = Select3.initialModel CauzaStramutare.initialModel CauzaStramutare.valuesWithLabels
+        , copieIncheiereStramutare = DocumentScanat2.initialModel
         }
+    }
 
 
 view : Model -> Html Msg
-view (Model model) =
+view model =
     fieldset []
         [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
         , ul []
             [ li [] [ Select3.view "Cauza strămutării:" model.ui.cauzaStramutareSelect |> map SetCauzaStramutare ]
-            , li []
-                [ DocumentScanat2.view
-                    { labelText = "Copia încheierii:"
-                    , initialModel = model.copieIncheiereStramutare
-                    , callback = SetCopieIncheiereStramutare
-                    }
-                ]
+            , li [] [ DocumentScanat2.view "Copia încheierii:" model.copieIncheiereStramutare |> map SetCopieIncheiereStramutare ]
 
             --
             --     TODO: Continue here. Can I TDD this?
@@ -98,7 +91,7 @@ view (Model model) =
 
 
 templateActPreluare : Model -> List (Html msg)
-templateActPreluare (Model model) =
+templateActPreluare model =
     [ h1 [] [ text "ActPreluare" ]
     , p [] [ model |> toString |> text ]
     ]

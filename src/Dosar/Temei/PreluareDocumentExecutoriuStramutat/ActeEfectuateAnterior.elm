@@ -9,6 +9,7 @@ import Html.Styled.Events exposing (onClick)
 type Msg
     = Set ActEfectuatAnterior.Msg
     | AddItem
+    | SubmitNewItem ActEfectuatAnterior.Model
 
 
 update : Msg -> Model -> Model
@@ -19,6 +20,9 @@ update msg model =
 
         AddItem ->
             { model | newItem = Just ActEfectuatAnterior.initialModel }
+
+        SubmitNewItem newItem ->
+            { model | items = model.items ++ [ newItem ] }
 
 
 type alias Model =
@@ -59,7 +63,7 @@ addForm newItem =
             , input [ id "add-item-file", type_ "file" ] []
             , label [ for "add-item-note" ] [ text "Note" ]
             , textarea [ id "add-item-note" ] []
-            , button [ id "add-item-submit" ] [ text "Submit" ]
+            , button [ id "add-item-submit", onClick (SubmitNewItem newItem), type_ "button" ] [ text "Submit" ]
             ]
         ]
 

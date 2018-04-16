@@ -1,4 +1,4 @@
-module Utils.MyList exposing (dropUntil, find, get, replace)
+module Utils.MyList exposing (dropUntil, find, get, last, replace)
 
 
 replace : List a -> Int -> a -> List a
@@ -39,3 +39,16 @@ dropUntil predicate xs =
                 xs
             else
                 dropUntil predicate xs
+
+
+last : List a -> Maybe a
+last xs =
+    case xs of
+        [] ->
+            Nothing
+
+        x :: [] ->
+            Just x
+
+        x :: xs ->
+            last xs

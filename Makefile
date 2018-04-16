@@ -13,10 +13,10 @@ compile:
 	elm make --warn src/Main.elm --output dist/Main.js
 
 clean:
-	rm -rf elm-stuff/build-artifacts/0.18.0/user/project
+	rm -rf {,tests/}elm-stuff/build-artifacts/0.18.0/user/project
 
 clean-hard:
-	rm -rf elm-stuff
+	rm -rf {,tests/}elm-stuff
 
 open:
 	open index.html

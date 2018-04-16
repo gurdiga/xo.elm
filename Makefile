@@ -26,7 +26,7 @@ tags:
 	rm tags; ctags -R
 
 pc: pre-commit
-pre-commit: compile test rich-text-editor check-untracked
+pre-commit: compile test rich-text-editor
 
 
 check-untracked:

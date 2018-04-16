@@ -1,7 +1,8 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg(..), initialModel, view, update)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
-import Html.Styled exposing (Html, fieldset, legend, p, text, map, button)
+import Html.Styled exposing (Html, fieldset, legend, p, text, map, button, form)
+import Html.Styled.Attributes exposing (class)
 import Html.Styled.Events exposing (onClick)
 
 
@@ -35,11 +36,19 @@ initialModel =
 
 view : Model -> Html Msg
 view model =
-    fieldset []
-        ([ legend [] [ text "ActeEfectuateAnterior" ] ]
-            ++ (List.map itemView model.items)
-            ++ [ button [ onClick AddItem ] [ text "add item" ] ]
-        )
+    fieldset [] <|
+        legend [] [ text "ActeEfectuateAnterior" ]
+            :: (List.map itemView model.items)
+            ++ [ button [ onClick AddItem ] [ text "add item" ]
+               , model.itemToAdd
+                    |> Maybe.map addForm
+                    |> Maybe.withDefault (text "")
+               ]
+
+
+addForm : ActEfectuatAnterior.Model -> Html Msg
+addForm itemToAdd =
+    form [ class "add-item" ] []
 
 
 itemView : ActEfectuatAnterior.Model -> Html Msg

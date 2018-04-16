@@ -3,7 +3,7 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnteriorTest
 import Expect
 import Test exposing (..)
 import Test.Html.Query as Query
-import Test.Html.Selector exposing (text, tag, attribute, containing)
+import Test.Html.Selector exposing (text, tag, attribute, containing, classes)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
 import Test.Html.Event as Event
@@ -57,6 +57,14 @@ suite =
                             ActeEfectuateAnterior.update ActeEfectuateAnterior.AddItem model
                                 |> .itemToAdd
                                 |> Expect.equal (Just ActEfectuatAnterior.initialModel)
+                    , test "renders the add form" <|
+                        \_ ->
+                            ActeEfectuateAnterior.update ActeEfectuateAnterior.AddItem model
+                                |> render
+                                |> Query.has
+                                    [ tag "form"
+                                    , classes [ "add-item" ]
+                                    ]
                     ]
                 ]
             ]

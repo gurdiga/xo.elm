@@ -1,3 +1,6 @@
+SERVER_IP=127.1
+SERVER_PORT=8005
+
 default: rich-text-editor compile test
 
 test: elm-test
@@ -19,7 +22,7 @@ clean-hard:
 	rm -rf {,tests/}elm-stuff
 
 open:
-	open index.html
+	open http://$(SERVER_IP):$(SERVER_PORT)/index.html
 
 .PHONY: tags
 tags:
@@ -50,7 +53,7 @@ make pre-commit
 endef
 
 start:
-	elm reactor & sleep 0.1
+	elm reactor --port=$(SERVER_PORT) --address=$(SERVER_IP) & sleep 0.1
 
 stop:
 	pkill elm-reactor

@@ -1,8 +1,8 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg(..), initialModel, view, update)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg(..), initialModel, update, view)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
-import Html.Styled exposing (Html, fieldset, legend, textarea, p, text, map, button, form, input)
-import Html.Styled.Attributes exposing (class, id, type_)
+import Html.Styled exposing (Html, button, fieldset, form, input, label, legend, map, p, text, textarea)
+import Html.Styled.Attributes exposing (class, for, id, type_)
 import Html.Styled.Events exposing (onClick)
 
 
@@ -18,41 +18,48 @@ update msg model =
             model
 
         AddItem ->
-            { model | itemToAdd = Just ActEfectuatAnterior.initialModel }
+            { model | newItem = Just ActEfectuatAnterior.initialModel }
 
 
 type alias Model =
     { items : List ActEfectuatAnterior.Model
-    , itemToAdd : Maybe ActEfectuatAnterior.Model
+    , newItem : Maybe ActEfectuatAnterior.Model
     }
 
 
 initialModel : Model
 initialModel =
     { items = [ ActEfectuatAnterior.initialModel ]
-    , itemToAdd = Nothing
+    , newItem = Nothing
     }
 
 
 view : Model -> Html Msg
 view model =
     fieldset [] <|
-        legend [] [ text "ActeEfectuateAnterior" ]
-            :: (List.map itemView model.items)
-            ++ [ button [ onClick AddItem ] [ text "add item" ]
-               , model.itemToAdd
+        [ legend [] [ text "ActeEfectuateAnterior" ] ]
+            ++ List.map itemView model.items
+            ++ [ model.newItem
                     |> Maybe.map addForm
-                    |> Maybe.withDefault (text "")
+                    |> Maybe.withDefault addButton
                ]
 
 
+addButton : Html Msg
+addButton =
+    button [ id "add-item-button", onClick AddItem ] [ text "add item" ]
+
+
 addForm : ActEfectuatAnterior.Model -> Html Msg
-addForm itemToAdd =
+addForm newItem =
     form [ class "add-item" ]
         [ fieldset []
             [ legend [] [ text "Add item" ]
+            , label [ for "add-item-file" ] [ text "Document scanat" ]
             , input [ id "add-item-file", type_ "file" ] []
+            , label [ for "add-item-note" ] [ text "Note" ]
             , textarea [ id "add-item-note" ] []
+            , button [ id "add-item-submit" ] [ text "Submit" ]
             ]
         ]
 

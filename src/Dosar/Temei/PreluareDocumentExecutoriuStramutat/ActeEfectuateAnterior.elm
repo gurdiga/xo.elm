@@ -27,6 +27,11 @@ initialModel =
 view : Model -> Html Msg
 view list =
     fieldset []
-        [ legend [] [ text "ActeEfectuateAnterior" ]
-        , list |> toString |> text
-        ]
+        ([ legend [] [ text "ActeEfectuateAnterior" ] ]
+            ++ (List.map itemView list)
+        )
+
+
+itemView : ActEfectuatAnterior.Model -> Html Msg
+itemView actEfectuatAnterior =
+    ActEfectuatAnterior.view actEfectuatAnterior |> map Set

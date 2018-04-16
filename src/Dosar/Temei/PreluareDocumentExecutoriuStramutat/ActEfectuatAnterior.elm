@@ -1,17 +1,18 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (Model, view, Msg, update, initialModel)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (Model, Msg(..), view, update, initialModel)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
-import Html.Styled exposing (Html, fieldset, legend, p, text)
+import Html.Styled exposing (Html, fieldset, legend, p, text, button)
+import Html.Styled.Events exposing (onClick)
 
 
 type Msg
-    = Msg
+    = Set
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Msg ->
+        Set ->
             model
 
 
@@ -31,6 +32,7 @@ initialModel =
 view : Model -> Html Msg
 view model =
     fieldset []
-        [ legend [] [ text "ActeEfectuateAnterior" ]
+        [ legend [] [ text "ActEfectuatAnterior" ]
         , model |> toString |> text
+        , button [ onClick Set ] [ text "Adaugă item" ]
         ]

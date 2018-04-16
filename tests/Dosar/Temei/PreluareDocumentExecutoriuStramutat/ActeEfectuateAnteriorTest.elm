@@ -3,11 +3,12 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnteriorTest
 import Expect
 import Test exposing (..)
 import Test.Html.Query as Query
-import Test.Html.Selector exposing (text, tag, attribute, containing, classes)
+import Test.Html.Selector exposing (text, tag, attribute, containing, classes, id)
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
 import Test.Html.Event as Event
 import Html.Styled
+import Html.Attributes exposing (type_)
 
 
 suite : Test
@@ -64,6 +65,9 @@ suite =
                                 |> Query.has
                                     [ tag "form"
                                     , classes [ "add-item" ]
+                                    , containing [ tag "legend", text "Add item" ]
+                                    , containing [ tag "input", id "add-item-file", attribute (type_ "file") ]
+                                    , containing [ tag "textarea", id "add-item-note" ]
                                     ]
                     ]
                 ]

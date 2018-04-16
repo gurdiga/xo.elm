@@ -1,8 +1,8 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg(..), initialModel, view, update)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
-import Html.Styled exposing (Html, fieldset, legend, p, text, map, button, form)
-import Html.Styled.Attributes exposing (class)
+import Html.Styled exposing (Html, fieldset, legend, textarea, p, text, map, button, form, input)
+import Html.Styled.Attributes exposing (class, id, type_)
 import Html.Styled.Events exposing (onClick)
 
 
@@ -48,7 +48,13 @@ view model =
 
 addForm : ActEfectuatAnterior.Model -> Html Msg
 addForm itemToAdd =
-    form [ class "add-item" ] []
+    form [ class "add-item" ]
+        [ fieldset []
+            [ legend [] [ text "Add item" ]
+            , input [ id "add-item-file", type_ "file" ] []
+            , textarea [ id "add-item-note" ] []
+            ]
+        ]
 
 
 itemView : ActEfectuatAnterior.Model -> Html Msg

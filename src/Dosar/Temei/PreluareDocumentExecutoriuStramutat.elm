@@ -2,7 +2,7 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (Model, Msg, ini
 
 -- import Utils.RichTextEditor as RichTextEditor
 
-import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior exposing (ActeEfectuateAnterior)
+import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
 import Html.Styled exposing (Html, fieldset, h1, legend, li, map, p, text, ul)
@@ -15,6 +15,7 @@ import Widgets.Select3 as Select3
 type Msg
     = SetCauzaStramutare (Select3.Msg CauzaStramutare.Model)
     | SetCopieIncheiereStramutare DocumentScanat2.Msg
+    | SetActeEfectuatAnterior ActeEfectuateAnterior.Msg
 
 
 update : Msg -> Model -> Model
@@ -24,7 +25,10 @@ update msg model =
             receiveCauzaStramutare model (Select3.update select3Msg model.ui.cauzaStramutareSelect)
 
         SetCopieIncheiereStramutare documentScanat2Msg ->
-            { model | copieIncheiereStramutare = (DocumentScanat2.update documentScanat2Msg model.ui.copieIncheiereStramutare) }
+            { model | copieIncheiereStramutare = DocumentScanat2.update documentScanat2Msg model.ui.copieIncheiereStramutare }
+
+        SetActeEfectuatAnterior acteEfectuateAnteriorMsg ->
+            { model | acteEfectuateAnterior = ActeEfectuateAnterior.update acteEfectuateAnteriorMsg model.acteEfectuateAnterior }
 
 
 receiveCauzaStramutare : Model -> Select3.Model CauzaStramutare.Model -> Model
@@ -38,7 +42,7 @@ receiveCauzaStramutare ({ ui } as model) newSelect =
 type alias Model =
     { cauzaStramutare : CauzaStramutare.Model
     , copieIncheiereStramutare : DocumentScanat2.Model
-    , acteEfectuatAnterior : ActeEfectuateAnterior
+    , acteEfectuateAnterior : ActeEfectuateAnterior.Model
     , note : String
     , actPreluare : String
     , ui : Ui
@@ -55,7 +59,7 @@ initialModel : Model
 initialModel =
     { cauzaStramutare = CauzaStramutare.initialModel
     , copieIncheiereStramutare = DocumentScanat2.initialModel
-    , acteEfectuatAnterior = ActeEfectuateAnterior.empty
+    , acteEfectuateAnterior = ActeEfectuateAnterior.initialModel
     , note = ""
     , actPreluare = ""
     , ui =
@@ -72,11 +76,11 @@ view model =
         , ul []
             [ li [] [ Select3.view "Cauza strămutării:" model.ui.cauzaStramutareSelect |> map SetCauzaStramutare ]
             , li [] [ DocumentScanat2.view "Copia încheierii:" model.copieIncheiereStramutare |> map SetCopieIncheiereStramutare ]
+            , li [] [ ActeEfectuateAnterior.view model.acteEfectuateAnterior |> map SetActeEfectuatAnterior ]
 
             --
             --     TODO: Continue here. Can I TDD this?
             --
-            --     , li [] [ ActeEfectuateAnterior.view model.acteEfectuatAnterior (\v -> c { model | acteEfectuatAnterior = v }) ]
             --     , li [] [ largeTextField "Note:" model.note (\v -> c { model | note = v }) ]
             --     , li []
             --         [ RichTextEditor.view

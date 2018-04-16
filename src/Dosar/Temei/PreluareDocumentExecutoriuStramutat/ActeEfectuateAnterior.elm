@@ -1,56 +1,32 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (ActeEfectuateAnterior, empty, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg, initialModel, view, update)
 
-import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior exposing (ActEfectuatAnterior(ActEfectuatAnterior))
-import Html exposing (Html, fieldset, legend, p, text)
-import Utils.DocumentScanat as DocumentScanat
-import Widgets.Fields exposing (unlabeledLargeTextField)
-import Widgets.Table as Table
+import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
+import Html.Styled exposing (Html, fieldset, legend, p, text, map)
 
 
-type ActeEfectuateAnterior
-    = ActeEfectuateAnterior (List ActEfectuatAnterior)
+type Msg
+    = Set ActEfectuatAnterior.Msg
 
 
-type alias Callback msg =
-    ActeEfectuateAnterior -> msg
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Set actEfectuatAnteriorMsg ->
+            model
 
 
-empty : ActeEfectuateAnterior
-empty =
-    ActeEfectuateAnterior []
+type alias Model =
+    List ActEfectuatAnterior.Model
 
 
-view : ActeEfectuateAnterior -> Callback msg -> Html msg
-view acteEfectuatAnterior callback =
+initialModel : Model
+initialModel =
+    [ ActEfectuatAnterior.initialModel ]
+
+
+view : Model -> Html Msg
+view list =
     fieldset []
         [ legend [] [ text "ActeEfectuateAnterior" ]
-        , tableView acteEfectuatAnterior callback
+        , list |> toString |> text
         ]
-
-
-tableView : ActeEfectuateAnterior -> Callback msg -> Html msg
-tableView acteEfectuatAnterior callback =
-    Table.view
-        { recordList = data acteEfectuatAnterior
-        , callback = callback << fromData
-        , columns =
-            [ ( "Copia scanată"
-              , \r c -> [ DocumentScanat.unlabeledView r.copie (\v -> c { r | copie = v }) ]
-              )
-            , ( "Note"
-              , \r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v })
-              )
-            ]
-        , emptyView = text ""
-        , empty = ActEfectuatAnterior.data ActEfectuatAnterior.empty
-        }
-
-
-data : ActeEfectuateAnterior -> List ActEfectuatAnterior.Data
-data (ActeEfectuateAnterior list) =
-    List.map ActEfectuatAnterior.data list
-
-
-fromData : List ActEfectuatAnterior.Data -> ActeEfectuateAnterior
-fromData =
-    ActeEfectuateAnterior << List.map ActEfectuatAnterior

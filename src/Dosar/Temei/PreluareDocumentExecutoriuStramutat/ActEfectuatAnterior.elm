@@ -1,32 +1,36 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior
-    exposing
-        ( ActEfectuatAnterior(ActEfectuatAnterior)
-        , Data
-        , data
-        , empty
-        )
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (Model, view, Msg, update, initialModel)
 
-import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
+import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
+import Html.Styled exposing (Html, fieldset, legend, p, text)
 
 
-type ActEfectuatAnterior
-    = ActEfectuatAnterior Data
+type Msg
+    = Msg
 
 
-type alias Data =
-    { copie : DocumentScanat
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Msg ->
+            model
+
+
+type alias Model =
+    { copie : DocumentScanat2.Model
     , note : String
     }
 
 
-empty : ActEfectuatAnterior
-empty =
-    ActEfectuatAnterior
-        { copie = DocumentScanat.empty
-        , note = ""
-        }
+initialModel : Model
+initialModel =
+    { copie = DocumentScanat2.initialModel
+    , note = ""
+    }
 
 
-data : ActEfectuatAnterior -> Data
-data (ActEfectuatAnterior data) =
-    data
+view : Model -> Html Msg
+view model =
+    fieldset []
+        [ legend [] [ text "ActeEfectuateAnterior" ]
+        , model |> toString |> text
+        ]

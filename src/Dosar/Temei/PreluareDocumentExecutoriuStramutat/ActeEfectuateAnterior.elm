@@ -3,13 +3,14 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exp
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
 import Html.Styled exposing (Html, button, fieldset, form, input, label, legend, map, p, text, textarea)
 import Html.Styled.Attributes exposing (class, for, id, type_)
-import Html.Styled.Events exposing (onClick)
+import Html.Styled.Events exposing (onClick, onInput)
 
 
 type Msg
     = Set ActEfectuatAnterior.Msg
     | AddItem
     | SubmitNewItem ActEfectuatAnterior.Model
+    | SetNewItemFile String
 
 
 update : Msg -> Model -> Model
@@ -23,6 +24,9 @@ update msg model =
 
         SubmitNewItem newItem ->
             { model | items = model.items ++ [ newItem ] }
+
+        SetNewItemFile newFile ->
+            model
 
 
 type alias Model =
@@ -60,7 +64,7 @@ addForm newItem =
         [ fieldset []
             [ legend [] [ text "Add item" ]
             , label [ for "add-item-file" ] [ text "Document scanat" ]
-            , input [ id "add-item-file", type_ "file" ] []
+            , input [ id "add-item-file", type_ "file", onInput SetNewItemFile ] []
             , label [ for "add-item-note" ] [ text "Note" ]
             , textarea [ id "add-item-note" ] []
             , button [ id "add-item-submit", onClick (SubmitNewItem newItem), type_ "button" ] [ text "Submit" ]

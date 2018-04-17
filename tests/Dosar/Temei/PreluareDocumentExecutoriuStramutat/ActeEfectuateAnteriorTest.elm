@@ -87,6 +87,20 @@ suite =
                                     |> MyList.last
                                     |> Expect.equal (Just newItem)
                         ]
+                     , describe "new item form changes"
+                        [ describe "the name field"
+                            [ test "changing triggers the message" <|
+                                \_ ->
+                                    let
+                                        newFile =
+                                            "/a/new/file"
+                                    in
+                                    rendered
+                                        |> Query.find newItemFileField
+                                        |> Event.simulate (Event.input newFile)
+                                        |> Event.expect (ActeEfectuateAnterior.SetNewItemFile newFile)
+                            ]
+                        ]
                      ]
                     )
                 ]
@@ -114,6 +128,11 @@ addItemForm =
 submitNewItemButton : List Selector
 submitNewItemButton =
     [ tag "button", id "add-item-submit", attribute (type_ "button") ]
+
+
+newItemFileField : List Selector
+newItemFileField =
+    [ tag "input", id "add-item-file", attribute (type_ "file") ]
 
 
 render : ActeEfectuateAnterior.Model -> Query.Single ActeEfectuateAnterior.Msg

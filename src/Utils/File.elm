@@ -1,4 +1,4 @@
-module Utils.File exposing (File, empty)
+module Utils.File exposing (File, empty, setPath)
 
 
 type alias File =
@@ -9,3 +9,8 @@ type alias File =
 empty : File
 empty =
     { path = "" }
+
+
+setPath : File -> String -> File
+setPath model newPath =
+    { model | path = newPath }

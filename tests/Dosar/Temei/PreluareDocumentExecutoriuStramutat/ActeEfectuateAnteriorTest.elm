@@ -88,19 +88,28 @@ suite =
                                     |> Expect.equal (Just newItem)
                         ]
                      , describe "new item form changes"
-                        [ describe "the name field"
-                            [ test "changing triggers the message" <|
+                        (let
+                            newFile =
+                                "/a/new/file"
+                         in
+                         [ describe "the name field"
+                            [ test "changing emits the SetNewItemFile message" <|
                                 \_ ->
-                                    let
-                                        newFile =
-                                            "/a/new/file"
-                                    in
                                     rendered
                                         |> Query.find newItemFileField
                                         |> Event.simulate (Event.input newFile)
                                         |> Event.expect (ActeEfectuateAnterior.SetNewItemFile newFile)
+                            , test "SetNewItemFile updates the newItem appropriately" <|
+                                \_ ->
+                                    model
+                                        |> ActeEfectuateAnterior.update ActeEfectuateAnterior.AddItem
+                                        |> ActeEfectuateAnterior.update (ActeEfectuateAnterior.SetNewItemFile newFile)
+                                        |> .newItem
+                                        |> Maybe.map (\item -> Expect.equal item.copie.file.path newFile)
+                                        |> Maybe.withDefault (Expect.fail ".newItem is Nothing")
                             ]
-                        ]
+                         ]
+                        )
                      ]
                     )
                 ]

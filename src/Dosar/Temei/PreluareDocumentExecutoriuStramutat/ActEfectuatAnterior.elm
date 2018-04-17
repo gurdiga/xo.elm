@@ -1,7 +1,7 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (Model, Msg(..), view, update, initialModel)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (Model, Msg(..), initialModel, setFile, update, view)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
-import Html.Styled exposing (Html, fieldset, legend, p, text, button)
+import Html.Styled exposing (Html, button, fieldset, legend, p, text)
 
 
 type Msg
@@ -13,6 +13,11 @@ update msg model =
     case msg of
         Set ->
             model
+
+
+setFile : Model -> String -> Model
+setFile model newPath =
+    { model | copie = DocumentScanat2.setCopie model.copie newPath }
 
 
 type alias Model =

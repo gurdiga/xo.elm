@@ -26,7 +26,12 @@ update msg model =
             { model | items = model.items ++ [ newItem ] }
 
         SetNewItemFile newFile ->
-            model
+            case model.newItem of
+                Nothing ->
+                    model
+
+                Just newItem ->
+                    { model | newItem = Just (ActEfectuatAnterior.setFile newItem newFile) }
 
 
 type alias Model =

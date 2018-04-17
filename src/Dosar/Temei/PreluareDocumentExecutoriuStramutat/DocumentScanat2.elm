@@ -1,6 +1,6 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 exposing (Model, Msg, update, initialModel, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 exposing (Model, Msg, initialModel, setCopie, update, view)
 
-import Html.Styled exposing (Attribute, Html, div, input, label, text, map)
+import Html.Styled exposing (Attribute, Html, div, input, label, map, text)
 import Html.Styled.Attributes exposing (type_)
 import Html.Styled.Events exposing (on)
 import Json.Decode as Json
@@ -16,6 +16,11 @@ update msg model =
     case msg of
         SetValue newFile ->
             { model | file = newFile }
+
+
+setCopie : Model -> String -> Model
+setCopie model newPath =
+    { model | file = File.setPath model.file newPath }
 
 
 type alias Model =
@@ -52,4 +57,4 @@ onFileSelect callback =
                 (\targetValue -> callback (File targetValue))
                 (Json.at [ "target", "value" ] Json.string)
     in
-        on "change" eventDecoder
+    on "change" eventDecoder

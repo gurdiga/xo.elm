@@ -57,7 +57,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { items = [ ActEfectuatAnterior.initialModel ]
+    { items = []
     , newItem = Nothing
     }
 
@@ -69,13 +69,16 @@ view model =
             ++ List.map itemView model.items
             ++ [ model.newItem
                     |> Maybe.map addForm
-                    |> Maybe.withDefault addButton
+                    |> Maybe.withDefault emptySlate
                ]
 
 
-addButton : Html Msg
-addButton =
-    button [ id "add-item-button", onClick AddItem ] [ text "add item" ]
+emptySlate : Html Msg
+emptySlate =
+    p []
+        [ text "No items."
+        , button [ id "add-item-button", onClick AddItem ] [ text "Add item" ]
+        ]
 
 
 addForm : ActEfectuatAnterior.Model -> Html Msg

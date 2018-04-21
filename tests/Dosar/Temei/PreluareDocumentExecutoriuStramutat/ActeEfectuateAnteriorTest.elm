@@ -37,7 +37,7 @@ suite =
                         , text actEfectuatAnterior2.copie.file.path
                         ]
         , describe "interactions"
-            [ describe "addint items"
+            [ describe "adding items"
                 [ test "has an add button" <|
                     \_ ->
                         render model

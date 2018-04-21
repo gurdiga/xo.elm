@@ -32,19 +32,21 @@ update msg model =
 
         SetNewItemFile newFile ->
             case model.newItem of
-                Nothing ->
-                    model
-
                 Just newItem ->
                     { model | newItem = Just (ActEfectuatAnterior.setFile newItem newFile) }
 
-        SetNewItemNote newNote ->
-            case model.newItem of
+                -- this should never happen
                 Nothing ->
                     model
 
+        SetNewItemNote newNote ->
+            case model.newItem of
                 Just newItem ->
                     { model | newItem = Just (ActEfectuatAnterior.setNote newItem newNote) }
+
+                -- this should never happen
+                Nothing ->
+                    model
 
 
 type alias Model =

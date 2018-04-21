@@ -11,6 +11,7 @@ type Msg
     | AddItem
     | SubmitNewItem ActEfectuatAnterior.Model
     | SetNewItemFile String
+    | SetNewItemNote String
 
 
 update : Msg -> Model -> Model
@@ -32,6 +33,14 @@ update msg model =
 
                 Just newItem ->
                     { model | newItem = Just (ActEfectuatAnterior.setFile newItem newFile) }
+
+        SetNewItemNote newNote ->
+            case model.newItem of
+                Nothing ->
+                    model
+
+                Just newItem ->
+                    { model | newItem = Just (ActEfectuatAnterior.setNote newItem newNote) }
 
 
 type alias Model =
@@ -71,7 +80,7 @@ addForm newItem =
             , label [ for "add-item-file" ] [ text "Document scanat" ]
             , input [ id "add-item-file", type_ "file", onInput SetNewItemFile ] []
             , label [ for "add-item-note" ] [ text "Note" ]
-            , textarea [ id "add-item-note" ] []
+            , textarea [ id "add-item-note", onInput SetNewItemNote ] []
             , button [ id "add-item-submit", onClick (SubmitNewItem newItem), type_ "button" ] [ text "Submit" ]
             ]
         ]

@@ -91,8 +91,11 @@ suite =
                         (let
                             newFile =
                                 "/a/new/file"
+
+                            newNote =
+                                "This is a note."
                          in
-                         [ describe "the name field"
+                         [ describe "the Copie field"
                             [ test "changing emits the SetNewItemFile message" <|
                                 \_ ->
                                     rendered
@@ -106,7 +109,23 @@ suite =
                                         |> ActeEfectuateAnterior.update (ActeEfectuateAnterior.SetNewItemFile newFile)
                                         |> .newItem
                                         |> Maybe.map (\item -> Expect.equal item.copie.file.path newFile)
-                                        |> Maybe.withDefault (Expect.fail ".newItem is Nothing")
+                                        |> Maybe.withDefault (Expect.fail ".newItem is unexpectedly Nothing")
+                            ]
+                         , describe "the Note field"
+                            [ test "changing emits the SetNewItemNote message" <|
+                                \_ ->
+                                    rendered
+                                        |> Query.find newItemNoteField
+                                        |> Event.simulate (Event.input newNote)
+                                        |> Event.expect (ActeEfectuateAnterior.SetNewItemNote newNote)
+                            , test "SetNewItemNote updates the newItem appropriately" <|
+                                \_ ->
+                                    model
+                                        |> ActeEfectuateAnterior.update ActeEfectuateAnterior.AddItem
+                                        |> ActeEfectuateAnterior.update (ActeEfectuateAnterior.SetNewItemNote newNote)
+                                        |> .newItem
+                                        |> Maybe.map (\item -> Expect.equal item.note newNote)
+                                        |> Maybe.withDefault (Expect.fail ".newItem is unexpectedly Nothing")
                             ]
                          ]
                         )
@@ -142,6 +161,11 @@ submitNewItemButton =
 newItemFileField : List Selector
 newItemFileField =
     [ tag "input", id "add-item-file", attribute (type_ "file") ]
+
+
+newItemNoteField : List Selector
+newItemNoteField =
+    [ tag "textarea", id "add-item-note" ]
 
 
 render : ActeEfectuateAnterior.Model -> Query.Single ActeEfectuateAnterior.Msg

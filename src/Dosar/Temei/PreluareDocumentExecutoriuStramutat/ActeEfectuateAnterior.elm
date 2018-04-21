@@ -9,6 +9,7 @@ import Html.Styled.Events exposing (onClick, onInput)
 type Msg
     = Set ActEfectuatAnterior.Msg
     | AddItem
+    | CancelNewItem
     | SubmitNewItem ActEfectuatAnterior.Model
     | SetNewItemFile String
     | SetNewItemNote String
@@ -22,6 +23,9 @@ update msg model =
 
         AddItem ->
             { model | newItem = Just ActEfectuatAnterior.initialModel }
+
+        CancelNewItem ->
+            { model | newItem = Nothing }
 
         SubmitNewItem newItem ->
             { model | items = model.items ++ [ newItem ] }
@@ -82,6 +86,7 @@ addForm newItem =
             , label [ for "add-item-note" ] [ text "Note" ]
             , textarea [ id "add-item-note", onInput SetNewItemNote ] []
             , button [ id "add-item-submit", onClick (SubmitNewItem newItem), type_ "button" ] [ text "Submit" ]
+            , button [ id "add-item-cancel", onClick CancelNewItem, type_ "button" ] [ text "Cancel" ]
             ]
         ]
 

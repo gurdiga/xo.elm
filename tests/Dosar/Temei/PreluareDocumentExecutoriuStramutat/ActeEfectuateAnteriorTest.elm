@@ -51,7 +51,7 @@ suite =
                             |> Query.find addItemButton
                             |> Event.simulate Event.click
                             |> Event.expect ActeEfectuateAnterior.AddItem
-                , test "the AddItem message updates sets the newItem member on the model" <|
+                , test "the AddItem message updates sets .newItem member on the model" <|
                     \_ ->
                         ActeEfectuateAnterior.update ActeEfectuateAnterior.AddItem model
                             |> .newItem
@@ -69,7 +69,7 @@ suite =
                                     [ Query.has addItemForm
                                     , Query.hasNot addItemButton
                                     ]
-                     , describe "the submit new item button"
+                     , describe "the “submit new item” button"
                         [ test "emits the SubmitNewItem message" <|
                             \_ ->
                                 rendered
@@ -86,6 +86,21 @@ suite =
                                     |> .items
                                     |> MyList.last
                                     |> Expect.equal (Just newItem)
+                        ]
+                     , describe "the “cancel” button"
+                        [ test "emits the CancelNewItem message" <|
+                            \_ ->
+                                rendered
+                                    |> Query.find cancelNewItemButton
+                                    |> Event.simulate Event.click
+                                    |> Event.expect ActeEfectuateAnterior.CancelNewItem
+                        , test "the CancelNewItem resets the .newItem on the model" <|
+                            \_ ->
+                                model
+                                    |> ActeEfectuateAnterior.update ActeEfectuateAnterior.AddItem
+                                    |> ActeEfectuateAnterior.update ActeEfectuateAnterior.CancelNewItem
+                                    |> .newItem
+                                    |> Expect.equal Nothing
                         ]
                      , describe "new item form changes"
                         (let
@@ -150,12 +165,18 @@ addItemForm =
     , containing [ tag "label", attribute (for "add-item-note") ]
     , containing [ tag "textarea", id "add-item-note" ]
     , containing submitNewItemButton
+    , containing cancelNewItemButton
     ]
 
 
 submitNewItemButton : List Selector
 submitNewItemButton =
     [ tag "button", id "add-item-submit", attribute (type_ "button") ]
+
+
+cancelNewItemButton : List Selector
+cancelNewItemButton =
+    [ tag "button", id "add-item-cancel", attribute (type_ "button") ]
 
 
 newItemFileField : List Selector

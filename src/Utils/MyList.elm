@@ -42,13 +42,5 @@ dropUntil predicate xs =
 
 
 last : List a -> Maybe a
-last xs =
-    case xs of
-        [] ->
-            Nothing
-
-        x :: [] ->
-            Just x
-
-        x :: xs ->
-            last xs
+last =
+    List.head << List.reverse

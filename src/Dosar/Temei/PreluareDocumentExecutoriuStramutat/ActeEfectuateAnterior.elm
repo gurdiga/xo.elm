@@ -1,7 +1,7 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg(..), initialModel, update, view)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
-import Html.Styled exposing (Html, button, fieldset, form, input, label, legend, map, p, text, textarea)
+import Html.Styled exposing (Html, button, div, fieldset, form, input, label, legend, map, p, text, textarea)
 import Html.Styled.Attributes exposing (class, for, id, type_)
 import Html.Styled.Events exposing (onClick, onInput)
 
@@ -100,8 +100,10 @@ addForm newItem =
             , input [ id "add-item-file", type_ "file", onInput SetNewItemFile ] []
             , label [ for "add-item-note" ] [ text "Note" ]
             , textarea [ id "add-item-note", onInput SetNewItemNote ] []
-            , button [ id "add-item-submit", onClick (SubmitNewItem newItem), type_ "button" ] [ text "Submit" ]
-            , button [ id "add-item-cancel", onClick CancelNewItem, type_ "button" ] [ text "Cancel" ]
+            , div []
+                [ button [ id "add-item-submit", onClick (SubmitNewItem newItem), type_ "button" ] [ text "Submit" ]
+                , button [ id "add-item-cancel", onClick CancelNewItem, type_ "button" ] [ text "Cancel" ]
+                ]
             ]
         ]
 

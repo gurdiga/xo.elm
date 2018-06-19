@@ -76,16 +76,20 @@ suite =
                                     |> Query.find submitNewItemButton
                                     |> Event.simulate Event.click
                                     |> Event.expect (ActeEfectuateAnterior.SubmitNewItem ActEfectuatAnterior.initialModel)
-                        , test "the SubmitNewItem appends the given item to the item list" <|
-                            \_ ->
-                                let
-                                    newItem =
-                                        ActEfectuatAnterior.initialModel
-                                in
-                                ActeEfectuateAnterior.update (ActeEfectuateAnterior.SubmitNewItem newItem) model
-                                    |> .items
-                                    |> MyList.last
-                                    |> Expect.equal (Just newItem)
+                        , describe "SubmitNewItem message"
+                            [ describe "when the item is valid"
+                                [ test "appends the item to the item list" <|
+                                    \_ ->
+                                        let
+                                            newItem =
+                                                ActEfectuatAnterior.initialModel
+                                        in
+                                        ActeEfectuateAnterior.update (ActeEfectuateAnterior.SubmitNewItem newItem) model
+                                            |> .items
+                                            |> MyList.last
+                                            |> Expect.equal (Just newItem)
+                                ]
+                            ]
                         ]
                      , describe "the “cancel” button"
                         [ test "emits the CancelNewItem message" <|

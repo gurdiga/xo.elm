@@ -55,6 +55,16 @@ type alias Model =
     }
 
 
+type Item
+    = Initial ActEfectuatAnterior.Model
+    | Valid ActEfectuatAnterior.Model
+    | Invalid ActEfectuatAnterior.Model (List ValidationErrorMessage)
+
+
+type alias ValidationErrorMessage =
+    String
+
+
 initialModel : Model
 initialModel =
     { items = []

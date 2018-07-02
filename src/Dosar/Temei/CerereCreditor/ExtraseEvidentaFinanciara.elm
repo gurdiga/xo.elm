@@ -20,7 +20,7 @@ update msg list =
         SetInregistrareEvidentaFinanciara i inregistrareEvidentaFinanciaraMsg ->
             MyList.get i list
                 |> Maybe.map (InregistrareEvidentaFinanciara.update inregistrareEvidentaFinanciaraMsg >> MyList.replace list i)
-                |> Debug.crash ("SetInregistrareEvidentaFinanciara got a bad index" ++ toString i)
+                |> Debug.crash ("SetInregistrareEvidentaFinanciara got a bad index: " ++ toString i)
 
 
 type alias Model =

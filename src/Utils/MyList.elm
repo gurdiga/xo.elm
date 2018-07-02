@@ -13,12 +13,9 @@ replace list index empty =
     List.indexedMap mapper list
 
 
-get : List a -> Int -> Maybe a
-get list index =
-    if index < 0 then
-        Nothing
-    else
-        list |> List.drop (index - 1) |> List.head
+get : Int -> List a -> Maybe a
+get index =
+    List.drop index >> List.head
 
 
 find : (a -> Bool) -> List a -> Maybe a

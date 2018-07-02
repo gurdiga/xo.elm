@@ -57,3 +57,6 @@ start:
 
 stop:
 	pkill elm-reactor
+
+edit:
+	atom .

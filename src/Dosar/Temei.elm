@@ -82,7 +82,7 @@ initialModel =
 
 initialTemei : Temei
 initialTemei =
-    PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.initialModel
+    CerereCreditor CerereCreditor.initialModel
 
 
 type Msg

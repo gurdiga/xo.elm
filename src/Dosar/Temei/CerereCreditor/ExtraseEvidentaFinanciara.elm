@@ -12,10 +12,10 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg (Model list) =
+update msg list =
     case msg of
         AddInregistrareEvidentaFinanciara ->
-            Model (list ++ [ InregistrareEvidentaFinanciara.initialModel ])
+            list ++ [ InregistrareEvidentaFinanciara.initialModel ]
 
         SetInregistrareEvidentaFinanciara i inregistrareEvidentaFinanciaraMsg ->
             let
@@ -26,23 +26,22 @@ update msg (Model list) =
                 Just v ->
                     InregistrareEvidentaFinanciara.update inregistrareEvidentaFinanciaraMsg v
                         |> MyList.replace list i
-                        |> Model
 
                 Nothing ->
-                    Model list
+                    list
 
 
-type Model
-    = Model (List InregistrareEvidentaFinanciara.Model)
+type alias Model =
+    List InregistrareEvidentaFinanciara.Model
 
 
 initialModel : Model
 initialModel =
-    Model []
+    [ InregistrareEvidentaFinanciara.initialModel ]
 
 
 view : Model -> Html Msg
-view (Model list) =
+view list =
     fieldset []
         [ legend [] [ text "ExtraseEvidentaFinanciara" ]
         , if List.isEmpty list then

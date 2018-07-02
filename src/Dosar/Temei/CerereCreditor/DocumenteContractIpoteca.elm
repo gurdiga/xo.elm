@@ -8,15 +8,14 @@ import Html.Styled exposing (Html, fieldset, legend, li, map, pre, text, ul)
 import Utils.DocumentScanatTea as DocumentScanatTea
 
 
-type Model
-    = Model
-        ContractIpoteca.Model
-        { contractCreditBancar : ContractCreditBancar.Model
-        , extraseEvidentaFinanciara : ExtraseEvidentaFinanciara.Model
-        , notificare : DocumentScanatTea.Model
-        , preaviz : DocumentScanatTea.Model
-        , declaratieContractNonLitigios : DeclaratieContractNonLitigios.Model
-        }
+type alias Model =
+    { contractIpoteca : ContractIpoteca.Model
+    , contractCreditBancar : ContractCreditBancar.Model
+    , extraseEvidentaFinanciara : ExtraseEvidentaFinanciara.Model
+    , notificare : DocumentScanatTea.Model
+    , preaviz : DocumentScanatTea.Model
+    , declaratieContractNonLitigios : DeclaratieContractNonLitigios.Model
+    }
 
 
 initialModel : Model
@@ -25,13 +24,13 @@ initialModel =
         contractIpoteca =
             ContractIpoteca.empty
     in
-    Model contractIpoteca
-        { contractCreditBancar = ContractCreditBancar.initialModel
-        , extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.initialModel
-        , notificare = DocumentScanatTea.initialModel
-        , preaviz = DocumentScanatTea.initialModel
-        , declaratieContractNonLitigios = DeclaratieContractNonLitigios.initialModel contractIpoteca
-        }
+    { contractIpoteca = contractIpoteca
+    , contractCreditBancar = ContractCreditBancar.initialModel
+    , extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.initialModel
+    , notificare = DocumentScanatTea.initialModel
+    , preaviz = DocumentScanatTea.initialModel
+    , declaratieContractNonLitigios = DeclaratieContractNonLitigios.initialModel contractIpoteca
+    }
 
 
 type Msg
@@ -44,32 +43,32 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg (Model contractIpoteca model) =
+update msg model =
     case msg of
         SetContractIpoteca contractIpotecaMsg ->
-            Model (ContractIpoteca.update contractIpotecaMsg contractIpoteca) model
+            { model | contractIpoteca = ContractIpoteca.update contractIpotecaMsg model.contractIpoteca }
 
         SetContractCreditBancar contractCreditBancarMsg ->
-            Model contractIpoteca { model | contractCreditBancar = ContractCreditBancar.update contractCreditBancarMsg model.contractCreditBancar }
+            { model | contractCreditBancar = ContractCreditBancar.update contractCreditBancarMsg model.contractCreditBancar }
 
         SetExtraseEvidentaFinanciara extraseEvidentaFinanciaraMsg ->
-            Model contractIpoteca { model | extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.update extraseEvidentaFinanciaraMsg model.extraseEvidentaFinanciara }
+            { model | extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.update extraseEvidentaFinanciaraMsg model.extraseEvidentaFinanciara }
 
         SetNotificare documentScanatTeaMsg ->
-            Model contractIpoteca { model | notificare = DocumentScanatTea.update documentScanatTeaMsg model.notificare }
+            { model | notificare = DocumentScanatTea.update documentScanatTeaMsg model.notificare }
 
         SetPreaviz documentScanatTeaMsg ->
-            Model contractIpoteca { model | preaviz = DocumentScanatTea.update documentScanatTeaMsg model.preaviz }
+            { model | preaviz = DocumentScanatTea.update documentScanatTeaMsg model.preaviz }
 
         SetDeclaratieContractNonLitigios declaratieContractNonLitigiosMsg ->
-            Model contractIpoteca { model | declaratieContractNonLitigios = DeclaratieContractNonLitigios.update declaratieContractNonLitigiosMsg model.declaratieContractNonLitigios }
+            { model | declaratieContractNonLitigios = DeclaratieContractNonLitigios.update declaratieContractNonLitigiosMsg model.declaratieContractNonLitigios }
 
 
 view : Model -> Html Msg
-view (Model contractIpoteca model) =
+view model =
     fieldset []
         [ legend [] [ text "DocumenteContractIpoteca" ]
-        , ContractIpoteca.view contractIpoteca |> map SetContractIpoteca
+        , ContractIpoteca.view model.contractIpoteca |> map SetContractIpoteca
         , ContractCreditBancar.view model.contractCreditBancar |> map SetContractCreditBancar
         , ExtraseEvidentaFinanciara.view model.extraseEvidentaFinanciara |> map SetExtraseEvidentaFinanciara
         , DocumentScanatTea.view { labelText = "Notificare:", documentScanat = model.notificare } |> map SetNotificare

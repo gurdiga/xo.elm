@@ -18,17 +18,9 @@ update msg list =
             list ++ [ InregistrareEvidentaFinanciara.initialModel ]
 
         SetInregistrareEvidentaFinanciara i inregistrareEvidentaFinanciaraMsg ->
-            let
-                x =
-                    MyList.get list i
-            in
-            case x of
-                Just v ->
-                    InregistrareEvidentaFinanciara.update inregistrareEvidentaFinanciaraMsg v
-                        |> MyList.replace list i
-
-                Nothing ->
-                    list
+            MyList.get i list
+                |> Maybe.map (InregistrareEvidentaFinanciara.update inregistrareEvidentaFinanciaraMsg >> MyList.replace list i)
+                |> Debug.crash ("SetInregistrareEvidentaFinanciara got a bad index" ++ toString i)
 
 
 type alias Model =

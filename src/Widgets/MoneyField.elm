@@ -45,5 +45,5 @@ unlabeledView (Money amount currency) =
         , onInput SetAmount
         ]
         []
-    , Select.unlabeledView Money.currenciesWithLabels currency SetCurrency |> fromUnstyled
+    , Select.unlabeledView Money.currenciesWithLabels currency SetCurrency
     ]

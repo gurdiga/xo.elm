@@ -12,6 +12,7 @@ module Widgets.Fields
 import Html exposing (Html, input, label, text, textarea)
 import Html.Attributes exposing (checked, type_, value)
 import Html.Events exposing (onCheck, onInput)
+import Html.Styled exposing (toUnstyled)
 import Utils.Money as Money exposing (Money(..))
 import Widgets.Select as Select
 
@@ -85,4 +86,5 @@ unlabeledMoneyField (Money amount currency) callback =
         Money.currenciesWithLabels
         currency
         (\v -> callback (Money amount v))
+        |> toUnstyled
     ]

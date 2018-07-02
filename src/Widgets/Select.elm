@@ -1,8 +1,8 @@
 module Widgets.Select exposing (unlabeledView, view)
 
-import Html exposing (Html, label, option, select, span, text)
-import Html.Attributes exposing (selected, style)
-import Html.Events exposing (onInput)
+import Html.Styled exposing (Html, label, option, select, span, text)
+import Html.Styled.Attributes exposing (selected, style)
+import Html.Styled.Events exposing (onInput)
 import UI.Styles as Styles
 
 

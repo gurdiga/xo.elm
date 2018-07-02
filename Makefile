@@ -22,7 +22,7 @@ clean-hard:
 	rm -rf {,tests/}elm-stuff
 
 open:
-	open http://$(SERVER_IP):$(SERVER_PORT)/index.html
+	open http://$(SERVER_IP):$(SERVER_PORT)/src/Main.elm
 
 .PHONY: tags
 tags:
@@ -57,6 +57,8 @@ start:
 
 stop:
 	pkill elm-reactor
+
+restart: stop start
 
 edit:
 	atom .

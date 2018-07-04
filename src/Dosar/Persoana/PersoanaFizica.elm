@@ -1,4 +1,4 @@
-module Dosar.Persoana.PersoanaFizica exposing (Model, Msg, empty, update, view)
+module Dosar.Persoana.PersoanaFizica exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Persoana.PersoanaFizica.Css as Css
 import Html.Styled exposing (Html, li, map, ul)
@@ -50,8 +50,8 @@ type alias Model =
     }
 
 
-empty : Model
-empty =
+initialModel : Model
+initialModel =
     { nume = ""
     , prenume = ""
     , dataNasterii = MyDate.empty

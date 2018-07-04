@@ -66,7 +66,7 @@ type Persoana
 initialModel : Model
 initialModel =
     Model
-        { persoana = PersoanaFizica PersoanaFizica.empty
+        { persoana = PersoanaFizica PersoanaFizica.initialModel
         , ui =
             { select = Select3.initialModel initialPersoana valuesWithLabels
             }
@@ -75,7 +75,7 @@ initialModel =
 
 initialPersoana : Persoana
 initialPersoana =
-    PersoanaFizica PersoanaFizica.empty
+    PersoanaFizica PersoanaFizica.initialModel
 
 
 view : Model -> Html Msg
@@ -88,7 +88,7 @@ view (Model model) =
 
 valuesWithLabels : List ( Persoana, String )
 valuesWithLabels =
-    [ ( PersoanaFizica PersoanaFizica.empty, "fizică" )
+    [ ( PersoanaFizica PersoanaFizica.initialModel, "fizică" )
     , ( PersoanaJuridica PersoanaJuridica.empty, "juridică" )
     ]
 

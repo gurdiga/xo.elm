@@ -19,52 +19,50 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg (Model model) =
+update msg model =
     case msg of
         SetNume textFieldMsg ->
-            Model { model | nume = TextField.update textFieldMsg model.nume }
+            { model | nume = TextField.update textFieldMsg model.nume }
 
         SetPrenume textFieldMsg ->
-            Model { model | prenume = TextField.update textFieldMsg model.prenume }
+            { model | prenume = TextField.update textFieldMsg model.prenume }
 
         SetDataNasterii dateFieldMsg ->
-            Model { model | dataNasterii = DateField.update dateFieldMsg model.dataNasterii }
+            { model | dataNasterii = DateField.update dateFieldMsg model.dataNasterii }
 
         SetCnp textFieldMsg ->
-            Model { model | cnp = TextField.update textFieldMsg model.cnp }
+            { model | cnp = TextField.update textFieldMsg model.cnp }
 
         SetAdresa largeTextFieldMsg ->
-            Model { model | adresa = LargeTextField.update largeTextFieldMsg model.adresa }
+            { model | adresa = LargeTextField.update largeTextFieldMsg model.adresa }
 
         SetNote largeTextFieldMsg ->
-            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
+            { model | note = LargeTextField.update largeTextFieldMsg model.note }
 
 
-type Model
-    = Model
-        { nume : String
-        , prenume : String
-        , dataNasterii : MyDate.Model
-        , cnp : String
-        , adresa : String
-        , note : String
-        }
+type alias Model =
+    { nume : String
+    , prenume : String
+    , dataNasterii : MyDate.Model
+    , cnp : String
+    , adresa : String
+    , note : String
+    }
 
 
 empty : Model
 empty =
-    Model
-        { nume = ""
-        , prenume = ""
-        , dataNasterii = MyDate.empty
-        , cnp = ""
-        , adresa = ""
-        , note = ""
-        }
+    { nume = ""
+    , prenume = ""
+    , dataNasterii = MyDate.empty
+    , cnp = ""
+    , adresa = ""
+    , note = ""
+    }
 
 
 view : Model -> Html Msg
-view (Model model) =
+view model =
     ul [ css [ Css.ul ] ]
         [ li [] [ TextField.view "Nume:" model.nume |> map SetNume ]
         , li [] [ TextField.view "Prenume:" model.prenume |> map SetPrenume ]

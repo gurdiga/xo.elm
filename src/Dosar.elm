@@ -2,31 +2,27 @@ module Dosar exposing (Model, Msg, initialModel, update, view)
 
 -- import Html.Events exposing (onInput)
 
+import Dosar.Actiune as Actiune exposing (Model)
 import Dosar.DocumentExecutoriu as DocumentExecutoriu
 import Dosar.Styles as Styles
 import Dosar.Temei as Temei
 import Html.Styled exposing (Html, button, div, fromUnstyled, h1, map, node, option, section, select, text, toUnstyled)
 
 
--- import Dosar.Actiune as Actiune exposing (Actiune)
 -- import UI.Styles as Styles
 
 
 type Msg
     = SetTemei Temei.Msg
     | SetDocumentExecutoriu DocumentExecutoriu.Msg
+    | SetActiune Actiune.Msg
 
 
 type alias Model =
     { id : String
     , temei : Temei.Model
     , documentExecutoriu : DocumentExecutoriu.Model
-
-    --
-    -- TODO: Continue here
-    --
-    --
-    -- , actiune : Actiune
+    , actiune : Actiune.Model
     }
 
 
@@ -35,8 +31,7 @@ initialModel =
     { id = "001"
     , temei = Temei.initialModel
     , documentExecutoriu = DocumentExecutoriu.empty
-
-    -- , actiune = Actiune.empty
+    , actiune = Actiune.initialModel
     }
 
 
@@ -49,6 +44,9 @@ update msg model =
         SetDocumentExecutoriu documentExecutoriuMsg ->
             { model | documentExecutoriu = DocumentExecutoriu.update documentExecutoriuMsg model.documentExecutoriu }
 
+        SetActiune actiuneMsg ->
+            { model | actiune = Actiune.update actiuneMsg model.actiune }
+
 
 view : Model -> Html Msg
 view model =
@@ -58,5 +56,6 @@ view model =
         , section []
             [ Temei.view model.temei |> map SetTemei
             , DocumentExecutoriu.view model.documentExecutoriu |> map SetDocumentExecutoriu
+            , Actiune.view model.actiune |> map SetActiune
             ]
         ]

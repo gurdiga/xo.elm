@@ -66,7 +66,7 @@ type Persoana
 initialModel : Model
 initialModel =
     Model
-        { persoana = PersoanaFizica PersoanaFizica.initialModel
+        { persoana = initialPersoana
         , ui =
             { select = Select3.initialModel initialPersoana valuesWithLabels
             }

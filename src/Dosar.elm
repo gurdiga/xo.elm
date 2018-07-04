@@ -17,43 +17,41 @@ type Msg
     | SetDocumentExecutoriu DocumentExecutoriu.Msg
 
 
-type Model
-    = Model
-        { id : String
-        , temei : Temei.Model
-        , documentExecutoriu : DocumentExecutoriu.Model
+type alias Model =
+    { id : String
+    , temei : Temei.Model
+    , documentExecutoriu : DocumentExecutoriu.Model
 
-        --
-        -- TODO: Continue here
-        --
-        --
-        -- , actiune : Actiune
-        }
+    --
+    -- TODO: Continue here
+    --
+    --
+    -- , actiune : Actiune
+    }
 
 
 initialModel : Model
 initialModel =
-    Model
-        { id = "001"
-        , temei = Temei.initialModel
-        , documentExecutoriu = DocumentExecutoriu.empty
+    { id = "001"
+    , temei = Temei.initialModel
+    , documentExecutoriu = DocumentExecutoriu.empty
 
-        -- , actiune = Actiune.empty
-        }
+    -- , actiune = Actiune.empty
+    }
 
 
 update : Msg -> Model -> Model
-update msg (Model model) =
+update msg model =
     case msg of
         SetTemei temeiMsg ->
-            Model { model | temei = Temei.update temeiMsg model.temei }
+            { model | temei = Temei.update temeiMsg model.temei }
 
         SetDocumentExecutoriu documentExecutoriuMsg ->
-            Model { model | documentExecutoriu = DocumentExecutoriu.update documentExecutoriuMsg model.documentExecutoriu }
+            { model | documentExecutoriu = DocumentExecutoriu.update documentExecutoriuMsg model.documentExecutoriu }
 
 
 view : Model -> Html Msg
-view (Model model) =
+view model =
     node "main"
         [ Styles.formular ]
         [ h1 [] [ text "Dosar deschis" ]

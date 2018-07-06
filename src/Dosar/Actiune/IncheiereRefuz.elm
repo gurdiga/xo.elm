@@ -1,49 +1,56 @@
-module Dosar.Actiune.IncheiereRefuz exposing (IncheiereRefuz, empty, view)
+module Dosar.Actiune.IncheiereRefuz exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz exposing (CauzaRefuz)
-import Html exposing (Html, button, div, fieldset, h1, legend, p, text)
-import Utils.RichTextEditor as RichTextEditor
+-- import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz exposing (CauzaRefuz)
 
-
-type IncheiereRefuz
-    = IncheiereRefuz Data
+import Html.Styled exposing (Html, button, div, fieldset, h1, legend, map, p, text)
 
 
-type alias Data =
-    { cauza : CauzaRefuz
-    , html : String
+-- import Utils.RichTextEditor as RichTextEditor
+
+
+type alias Model =
+    { --  cauza : CauzaRefuz
+      -- , html : String
     }
 
 
-empty : IncheiereRefuz
-empty =
-    IncheiereRefuz
-        { cauza = CauzaRefuz.empty
-        , html = ""
-        }
+initialModel : Model
+initialModel =
+    { --  cauza = CauzaRefuz.empty
+      -- , html = ""
+    }
 
 
-view : IncheiereRefuz -> (IncheiereRefuz -> Cmd msg -> Sub msg -> msg) -> Html msg
-view ((IncheiereRefuz data) as incheiereRefuz) callback =
-    let
-        c data =
-            callback (IncheiereRefuz data) Cmd.none Sub.none
-    in
+view : Model -> Html msg
+view model =
     fieldset []
         [ legend [] [ text "IncheiereRefuz" ]
-        , CauzaRefuz.view data.cauza (\v -> c { data | cauza = v })
-        , RichTextEditor.view
-            { buttonLabel = "Editează"
-            , content = template data
-            , onOpen = callback incheiereRefuz
-            , onResponse = \s -> c { data | html = s }
-            }
+        , text <| toString model
+
+        -- , CauzaRefuz.view data.cauza (\v -> c { data | cauza = v })
+        -- , RichTextEditor.view
+        --     { buttonLabel = "Editează"
+        --     , content = template data
+        --     , onOpen = callback incheiereRefuz
+        --     , onResponse = \s -> c { data | html = s }
+        --     }
         ]
 
 
-template : Data -> List (Html msg)
-template data =
+template : Model -> List (Html msg)
+template model =
     -- TODO: find the real template
     [ h1 [] [ text "IncheiereRefuz" ]
-    , p [] [ text <| toString <| data ]
+    , p [] [ text <| toString <| model ]
     ]
+
+
+type Msg
+    = Msg
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Msg ->
+            model

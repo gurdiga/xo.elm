@@ -1,70 +1,67 @@
-module Dosar.Actiune.IncheiereIntentare exposing (IncheiereIntentare, empty, view)
+module Dosar.Actiune.IncheiereIntentare exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere as RezultatIncercareConciliere exposing (RezultatIncercareConciliere)
-import Html exposing (Html, button, div, fieldset, h1, legend, p, text)
+-- import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere as RezultatIncercareConciliere exposing (RezultatIncercareConciliere)
+-- import Utils.RichTextEditor as RichTextEditor
+
+import Html.Styled exposing (Html, button, div, fieldset, h1, legend, map, p, text)
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
-import Utils.MyDate as MyDate exposing (MyDate)
-import Utils.RichTextEditor as RichTextEditor
+import Utils.MyDate as MyDate
+import Widgets.DateField as DateField
 
 
-type IncheiereIntentare
-    = IncheiereIntentare Data
-
-
-type alias Data =
+type alias Model =
     { html : String
     , borderouDeCalcul : String
     , copieIncheiere : DocumentScanat
-    , termenConciliere : MyDate
-    , rezultatIncercareConciliere : RezultatIncercareConciliere
+    , termenConciliere : MyDate.Model
+
+    -- , rezultatIncercareConciliere : RezultatIncercareConciliere
     }
 
 
-empty : IncheiereIntentare
-empty =
-    IncheiereIntentare
-        { html = ""
-        , borderouDeCalcul = ""
-        , copieIncheiere = DocumentScanat.empty
-        , termenConciliere = MyDate.empty
-        , rezultatIncercareConciliere = RezultatIncercareConciliere.empty
-        }
+initialModel : Model
+initialModel =
+    { html = ""
+    , borderouDeCalcul = ""
+    , copieIncheiere = DocumentScanat.empty
+    , termenConciliere = MyDate.empty
+
+    -- , rezultatIncercareConciliere = RezultatIncercareConciliere.empty
+    }
 
 
-view : IncheiereIntentare -> (IncheiereIntentare -> Cmd msg -> Sub msg -> msg) -> Html msg
-view ((IncheiereIntentare data) as incheiereIntentare) callback =
-    let
-        c data =
-            callback (IncheiereIntentare data) Cmd.none Sub.none
-    in
+view : Model -> Html Msg
+view (data as incheiereIntentare) =
     fieldset []
         [ legend [] [ text "IncheiereIntentare" ]
-        , RichTextEditor.view
-            { buttonLabel = "Editează"
-            , content = template data
-            , onOpen = callback incheiereIntentare
-            , onResponse = \s -> c { data | html = s }
-            }
-        , RichTextEditor.view
-            { buttonLabel = "Formează borderou de calcul"
-            , content = borderouDeCalculTemplate data
-            , onOpen = callback incheiereIntentare
-            , onResponse = \s -> c { data | borderouDeCalcul = s }
-            }
-        , DocumentScanat.view
-            { labelText = "Copia încheierii:"
-            , documentScanat = data.copieIncheiere
-            , callback = \v -> c { data | copieIncheiere = v }
-            }
+
+        -- , RichTextEditor.view
+        --     { buttonLabel = "Editează"
+        --     , content = template data
+        --     , onOpen = callback incheiereIntentare
+        --     , onResponse = \s -> c { data | html = s }
+        --     }
+        -- , RichTextEditor.view
+        --     { buttonLabel = "Formează borderou de calcul"
+        --     , content = borderouDeCalculTemplate data
+        --     , onOpen = callback incheiereIntentare
+        --     , onResponse = \s -> c { data | borderouDeCalcul = s }
+        --     }
+        -- , DocumentScanat.view
+        --     { labelText = "Copia încheierii:"
+        --     , documentScanat = data.copieIncheiere
+        --     , callback = \v -> c { data | copieIncheiere = v }
+        --     }
         , -- LATER: Check that the date is reasonable? In the near future?
-          MyDate.view "Termen de conciliere:" data.termenConciliere (\v -> c { data | termenConciliere = v })
-        , RezultatIncercareConciliere.view
-            data.rezultatIncercareConciliere
-            (\v -> callback (IncheiereIntentare { data | rezultatIncercareConciliere = v }))
+          DateField.view "Termen de conciliere:" data.termenConciliere |> map SetTermenConciliere
+
+        -- , RezultatIncercareConciliere.view
+        --     data.rezultatIncercareConciliere
+        --     (\v -> callback (Model { data | rezultatIncercareConciliere = v }))
         ]
 
 
-template : Data -> List (Html msg)
+template : Model -> List (Html Msg)
 template data =
     -- TODO: find the real template
     [ h1 [] [ text "IncheiereIntentare" ]
@@ -72,9 +69,20 @@ template data =
     ]
 
 
-borderouDeCalculTemplate : Data -> List (Html msg)
+borderouDeCalculTemplate : Model -> List (Html Msg)
 borderouDeCalculTemplate data =
     -- TODO: find the real template
     [ h1 [] [ text "Borderou de calcul pentru cheltuielile de intentare" ]
     , p [] [ text <| toString <| data ]
     ]
+
+
+type Msg
+    = SetTermenConciliere DateField.Msg
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SetTermenConciliere dateFieldMsg ->
+            { model | termenConciliere = DateField.update dateFieldMsg model.termenConciliere }

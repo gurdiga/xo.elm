@@ -7,7 +7,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare exposing (IncheiereIncetare)
 import Html exposing (Html, div, h1, p, text)
-import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
+import Utils.DocumentScanat as DocumentScanat exposing (Model)
 import Utils.RichTextEditor as RichTextEditor
 
 
@@ -17,9 +17,9 @@ type PartileAjungLaIntelegere
 
 type alias Data =
     { procesVerbalConsemnareConditiiExecutare : String
-    , copieProcesVerbalConsemnareConditiiExecutare : DocumentScanat
+    , copieProcesVerbalConsemnareConditiiExecutare : Model
     , procesVerbalConstatareExecutare : String
-    , copieProcesVerbalConstatareExecutare : DocumentScanat
+    , copieProcesVerbalConstatareExecutare : Model
     , incheiereIncetare : IncheiereIncetare
     }
 
@@ -28,9 +28,9 @@ empty : PartileAjungLaIntelegere
 empty =
     PartileAjungLaIntelegere
         { procesVerbalConsemnareConditiiExecutare = ""
-        , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat.empty
+        , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat.initialModel
         , procesVerbalConstatareExecutare = ""
-        , copieProcesVerbalConstatareExecutare = DocumentScanat.empty
+        , copieProcesVerbalConstatareExecutare = DocumentScanat.initialModel
         , incheiereIncetare = IncheiereIncetare.empty
         }
 

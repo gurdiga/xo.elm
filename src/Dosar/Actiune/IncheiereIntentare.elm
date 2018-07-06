@@ -1,17 +1,17 @@
 module Dosar.Actiune.IncheiereIntentare exposing (Model, Msg, initialModel, update, view)
 
 -- import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere as RezultatIncercareConciliere exposing (RezultatIncercareConciliere)
--- import Utils.RichTextEditor as RichTextEditor
 
 import Html.Styled exposing (Html, button, div, fieldset, h1, legend, map, p, text)
 import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
 import Utils.MyDate as MyDate
+import Utils.RichTextEditor2 as RichTextEditor2
 import Widgets.DateField as DateField
 
 
 type alias Model =
-    { html : String
-    , borderouDeCalcul : String
+    { html : RichTextEditor2.Model
+    , borderouDeCalcul : RichTextEditor2.Model
     , copieIncheiere : DocumentScanat
     , termenConciliere : MyDate.Model
 
@@ -21,8 +21,8 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { html = ""
-    , borderouDeCalcul = ""
+    { html = RichTextEditor2.initialModel
+    , borderouDeCalcul = RichTextEditor2.initialModel
     , copieIncheiere = DocumentScanat.empty
     , termenConciliere = MyDate.empty
 
@@ -31,29 +31,19 @@ initialModel =
 
 
 view : Model -> Html Msg
-view (data as incheiereIntentare) =
+view model =
     fieldset []
         [ legend [] [ text "IncheiereIntentare" ]
+        , RichTextEditor2.view "Textul încheierii:" model.html |> map SetHtml
+        , RichTextEditor2.view "Borderou de calcul:" model.borderouDeCalcul |> map SetBorderouDeCalcul
 
-        -- , RichTextEditor.view
-        --     { buttonLabel = "Editează"
-        --     , content = template data
-        --     , onOpen = callback incheiereIntentare
-        --     , onResponse = \s -> c { data | html = s }
-        --     }
-        -- , RichTextEditor.view
-        --     { buttonLabel = "Formează borderou de calcul"
-        --     , content = borderouDeCalculTemplate data
-        --     , onOpen = callback incheiereIntentare
-        --     , onResponse = \s -> c { data | borderouDeCalcul = s }
-        --     }
         -- , DocumentScanat.view
         --     { labelText = "Copia încheierii:"
         --     , documentScanat = data.copieIncheiere
         --     , callback = \v -> c { data | copieIncheiere = v }
         --     }
         , -- LATER: Check that the date is reasonable? In the near future?
-          DateField.view "Termen de conciliere:" data.termenConciliere |> map SetTermenConciliere
+          DateField.view "Termen de conciliere:" model.termenConciliere |> map SetTermenConciliere
 
         -- , RezultatIncercareConciliere.view
         --     data.rezultatIncercareConciliere
@@ -61,28 +51,20 @@ view (data as incheiereIntentare) =
         ]
 
 
-template : Model -> List (Html Msg)
-template data =
-    -- TODO: find the real template
-    [ h1 [] [ text "IncheiereIntentare" ]
-    , p [] [ text <| toString <| data ]
-    ]
-
-
-borderouDeCalculTemplate : Model -> List (Html Msg)
-borderouDeCalculTemplate data =
-    -- TODO: find the real template
-    [ h1 [] [ text "Borderou de calcul pentru cheltuielile de intentare" ]
-    , p [] [ text <| toString <| data ]
-    ]
-
-
 type Msg
     = SetTermenConciliere DateField.Msg
+    | SetHtml RichTextEditor2.Msg
+    | SetBorderouDeCalcul RichTextEditor2.Msg
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetTermenConciliere dateFieldMsg ->
-            { model | termenConciliere = DateField.update dateFieldMsg model.termenConciliere }
+        SetTermenConciliere msgDateField ->
+            { model | termenConciliere = DateField.update msgDateField model.termenConciliere }
+
+        SetHtml msgRichTextEditor2 ->
+            { model | html = RichTextEditor2.update msgRichTextEditor2 model.html }
+
+        SetBorderouDeCalcul msgRichTextEditor2 ->
+            { model | borderouDeCalcul = RichTextEditor2.update msgRichTextEditor2 model.borderouDeCalcul }

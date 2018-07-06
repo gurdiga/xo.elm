@@ -6,7 +6,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
         )
 
 import Html exposing (Html, fieldset, h1, legend, p, text)
-import Utils.DocumentScanat as DocumentScanat exposing (DocumentScanat)
+import Utils.DocumentScanat as DocumentScanat exposing (Model)
 import Utils.RichTextEditor as RichTextEditor
 
 
@@ -16,7 +16,7 @@ type IncheiereIncetare
 
 type alias Data =
     { html : String
-    , copie : DocumentScanat
+    , copie : Model
     }
 
 
@@ -24,7 +24,7 @@ empty : IncheiereIncetare
 empty =
     IncheiereIncetare
         { html = ""
-        , copie = DocumentScanat.empty
+        , copie = DocumentScanat.initialModel
         }
 
 

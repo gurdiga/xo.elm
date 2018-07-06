@@ -60,11 +60,11 @@ dropdown model =
 fields : Actiune -> Html Msg
 fields actiune =
     case actiune of
-        IncheiereIntentare incheiereIntentare ->
-            IncheiereIntentare.view incheiereIntentare |> map SetIncheiereIntentare
+        IncheiereIntentare modelIncheiereIntentare ->
+            IncheiereIntentare.view modelIncheiereIntentare |> map SetIncheiereIntentare
 
-        IncheiereRefuz incheiereRefuz ->
-            IncheiereRefuz.view incheiereRefuz |> map SetIncheiereIntentare
+        IncheiereRefuz modelIncheiereRefuz ->
+            IncheiereRefuz.view modelIncheiereRefuz |> map SetIncheiereIntentare
 
 
 type Msg

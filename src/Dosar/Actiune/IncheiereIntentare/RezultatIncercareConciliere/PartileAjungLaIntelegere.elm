@@ -1,87 +1,76 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere
-    exposing
-        ( PartileAjungLaIntelegere
-        , empty
-        , view
-        )
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare exposing (IncheiereIncetare)
-import Html exposing (Html, div, h1, p, text)
-import Utils.DocumentScanat as DocumentScanat exposing (Model)
-import Utils.RichTextEditor as RichTextEditor
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare
+import Html.Styled exposing (Html, fieldset, legend, map, text)
+import Utils.DocumentScanat2 as DocumentScanat2
+import Utils.RichTextEditor2 as RichTextEditor2
 
 
-type PartileAjungLaIntelegere
-    = PartileAjungLaIntelegere Data
-
-
-type alias Data =
-    { procesVerbalConsemnareConditiiExecutare : String
-    , copieProcesVerbalConsemnareConditiiExecutare : Model
-    , procesVerbalConstatareExecutare : String
-    , copieProcesVerbalConstatareExecutare : Model
-    , incheiereIncetare : IncheiereIncetare
+type alias Model =
+    { procesVerbalConsemnareConditiiExecutare : RichTextEditor2.Model
+    , copieProcesVerbalConsemnareConditiiExecutare : DocumentScanat2.Model
+    , procesVerbalConstatareExecutare : RichTextEditor2.Model
+    , copieProcesVerbalConstatareExecutare : DocumentScanat2.Model
+    , incheiereIncetare : IncheiereIncetare.Model
     }
 
 
-empty : PartileAjungLaIntelegere
-empty =
-    PartileAjungLaIntelegere
-        { procesVerbalConsemnareConditiiExecutare = ""
-        , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat.initialModel
-        , procesVerbalConstatareExecutare = ""
-        , copieProcesVerbalConstatareExecutare = DocumentScanat.initialModel
-        , incheiereIncetare = IncheiereIncetare.empty
-        }
+initialModel : Model
+initialModel =
+    { procesVerbalConsemnareConditiiExecutare = RichTextEditor2.initialModel
+    , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat2.initialModel
+    , procesVerbalConstatareExecutare = RichTextEditor2.initialModel
+    , copieProcesVerbalConstatareExecutare = DocumentScanat2.initialModel
+    , incheiereIncetare = IncheiereIncetare.initialModel
+    }
 
 
-view : PartileAjungLaIntelegere -> (PartileAjungLaIntelegere -> Cmd msg -> Sub msg -> msg) -> Html msg
-view partileAjungLaIntelegere callback =
-    let
-        (PartileAjungLaIntelegere data) =
-            partileAjungLaIntelegere
-
-        c data =
-            callback (PartileAjungLaIntelegere data) Cmd.none Sub.none
-    in
-    div []
-        [ RichTextEditor.view
-            { buttonLabel = "Formează proces-verbal de consemnare condițiilor de executare"
-            , content = templateProcesVerbalConsemnareConditiiExecutare data
-            , onOpen = callback partileAjungLaIntelegere
-            , onResponse = \v -> c { data | procesVerbalConsemnareConditiiExecutare = v }
-            }
-        , DocumentScanat.view
-            { labelText = "Copia semnată a procesului-verbal de consemnare a condițiilor de executare"
-            , documentScanat = data.copieProcesVerbalConsemnareConditiiExecutare
-            , callback = \v -> c { data | copieProcesVerbalConsemnareConditiiExecutare = v }
-            }
-        , RichTextEditor.view
-            { buttonLabel = "Formează proces-verbal de constatare a executării"
-            , content = templateProcesVerbalConstatareExecutare data
-            , onOpen = callback partileAjungLaIntelegere
-            , onResponse = \v -> c { data | procesVerbalConstatareExecutare = v }
-            }
-        , DocumentScanat.view
-            { labelText = "Copia semnată a procesului-verbal de constatare a executării"
-            , documentScanat = data.copieProcesVerbalConstatareExecutare
-            , callback = \v -> c { data | copieProcesVerbalConstatareExecutare = v }
-            }
-        , IncheiereIncetare.view data.incheiereIncetare (\v -> callback (PartileAjungLaIntelegere { data | incheiereIncetare = v }))
+view : Model -> Html Msg
+view model =
+    fieldset []
+        [ legend [] [ text "PartileAjungLaIntelegere" ]
+        , RichTextEditor2.view
+            "Formează proces-verbal de consemnare condițiilor de executare"
+            model.procesVerbalConsemnareConditiiExecutare
+            |> map SetProcesVerbalConsemnareConditiiExecutare
+        , DocumentScanat2.view
+            "Copia semnată a procesului-verbal de consemnare a condițiilor de executare"
+            model.copieProcesVerbalConsemnareConditiiExecutare
+            |> map SetCopieProcesVerbalConsemnareConditiiExecutare
+        , RichTextEditor2.view
+            "Formează proces-verbal de constatare a executării"
+            model.procesVerbalConstatareExecutare
+            |> map SetProcesVerbalConstatareExecutare
+        , DocumentScanat2.view
+            "Copia semnată a procesului-verbal de constatare a executării"
+            model.copieProcesVerbalConstatareExecutare
+            |> map SetCopieProcesVerbalConstatareExecutare
+        , IncheiereIncetare.view model.incheiereIncetare |> map SetIncheiereIncetare
         ]
 
 
-templateProcesVerbalConsemnareConditiiExecutare : Data -> List (Html msg)
-templateProcesVerbalConsemnareConditiiExecutare data =
-    -- TODO: find the real template
-    [ h1 [] [ text "Proces-verbal de consemnare a condițiilor de executare" ]
-    , p [] [ text <| toString <| data ]
-    ]
+type Msg
+    = SetProcesVerbalConsemnareConditiiExecutare RichTextEditor2.Msg
+    | SetCopieProcesVerbalConsemnareConditiiExecutare DocumentScanat2.Msg
+    | SetProcesVerbalConstatareExecutare RichTextEditor2.Msg
+    | SetCopieProcesVerbalConstatareExecutare DocumentScanat2.Msg
+    | SetIncheiereIncetare IncheiereIncetare.Msg
 
 
-templateProcesVerbalConstatareExecutare : Data -> List (Html msg)
-templateProcesVerbalConstatareExecutare data =
-    -- TODO: find the real template
-    [ h1 [] [ text "Proces-verbal de constatare a executării" ]
-    , p [] [ text <| toString <| data ]
-    ]
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SetProcesVerbalConsemnareConditiiExecutare msgRichTextEditor2 ->
+            { model | procesVerbalConsemnareConditiiExecutare = RichTextEditor2.update msgRichTextEditor2 model.procesVerbalConsemnareConditiiExecutare }
+
+        SetCopieProcesVerbalConsemnareConditiiExecutare msgDocumentScanat2 ->
+            { model | copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat2.update msgDocumentScanat2 model.copieProcesVerbalConstatareExecutare }
+
+        SetProcesVerbalConstatareExecutare msgRichTextEditor2 ->
+            { model | procesVerbalConstatareExecutare = RichTextEditor2.update msgRichTextEditor2 model.procesVerbalConstatareExecutare }
+
+        SetCopieProcesVerbalConstatareExecutare msgDocumentScanat2 ->
+            { model | copieProcesVerbalConstatareExecutare = DocumentScanat2.update msgDocumentScanat2 model.copieProcesVerbalConstatareExecutare }
+
+        SetIncheiereIncetare msgIncheiereIncetare ->
+            { model | incheiereIncetare = IncheiereIncetare.update msgIncheiereIncetare model.incheiereIncetare }

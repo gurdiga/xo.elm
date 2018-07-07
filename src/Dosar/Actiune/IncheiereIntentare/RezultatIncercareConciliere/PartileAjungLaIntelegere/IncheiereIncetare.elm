@@ -1,61 +1,42 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare
-    exposing
-        ( IncheiereIncetare
-        , empty
-        , view
-        )
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare exposing (Model, Msg, initialModel, update, view)
 
-import Html exposing (Html, fieldset, h1, legend, p, text)
-import Utils.DocumentScanat as DocumentScanat exposing (Model)
-import Utils.RichTextEditor as RichTextEditor
+import Html.Styled exposing (Html, fieldset, h1, legend, map, text)
+import Utils.DocumentScanat2 as DocumentScanat2
+import Utils.RichTextEditor2 as RichTextEditor2
 
 
-type IncheiereIncetare
-    = IncheiereIncetare Data
-
-
-type alias Data =
-    { html : String
-    , copie : Model
+type alias Model =
+    { text : RichTextEditor2.Model
+    , copie : DocumentScanat2.Model
     }
 
 
-empty : IncheiereIncetare
-empty =
-    IncheiereIncetare
-        { html = ""
-        , copie = DocumentScanat.initialModel
-        }
+initialModel : Model
+initialModel =
+    { text = RichTextEditor2.initialModel
+    , copie = DocumentScanat2.initialModel
+    }
 
 
-view : IncheiereIncetare -> (IncheiereIncetare -> Cmd msg -> Sub msg -> msg) -> Html msg
-view incheiereIntentare callback =
-    let
-        (IncheiereIncetare data) =
-            incheiereIntentare
-
-        c data =
-            callback (IncheiereIncetare data) Cmd.none Sub.none
-    in
+view : Model -> Html Msg
+view model =
     fieldset []
         [ legend [] [ text "IncheiereIncetare" ]
-        , RichTextEditor.view
-            { buttonLabel = "Formează încheiere încetare"
-            , content = template data
-            , onOpen = callback incheiereIntentare
-            , onResponse = \v -> c { data | html = v }
-            }
-        , DocumentScanat.view
-            { labelText = "Copia încheierii de încetare:"
-            , documentScanat = data.copie
-            , callback = \v -> c { data | copie = v }
-            }
+        , RichTextEditor2.view "Formează încheiere încetare:" model.text |> map SetText
+        , DocumentScanat2.view "Copia încheierii de încetare:" model.copie |> map SetCopie
         ]
 
 
-template : Data -> List (Html msg)
-template data =
-    -- TODO: find the real template
-    [ h1 [] [ text "IncheiereIncetare" ]
-    , p [] [ text <| toString <| data ]
-    ]
+type Msg
+    = SetText RichTextEditor2.Msg
+    | SetCopie DocumentScanat2.Msg
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SetText msgRichTextEditor2 ->
+            { model | text = RichTextEditor2.update msgRichTextEditor2 model.text }
+
+        SetCopie msgDocumentScanat2 ->
+            { model | copie = DocumentScanat2.update msgDocumentScanat2 model.copie }

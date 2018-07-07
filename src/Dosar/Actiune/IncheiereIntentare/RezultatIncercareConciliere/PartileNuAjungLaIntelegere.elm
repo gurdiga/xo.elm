@@ -1,95 +1,68 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere
-    exposing
-        ( PartileNuAjungLaIntelegere
-        , empty
-        , view
-        )
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare as MasuriDeAsigurare exposing (MasuriDeAsigurare)
-import Html exposing (Html, div, h1, p, text)
-import Utils.MyDate as MyDate exposing (MyDate)
-import Utils.RichTextEditor as RichTextEditor
+-- import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare as MasuriDeAsigurare exposing (MasuriDeAsigurare)
+
+import Html.Styled exposing (Html, fieldset, legend, map, p, text)
+import Utils.MyDate as MyDate
+import Utils.RichTextEditor2 as RichTextEditor2
+import Widgets.DateField as DateField
 
 
-type PartileNuAjungLaIntelegere
-    = PartileNuAjungLaIntelegere Data
+type alias Model =
+    { procesVerbalContinuare : RichTextEditor2.Model
+    , incheiereContinuare : RichTextEditor2.Model
+    , borderouDeCalcul : RichTextEditor2.Model
+    , termenDeExecutare : MyDate.Model
 
-
-type alias Data =
-    { procesVerbalContinuare : String
-    , incheiereContinuare : String
-    , borderouDeCalcul : String
-    , termenDeExecutare : MyDate
-    , masuriDeAsigurare : MasuriDeAsigurare
+    -- , masuriDeAsigurare : MasuriDeAsigurare
     }
 
 
-empty : PartileNuAjungLaIntelegere
-empty =
-    PartileNuAjungLaIntelegere
-        { procesVerbalContinuare = ""
-        , incheiereContinuare = ""
-        , borderouDeCalcul = ""
-        , termenDeExecutare = MyDate.empty
-        , masuriDeAsigurare = MasuriDeAsigurare.empty
-        }
+initialModel : Model
+initialModel =
+    { procesVerbalContinuare = RichTextEditor2.initialModel
+    , incheiereContinuare = RichTextEditor2.initialModel
+    , borderouDeCalcul = RichTextEditor2.initialModel
+    , termenDeExecutare = MyDate.empty
+
+    -- , masuriDeAsigurare = MasuriDeAsigurare.empty
+    }
 
 
-view : PartileNuAjungLaIntelegere -> (PartileNuAjungLaIntelegere -> Cmd msg -> Sub msg -> msg) -> Html msg
-view partileNuAjungLaIntelegere callback =
-    let
-        (PartileNuAjungLaIntelegere data) =
-            partileNuAjungLaIntelegere
+view : Model -> Html Msg
+view model =
+    fieldset []
+        [ legend [] [ text "PartileNuAjungLaIntelegere" ]
+        , DateField.view "Termen de executare:" model.termenDeExecutare |> map SetTermenDeExecutare
+        , RichTextEditor2.view "Formează proces-verbal de continuare" model.procesVerbalContinuare |> map SetProcesVerbalContinuare
+        , RichTextEditor2.view "Formează încheiere de continuare" model.incheiereContinuare |> map SetIncheiereContinuare
+        , RichTextEditor2.view "Formează borderou de calcul" model.borderouDeCalcul |> map SetBorderouDeCalcul
 
-        c data =
-            callback (PartileNuAjungLaIntelegere data) Cmd.none Sub.none
-    in
-    div []
-        [ MyDate.view "Termen de executare:" data.termenDeExecutare (\v -> c { data | termenDeExecutare = v })
-        , RichTextEditor.view
-            { buttonLabel = "Formează proces-verbal de continuare"
-            , content = templateProcesVerbalContinuare data
-            , onOpen = callback partileNuAjungLaIntelegere
-            , onResponse = \v -> c { data | procesVerbalContinuare = v }
-            }
-        , RichTextEditor.view
-            { buttonLabel = "Formează încheiere de continuare"
-            , content = templateIncheiereContinuare data
-            , onOpen = callback partileNuAjungLaIntelegere
-            , onResponse = \v -> c { data | incheiereContinuare = v }
-            }
-        , RichTextEditor.view
-            { buttonLabel = "Formează borderou de calcul"
-            , content = templateBorderouDeCalcul data
-            , onOpen = callback partileNuAjungLaIntelegere
-            , onResponse = \v -> c { data | borderouDeCalcul = v }
-            }
-        , MasuriDeAsigurare.view data.masuriDeAsigurare
-            (\v ->
-                PartileNuAjungLaIntelegere { data | masuriDeAsigurare = v } |> callback
-            )
+        -- , MasuriDeAsigurare.view data.masuriDeAsigurare
+        --     (\v ->
+        --         Model { data | masuriDeAsigurare = v } |> callback
+        --     )
         ]
 
 
-templateProcesVerbalContinuare : Data -> List (Html msg)
-templateProcesVerbalContinuare data =
-    -- TODO: find the real template
-    [ h1 [] [ text "Proces-verbal de continuare" ]
-    , p [] [ text <| toString <| data ]
-    ]
+type Msg
+    = SetTermenDeExecutare DateField.Msg
+    | SetProcesVerbalContinuare RichTextEditor2.Msg
+    | SetIncheiereContinuare RichTextEditor2.Msg
+    | SetBorderouDeCalcul RichTextEditor2.Msg
 
 
-templateIncheiereContinuare : Data -> List (Html msg)
-templateIncheiereContinuare data =
-    -- TODO: find the real template
-    [ h1 [] [ text "Incheiere de continuare" ]
-    , p [] [ text <| toString <| data ]
-    ]
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SetTermenDeExecutare msgDateField ->
+            { model | termenDeExecutare = DateField.update msgDateField model.termenDeExecutare }
 
+        SetProcesVerbalContinuare msgRichTextEditor2 ->
+            { model | procesVerbalContinuare = RichTextEditor2.update msgRichTextEditor2 model.procesVerbalContinuare }
 
-templateBorderouDeCalcul : Data -> List (Html msg)
-templateBorderouDeCalcul data =
-    -- TODO: find the real template
-    [ h1 [] [ text "Borderou de calcul" ]
-    , p [] [ text <| toString <| data ]
-    ]
+        SetIncheiereContinuare msgRichTextEditor2 ->
+            { model | incheiereContinuare = RichTextEditor2.update msgRichTextEditor2 model.incheiereContinuare }
+
+        SetBorderouDeCalcul msgRichTextEditor2 ->
+            { model | borderouDeCalcul = RichTextEditor2.update msgRichTextEditor2 model.borderouDeCalcul }

@@ -1,18 +1,14 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (Model, Msg, initialModel, update, view)
 
--- import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere as PartileNuAjungLaIntelegere
-
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere as PartileAjungLaIntelegere
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere as PartileNuAjungLaIntelegere
 import Html.Styled exposing (Html, div, fieldset, label, legend, map, text)
 import Widgets.Select3 as Select3
 
 
 type RezultatIncercareConciliere
     = PartileAjungLaIntelegere PartileAjungLaIntelegere.Model
-
-
-
--- | PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Model
+    | PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Model
 
 
 type alias Model =
@@ -44,10 +40,9 @@ valuesWithLabels =
     [ ( PartileAjungLaIntelegere PartileAjungLaIntelegere.initialModel
       , "părțile ajung la înțelegere"
       )
-
-    -- , ( PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.empty
-    --   , "părțile nu ajung la înțelegere"
-    --   )
+    , ( PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.initialModel
+      , "părțile nu ajung la înțelegere"
+      )
     ]
 
 
@@ -70,19 +65,14 @@ fields rezultatIncercareConciliere =
         PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
             PartileAjungLaIntelegere.view modelPartileAjungLaIntelegere |> map SetPartileAjungLaIntelegere
 
-
-
--- PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
---     PartileNuAjungLaIntelegere.view modelPartileNuAjungLaIntelegere |> map SetPartileNuAjungLaIntelegere
+        PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
+            PartileNuAjungLaIntelegere.view modelPartileNuAjungLaIntelegere |> map SetPartileNuAjungLaIntelegere
 
 
 type Msg
     = ResetRezultatIncercareConciliere (Select3.Msg RezultatIncercareConciliere)
     | SetPartileAjungLaIntelegere PartileAjungLaIntelegere.Msg
-
-
-
--- | SetPartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Msg
+    | SetPartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Msg
 
 
 update : Msg -> Model -> Model
@@ -95,6 +85,17 @@ update msg model =
             case model.rezultatIncercareConciliere of
                 PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
                     { model | rezultatIncercareConciliere = PartileAjungLaIntelegere (PartileAjungLaIntelegere.update msgPartileAjungLaIntelegere modelPartileAjungLaIntelegere) }
+
+                PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
+                    model
+
+        SetPartileNuAjungLaIntelegere msgPartileNuAjungLaIntelegere ->
+            case model.rezultatIncercareConciliere of
+                PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
+                    { model | rezultatIncercareConciliere = PartileNuAjungLaIntelegere (PartileNuAjungLaIntelegere.update msgPartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere) }
+
+                PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
+                    model
 
 
 resetRezultatIncercareConciliere : Model -> Select3.Model RezultatIncercareConciliere -> Model

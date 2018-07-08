@@ -1,48 +1,52 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu exposing (Model, Msg, getValueFromMsg, initialModel, update, view)
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
-import Html.Styled exposing (Html, fieldset, legend, li, text, ul)
-import Utils.Money as Money exposing (Currency(EUR, USD), Money(Money))
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.MijlocBanesc as MijlocBanesc
+import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
 
 
 type alias Model =
-    List BunUrmarit
+    { bunuri : List BunUrmarit.Model
+    , mijloaceBanesti : List MijlocBanesc.Model
+    }
 
 
 initialModel : Model
 initialModel =
-    [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
-    , BunUrmarit { denumire = "Automobil Porsche", valoare = Money 250000 USD, note = "Yeah!" }
-    ]
-
-
-getValueFromMsg : Msg -> Model
-getValueFromMsg msg =
-    case msg of
-        Msg model ->
-            model
+    { bunuri = [ BunUrmarit.initialModel ]
+    , mijloaceBanesti = []
+    }
 
 
 view : Model -> Html Msg
 view list =
     fieldset []
         [ legend [] [ text "UrmarirePatrimoniu" ]
-        , text "TODO: add CRUD UI"
-        , ul [] (List.indexedMap itemView list)
+
+        --
+        -- TODO: Implement list CRUD: list, delete button, add button, add/edit item form
+        --
+        , ul [] (List.indexedMap viewBunUrmarit list.bunuri)
+        , ul [] (List.indexedMap viewMijlocBanesc list.mijloaceBanesti)
         ]
 
 
-itemView : Int -> BunUrmarit -> Html Msg
-itemView i bunUrmarit =
-    li [] [ text <| toString bunUrmarit ]
+viewBunUrmarit : Int -> BunUrmarit.Model -> Html Msg
+viewBunUrmarit i bunUrmarit =
+    li [] [ BunUrmarit.view bunUrmarit |> map (SetBunUrmarit i) ]
+
+
+viewMijlocBanesc : Int -> MijlocBanesc.Model -> Html Msg
+viewMijlocBanesc i mijlocBanesc =
+    li [] [ text <| toString mijlocBanesc ]
 
 
 type Msg
-    = Msg Model
+    = SetBunUrmarit Int BunUrmarit.Msg
 
 
-update : Msg -> Model
-update msg =
+update : Msg -> Model -> Model
+update msg model =
     case msg of
-        Msg model ->
+        SetBunUrmarit i mgBunUrmarit ->
             model

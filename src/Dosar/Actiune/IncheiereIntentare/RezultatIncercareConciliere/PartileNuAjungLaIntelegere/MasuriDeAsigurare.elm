@@ -22,7 +22,7 @@ view list =
     fieldset []
         [ legend [] [ text "MasuriDeAsigurare" ]
         , ul [] (List.indexedMap itemView list)
-        , MasuraDeAsigurare.addView |> map AddItem
+        , button [ onClick (AddItem MasuraDeAsigurare.initialModel) ] [ text "Adaugă" ]
         ]
 
 
@@ -37,7 +37,7 @@ itemView i item =
 
 
 type Msg
-    = AddItem MasuraDeAsigurare.Msg
+    = AddItem MasuraDeAsigurare.Model
     | DeleteItem MasuraDeAsigurare.Model
     | ReplaceItem MasuraDeAsigurare.Msg
 
@@ -45,8 +45,8 @@ type Msg
 update : Msg -> Model -> Model
 update msg list =
     case msg of
-        AddItem msgMasuraDeAsigurare ->
-            list ++ [ MasuraDeAsigurare.getValueFromMsg msgMasuraDeAsigurare ]
+        AddItem modelMasuraDeAsigurare ->
+            list ++ [ modelMasuraDeAsigurare ]
 
         DeleteItem msgMasuraDeAsigurare ->
             List.filter ((/=) msgMasuraDeAsigurare) list

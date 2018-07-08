@@ -1,83 +1,54 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit
-    exposing
-        ( BunUrmarit(BunUrmarit)
-        , Data
-        , data
-        , editForm
-        , empty
-        , view
-        )
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit exposing (Model, Msg, initialModel, update, view)
 
-import Html exposing (Html, br, button, div, fieldset, input, label, legend, p, small, span, strong, text)
-import Html.Attributes exposing (style)
+import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.Money as Money exposing (Currency(MDL), Money(Money))
 import Utils.MyHtmlEvents exposing (onClick)
-import Widgets.Fields exposing (largeTextField, moneyField, textField)
+import Widgets.LargeTextField as LargeTextField
+import Widgets.MoneyField as MoneyField
+import Widgets.TextField as TextField
 
 
-type BunUrmarit
-    = BunUrmarit Data
-
-
-type alias Data =
+type alias Model =
     { denumire : String
     , valoare : Money
     , note : String
     }
 
 
-empty : BunUrmarit
-empty =
-    BunUrmarit
-        { denumire = ""
-        , valoare = Money 0 MDL
-        , note = ""
-        }
+initialModel : Model
+initialModel =
+    { denumire = ""
+    , valoare = Money 0 MDL
+    , note = ""
+    }
 
 
-data : BunUrmarit -> Data
-data (BunUrmarit data) =
-    data
-
-
-editForm : BunUrmarit -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> (BunUrmarit -> msg) -> Html msg
-editForm bunUrmarit updateCallback submitCallback cancelCallback =
-    let
-        (BunUrmarit data) =
-            bunUrmarit
-
-        c =
-            updateCallback << BunUrmarit
-    in
+view : Model -> Html Msg
+view model =
     fieldset []
-        [ legend [] [ text "Detalii bun:" ]
-        , textField "Denumire:" data.denumire (\v -> c { data | denumire = v })
-        , br [] []
-        , moneyField "Valoare:" data.valoare (\v -> c { data | valoare = v })
-        , br [] []
-        , largeTextField "Note:" data.note (\v -> c { data | note = v })
-        , br [] []
-        , button [ onClick (\_ -> submitCallback bunUrmarit) ] [ text "Submit" ]
-        , button [ onClick (\_ -> cancelCallback bunUrmarit) ] [ text "Cancel" ]
+        [ legend [] [ text "BunUrmarit" ]
+        , ul []
+            [ li [] [ TextField.view "Denumire:" model.denumire |> map SetDenumire ]
+            , li [] [ MoneyField.view "Valoare:" model.valoare |> map SetValoare ]
+            , li [] [ LargeTextField.view "Note:" model.note |> map SetNote ]
+            ]
         ]
 
 
-view : BunUrmarit -> Html msg
-view (BunUrmarit { denumire, valoare, note }) =
-    let
-        mainStyle =
-            [ ( "margin", "0" ) ]
+type Msg
+    = SetDenumire TextField.Msg
+    | SetValoare MoneyField.Msg
+    | SetNote LargeTextField.Msg
 
-        noteStyle =
-            [ ( "margin", "0" )
-            , ( "color", "gray" )
-            ]
-    in
-    div []
-        [ p [ style mainStyle ]
-            [ span [] [ text denumire ]
-            , text " "
-            , strong [] [ text (Money.format valoare) ]
-            ]
-        , p [ style noteStyle ] [ small [] [ text note ] ]
-        ]
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SetDenumire msgTextField ->
+            { model | denumire = TextField.update msgTextField model.denumire }
+
+        SetValoare msgMoneyField ->
+            { model | valoare = MoneyField.update msgMoneyField model.valoare }
+
+        SetNote msgLargeTextField ->
+            { model | note = LargeTextField.update msgLargeTextField model.note }

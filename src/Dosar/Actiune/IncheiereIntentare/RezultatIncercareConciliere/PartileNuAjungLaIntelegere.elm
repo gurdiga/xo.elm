@@ -1,7 +1,6 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere exposing (Model, Msg, initialModel, update, view)
 
--- import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare as MasuriDeAsigurare exposing (MasuriDeAsigurare)
-
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare as MasuriDeAsigurare
 import Html.Styled exposing (Html, fieldset, legend, map, p, text)
 import Utils.MyDate as MyDate
 import Utils.RichTextEditor2 as RichTextEditor2
@@ -13,8 +12,7 @@ type alias Model =
     , incheiereContinuare : RichTextEditor2.Model
     , borderouDeCalcul : RichTextEditor2.Model
     , termenDeExecutare : MyDate.Model
-
-    -- , masuriDeAsigurare : MasuriDeAsigurare
+    , masuriDeAsigurare : MasuriDeAsigurare.Model
     }
 
 
@@ -24,8 +22,7 @@ initialModel =
     , incheiereContinuare = RichTextEditor2.initialModel
     , borderouDeCalcul = RichTextEditor2.initialModel
     , termenDeExecutare = MyDate.empty
-
-    -- , masuriDeAsigurare = MasuriDeAsigurare.empty
+    , masuriDeAsigurare = MasuriDeAsigurare.empty
     }
 
 
@@ -37,11 +34,7 @@ view model =
         , RichTextEditor2.view "Formează proces-verbal de continuare" model.procesVerbalContinuare |> map SetProcesVerbalContinuare
         , RichTextEditor2.view "Formează încheiere de continuare" model.incheiereContinuare |> map SetIncheiereContinuare
         , RichTextEditor2.view "Formează borderou de calcul" model.borderouDeCalcul |> map SetBorderouDeCalcul
-
-        -- , MasuriDeAsigurare.view data.masuriDeAsigurare
-        --     (\v ->
-        --         Model { data | masuriDeAsigurare = v } |> callback
-        --     )
+        , MasuriDeAsigurare.view model.masuriDeAsigurare |> map SetMasuriDeAsigurare
         ]
 
 
@@ -50,6 +43,7 @@ type Msg
     | SetProcesVerbalContinuare RichTextEditor2.Msg
     | SetIncheiereContinuare RichTextEditor2.Msg
     | SetBorderouDeCalcul RichTextEditor2.Msg
+    | SetMasuriDeAsigurare MasuriDeAsigurare.Msg
 
 
 update : Msg -> Model -> Model
@@ -66,3 +60,6 @@ update msg model =
 
         SetBorderouDeCalcul msgRichTextEditor2 ->
             { model | borderouDeCalcul = RichTextEditor2.update msgRichTextEditor2 model.borderouDeCalcul }
+
+        SetMasuriDeAsigurare msgMasuriDeAsigurare ->
+            { model | masuriDeAsigurare = MasuriDeAsigurare.update msgMasuriDeAsigurare model.masuriDeAsigurare }

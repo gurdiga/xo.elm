@@ -18,7 +18,8 @@ type alias Model =
 
 
 type alias Ui =
-    { select : Select3.Model RezultatIncercareConciliere }
+    { select : Select3.Model RezultatIncercareConciliere
+    }
 
 
 initialModel : Model
@@ -32,7 +33,7 @@ initialModel =
 
 initialRezultatIncercareConciliere : RezultatIncercareConciliere
 initialRezultatIncercareConciliere =
-    PartileAjungLaIntelegere PartileAjungLaIntelegere.initialModel
+    PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.initialModel
 
 
 valuesWithLabels : List ( RezultatIncercareConciliere, String )

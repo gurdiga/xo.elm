@@ -1,117 +1,48 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu exposing (UrmarirePatrimoniu, empty, view)
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu exposing (Model, Msg, getValueFromMsg, initialModel, update, view)
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit exposing (BunUrmarit(BunUrmarit))
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList as EditableList exposing (EditableList)
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.Sechestru as Sechestru exposing (Sechestru)
-import Html exposing (Html, button, div, fieldset, legend, text)
+import Html.Styled exposing (Html, fieldset, legend, li, text, ul)
 import Utils.Money as Money exposing (Currency(EUR, USD), Money(Money))
-import Utils.MyHtmlEvents exposing (onClick)
 
 
-type UrmarirePatrimoniu
-    = UrmarirePatrimoniu
-        { bunuriUrmarite : List BunUrmarit
-        , sechestre : List Sechestru
-        , view : View
-        }
+type alias Model =
+    List BunUrmarit
 
 
-type alias View =
-    { regim : Regim
-    }
-
-
-type Regim
-    = Editare (EditableList BunUrmarit)
-    | Sechestrare Sechestru
-
-
-empty : UrmarirePatrimoniu
-empty =
-    UrmarirePatrimoniu
-        { bunuriUrmarite = someBunuriUrmarite
-        , sechestre = someSechestre
-        , view =
-            { regim = Editare (EditableList.fromItems someBunuriUrmarite)
-            }
-        }
-
-
-someBunuriUrmarite : List BunUrmarit
-someBunuriUrmarite =
+initialModel : Model
+initialModel =
     [ BunUrmarit { denumire = "Automobil Ferrari", valoare = Money 400000 EUR, note = "Certo che sì" }
-    , BunUrmarit { denumire = "Automobil Porche", valoare = Money 250000 USD, note = "Yeah!" }
+    , BunUrmarit { denumire = "Automobil Porsche", valoare = Money 250000 USD, note = "Yeah!" }
     ]
 
 
-someSechestre : List Sechestru
-someSechestre =
-    [ Sechestru.withItemsSelected someBunuriUrmarite ]
+getValueFromMsg : Msg -> Model
+getValueFromMsg msg =
+    case msg of
+        Msg model ->
+            model
 
 
-view : UrmarirePatrimoniu -> (UrmarirePatrimoniu -> Cmd msg -> Sub msg -> msg) -> Html msg
-view (UrmarirePatrimoniu ({ view } as data)) callback =
-    let
-        this =
-            fieldset []
-                [ legend [] [ text "UrmarirePatrimoniu" ]
-                , case view.regim of
-                    Editare editableList ->
-                        listaBunuri editableList
+view : Model -> Html Msg
+view list =
+    fieldset []
+        [ legend [] [ text "UrmarirePatrimoniu" ]
+        , text "TODO: add CRUD UI"
+        , ul [] (List.indexedMap itemView list)
+        ]
 
-                    Sechestrare sechestru ->
-                        formularSechestru sechestru
-                , listaSechestre
-                , actionButtons
-                ]
 
-        c data =
-            callback (UrmarirePatrimoniu data)
+itemView : Int -> BunUrmarit -> Html Msg
+itemView i bunUrmarit =
+    li [] [ text <| toString bunUrmarit ]
 
-        listaBunuri editableList =
-            fieldset []
-                [ legend [] [ text "Lista bunurilor urmărite" ]
-                , EditableList.view
-                    { editableList = editableList
-                    , editItemView = BunUrmarit.editForm
-                    , displayItemView = BunUrmarit.view
-                    , newItem = BunUrmarit.empty
-                    , callback = \v -> c { data | view = { view | regim = Editare v } } Cmd.none Sub.none
-                    }
-                ]
 
-        formularSechestru sechestru =
-            Sechestru.editView
-                { sechestru = sechestru
-                , updateCallback = \sechestru -> c { data | view = { view | regim = Sechestrare sechestru } }
-                , submitCallback =
-                    \sechestru ->
-                        c
-                            { data
-                                | sechestre = data.sechestre ++ [ sechestru ]
-                                , view = { view | regim = Editare (EditableList.fromItems data.bunuriUrmarite) }
-                            }
-                , cancelCallback = \_ -> c { data | view = { view | regim = Editare (EditableList.fromItems data.bunuriUrmarite) } }
-                }
+type Msg
+    = Msg Model
 
-        listaSechestre =
-            fieldset []
-                [ legend [] [ text "Lista de sechestre" ]
-                , EditableList.view
-                    { editableList = EditableList.fromItems data.sechestre
-                    , editItemView = \sechestru updateCallback submitCallback cancelCallback -> toString sechestru |> text
-                    , displayItemView = Sechestru.view
-                    , newItem = Sechestru.fromItems data.bunuriUrmarite
-                    , callback = \editableList -> c data Cmd.none Sub.none
-                    }
-                ]
 
-        actionButtons =
-            div [] [ butonAplicareSechestru ]
-
-        butonAplicareSechestru =
-            button
-                [ onClick (\_ -> c { data | view = { view | regim = Sechestrare (Sechestru.fromItems data.bunuriUrmarite) } } Cmd.none Sub.none) ]
-                [ text "Aplică sechestru" ]
-    in
-    this
+update : Msg -> Model
+update msg =
+    case msg of
+        Msg model ->
+            model

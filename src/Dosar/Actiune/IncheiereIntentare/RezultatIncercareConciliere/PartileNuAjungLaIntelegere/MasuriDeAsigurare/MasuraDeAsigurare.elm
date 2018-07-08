@@ -1,77 +1,56 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare
-    exposing
-        ( MasuraDeAsigurare
-        , addView
-        , empty
-        , view
-        )
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare exposing (Model, Msg, addView, getValueFromMsg, initialModel, update, view)
 
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu as UrmarirePatrimoniu exposing (UrmarirePatrimoniu)
-import Html exposing (Html, button, div, fieldset, legend, li, text, ul)
-import Utils.MyHtmlEvents exposing (onClick)
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu as UrmarirePatrimoniu
+import Html.Styled exposing (Html, button, div, fieldset, legend, li, map, text, ul)
+import Html.Styled.Events exposing (onClick)
 
 
-type MasuraDeAsigurare
-    = UrmarirePatrimoniu UrmarirePatrimoniu
-    | Evacuare
-    | EfectuareActeObligatorii
-    | RestabilireSalariat
-    | StabilireDomiciliuCopil
+type Model
+    = UrmarirePatrimoniu UrmarirePatrimoniu.Model
 
 
-empty : MasuraDeAsigurare
-empty =
-    UrmarirePatrimoniu UrmarirePatrimoniu.empty
+initialModel : Model
+initialModel =
+    UrmarirePatrimoniu UrmarirePatrimoniu.initialModel
 
 
-addView : (MasuraDeAsigurare -> msg) -> Html msg
-addView callback =
+getValueFromMsg : Msg -> Model
+getValueFromMsg msg =
+    case msg of
+        Set masuraDeAsigurare ->
+            masuraDeAsigurare
+
+        SetUrmarirePatrimoniu msgUrmarirePatrimoniu ->
+            UrmarirePatrimoniu (UrmarirePatrimoniu.getValueFromMsg msgUrmarirePatrimoniu)
+
+
+addView : Html Msg
+addView =
     div []
         [ text "Adaugă măsură:"
         , ul []
-            [ li [] [ button [ onClick (\_ -> callback << UrmarirePatrimoniu <| UrmarirePatrimoniu.empty) ] [ text "UrmarirePatrimoniu" ] ]
-            , li [] [ button [ onClick (\_ -> callback Evacuare) ] [ text "Evacuare" ] ]
-            , li [] [ button [ onClick (\_ -> callback EfectuareActeObligatorii) ] [ text "EfectuareActeObligatorii" ] ]
-            , li [] [ button [ onClick (\_ -> callback RestabilireSalariat) ] [ text "RestabilireSalariat" ] ]
-            , li [] [ button [ onClick (\_ -> callback StabilireDomiciliuCopil) ] [ text "StabilireDomiciliuCopil" ] ]
+            [ li [] [ button [ onClick (Set (UrmarirePatrimoniu UrmarirePatrimoniu.initialModel)) ] [ text "UrmarirePatrimoniu" ] ]
             ]
         ]
 
 
-view : MasuraDeAsigurare -> (MasuraDeAsigurare -> Cmd msg -> Sub msg -> msg) -> Html msg
-view masuraDeAsigurare callback =
-    case masuraDeAsigurare of
+view : Model -> Html Msg
+view model =
+    case model of
         UrmarirePatrimoniu v ->
-            UrmarirePatrimoniu.view v (callback << UrmarirePatrimoniu)
-
-        Evacuare ->
-            viewEvacuare
-
-        EfectuareActeObligatorii ->
-            viewEfectuareActeObligatorii
-
-        RestabilireSalariat ->
-            viewRestabilireSalariat
-
-        StabilireDomiciliuCopil ->
-            viewStabilireDomiciliuCopil
+            UrmarirePatrimoniu.view v |> map SetUrmarirePatrimoniu
 
 
-viewEvacuare : Html msg
-viewEvacuare =
-    text "viewEvacuare!"
+type Msg
+    = Set Model
+    | SetUrmarirePatrimoniu UrmarirePatrimoniu.Msg
 
 
-viewEfectuareActeObligatorii : Html msg
-viewEfectuareActeObligatorii =
-    text "viewEfectuareActeObligatorii!"
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        Set masuraDeAsigurare ->
+            masuraDeAsigurare
 
-
-viewRestabilireSalariat : Html msg
-viewRestabilireSalariat =
-    text "viewRestabilireSalariat!"
-
-
-viewStabilireDomiciliuCopil : Html msg
-viewStabilireDomiciliuCopil =
-    text "viewStabilireDomiciliuCopil!"
+        SetUrmarirePatrimoniu msgUrmarirePatrimoniu ->
+            UrmarirePatrimoniu (UrmarirePatrimoniu.update msgUrmarirePatrimoniu)

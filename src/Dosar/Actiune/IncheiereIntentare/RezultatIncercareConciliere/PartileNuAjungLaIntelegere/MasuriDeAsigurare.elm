@@ -1,52 +1,55 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare
-    exposing
-        ( MasuriDeAsigurare
-        , empty
-        , view
-        )
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare exposing (Model, Msg, empty, update, view)
 
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare as MasuraDeAsigurare exposing (MasuraDeAsigurare)
-import Html exposing (Html, button, fieldset, legend, li, text, ul)
-import Utils.MyHtmlEvents exposing (onClick)
-import Utils.MyList as MyList
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare as MasuraDeAsigurare exposing (Model)
+import Html.Styled exposing (Html, button, fieldset, legend, li, map, text, ul)
+import Html.Styled.Events exposing (onClick)
 
 
-type MasuriDeAsigurare
-    = MasuriDeAsigurare (List MasuraDeAsigurare)
+-- import Utils.MyList as MyList
 
 
-empty : MasuriDeAsigurare
+type alias Model =
+    List MasuraDeAsigurare.Model
+
+
+empty : Model
 empty =
-    MasuriDeAsigurare [ MasuraDeAsigurare.empty ]
+    [ MasuraDeAsigurare.initialModel ]
 
 
-view : MasuriDeAsigurare -> (MasuriDeAsigurare -> Cmd msg -> Sub msg -> msg) -> Html msg
-view (MasuriDeAsigurare items) callback =
-    let
-        c data =
-            callback (MasuriDeAsigurare data) Cmd.none Sub.none
-
-        addItem item =
-            c (items ++ [ item ])
-
-        deleteItem item _ =
-            c (List.filter ((/=) item) items)
-
-        itemView i item =
-            li []
-                [ MasuraDeAsigurare.view item
-                    (\v ->
-                        MyList.replace items i v
-                            |> MasuriDeAsigurare
-                            |> callback
-                    )
-                , button
-                    [ onClick (deleteItem item) ]
-                    [ text "Șterge" ]
-                ]
-    in
+view : Model -> Html Msg
+view list =
     fieldset []
         [ legend [] [ text "MasuriDeAsigurare" ]
-        , ul [] (List.indexedMap itemView items)
-        , MasuraDeAsigurare.addView addItem
+        , ul [] (List.indexedMap itemView list)
+        , MasuraDeAsigurare.addView |> map AddItem
         ]
+
+
+itemView : Int -> MasuraDeAsigurare.Model -> Html Msg
+itemView i item =
+    li []
+        [ MasuraDeAsigurare.view item |> map ReplaceItem
+        , button
+            [ onClick (DeleteItem item) ]
+            [ text "Șterge" ]
+        ]
+
+
+type Msg
+    = AddItem MasuraDeAsigurare.Msg
+    | DeleteItem MasuraDeAsigurare.Model
+    | ReplaceItem MasuraDeAsigurare.Msg
+
+
+update : Msg -> Model -> Model
+update msg list =
+    case msg of
+        AddItem msgMasuraDeAsigurare ->
+            list ++ [ MasuraDeAsigurare.getValueFromMsg msgMasuraDeAsigurare ]
+
+        DeleteItem msgMasuraDeAsigurare ->
+            List.filter ((/=) msgMasuraDeAsigurare) list
+
+        ReplaceItem mdgMasuraDeAsigurare ->
+            list

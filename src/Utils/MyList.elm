@@ -1,4 +1,4 @@
-module Utils.MyList exposing (dropUntil, find, get, last, replace)
+module Utils.MyList exposing (dropUntil, find, get, last, replace, replaceItem)
 
 
 replace : List a -> Int -> a -> List a
@@ -11,6 +11,17 @@ replace list index empty =
                 v
     in
     List.indexedMap mapper list
+
+
+replaceItem : a -> a -> List a -> List a
+replaceItem oldItem newItem =
+    List.map
+        (\item ->
+            if item == oldItem then
+                newItem
+            else
+                item
+        )
 
 
 get : Int -> List a -> Maybe a

@@ -2,7 +2,9 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.MijlocBanesc as MijlocBanesc
-import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
+import Html.Styled exposing (Html, button, fieldset, legend, li, map, text, ul)
+import Html.Styled.Events exposing (onClick)
+import Utils.MyList as MyList
 
 
 type alias Model =
@@ -24,16 +26,19 @@ view list =
         [ legend [] [ text "UrmarirePatrimoniu" ]
 
         --
-        -- TODO: Implement list CRUD: list, delete button, add button, add/edit item form
+        -- TODO: Implement simple list CRUD: list, delete button, add button, add/edit item form
         --
-        , ul [] (List.indexedMap viewBunUrmarit list.bunuri)
+        , ul [] (List.map viewBunUrmarit list.bunuri)
         , ul [] (List.indexedMap viewMijlocBanesc list.mijloaceBanesti)
         ]
 
 
-viewBunUrmarit : Int -> BunUrmarit.Model -> Html Msg
-viewBunUrmarit i bunUrmarit =
-    li [] [ BunUrmarit.view bunUrmarit |> map (SetBunUrmarit i) ]
+viewBunUrmarit : BunUrmarit.Model -> Html Msg
+viewBunUrmarit bunUrmarit =
+    li []
+        [ BunUrmarit.view bunUrmarit |> map (SetBunUrmarit bunUrmarit)
+        , button [ onClick (DeleteBunUrmarit bunUrmarit) ] [ text "Șterge" ]
+        ]
 
 
 viewMijlocBanesc : Int -> MijlocBanesc.Model -> Html Msg
@@ -42,11 +47,19 @@ viewMijlocBanesc i mijlocBanesc =
 
 
 type Msg
-    = SetBunUrmarit Int BunUrmarit.Msg
+    = SetBunUrmarit BunUrmarit.Model BunUrmarit.Msg
+    | DeleteBunUrmarit BunUrmarit.Model
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetBunUrmarit i mgBunUrmarit ->
-            model
+        SetBunUrmarit modelBunUrmarit msgBunUrmarit ->
+            let
+                newModelBunUrmarit =
+                    BunUrmarit.update msgBunUrmarit modelBunUrmarit
+            in
+            { model | bunuri = MyList.replaceItem modelBunUrmarit newModelBunUrmarit model.bunuri }
+
+        DeleteBunUrmarit modelBunUrmarit ->
+            { model | bunuri = List.filter ((/=) modelBunUrmarit) model.bunuri }

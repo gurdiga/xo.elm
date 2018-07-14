@@ -1,8 +1,7 @@
-module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit exposing (Model, Msg, initialModel, update, view)
+module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit exposing (Model, Msg, initialModel, update, view, viewEditForm)
 
 import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.Money as Money exposing (Currency(MDL), Money(Money))
-import Utils.MyHtmlEvents exposing (onClick)
 import Widgets.LargeTextField as LargeTextField
 import Widgets.MoneyField as MoneyField
 import Widgets.TextField as TextField
@@ -28,10 +27,19 @@ view model =
     fieldset []
         [ legend [] [ text "BunUrmarit" ]
         , ul []
-            [ li [] [ TextField.view "Denumire:" model.denumire |> map SetDenumire ]
-            , li [] [ MoneyField.view "Valoare:" model.valoare |> map SetValoare ]
-            , li [] [ LargeTextField.view "Note:" model.note |> map SetNote ]
+            [ li [] [ text ("Denumire:" ++ model.denumire) ]
+            , li [] [ text ("Valoare:" ++ toString model.valoare) ]
+            , li [] [ text ("Note:" ++ model.note) ]
             ]
+        ]
+
+
+viewEditForm : Model -> Html Msg
+viewEditForm model =
+    ul []
+        [ li [] [ TextField.view "Denumire:" model.denumire |> map SetDenumire ]
+        , li [] [ MoneyField.view "Valoare:" model.valoare |> map SetValoare ]
+        , li [] [ LargeTextField.view "Note:" model.note |> map SetNote ]
         ]
 
 

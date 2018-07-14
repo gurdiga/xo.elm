@@ -2,42 +2,78 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.MijlocBanesc as MijlocBanesc
-import Html.Styled exposing (Html, button, fieldset, legend, li, map, text, ul)
+import Html.Styled exposing (Html, button, div, fieldset, legend, li, map, p, text, ul)
 import Html.Styled.Events exposing (onClick)
 import Utils.MyList as MyList
 
 
 type alias Model =
     { bunuri : List BunUrmarit.Model
+    , bunUrmaritNou : Maybe BunUrmarit.Model
+    , bunUrmaritEditat : Maybe ( Int, BunUrmarit.Model )
     , mijloaceBanesti : List MijlocBanesc.Model
     }
 
 
 initialModel : Model
 initialModel =
-    { bunuri = [ BunUrmarit.initialModel ]
+    { bunuri = []
+    , bunUrmaritNou = Nothing
+    , bunUrmaritEditat = Nothing
     , mijloaceBanesti = []
     }
 
 
 view : Model -> Html Msg
-view list =
+view model =
     fieldset []
         [ legend [] [ text "UrmarirePatrimoniu" ]
-
-        --
-        -- TODO: Implement simple list CRUD: list, delete button, add button, add/edit item form
-        --
-        , ul [] (List.map viewBunUrmarit list.bunuri)
-        , ul [] (List.indexedMap viewMijlocBanesc list.mijloaceBanesti)
+        , if List.isEmpty model.bunuri then
+            p [] [ text "Nu sunt bunuri înregistrate." ]
+          else
+            viewBunuriUrmarite model.bunuri
+        , model.bunUrmaritNou
+            |> Maybe.map viewBunUrmaritAdd
+            |> Maybe.withDefault
+                (model.bunUrmaritEditat
+                    |> Maybe.map viewBunUrmaritEdit
+                    |> Maybe.withDefault (button [ onClick BunUrmaritNouAdd ] [ text "Adaugă" ])
+                )
+        , ul [] (List.indexedMap viewMijlocBanesc model.mijloaceBanesti)
         ]
 
 
-viewBunUrmarit : BunUrmarit.Model -> Html Msg
-viewBunUrmarit bunUrmarit =
+viewBunuriUrmarite : List BunUrmarit.Model -> Html Msg
+viewBunuriUrmarite bunuri =
+    ul [] (List.indexedMap viewBunUrmarit bunuri)
+
+
+viewBunUrmarit : Int -> BunUrmarit.Model -> Html Msg
+viewBunUrmarit i bunUrmarit =
     li []
-        [ BunUrmarit.view bunUrmarit |> map (SetBunUrmarit bunUrmarit)
-        , button [ onClick (DeleteBunUrmarit bunUrmarit) ] [ text "Șterge" ]
+        [ BunUrmarit.view bunUrmarit |> map BunUrmaritNoop
+        , button [ onClick (BunUrmaritEditatInit ( i, bunUrmarit )) ] [ text "Editează" ]
+        , button [ onClick (BunUrmaritDelete bunUrmarit) ] [ text "Șterge" ]
+        ]
+
+
+viewBunUrmaritAdd : BunUrmarit.Model -> Html Msg
+viewBunUrmaritAdd modelBunUrmarit =
+    fieldset []
+        [ legend [] [ text "Adaugă bun urmărit" ]
+        , BunUrmarit.viewEditForm modelBunUrmarit |> map (BunUrmaritNouSet modelBunUrmarit)
+        , button [ onClick (BunUrmaritNouSubmit modelBunUrmarit) ] [ text "Confirmă adăugarea" ]
+        , button [ onClick BunUrmaritNouReset ] [ text "Anulează adăugarea" ]
+        ]
+
+
+viewBunUrmaritEdit : ( Int, BunUrmarit.Model ) -> Html Msg
+viewBunUrmaritEdit ( i, modelBunUrmarit ) =
+    fieldset []
+        [ legend [] [ text "Editează bun urmărit" ]
+        , BunUrmarit.viewEditForm modelBunUrmarit |> map (BunUrmaritEditatSet ( i, modelBunUrmarit ))
+        , button [ onClick (BunUrmaritEditatSubmit ( i, modelBunUrmarit )) ] [ text "Confirmă editarea" ]
+        , button [ onClick BunUrmaritEditatReset ] [ text "Anulează editarea" ]
         ]
 
 
@@ -47,19 +83,51 @@ viewMijlocBanesc i mijlocBanesc =
 
 
 type Msg
-    = SetBunUrmarit BunUrmarit.Model BunUrmarit.Msg
-    | DeleteBunUrmarit BunUrmarit.Model
+    = BunUrmaritNouAdd
+    | BunUrmaritNouSet BunUrmarit.Model BunUrmarit.Msg
+    | BunUrmaritNouSubmit BunUrmarit.Model
+    | BunUrmaritNouReset
+    | BunUrmaritEditatInit ( Int, BunUrmarit.Model )
+    | BunUrmaritEditatSet ( Int, BunUrmarit.Model ) BunUrmarit.Msg
+    | BunUrmaritEditatSubmit ( Int, BunUrmarit.Model )
+    | BunUrmaritEditatReset
+    | BunUrmaritNoop BunUrmarit.Msg
+    | BunUrmaritDelete BunUrmarit.Model
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetBunUrmarit modelBunUrmarit msgBunUrmarit ->
-            let
-                newModelBunUrmarit =
-                    BunUrmarit.update msgBunUrmarit modelBunUrmarit
-            in
-            { model | bunuri = MyList.replaceItem modelBunUrmarit newModelBunUrmarit model.bunuri }
+        BunUrmaritNouAdd ->
+            { model | bunUrmaritNou = Just BunUrmarit.initialModel }
 
-        DeleteBunUrmarit modelBunUrmarit ->
+        BunUrmaritNouSet modelBunUrmarit msgBunUrmarit ->
+            { model | bunUrmaritNou = Just (BunUrmarit.update msgBunUrmarit modelBunUrmarit) }
+
+        BunUrmaritNouSubmit modelBunUrmarit ->
+            { model | bunUrmaritNou = Nothing, bunuri = model.bunuri ++ [ modelBunUrmarit ] }
+
+        BunUrmaritNouReset ->
+            { model | bunUrmaritNou = Nothing }
+
+        BunUrmaritEditatInit ( i, modelBunUrmarit ) ->
+            { model | bunUrmaritEditat = Just ( i, modelBunUrmarit ) }
+
+        BunUrmaritEditatSet ( i, modelBunUrmarit ) msgBunUrmarit ->
+            { model | bunUrmaritEditat = Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit ) }
+
+        BunUrmaritEditatSubmit ( i, modelBunUrmarit ) ->
+            let
+                newBunuri =
+                    MyList.replace model.bunuri i modelBunUrmarit
+            in
+            { model | bunUrmaritEditat = Nothing, bunuri = newBunuri }
+
+        BunUrmaritEditatReset ->
+            { model | bunUrmaritEditat = Nothing }
+
+        BunUrmaritNoop msgBunUrmarit ->
+            model
+
+        BunUrmaritDelete modelBunUrmarit ->
             { model | bunuri = List.filter ((/=) modelBunUrmarit) model.bunuri }

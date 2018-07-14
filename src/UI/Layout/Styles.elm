@@ -10,7 +10,8 @@ main_ =
     css
         [ padding (px 24)
         , fontFamilies [ "Alegreya Sans" ]
-        , backgroundImage (url "assets/images/bg.png")
+
+        -- , backgroundImage (url "assets/images/bg.png")
         , boxSizing borderBox
         , height (vh 100)
         ]

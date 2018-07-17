@@ -19,7 +19,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Set actEfectuatAnteriorMsg ->
-            model
+            Debug.crash "update doesn’t handle Set"
 
         AddItem ->
             { model | newItem = Just ActEfectuatAnterior.initialModel }
@@ -35,18 +35,16 @@ update msg model =
                 Just newItem ->
                     { model | newItem = Just (ActEfectuatAnterior.setFile newItem newFile) }
 
-                -- this should never happen
                 Nothing ->
-                    model
+                    Debug.crash "SetNewItemFile cant be emitted with Nothing"
 
         SetNewItemNote newNote ->
             case model.newItem of
                 Just newItem ->
                     { model | newItem = Just (ActEfectuatAnterior.setNote newItem newNote) }
 
-                -- this should never happen
                 Nothing ->
-                    model
+                    Debug.crash "SetNewItemNote cant be emitted with Nothing"
 
 
 type alias Model =

@@ -88,7 +88,7 @@ update msg model =
                     { model | rezultatIncercareConciliere = PartileAjungLaIntelegere (PartileAjungLaIntelegere.update msgPartileAjungLaIntelegere modelPartileAjungLaIntelegere) }
 
                 PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
-                    model
+                    Debug.crash "SetPartileAjungLaIntelegere can’t be emitted with a PartileNuAjungLaIntelegere"
 
         SetPartileNuAjungLaIntelegere msgPartileNuAjungLaIntelegere ->
             case model.rezultatIncercareConciliere of
@@ -96,7 +96,7 @@ update msg model =
                     { model | rezultatIncercareConciliere = PartileNuAjungLaIntelegere (PartileNuAjungLaIntelegere.update msgPartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere) }
 
                 PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
-                    model
+                    Debug.crash "SetPartileNuAjungLaIntelegere can’t be emitted with a PartileAjungLaIntelegere"
 
 
 resetRezultatIncercareConciliere : Model -> Select3.Model RezultatIncercareConciliere -> Model

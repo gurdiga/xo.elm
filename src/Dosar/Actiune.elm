@@ -85,7 +85,7 @@ update msg model =
                     { model | actiune = IncheiereIntentare (IncheiereIntentare.update msgIncheiereIntentare modelIncheiereIntentare) }
 
                 IncheiereRefuz modelIncheiereRefuz ->
-                    model
+                    Debug.crash "SetIncheiereIntentare cant have a IncheiereRefuz"
 
         SetIncheiereRefuz msgIncheiereRefuz ->
             case model.actiune of
@@ -93,7 +93,7 @@ update msg model =
                     { model | actiune = IncheiereRefuz (IncheiereRefuz.update msgIncheiereRefuz modelIncheiereRefuz) }
 
                 IncheiereIntentare modelIncheiereIntentare ->
-                    model
+                    Debug.crash "SetIncheiereRefuz cant have a IncheiereIntentare"
 
 
 resetActiune : Model -> Select3.Model Actiune -> Model

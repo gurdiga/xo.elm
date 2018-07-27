@@ -5,22 +5,61 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 import Html.Styled exposing (Html, button, div, fieldset, legend, li, map, p, text, ul)
 import Html.Styled.Events exposing (onClick)
 import Utils.MyList as MyList
+import Widgets.EditableList as EditableList
 
 
 type alias Model =
-    { bunuri : List BunUrmarit.Model
+    { bunuriUrmarite : List BunUrmarit.Model
     , bunUrmaritNou : Maybe BunUrmarit.Model
-    , bunUrmaritEditat : Maybe ( Int, BunUrmarit.Model )
+    , bunUrmaritEditat : BunUrmaritEditat
     , mijloaceBanesti : List MijlocBanesc.Model
+    , ui : Ui
     }
+
+
+type alias BunUrmaritEditat =
+    Maybe ( Int, BunUrmarit.Model )
+
+
+setBunUrmaritEditat : BunUrmaritEditat -> Model -> Model
+setBunUrmaritEditat bunUrmaritEditat model =
+    { model
+        | bunUrmaritEditat = bunUrmaritEditat
+        , ui = uiSetBunuriUrmariteEditableList (EditableList.setItemToEdit bunUrmaritEditat model.ui.bunuriUrmariteEditableList) model.ui
+    }
+
+
+setBunuriUrmarite : List BunUrmarit.Model -> Model -> Model
+setBunuriUrmarite bunuriUrmarite model =
+    { model
+        | bunuriUrmarite = bunuriUrmarite
+        , ui = uiSetBunuriUrmariteEditableList (EditableList.setItems bunuriUrmarite model.ui.bunuriUrmariteEditableList) model.ui
+    }
+
+
+type alias Ui =
+    { bunuriUrmariteEditableList : EditableList.Model BunUrmarit.Model
+    }
+
+
+uiSetBunuriUrmariteEditableList : EditableList.Model BunUrmarit.Model -> Ui -> Ui
+uiSetBunuriUrmariteEditableList bunuriUrmariteEditableList ui =
+    { ui | bunuriUrmariteEditableList = bunuriUrmariteEditableList }
 
 
 initialModel : Model
 initialModel =
-    { bunuri = []
+    let
+        bunuriUrmarite =
+            [ BunUrmarit.initialModel ]
+    in
+    { bunuriUrmarite = bunuriUrmarite
     , bunUrmaritNou = Nothing
     , bunUrmaritEditat = Nothing
     , mijloaceBanesti = []
+    , ui =
+        { bunuriUrmariteEditableList = EditableList.initialModel bunuriUrmarite Nothing Nothing
+        }
     }
 
 
@@ -28,10 +67,18 @@ view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "UrmarirePatrimoniu" ]
-        , if List.isEmpty model.bunuri then
+        , EditableList.view
+            { noItemsView = Just (text "Nu sunt bunuri înregistrate.")
+            , viewItem = viewBunUrmarit
+            , viewItemAdd = viewBunUrmaritAdd
+            , viewItemEdit = viewBunUrmaritEdit
+            , viewAddItemButton = button [ onClick BunUrmaritNouAdd ] [ text "Adaugă" ]
+            }
+            model.ui.bunuriUrmariteEditableList
+        , if List.isEmpty model.bunuriUrmarite then
             p [] [ text "Nu sunt bunuri înregistrate." ]
           else
-            viewBunuriUrmarite model.bunuri
+            viewBunuriUrmarite model.bunuriUrmarite
         , model.bunUrmaritNou
             |> Maybe.map viewBunUrmaritAdd
             |> Maybe.withDefault
@@ -44,8 +91,8 @@ view model =
 
 
 viewBunuriUrmarite : List BunUrmarit.Model -> Html Msg
-viewBunuriUrmarite bunuri =
-    ul [] (List.indexedMap viewBunUrmarit bunuri)
+viewBunuriUrmarite bunuriUrmarite =
+    ul [] (List.indexedMap viewBunUrmarit bunuriUrmarite)
 
 
 viewBunUrmarit : Int -> BunUrmarit.Model -> Html Msg
@@ -93,6 +140,7 @@ type Msg
     | BunUrmaritEditatReset
     | BunUrmaritNoop BunUrmarit.Msg
     | BunUrmaritDelete BunUrmarit.Model
+    | Noop BunUrmarit.Model
 
 
 update : Msg -> Model -> Model
@@ -105,30 +153,36 @@ update msg model =
             { model | bunUrmaritNou = Just (BunUrmarit.update msgBunUrmarit modelBunUrmarit) }
 
         BunUrmaritNouSubmit modelBunUrmarit ->
-            { model | bunUrmaritNou = Nothing, bunuri = model.bunuri ++ [ modelBunUrmarit ] }
+            { model | bunUrmaritNou = Nothing, bunuriUrmarite = model.bunuriUrmarite ++ [ modelBunUrmarit ] }
 
         BunUrmaritNouReset ->
             { model | bunUrmaritNou = Nothing }
 
         BunUrmaritEditatInit ( i, modelBunUrmarit ) ->
-            { model | bunUrmaritEditat = Just ( i, modelBunUrmarit ) }
+            model
+                |> setBunUrmaritEditat (Just ( i, modelBunUrmarit ))
 
         BunUrmaritEditatSet ( i, modelBunUrmarit ) msgBunUrmarit ->
-            { model | bunUrmaritEditat = Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit ) }
+            model
+                |> setBunUrmaritEditat (Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit ))
 
         BunUrmaritEditatSubmit ( i, modelBunUrmarit ) ->
-            let
-                newBunuri =
-                    MyList.replace model.bunuri i modelBunUrmarit
-            in
-            { model | bunUrmaritEditat = Nothing, bunuri = newBunuri }
+            model
+                |> setBunuriUrmarite (MyList.replace model.bunuriUrmarite i modelBunUrmarit)
+                |> setBunUrmaritEditat Nothing
 
         BunUrmaritEditatReset ->
-            { model | bunUrmaritEditat = Nothing }
+            model
+                |> setBunUrmaritEditat Nothing
 
         -- TODO: Is this alright?
         BunUrmaritNoop msgBunUrmarit ->
             model
 
         BunUrmaritDelete modelBunUrmarit ->
-            { model | bunuri = List.filter ((/=) modelBunUrmarit) model.bunuri }
+            model
+                |> setBunuriUrmarite (List.filter ((/=) modelBunUrmarit) model.bunuriUrmarite)
+                |> setBunUrmaritEditat Nothing
+
+        Noop modelBunUrmarit ->
+            model

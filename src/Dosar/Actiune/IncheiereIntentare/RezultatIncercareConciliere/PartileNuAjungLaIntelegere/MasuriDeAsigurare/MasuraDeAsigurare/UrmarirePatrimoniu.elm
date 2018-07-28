@@ -9,44 +9,15 @@ import Widgets.EditableList as EditableList
 
 
 type alias Model =
-    { bunuriUrmarite : List BunUrmarit.Model
-    , mijloaceBanesti : List MijlocBanesc.Model
-    , uiBunuriUrmariteEditableList : EditableList.Model BunUrmarit.Model
+    { mijloaceBanesti : List MijlocBanesc.Model
+    , bunuriUrmarite : EditableList.Model BunUrmarit.Model
     }
-
-
-type alias BunUrmaritNou =
-    Maybe BunUrmarit.Model
-
-
-type alias BunUrmaritEditat =
-    Maybe ( Int, BunUrmarit.Model )
-
-
-setBunUrmaritNou : BunUrmaritNou -> Model -> Model
-setBunUrmaritNou bunUrmaritNou model =
-    { model | uiBunuriUrmariteEditableList = EditableList.setItemToAdd bunUrmaritNou model.uiBunuriUrmariteEditableList }
-
-
-setBunUrmaritEditat : BunUrmaritEditat -> Model -> Model
-setBunUrmaritEditat bunUrmaritEditat model =
-    { model | uiBunuriUrmariteEditableList = EditableList.setItemToEdit bunUrmaritEditat model.uiBunuriUrmariteEditableList }
-
-
-setBunuriUrmarite : List BunUrmarit.Model -> Model -> Model
-setBunuriUrmarite bunuriUrmarite model =
-    { model | uiBunuriUrmariteEditableList = EditableList.setItems bunuriUrmarite model.uiBunuriUrmariteEditableList }
 
 
 initialModel : Model
 initialModel =
-    let
-        bunuriUrmarite =
-            [ BunUrmarit.initialModel ]
-    in
-    { bunuriUrmarite = bunuriUrmarite
-    , mijloaceBanesti = []
-    , uiBunuriUrmariteEditableList = EditableList.initialModel bunuriUrmarite Nothing Nothing
+    { mijloaceBanesti = []
+    , bunuriUrmarite = EditableList.initialModel [ BunUrmarit.initialModel ]
     }
 
 
@@ -61,18 +32,7 @@ view model =
             , viewItemEdit = viewBunUrmaritEdit
             , viewAddItemButton = viewBunUrmaritAddButton
             }
-            model.uiBunuriUrmariteEditableList
-        , if List.isEmpty model.bunuriUrmarite then
-            p [] [ text "Nu sunt bunuri înregistrate." ]
-          else
-            viewBunuriUrmarite model.bunuriUrmarite
-        , model.uiBunuriUrmariteEditableList.itemToAdd
-            |> Maybe.map viewBunUrmaritAdd
-            |> Maybe.withDefault
-                (model.uiBunuriUrmariteEditableList.itemToEdit
-                    |> Maybe.map viewBunUrmaritEdit
-                    |> Maybe.withDefault (button [ onClick BunUrmaritNouAdd ] [ text "Adaugă" ])
-                )
+            model.bunuriUrmarite
         , ul [] (List.indexedMap viewMijlocBanesc model.mijloaceBanesti)
         ]
 
@@ -139,34 +99,32 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         BunUrmaritNouAdd ->
-            setBunUrmaritNou (Just BunUrmarit.initialModel) model
+            { model | bunuriUrmarite = EditableList.setItemToAdd (Just BunUrmarit.initialModel) model.bunuriUrmarite }
 
         BunUrmaritNouSet modelBunUrmarit msgBunUrmarit ->
-            model |> setBunUrmaritNou (Just (BunUrmarit.update msgBunUrmarit modelBunUrmarit))
+            { model | bunuriUrmarite = EditableList.setItemToAdd (Just (BunUrmarit.update msgBunUrmarit modelBunUrmarit)) model.bunuriUrmarite }
 
         BunUrmaritNouSubmit modelBunUrmarit ->
-            model
-                |> setBunuriUrmarite (model.bunuriUrmarite ++ [ modelBunUrmarit ])
-                |> setBunUrmaritNou Nothing
+            { model | bunuriUrmarite = EditableList.addItem modelBunUrmarit model.bunuriUrmarite }
 
         BunUrmaritNouReset ->
-            model |> setBunUrmaritNou Nothing
+            { model | bunuriUrmarite = EditableList.resetItemToAdd model.bunuriUrmarite }
 
         BunUrmaritEditatInit ( i, modelBunUrmarit ) ->
-            model |> setBunUrmaritEditat (Just ( i, modelBunUrmarit ))
+            { model | bunuriUrmarite = EditableList.setItemToEdit (Just ( i, modelBunUrmarit )) model.bunuriUrmarite }
 
         BunUrmaritEditatSet ( i, modelBunUrmarit ) msgBunUrmarit ->
-            model |> setBunUrmaritEditat (Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit ))
+            { model | bunuriUrmarite = EditableList.setItemToEdit (Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit )) model.bunuriUrmarite }
 
         BunUrmaritEditatSubmit ( i, modelBunUrmarit ) ->
-            model |> setBunuriUrmarite (MyList.replace model.bunuriUrmarite i modelBunUrmarit)
+            { model | bunuriUrmarite = EditableList.setItems (MyList.replace model.bunuriUrmarite.items i modelBunUrmarit) model.bunuriUrmarite }
 
         BunUrmaritEditatReset ->
-            model |> setBunUrmaritEditat Nothing
+            { model | bunuriUrmarite = EditableList.resetItemToEdit model.bunuriUrmarite }
 
         -- TODO: Is this alright?
         BunUrmaritNoop msgBunUrmarit ->
             model
 
         BunUrmaritDelete modelBunUrmarit ->
-            model |> setBunuriUrmarite (List.filter ((/=) modelBunUrmarit) model.bunuriUrmarite)
+            { model | bunuriUrmarite = EditableList.setItems (List.filter ((/=) modelBunUrmarit) model.bunuriUrmarite.items) model.bunuriUrmarite }

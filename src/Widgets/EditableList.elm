@@ -1,4 +1,4 @@
-module Widgets.EditableList exposing (Model, initialModel, setItemToAdd, setItemToEdit, setItems, view)
+module Widgets.EditableList exposing (Model, addItem, initialModel, resetItemToAdd, resetItemToEdit, setItemToAdd, setItemToEdit, setItems, view)
 
 import Html.Styled exposing (Html, button, fieldset, legend, li, p, text, ul)
 
@@ -22,11 +22,11 @@ type alias ItemToEdit a =
     Maybe ( Int, a )
 
 
-initialModel : Items a -> ItemToAdd a -> ItemToEdit a -> Model a
-initialModel items itemToAdd itemToEdit =
+initialModel : Items a -> Model a
+initialModel items =
     { items = items
-    , itemToAdd = itemToAdd
-    , itemToEdit = itemToEdit
+    , itemToAdd = Nothing
+    , itemToEdit = Nothing
     }
 
 
@@ -43,9 +43,27 @@ setItemToEdit itemToEdit model =
     { model | itemToEdit = itemToEdit }
 
 
+resetItemToEdit : Model a -> Model a
+resetItemToEdit =
+    setItemToEdit Nothing
+
+
 setItemToAdd : ItemToAdd a -> Model a -> Model a
 setItemToAdd itemToAdd model =
     { model | itemToAdd = itemToAdd }
+
+
+resetItemToAdd : Model a -> Model a
+resetItemToAdd =
+    setItemToAdd Nothing
+
+
+addItem : a -> Model a -> Model a
+addItem item model =
+    { model
+        | items = model.items ++ [ item ]
+        , itemToAdd = Nothing
+    }
 
 
 type alias ViewItem a msg =

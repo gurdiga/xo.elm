@@ -1,4 +1,4 @@
-module Widgets.EditableList exposing (Model, initialModel, setItemToEdit, setItems, view)
+module Widgets.EditableList exposing (Model, initialModel, setItemToAdd, setItemToEdit, setItems, view)
 
 import Html.Styled exposing (Html, button, fieldset, legend, li, p, text, ul)
 
@@ -58,9 +58,9 @@ type alias ViewItemEdit a msg =
 
 
 type alias Config a msg =
-    { noItemsView : Maybe (Html msg)
-    , viewItemAdd : ViewItemAdd a msg
+    { viewNoItems : Html msg
     , viewItem : ViewItem a msg
+    , viewItemAdd : ViewItemAdd a msg
     , viewItemEdit : ViewItemEdit a msg
     , viewAddItemButton : Html msg
     }
@@ -71,7 +71,7 @@ view config model =
     fieldset []
         [ legend [] [ text "EditableList" ]
         , if List.isEmpty model.items then
-            p [] [ config.noItemsView |> Maybe.withDefault (text "No items.") ]
+            p [] [ config.viewNoItems ]
           else
             viewList config.viewItem model.items
         , model.itemToAdd

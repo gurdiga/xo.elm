@@ -10,11 +10,16 @@ import Widgets.EditableList as EditableList
 
 type alias Model =
     { bunuriUrmarite : List BunUrmarit.Model
-    , bunUrmaritNou : Maybe BunUrmarit.Model
+    , -- TODO: could I hide these 2 in EditableList?
+      bunUrmaritNou : BunUrmaritNou
     , bunUrmaritEditat : BunUrmaritEditat
     , mijloaceBanesti : List MijlocBanesc.Model
-    , ui : Ui
+    , uiBunuriUrmariteEditableList : EditableList.Model BunUrmarit.Model
     }
+
+
+type alias BunUrmaritNou =
+    Maybe BunUrmarit.Model
 
 
 type alias BunUrmaritEditat =
@@ -25,7 +30,15 @@ setBunUrmaritEditat : BunUrmaritEditat -> Model -> Model
 setBunUrmaritEditat bunUrmaritEditat model =
     { model
         | bunUrmaritEditat = bunUrmaritEditat
-        , ui = uiSetBunuriUrmariteEditableList (EditableList.setItemToEdit bunUrmaritEditat model.ui.bunuriUrmariteEditableList) model.ui
+        , uiBunuriUrmariteEditableList = EditableList.setItemToEdit bunUrmaritEditat model.uiBunuriUrmariteEditableList
+    }
+
+
+setBunUrmaritNou : BunUrmaritNou -> Model -> Model
+setBunUrmaritNou bunUrmaritNou model =
+    { model
+        | bunUrmaritNou = bunUrmaritNou
+        , uiBunuriUrmariteEditableList = EditableList.setItemToAdd bunUrmaritNou model.uiBunuriUrmariteEditableList
     }
 
 
@@ -33,18 +46,8 @@ setBunuriUrmarite : List BunUrmarit.Model -> Model -> Model
 setBunuriUrmarite bunuriUrmarite model =
     { model
         | bunuriUrmarite = bunuriUrmarite
-        , ui = uiSetBunuriUrmariteEditableList (EditableList.setItems bunuriUrmarite model.ui.bunuriUrmariteEditableList) model.ui
+        , uiBunuriUrmariteEditableList = EditableList.setItems bunuriUrmarite model.uiBunuriUrmariteEditableList
     }
-
-
-type alias Ui =
-    { bunuriUrmariteEditableList : EditableList.Model BunUrmarit.Model
-    }
-
-
-uiSetBunuriUrmariteEditableList : EditableList.Model BunUrmarit.Model -> Ui -> Ui
-uiSetBunuriUrmariteEditableList bunuriUrmariteEditableList ui =
-    { ui | bunuriUrmariteEditableList = bunuriUrmariteEditableList }
 
 
 initialModel : Model
@@ -57,9 +60,7 @@ initialModel =
     , bunUrmaritNou = Nothing
     , bunUrmaritEditat = Nothing
     , mijloaceBanesti = []
-    , ui =
-        { bunuriUrmariteEditableList = EditableList.initialModel bunuriUrmarite Nothing Nothing
-        }
+    , uiBunuriUrmariteEditableList = EditableList.initialModel bunuriUrmarite Nothing Nothing
     }
 
 
@@ -68,13 +69,13 @@ view model =
     fieldset []
         [ legend [] [ text "UrmarirePatrimoniu" ]
         , EditableList.view
-            { noItemsView = Just (text "Nu sunt bunuri înregistrate.")
+            { viewNoItems = text "Nu sunt bunuri înregistrate."
             , viewItem = viewBunUrmarit
             , viewItemAdd = viewBunUrmaritAdd
             , viewItemEdit = viewBunUrmaritEdit
-            , viewAddItemButton = button [ onClick BunUrmaritNouAdd ] [ text "Adaugă" ]
+            , viewAddItemButton = viewBunUrmaritAddButton
             }
-            model.ui.bunuriUrmariteEditableList
+            model.uiBunuriUrmariteEditableList
         , if List.isEmpty model.bunuriUrmarite then
             p [] [ text "Nu sunt bunuri înregistrate." ]
           else
@@ -114,6 +115,11 @@ viewBunUrmaritAdd modelBunUrmarit =
         ]
 
 
+viewBunUrmaritAddButton : Html Msg
+viewBunUrmaritAddButton =
+    button [ onClick BunUrmaritNouAdd ] [ text "Adaugă" ]
+
+
 viewBunUrmaritEdit : ( Int, BunUrmarit.Model ) -> Html Msg
 viewBunUrmaritEdit ( i, modelBunUrmarit ) =
     fieldset []
@@ -134,7 +140,8 @@ type Msg
     | BunUrmaritNouSet BunUrmarit.Model BunUrmarit.Msg
     | BunUrmaritNouSubmit BunUrmarit.Model
     | BunUrmaritNouReset
-    | BunUrmaritEditatInit ( Int, BunUrmarit.Model )
+    | -- TODO: could I hide these 4 in EditableList?
+      BunUrmaritEditatInit ( Int, BunUrmarit.Model )
     | BunUrmaritEditatSet ( Int, BunUrmarit.Model ) BunUrmarit.Msg
     | BunUrmaritEditatSubmit ( Int, BunUrmarit.Model )
     | BunUrmaritEditatReset

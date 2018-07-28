@@ -10,9 +10,6 @@ import Widgets.EditableList as EditableList
 
 type alias Model =
     { bunuriUrmarite : List BunUrmarit.Model
-    , -- TODO: could I hide these 2 in EditableList?
-      bunUrmaritNou : BunUrmaritNou
-    , bunUrmaritEditat : BunUrmaritEditat
     , mijloaceBanesti : List MijlocBanesc.Model
     , uiBunuriUrmariteEditableList : EditableList.Model BunUrmarit.Model
     }
@@ -26,28 +23,19 @@ type alias BunUrmaritEditat =
     Maybe ( Int, BunUrmarit.Model )
 
 
-setBunUrmaritEditat : BunUrmaritEditat -> Model -> Model
-setBunUrmaritEditat bunUrmaritEditat model =
-    { model
-        | bunUrmaritEditat = bunUrmaritEditat
-        , uiBunuriUrmariteEditableList = EditableList.setItemToEdit bunUrmaritEditat model.uiBunuriUrmariteEditableList
-    }
-
-
 setBunUrmaritNou : BunUrmaritNou -> Model -> Model
 setBunUrmaritNou bunUrmaritNou model =
-    { model
-        | bunUrmaritNou = bunUrmaritNou
-        , uiBunuriUrmariteEditableList = EditableList.setItemToAdd bunUrmaritNou model.uiBunuriUrmariteEditableList
-    }
+    { model | uiBunuriUrmariteEditableList = EditableList.setItemToAdd bunUrmaritNou model.uiBunuriUrmariteEditableList }
+
+
+setBunUrmaritEditat : BunUrmaritEditat -> Model -> Model
+setBunUrmaritEditat bunUrmaritEditat model =
+    { model | uiBunuriUrmariteEditableList = EditableList.setItemToEdit bunUrmaritEditat model.uiBunuriUrmariteEditableList }
 
 
 setBunuriUrmarite : List BunUrmarit.Model -> Model -> Model
 setBunuriUrmarite bunuriUrmarite model =
-    { model
-        | bunuriUrmarite = bunuriUrmarite
-        , uiBunuriUrmariteEditableList = EditableList.setItems bunuriUrmarite model.uiBunuriUrmariteEditableList
-    }
+    { model | uiBunuriUrmariteEditableList = EditableList.setItems bunuriUrmarite model.uiBunuriUrmariteEditableList }
 
 
 initialModel : Model
@@ -57,8 +45,6 @@ initialModel =
             [ BunUrmarit.initialModel ]
     in
     { bunuriUrmarite = bunuriUrmarite
-    , bunUrmaritNou = Nothing
-    , bunUrmaritEditat = Nothing
     , mijloaceBanesti = []
     , uiBunuriUrmariteEditableList = EditableList.initialModel bunuriUrmarite Nothing Nothing
     }
@@ -80,10 +66,10 @@ view model =
             p [] [ text "Nu sunt bunuri înregistrate." ]
           else
             viewBunuriUrmarite model.bunuriUrmarite
-        , model.bunUrmaritNou
+        , model.uiBunuriUrmariteEditableList.itemToAdd
             |> Maybe.map viewBunUrmaritAdd
             |> Maybe.withDefault
-                (model.bunUrmaritEditat
+                (model.uiBunuriUrmariteEditableList.itemToEdit
                     |> Maybe.map viewBunUrmaritEdit
                     |> Maybe.withDefault (button [ onClick BunUrmaritNouAdd ] [ text "Adaugă" ])
                 )
@@ -147,49 +133,40 @@ type Msg
     | BunUrmaritEditatReset
     | BunUrmaritNoop BunUrmarit.Msg
     | BunUrmaritDelete BunUrmarit.Model
-    | Noop BunUrmarit.Model
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         BunUrmaritNouAdd ->
-            { model | bunUrmaritNou = Just BunUrmarit.initialModel }
+            setBunUrmaritNou (Just BunUrmarit.initialModel) model
 
         BunUrmaritNouSet modelBunUrmarit msgBunUrmarit ->
-            { model | bunUrmaritNou = Just (BunUrmarit.update msgBunUrmarit modelBunUrmarit) }
+            model |> setBunUrmaritNou (Just (BunUrmarit.update msgBunUrmarit modelBunUrmarit))
 
         BunUrmaritNouSubmit modelBunUrmarit ->
-            { model | bunUrmaritNou = Nothing, bunuriUrmarite = model.bunuriUrmarite ++ [ modelBunUrmarit ] }
+            model
+                |> setBunuriUrmarite (model.bunuriUrmarite ++ [ modelBunUrmarit ])
+                |> setBunUrmaritNou Nothing
 
         BunUrmaritNouReset ->
-            { model | bunUrmaritNou = Nothing }
+            model |> setBunUrmaritNou Nothing
 
         BunUrmaritEditatInit ( i, modelBunUrmarit ) ->
-            model
-                |> setBunUrmaritEditat (Just ( i, modelBunUrmarit ))
+            model |> setBunUrmaritEditat (Just ( i, modelBunUrmarit ))
 
         BunUrmaritEditatSet ( i, modelBunUrmarit ) msgBunUrmarit ->
-            model
-                |> setBunUrmaritEditat (Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit ))
+            model |> setBunUrmaritEditat (Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit ))
 
         BunUrmaritEditatSubmit ( i, modelBunUrmarit ) ->
-            model
-                |> setBunuriUrmarite (MyList.replace model.bunuriUrmarite i modelBunUrmarit)
-                |> setBunUrmaritEditat Nothing
+            model |> setBunuriUrmarite (MyList.replace model.bunuriUrmarite i modelBunUrmarit)
 
         BunUrmaritEditatReset ->
-            model
-                |> setBunUrmaritEditat Nothing
+            model |> setBunUrmaritEditat Nothing
 
         -- TODO: Is this alright?
         BunUrmaritNoop msgBunUrmarit ->
             model
 
         BunUrmaritDelete modelBunUrmarit ->
-            model
-                |> setBunuriUrmarite (List.filter ((/=) modelBunUrmarit) model.bunuriUrmarite)
-                |> setBunUrmaritEditat Nothing
-
-        Noop modelBunUrmarit ->
-            model
+            model |> setBunuriUrmarite (List.filter ((/=) modelBunUrmarit) model.bunuriUrmarite)

@@ -32,7 +32,10 @@ initialModel items itemToAdd itemToEdit =
 
 setItems : Items a -> Model a -> Model a
 setItems items model =
-    { model | items = items }
+    { model
+        | items = items
+        , itemToEdit = Nothing
+    }
 
 
 setItemToEdit : ItemToEdit a -> Model a -> Model a

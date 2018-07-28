@@ -82,12 +82,12 @@ viewMijlocBanesc i mijlocBanesc =
 
 
 type Msg
-    = BunUrmaritNouAdd
+    = -- TODO: could I pack some of these inside EditableList?
+      BunUrmaritNouAdd
     | BunUrmaritNouSet BunUrmarit.Model BunUrmarit.Msg
     | BunUrmaritNouSubmit BunUrmarit.Model
     | BunUrmaritNouReset
-    | -- TODO: could I hide these 4 in EditableList?
-      BunUrmaritEditatInit ( Int, BunUrmarit.Model )
+    | BunUrmaritEditatInit ( Int, BunUrmarit.Model )
     | BunUrmaritEditatSet ( Int, BunUrmarit.Model ) BunUrmarit.Msg
     | BunUrmaritEditatSubmit ( Int, BunUrmarit.Model )
     | BunUrmaritEditatReset
@@ -122,9 +122,9 @@ update msg model =
         BunUrmaritEditatReset ->
             { model | bunuriUrmarite = EditableList.resetItemToEdit model.bunuriUrmarite }
 
+        BunUrmaritDelete modelBunUrmarit ->
+            { model | bunuriUrmarite = EditableList.setItems (List.filter ((/=) modelBunUrmarit) model.bunuriUrmarite.items) model.bunuriUrmarite }
+
         -- TODO: Is this alright?
         BunUrmaritNoop msgBunUrmarit ->
             model
-
-        BunUrmaritDelete modelBunUrmarit ->
-            { model | bunuriUrmarite = EditableList.setItems (List.filter ((/=) modelBunUrmarit) model.bunuriUrmarite.items) model.bunuriUrmarite }

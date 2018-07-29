@@ -94,7 +94,7 @@ view config model =
         , if List.isEmpty model.items then
             p [] [ config.viewNoItems ]
           else
-            viewList config.viewItem model.items
+            ul [] (List.indexedMap config.viewItem model.items)
         , model.itemToAdd
             |> Maybe.map config.viewItemAdd
             |> Maybe.withDefault
@@ -103,8 +103,3 @@ view config model =
                     |> Maybe.withDefault config.viewAddItemButton
                 )
         ]
-
-
-viewList : ViewItem a msg -> List a -> Html msg
-viewList viewItem items =
-    ul [] (List.indexedMap viewItem items)

@@ -20,7 +20,7 @@ view : Model -> Html Msg
 view model =
     EditableList.view
         { viewNoItems = text "Nu sunt bunuri înregistrate."
-        , viewItem = viewBunUrmarit
+        , viewItem = viewBunUrmarit EditedInit
         , viewItemAdd = viewBunUrmaritAdd
         , viewItemEdit = viewBunUrmaritEdit
         , viewAddItemButton = viewBunUrmaritAddButton
@@ -28,11 +28,11 @@ view model =
         model
 
 
-viewBunUrmarit : Int -> BunUrmarit.Model -> Html Msg
-viewBunUrmarit i bunUrmarit =
+viewBunUrmarit : (( Int, BunUrmarit.Model ) -> Msg) -> Int -> BunUrmarit.Model -> Html Msg
+viewBunUrmarit msgEditedInit i bunUrmarit =
     li []
         [ BunUrmarit.view bunUrmarit |> map Noop
-        , button [ onClick (EditedInit ( i, bunUrmarit )) ] [ text "Editează" ]
+        , button [ onClick (msgEditedInit ( i, bunUrmarit )) ] [ text "Editează" ]
         , button [ onClick (Delete bunUrmarit) ] [ text "Șterge" ]
         ]
 

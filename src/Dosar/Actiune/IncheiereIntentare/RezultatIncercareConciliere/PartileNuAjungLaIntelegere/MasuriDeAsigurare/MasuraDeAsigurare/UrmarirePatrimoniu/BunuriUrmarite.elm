@@ -16,19 +16,18 @@ initialModel =
 
 
 view : Model -> Html Msg
-view model =
+view =
     EditableList.view
         { viewNoItems = text "Nu sunt bunuri înregistrate."
-        , viewItem = viewBunUrmarit
-        , viewItemAdd = viewBunUrmaritAdd
-        , viewItemEdit = viewBunUrmaritEdit
-        , viewAddItemButton = viewBunUrmaritAddButton
+        , viewItem = viewItem
+        , viewItemAdd = viewItemAdd
+        , viewItemEdit = viewItemEdit
+        , viewAddItemButton = viewAddItemButton
         }
-        model
 
 
-viewBunUrmarit : Int -> BunUrmarit.Model -> Html Msg
-viewBunUrmarit i x =
+viewItem : Int -> BunUrmarit.Model -> Html Msg
+viewItem i x =
     li []
         [ BunUrmarit.view x |> map (\m -> EditableList.Noop)
         , button [ onClick (EditableList.BeginEditItem i x) ] [ text "Editează" ]
@@ -36,8 +35,8 @@ viewBunUrmarit i x =
         ]
 
 
-viewBunUrmaritAdd : BunUrmarit.Model -> Html Msg
-viewBunUrmaritAdd x =
+viewItemAdd : BunUrmarit.Model -> Html Msg
+viewItemAdd x =
     fieldset []
         [ legend [] [ text "Adaugă bun urmărit" ]
         , BunUrmarit.viewEditForm x |> map (\m -> BunUrmarit.update m x |> EditableList.BeginAddItem)
@@ -46,13 +45,13 @@ viewBunUrmaritAdd x =
         ]
 
 
-viewBunUrmaritAddButton : Html Msg
-viewBunUrmaritAddButton =
+viewAddItemButton : Html Msg
+viewAddItemButton =
     button [ onClick (EditableList.BeginAddItem BunUrmarit.initialModel) ] [ text "Adaugă" ]
 
 
-viewBunUrmaritEdit : ( Int, BunUrmarit.Model ) -> Html Msg
-viewBunUrmaritEdit ( i, x ) =
+viewItemEdit : ( Int, BunUrmarit.Model ) -> Html Msg
+viewItemEdit ( i, x ) =
     fieldset []
         [ legend [] [ text "Editează bun urmărit" ]
         , BunUrmarit.viewEditForm x |> map (\m -> BunUrmarit.update m x |> EditableList.BeginEditItem i)

@@ -31,9 +31,9 @@ view model =
 viewBunUrmarit : Int -> BunUrmarit.Model -> Html Msg
 viewBunUrmarit i bunUrmarit =
     li []
-        [ BunUrmarit.view bunUrmarit |> map BunUrmaritNoop
-        , button [ onClick (BunUrmaritEditatInit ( i, bunUrmarit )) ] [ text "Editează" ]
-        , button [ onClick (BunUrmaritDelete bunUrmarit) ] [ text "Șterge" ]
+        [ BunUrmarit.view bunUrmarit |> map Noop
+        , button [ onClick (EditedInit ( i, bunUrmarit )) ] [ text "Editează" ]
+        , button [ onClick (Delete bunUrmarit) ] [ text "Șterge" ]
         ]
 
 
@@ -41,70 +41,70 @@ viewBunUrmaritAdd : BunUrmarit.Model -> Html Msg
 viewBunUrmaritAdd modelBunUrmarit =
     fieldset []
         [ legend [] [ text "Adaugă bun urmărit" ]
-        , BunUrmarit.viewEditForm modelBunUrmarit |> map (BunUrmaritNouSet modelBunUrmarit)
-        , button [ onClick (BunUrmaritNouSubmit modelBunUrmarit) ] [ text "Confirmă adăugarea" ]
-        , button [ onClick BunUrmaritNouReset ] [ text "Anulează adăugarea" ]
+        , BunUrmarit.viewEditForm modelBunUrmarit |> map (NewSet modelBunUrmarit)
+        , button [ onClick (NewSubmit modelBunUrmarit) ] [ text "Confirmă adăugarea" ]
+        , button [ onClick NewReset ] [ text "Anulează adăugarea" ]
         ]
 
 
 viewBunUrmaritAddButton : Html Msg
 viewBunUrmaritAddButton =
-    button [ onClick BunUrmaritNouAdd ] [ text "Adaugă" ]
+    button [ onClick NewAdd ] [ text "Adaugă" ]
 
 
 viewBunUrmaritEdit : ( Int, BunUrmarit.Model ) -> Html Msg
 viewBunUrmaritEdit ( i, modelBunUrmarit ) =
     fieldset []
         [ legend [] [ text "Editează bun urmărit" ]
-        , BunUrmarit.viewEditForm modelBunUrmarit |> map (BunUrmaritEditatSet ( i, modelBunUrmarit ))
-        , button [ onClick (BunUrmaritEditatSubmit ( i, modelBunUrmarit )) ] [ text "Confirmă editarea" ]
-        , button [ onClick BunUrmaritEditatReset ] [ text "Anulează editarea" ]
+        , BunUrmarit.viewEditForm modelBunUrmarit |> map (EditedSet ( i, modelBunUrmarit ))
+        , button [ onClick (EditedSubmit ( i, modelBunUrmarit )) ] [ text "Confirmă editarea" ]
+        , button [ onClick EditedReset ] [ text "Anulează editarea" ]
         ]
 
 
 type Msg
-    = BunUrmaritNouAdd
-    | BunUrmaritNouSet BunUrmarit.Model BunUrmarit.Msg
-    | BunUrmaritNouSubmit BunUrmarit.Model
-    | BunUrmaritNouReset
-    | BunUrmaritEditatInit ( Int, BunUrmarit.Model )
-    | BunUrmaritEditatSet ( Int, BunUrmarit.Model ) BunUrmarit.Msg
-    | BunUrmaritEditatSubmit ( Int, BunUrmarit.Model )
-    | BunUrmaritEditatReset
-    | BunUrmaritDelete BunUrmarit.Model
-    | BunUrmaritNoop BunUrmarit.Msg
+    = NewAdd
+    | NewSet BunUrmarit.Model BunUrmarit.Msg
+    | NewSubmit BunUrmarit.Model
+    | NewReset
+    | EditedInit ( Int, BunUrmarit.Model )
+    | EditedSet ( Int, BunUrmarit.Model ) BunUrmarit.Msg
+    | EditedSubmit ( Int, BunUrmarit.Model )
+    | EditedReset
+    | Delete BunUrmarit.Model
+    | Noop BunUrmarit.Msg
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        BunUrmaritNouAdd ->
+        NewAdd ->
             EditableList.setItemToAdd (Just BunUrmarit.initialModel) model
 
-        BunUrmaritNouSet modelBunUrmarit msgBunUrmarit ->
+        NewSet modelBunUrmarit msgBunUrmarit ->
             EditableList.setItemToAdd (Just (BunUrmarit.update msgBunUrmarit modelBunUrmarit)) model
 
-        BunUrmaritNouSubmit modelBunUrmarit ->
+        NewSubmit modelBunUrmarit ->
             EditableList.addItem modelBunUrmarit model
 
-        BunUrmaritNouReset ->
+        NewReset ->
             EditableList.resetItemToAdd model
 
-        BunUrmaritEditatInit ( i, modelBunUrmarit ) ->
+        EditedInit ( i, modelBunUrmarit ) ->
             EditableList.setItemToEdit (Just ( i, modelBunUrmarit )) model
 
-        BunUrmaritEditatSet ( i, modelBunUrmarit ) msgBunUrmarit ->
+        EditedSet ( i, modelBunUrmarit ) msgBunUrmarit ->
             EditableList.setItemToEdit (Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit )) model
 
-        BunUrmaritEditatSubmit ( i, modelBunUrmarit ) ->
+        EditedSubmit ( i, modelBunUrmarit ) ->
             EditableList.setItems (MyList.replace model.items i modelBunUrmarit) model
 
-        BunUrmaritEditatReset ->
+        EditedReset ->
             EditableList.resetItemToEdit model
 
-        BunUrmaritDelete modelBunUrmarit ->
+        Delete modelBunUrmarit ->
             EditableList.setItems (List.filter ((/=) modelBunUrmarit) model.items) model
 
         -- TODO: Is this alright?
-        BunUrmaritNoop msgBunUrmarit ->
+        Noop msgBunUrmarit ->
             model

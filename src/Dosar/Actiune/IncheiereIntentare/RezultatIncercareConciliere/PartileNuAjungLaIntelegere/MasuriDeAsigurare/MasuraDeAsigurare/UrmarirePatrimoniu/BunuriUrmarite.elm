@@ -3,7 +3,6 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit
 import Html.Styled exposing (Html, button, fieldset, legend, li, map, text)
 import Html.Styled.Events exposing (onClick)
-import Utils.MyList as MyList
 import Widgets.EditableList as EditableList
 
 
@@ -20,7 +19,7 @@ view : Model -> Html Msg
 view model =
     EditableList.view
         { viewNoItems = text "Nu sunt bunuri înregistrate."
-        , viewItem = viewBunUrmarit EditedInit
+        , viewItem = viewBunUrmarit
         , viewItemAdd = viewBunUrmaritAdd
         , viewItemEdit = viewBunUrmaritEdit
         , viewAddItemButton = viewBunUrmaritAddButton
@@ -28,83 +27,44 @@ view model =
         model
 
 
-viewBunUrmarit : (( Int, BunUrmarit.Model ) -> Msg) -> Int -> BunUrmarit.Model -> Html Msg
-viewBunUrmarit msgEditedInit i bunUrmarit =
+viewBunUrmarit : Int -> BunUrmarit.Model -> Html Msg
+viewBunUrmarit i x =
     li []
-        [ BunUrmarit.view bunUrmarit |> map Noop
-        , button [ onClick (msgEditedInit ( i, bunUrmarit )) ] [ text "Editează" ]
-        , button [ onClick (Delete bunUrmarit) ] [ text "Șterge" ]
+        [ BunUrmarit.view x |> map (\m -> EditableList.Noop)
+        , button [ onClick (EditableList.BeginEditItem i x) ] [ text "Editează" ]
+        , button [ onClick (EditableList.DeleteItem x) ] [ text "Șterge" ]
         ]
 
 
 viewBunUrmaritAdd : BunUrmarit.Model -> Html Msg
-viewBunUrmaritAdd modelBunUrmarit =
+viewBunUrmaritAdd x =
     fieldset []
         [ legend [] [ text "Adaugă bun urmărit" ]
-        , BunUrmarit.viewEditForm modelBunUrmarit |> map (NewSet modelBunUrmarit)
-        , button [ onClick (NewSubmit modelBunUrmarit) ] [ text "Confirmă adăugarea" ]
-        , button [ onClick NewReset ] [ text "Anulează adăugarea" ]
+        , BunUrmarit.viewEditForm x |> map (\m -> BunUrmarit.update m x |> EditableList.BeginAddItem)
+        , button [ onClick (EditableList.AddItem x) ] [ text "Confirmă adăugarea" ]
+        , button [ onClick EditableList.CancelAddItem ] [ text "Anulează adăugarea" ]
         ]
 
 
 viewBunUrmaritAddButton : Html Msg
 viewBunUrmaritAddButton =
-    button [ onClick NewAdd ] [ text "Adaugă" ]
+    button [ onClick (EditableList.BeginAddItem BunUrmarit.initialModel) ] [ text "Adaugă" ]
 
 
 viewBunUrmaritEdit : ( Int, BunUrmarit.Model ) -> Html Msg
-viewBunUrmaritEdit ( i, modelBunUrmarit ) =
+viewBunUrmaritEdit ( i, x ) =
     fieldset []
         [ legend [] [ text "Editează bun urmărit" ]
-        , BunUrmarit.viewEditForm modelBunUrmarit |> map (EditedSet ( i, modelBunUrmarit ))
-        , button [ onClick (EditedSubmit ( i, modelBunUrmarit )) ] [ text "Confirmă editarea" ]
-        , button [ onClick EditedReset ] [ text "Anulează editarea" ]
+        , BunUrmarit.viewEditForm x |> map (\m -> BunUrmarit.update m x |> EditableList.BeginEditItem i)
+        , button [ onClick (EditableList.ReplaceItem i x) ] [ text "Confirmă editarea" ]
+        , button [ onClick EditableList.CancelEditItem ] [ text "Anulează editarea" ]
         ]
 
 
-type Msg
-    = NewAdd
-    | NewSet BunUrmarit.Model BunUrmarit.Msg
-    | NewSubmit BunUrmarit.Model
-    | NewReset
-    | EditedInit ( Int, BunUrmarit.Model )
-    | EditedSet ( Int, BunUrmarit.Model ) BunUrmarit.Msg
-    | EditedSubmit ( Int, BunUrmarit.Model )
-    | EditedReset
-    | Delete BunUrmarit.Model
-    | Noop BunUrmarit.Msg
+type alias Msg =
+    EditableList.Msg BunUrmarit.Model
 
 
 update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        NewAdd ->
-            EditableList.setItemToAdd (Just BunUrmarit.initialModel) model
-
-        NewSet modelBunUrmarit msgBunUrmarit ->
-            EditableList.setItemToAdd (Just (BunUrmarit.update msgBunUrmarit modelBunUrmarit)) model
-
-        NewSubmit modelBunUrmarit ->
-            EditableList.addItem modelBunUrmarit model
-
-        NewReset ->
-            EditableList.resetItemToAdd model
-
-        EditedInit ( i, modelBunUrmarit ) ->
-            EditableList.setItemToEdit (Just ( i, modelBunUrmarit )) model
-
-        EditedSet ( i, modelBunUrmarit ) msgBunUrmarit ->
-            EditableList.setItemToEdit (Just ( i, BunUrmarit.update msgBunUrmarit modelBunUrmarit )) model
-
-        EditedSubmit ( i, modelBunUrmarit ) ->
-            EditableList.setItems (MyList.replace model.items i modelBunUrmarit) model
-
-        EditedReset ->
-            EditableList.resetItemToEdit model
-
-        Delete modelBunUrmarit ->
-            EditableList.setItems (List.filter ((/=) modelBunUrmarit) model.items) model
-
-        -- TODO: Is this alright?
-        Noop msgBunUrmarit ->
-            model
+update =
+    EditableList.update

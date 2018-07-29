@@ -1,6 +1,7 @@
-module Widgets.EditableList exposing (Model, addItem, initialModel, resetItemToAdd, resetItemToEdit, setItemToAdd, setItemToEdit, setItems, view)
+module Widgets.EditableList exposing (Model, Msg(..), initialModel, update, view)
 
 import Html.Styled exposing (Html, button, fieldset, legend, li, p, text, ul)
+import Utils.MyList as MyList
 
 
 type alias Model a =
@@ -27,42 +28,6 @@ initialModel items =
     { items = items
     , itemToAdd = Nothing
     , itemToEdit = Nothing
-    }
-
-
-setItems : Items a -> Model a -> Model a
-setItems items model =
-    { model
-        | items = items
-        , itemToEdit = Nothing
-    }
-
-
-setItemToEdit : ItemToEdit a -> Model a -> Model a
-setItemToEdit itemToEdit model =
-    { model | itemToEdit = itemToEdit }
-
-
-resetItemToEdit : Model a -> Model a
-resetItemToEdit =
-    setItemToEdit Nothing
-
-
-setItemToAdd : ItemToAdd a -> Model a -> Model a
-setItemToAdd itemToAdd model =
-    { model | itemToAdd = itemToAdd }
-
-
-resetItemToAdd : Model a -> Model a
-resetItemToAdd =
-    setItemToAdd Nothing
-
-
-addItem : a -> Model a -> Model a
-addItem item model =
-    { model
-        | items = model.items ++ [ item ]
-        , itemToAdd = Nothing
     }
 
 
@@ -103,3 +68,48 @@ view config model =
                     |> Maybe.withDefault config.viewAddItemButton
                 )
         ]
+
+
+type Msg a
+    = BeginAddItem a
+    | CancelAddItem
+    | AddItem a
+    | BeginEditItem Int a
+    | CancelEditItem
+    | ReplaceItem Int a
+    | DeleteItem a
+    | Noop
+
+
+update : Msg a -> Model a -> Model a
+update msg model =
+    case msg of
+        BeginAddItem x ->
+            { model | itemToAdd = Just x }
+
+        CancelAddItem ->
+            { model | itemToAdd = Nothing }
+
+        AddItem x ->
+            { model
+                | items = model.items ++ [ x ]
+                , itemToAdd = Nothing
+            }
+
+        BeginEditItem i x ->
+            { model | itemToEdit = Just ( i, x ) }
+
+        CancelEditItem ->
+            { model | itemToEdit = Nothing }
+
+        ReplaceItem i x ->
+            { model
+                | items = MyList.replace model.items i x
+                , itemToEdit = Nothing
+            }
+
+        DeleteItem x ->
+            { model | items = List.filter ((/=) x) model.items }
+
+        Noop ->
+            model

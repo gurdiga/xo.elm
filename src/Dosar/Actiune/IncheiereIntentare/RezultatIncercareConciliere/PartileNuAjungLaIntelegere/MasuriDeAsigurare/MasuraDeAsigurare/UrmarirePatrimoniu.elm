@@ -1,19 +1,19 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite as BunuriUrmarite
-import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.MijlocBanesc as MijlocBanesc
+import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.MijloaceBanesti as MijloaceBanesti
 import Html.Styled exposing (Html, button, div, fieldset, legend, li, map, p, text, ul)
 
 
 type alias Model =
-    { mijloaceBanesti : List MijlocBanesc.Model
+    { mijloaceBanesti : MijloaceBanesti.Model
     , bunuriUrmarite : BunuriUrmarite.Model
     }
 
 
 initialModel : Model
 initialModel =
-    { mijloaceBanesti = []
+    { mijloaceBanesti = MijloaceBanesti.initialModel
     , bunuriUrmarite = BunuriUrmarite.initialModel
     }
 
@@ -23,21 +23,20 @@ view model =
     fieldset []
         [ legend [] [ text "UrmarirePatrimoniu" ]
         , BunuriUrmarite.view model.bunuriUrmarite |> map SetBunuriUrmarite
-        , ul [] (List.indexedMap viewMijlocBanesc model.mijloaceBanesti)
+        , MijloaceBanesti.view model.mijloaceBanesti |> map SetMijloaceBanesti
         ]
-
-
-viewMijlocBanesc : Int -> MijlocBanesc.Model -> Html Msg
-viewMijlocBanesc i mijlocBanesc =
-    li [] [ text <| toString mijlocBanesc ]
 
 
 type Msg
     = SetBunuriUrmarite BunuriUrmarite.Msg
+    | SetMijloaceBanesti MijloaceBanesti.Msg
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetBunuriUrmarite msgBunuriUrmarite ->
-            { model | bunuriUrmarite = BunuriUrmarite.update msgBunuriUrmarite model.bunuriUrmarite }
+        SetBunuriUrmarite m ->
+            { model | bunuriUrmarite = BunuriUrmarite.update m model.bunuriUrmarite }
+
+        SetMijloaceBanesti m ->
+            { model | mijloaceBanesti = MijloaceBanesti.update m model.mijloaceBanesti }

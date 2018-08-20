@@ -15,7 +15,7 @@ type alias Model =
 
 empty : Model
 empty =
-    [ MasuraDeAsigurare.initialModel ]
+    []
 
 
 view : Model -> Html Msg

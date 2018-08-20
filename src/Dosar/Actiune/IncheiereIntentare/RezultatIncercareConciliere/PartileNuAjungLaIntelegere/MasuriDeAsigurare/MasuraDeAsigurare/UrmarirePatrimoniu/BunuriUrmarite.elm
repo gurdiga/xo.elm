@@ -12,7 +12,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    EditableList.initialModel [ BunUrmarit.initialModel ]
+    EditableList.initialModel []
 
 
 view : Model -> Html Msg

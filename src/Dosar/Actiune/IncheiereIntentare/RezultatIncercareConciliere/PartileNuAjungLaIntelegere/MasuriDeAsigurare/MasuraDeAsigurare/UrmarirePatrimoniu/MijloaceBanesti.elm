@@ -12,7 +12,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    EditableList.initialModel [ MijlocBanesc.initialModel ]
+    EditableList.initialModel []
 
 
 view : Model -> Html Msg

@@ -7,17 +7,34 @@ import Widgets.EditableList as EditableList
 
 
 type alias Model =
-    EditableList.Model BunUrmarit.Model
+    { items : List BunUrmarit.Model
+    , editableListState : EditableList.State BunUrmarit.Model
+    }
 
 
 initialModel : Model
 initialModel =
-    EditableList.initialModel [ BunUrmarit.initialModel ]
+    { items = []
+    , editableListState = editableListState
+    }
+
+
+editableListState : EditableList.State BunUrmarit.Model
+editableListState =
+    EditableList.state
+        { itemToAdd = Nothing
+        , itemToEdit = Nothing
+        }
 
 
 view : Model -> Html Msg
-view =
-    EditableList.view
+view { items, editableListState } =
+    EditableList.view editableListConfig editableListState items
+
+
+editableListConfig : EditableList.Config BunUrmarit.Model SomeKindOfMsg
+editableListConfig =
+    EditableList.config
         { viewNoItems = text "Nu sunt bunuri înregistrate."
         , viewItem = viewItem
         , viewItemAdd = viewItemAdd
@@ -65,5 +82,5 @@ type alias Msg =
 
 
 update : Msg -> Model -> Model
-update =
-    EditableList.update
+update msg model =
+    EditableList.update msg model.editableListState model.items

@@ -1,6 +1,6 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.EditableList2 exposing (Config, State, config, state, view)
 
-import Html.Styled exposing (Html, button, fieldset, legend, li, map, text, ul)
+import Html.Styled exposing (Html, button, fieldset, legend, li, map, p, text, ul)
 
 
 type State
@@ -16,27 +16,37 @@ state =
     State
 
 
-type Config msg
-    = Config (ConfigData msg)
+type Config a msg
+    = Config (ConfigData a msg)
 
 
-type alias ConfigData msg =
+type alias ViewItem a msg =
+    Int -> a -> Html msg
+
+
+type alias ConfigData a msg =
     { toMsg : State -> msg
+    , viewNoItems : Html msg
+    , viewItem : ViewItem a msg
     }
 
 
-config : ConfigData msg -> Config msg
+config : ConfigData a msg -> Config a msg
 config =
     Config
 
 
-view : Config msg -> State -> List data -> Html msg
-view (Config config) state data =
+view : Config a msg -> State -> List a -> Html msg
+view (Config config) state items =
     fieldset []
         [ legend [] [ text "EditableList2" ]
+        , if List.isEmpty items then
+            p [] [ config.viewNoItems ]
+          else
+            ul [] (List.indexedMap config.viewItem items)
         , ul []
             [ li [] [ text "state", text (toString state) ]
             , li [] [ text "config", text (toString config) ]
-            , li [] [ text "data", text (toString data) ]
+            , li [] [ text "items", text (toString items) ]
             ]
         ]

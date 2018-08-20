@@ -1,33 +1,23 @@
-module Widgets.EditableList exposing (Model, Msg(..), initialModel, update, view)
+module Widgets.EditableList exposing (Config, Model, Msg(..), State, config, state, update, view)
 
 import Html.Styled exposing (Html, button, fieldset, legend, li, p, text, ul)
 import Utils.MyList as MyList
 
 
 type alias Model a =
-    { items : Items a
-    , itemToAdd : ItemToAdd a
-    , itemToEdit : ItemToEdit a
-    }
-
-
-type alias Items a =
     List a
 
 
-type alias ItemToAdd a =
-    Maybe a
+type Config a msg
+    = Config (ConfigData a msg)
 
 
-type alias ItemToEdit a =
-    Maybe ( Int, a )
-
-
-initialModel : Items a -> Model a
-initialModel items =
-    { items = items
-    , itemToAdd = Nothing
-    , itemToEdit = Nothing
+type alias ConfigData a msg =
+    { viewNoItems : Html msg
+    , viewItem : ViewItem a msg
+    , viewItemAdd : ViewItemAdd a msg
+    , viewItemEdit : ViewItemEdit a msg
+    , viewAddItemButton : Html msg
     }
 
 
@@ -43,27 +33,46 @@ type alias ViewItemEdit a msg =
     ( Int, a ) -> Html msg
 
 
-type alias Config a msg =
-    { viewNoItems : Html msg
-    , viewItem : ViewItem a msg
-    , viewItemAdd : ViewItemAdd a msg
-    , viewItemEdit : ViewItemEdit a msg
-    , viewAddItemButton : Html msg
+config : ConfigData a msg -> Config a msg
+config =
+    Config
+
+
+type State a
+    = State (StateData a)
+
+
+type alias StateData a =
+    { itemToAdd : ItemToAdd a
+    , itemToEdit : ItemToEdit a
     }
 
 
-view : Config a msg -> Model a -> Html msg
-view config model =
+type alias ItemToAdd a =
+    Maybe a
+
+
+type alias ItemToEdit a =
+    Maybe ( Int, a )
+
+
+state : StateData a -> State a
+state =
+    State
+
+
+view : Config a msg -> State a -> Model a -> Html msg
+view (Config config) (State state) items =
     fieldset []
         [ legend [] [ text "EditableList" ]
-        , if List.isEmpty model.items then
+        , if List.isEmpty items then
             p [] [ config.viewNoItems ]
           else
-            ul [] (List.indexedMap config.viewItem model.items)
-        , model.itemToAdd
+            ul [] (List.indexedMap config.viewItem items)
+        , state.itemToAdd
             |> Maybe.map config.viewItemAdd
             |> Maybe.withDefault
-                (model.itemToEdit
+                (state.itemToEdit
                     |> Maybe.map config.viewItemEdit
                     |> Maybe.withDefault config.viewAddItemButton
                 )
@@ -81,35 +90,29 @@ type Msg a
     | Noop
 
 
-update : Msg a -> Model a -> Model a
-update msg model =
+update : Msg a -> State a -> Model a -> ( State a, Model a )
+update msg (State state) items =
     case msg of
         BeginAddItem x ->
-            { model | itemToAdd = Just x }
+            ( State { state | itemToAdd = Just x }, items )
 
         CancelAddItem ->
-            { model | itemToAdd = Nothing }
+            ( State { state | itemToAdd = Nothing }, items )
 
         AddItem x ->
-            { model
-                | items = model.items ++ [ x ]
-                , itemToAdd = Nothing
-            }
+            ( State { state | itemToAdd = Nothing }, items ++ [ x ] )
 
         BeginEditItem i x ->
-            { model | itemToEdit = Just ( i, x ) }
+            ( State { state | itemToEdit = Just ( i, x ) }, items )
 
         CancelEditItem ->
-            { model | itemToEdit = Nothing }
+            ( State { state | itemToEdit = Nothing }, items )
 
         ReplaceItem i x ->
-            { model
-                | items = MyList.replace model.items i x
-                , itemToEdit = Nothing
-            }
+            ( State { state | itemToEdit = Nothing }, MyList.replace items i x )
 
         DeleteItem x ->
-            { model | items = List.filter ((/=) x) model.items }
+            ( State state, List.filter ((/=) x) items )
 
         Noop ->
-            model
+            ( State state, items )

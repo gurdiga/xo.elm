@@ -3,44 +3,24 @@ module Dosar.Actiune exposing (Model, Msg, initialModel, update, view)
 import Dosar.Actiune.IncheiereIntentare as IncheiereIntentare
 import Dosar.Actiune.IncheiereRefuz as IncheiereRefuz
 import Html.Styled exposing (Html, fieldset, label, legend, map, text)
-import Widgets.Select3 as Select3
+import Widgets.Select4 as Select4
 
 
-type Actiune
+type Model
     = IncheiereIntentare IncheiereIntentare.Model
     | IncheiereRefuz IncheiereRefuz.Model
 
 
-type alias Model =
-    { actiune : Actiune
-    , ui : Ui
-    }
-
-
-type alias Ui =
-    { select : Select3.Model Actiune
-    }
-
-
-valuesWithLabels : List ( Actiune, String )
+valuesWithLabels : List ( Model, String )
 valuesWithLabels =
     [ ( IncheiereIntentare IncheiereIntentare.initialModel, "intentare" )
     , ( IncheiereRefuz IncheiereRefuz.initialModel, "refuz" )
     ]
 
 
-initialActiune : Actiune
-initialActiune =
-    IncheiereIntentare IncheiereIntentare.initialModel
-
-
 initialModel : Model
 initialModel =
-    { actiune = initialActiune
-    , ui =
-        { select = Select3.initialModel initialActiune valuesWithLabels
-        }
-    }
+    IncheiereIntentare IncheiereIntentare.initialModel
 
 
 view : Model -> Html Msg
@@ -48,16 +28,22 @@ view model =
     fieldset []
         [ legend [] [ text "Actiune" ]
         , dropdown model
-        , fields model.actiune
+        , fields model
         ]
 
 
 dropdown : Model -> Html Msg
 dropdown model =
-    Select3.view "Actiune:" model.ui.select |> map ResetActiune
+    Select4.view <|
+        Select4.config
+            { label = "Actiune:"
+            , valuesWithLabels = valuesWithLabels
+            , defaultValue = model
+            , onInput = Set
+            }
 
 
-fields : Actiune -> Html Msg
+fields : Model -> Html Msg
 fields actiune =
     case actiune of
         IncheiereIntentare modelIncheiereIntentare ->
@@ -68,7 +54,7 @@ fields actiune =
 
 
 type Msg
-    = ResetActiune (Select3.Msg Actiune)
+    = Set Model
     | SetIncheiereIntentare IncheiereIntentare.Msg
     | SetIncheiereRefuz IncheiereRefuz.Msg
 
@@ -76,29 +62,21 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        ResetActiune actiuneMsgSelect3 ->
-            resetActiune model (Select3.update actiuneMsgSelect3 model.ui.select)
+        Set v ->
+            v
 
         SetIncheiereIntentare msgIncheiereIntentare ->
-            case model.actiune of
+            case model of
                 IncheiereIntentare modelIncheiereIntentare ->
-                    { model | actiune = IncheiereIntentare (IncheiereIntentare.update msgIncheiereIntentare modelIncheiereIntentare) }
+                    IncheiereIntentare (IncheiereIntentare.update msgIncheiereIntentare modelIncheiereIntentare)
 
                 IncheiereRefuz modelIncheiereRefuz ->
                     Debug.crash "SetIncheiereIntentare cant have a IncheiereRefuz"
 
         SetIncheiereRefuz msgIncheiereRefuz ->
-            case model.actiune of
+            case model of
                 IncheiereRefuz modelIncheiereRefuz ->
-                    { model | actiune = IncheiereRefuz (IncheiereRefuz.update msgIncheiereRefuz modelIncheiereRefuz) }
+                    IncheiereRefuz (IncheiereRefuz.update msgIncheiereRefuz modelIncheiereRefuz)
 
                 IncheiereIntentare modelIncheiereIntentare ->
                     Debug.crash "SetIncheiereRefuz cant have a IncheiereIntentare"
-
-
-resetActiune : Model -> Select3.Model Actiune -> Model
-resetActiune ({ ui } as model) newSelect =
-    { model
-        | ui = { ui | select = newSelect }
-        , actiune = Select3.selectedValue newSelect
-    }

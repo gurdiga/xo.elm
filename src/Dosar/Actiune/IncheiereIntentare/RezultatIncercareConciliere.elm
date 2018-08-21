@@ -3,40 +3,20 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (Mo
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere as PartileAjungLaIntelegere
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere as PartileNuAjungLaIntelegere
 import Html.Styled exposing (Html, div, fieldset, label, legend, map, text)
-import Widgets.Select3 as Select3
+import Widgets.Select4 as Select4
 
 
-type RezultatIncercareConciliere
+type Model
     = PartileAjungLaIntelegere PartileAjungLaIntelegere.Model
     | PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Model
 
 
-type alias Model =
-    { rezultatIncercareConciliere : RezultatIncercareConciliere
-    , ui : Ui
-    }
-
-
-type alias Ui =
-    { select : Select3.Model RezultatIncercareConciliere
-    }
-
-
 initialModel : Model
 initialModel =
-    { rezultatIncercareConciliere = initialRezultatIncercareConciliere
-    , ui =
-        { select = Select3.initialModel initialRezultatIncercareConciliere valuesWithLabels
-        }
-    }
-
-
-initialRezultatIncercareConciliere : RezultatIncercareConciliere
-initialRezultatIncercareConciliere =
     PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.initialModel
 
 
-valuesWithLabels : List ( RezultatIncercareConciliere, String )
+valuesWithLabels : List ( Model, String )
 valuesWithLabels =
     [ ( PartileAjungLaIntelegere PartileAjungLaIntelegere.initialModel
       , "părțile ajung la înțelegere"
@@ -50,17 +30,22 @@ valuesWithLabels =
 view : Model -> Html Msg
 view model =
     fieldset []
-        [ legend [] [ dropdown model ]
-        , fields model.rezultatIncercareConciliere
+        [ legend [] [ Select4.view (select4Config model) ]
+        , fields model
         ]
 
 
-dropdown : Model -> Html Msg
-dropdown model =
-    Select3.view "RezultatIncercareConciliere:" model.ui.select |> map ResetRezultatIncercareConciliere
+select4Config : Model -> Select4.Config Model Msg
+select4Config model =
+    Select4.config
+        { label = "RezultatIncercareConciliere 4:"
+        , defaultValue = model
+        , valuesWithLabels = valuesWithLabels
+        , onInput = Set
+        }
 
 
-fields : RezultatIncercareConciliere -> Html Msg
+fields : Model -> Html Msg
 fields rezultatIncercareConciliere =
     case rezultatIncercareConciliere of
         PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
@@ -71,37 +56,29 @@ fields rezultatIncercareConciliere =
 
 
 type Msg
-    = ResetRezultatIncercareConciliere (Select3.Msg RezultatIncercareConciliere)
-    | SetPartileAjungLaIntelegere PartileAjungLaIntelegere.Msg
+    = SetPartileAjungLaIntelegere PartileAjungLaIntelegere.Msg
     | SetPartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Msg
+    | Set Model
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        ResetRezultatIncercareConciliere rezultatIncercareConciliereMsgSelect3 ->
-            resetRezultatIncercareConciliere model (Select3.update rezultatIncercareConciliereMsgSelect3 model.ui.select)
+        Set v ->
+            v
 
         SetPartileAjungLaIntelegere msgPartileAjungLaIntelegere ->
-            case model.rezultatIncercareConciliere of
+            case model of
                 PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
-                    { model | rezultatIncercareConciliere = PartileAjungLaIntelegere (PartileAjungLaIntelegere.update msgPartileAjungLaIntelegere modelPartileAjungLaIntelegere) }
+                    PartileAjungLaIntelegere (PartileAjungLaIntelegere.update msgPartileAjungLaIntelegere modelPartileAjungLaIntelegere)
 
                 PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
                     Debug.crash "SetPartileAjungLaIntelegere can’t be emitted with a PartileNuAjungLaIntelegere"
 
         SetPartileNuAjungLaIntelegere msgPartileNuAjungLaIntelegere ->
-            case model.rezultatIncercareConciliere of
+            case model of
                 PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
-                    { model | rezultatIncercareConciliere = PartileNuAjungLaIntelegere (PartileNuAjungLaIntelegere.update msgPartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere) }
+                    PartileNuAjungLaIntelegere (PartileNuAjungLaIntelegere.update msgPartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere)
 
                 PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
                     Debug.crash "SetPartileNuAjungLaIntelegere can’t be emitted with a PartileAjungLaIntelegere"
-
-
-resetRezultatIncercareConciliere : Model -> Select3.Model RezultatIncercareConciliere -> Model
-resetRezultatIncercareConciliere ({ ui } as model) newSelect =
-    { model
-        | ui = { ui | select = newSelect }
-        , rezultatIncercareConciliere = Select3.selectedValue newSelect
-    }

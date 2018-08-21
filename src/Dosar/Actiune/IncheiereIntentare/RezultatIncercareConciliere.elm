@@ -30,19 +30,20 @@ valuesWithLabels =
 view : Model -> Html Msg
 view model =
     fieldset []
-        [ legend [] [ Select4.view (select4Config model) ]
+        [ legend [] [ dropdown model ]
         , fields model
         ]
 
 
-select4Config : Model -> Select4.Config Model Msg
-select4Config model =
-    Select4.config
-        { label = "RezultatIncercareConciliere 4:"
-        , defaultValue = model
-        , valuesWithLabels = valuesWithLabels
-        , onInput = Set
-        }
+dropdown : Model -> Html Msg
+dropdown model =
+    Select4.view <|
+        Select4.config
+            { label = "RezultatIncercareConciliere 4:"
+            , defaultValue = model
+            , valuesWithLabels = valuesWithLabels
+            , onInput = Set
+            }
 
 
 fields : Model -> Html Msg

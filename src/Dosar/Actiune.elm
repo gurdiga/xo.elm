@@ -44,19 +44,19 @@ dropdown model =
 
 
 fields : Model -> Html Msg
-fields actiune =
-    case actiune of
-        IncheiereIntentare modelIncheiereIntentare ->
-            IncheiereIntentare.view modelIncheiereIntentare |> map SetIncheiereIntentare
+fields model =
+    case model of
+        IncheiereIntentare v ->
+            IncheiereIntentare.view v |> map (SetIncheiereIntentare v)
 
-        IncheiereRefuz modelIncheiereRefuz ->
-            IncheiereRefuz.view modelIncheiereRefuz |> map SetIncheiereIntentare
+        IncheiereRefuz v ->
+            IncheiereRefuz.view v |> map (SetIncheiereRefuz v)
 
 
 type Msg
     = Set Model
-    | SetIncheiereIntentare IncheiereIntentare.Msg
-    | SetIncheiereRefuz IncheiereRefuz.Msg
+    | SetIncheiereIntentare IncheiereIntentare.Model IncheiereIntentare.Msg
+    | SetIncheiereRefuz IncheiereRefuz.Model IncheiereRefuz.Msg
 
 
 update : Msg -> Model -> Model
@@ -65,18 +65,8 @@ update msg model =
         Set v ->
             v
 
-        SetIncheiereIntentare msgIncheiereIntentare ->
-            case model of
-                IncheiereIntentare modelIncheiereIntentare ->
-                    IncheiereIntentare (IncheiereIntentare.update msgIncheiereIntentare modelIncheiereIntentare)
+        SetIncheiereIntentare v m ->
+            IncheiereIntentare (IncheiereIntentare.update m v)
 
-                IncheiereRefuz modelIncheiereRefuz ->
-                    Debug.crash "SetIncheiereIntentare cant have a IncheiereRefuz"
-
-        SetIncheiereRefuz msgIncheiereRefuz ->
-            case model of
-                IncheiereRefuz modelIncheiereRefuz ->
-                    IncheiereRefuz (IncheiereRefuz.update msgIncheiereRefuz modelIncheiereRefuz)
-
-                IncheiereIntentare modelIncheiereIntentare ->
-                    Debug.crash "SetIncheiereRefuz cant have a IncheiereIntentare"
+        SetIncheiereRefuz v m ->
+            IncheiereRefuz (IncheiereRefuz.update m v)

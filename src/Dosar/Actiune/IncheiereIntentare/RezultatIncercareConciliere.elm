@@ -47,18 +47,18 @@ dropdown model =
 
 
 fields : Model -> Html Msg
-fields rezultatIncercareConciliere =
-    case rezultatIncercareConciliere of
+fields model =
+    case model of
         PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
-            PartileAjungLaIntelegere.view modelPartileAjungLaIntelegere |> map SetPartileAjungLaIntelegere
+            PartileAjungLaIntelegere.view modelPartileAjungLaIntelegere |> map (SetPartileAjungLaIntelegere modelPartileAjungLaIntelegere)
 
         PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
-            PartileNuAjungLaIntelegere.view modelPartileNuAjungLaIntelegere |> map SetPartileNuAjungLaIntelegere
+            PartileNuAjungLaIntelegere.view modelPartileNuAjungLaIntelegere |> map (SetPartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere)
 
 
 type Msg
-    = SetPartileAjungLaIntelegere PartileAjungLaIntelegere.Msg
-    | SetPartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Msg
+    = SetPartileAjungLaIntelegere PartileAjungLaIntelegere.Model PartileAjungLaIntelegere.Msg
+    | SetPartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Model PartileNuAjungLaIntelegere.Msg
     | Set Model
 
 
@@ -68,18 +68,8 @@ update msg model =
         Set v ->
             v
 
-        SetPartileAjungLaIntelegere msgPartileAjungLaIntelegere ->
-            case model of
-                PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
-                    PartileAjungLaIntelegere (PartileAjungLaIntelegere.update msgPartileAjungLaIntelegere modelPartileAjungLaIntelegere)
+        SetPartileAjungLaIntelegere v m ->
+            PartileAjungLaIntelegere (PartileAjungLaIntelegere.update m v)
 
-                PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
-                    Debug.crash "SetPartileAjungLaIntelegere can’t be emitted with a PartileNuAjungLaIntelegere"
-
-        SetPartileNuAjungLaIntelegere msgPartileNuAjungLaIntelegere ->
-            case model of
-                PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
-                    PartileNuAjungLaIntelegere (PartileNuAjungLaIntelegere.update msgPartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere)
-
-                PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
-                    Debug.crash "SetPartileNuAjungLaIntelegere can’t be emitted with a PartileAjungLaIntelegere"
+        SetPartileNuAjungLaIntelegere v m ->
+            PartileNuAjungLaIntelegere (PartileNuAjungLaIntelegere.update m v)

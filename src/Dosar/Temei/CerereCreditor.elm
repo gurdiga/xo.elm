@@ -8,14 +8,13 @@ import Widgets.CheckboxField as CheckboxField
 import Widgets.DateField as DateField
 
 
-type Model
-    = Model
-        { dataDepunere : MyDate.Model
-        , creditor : Persoana.Model
-        , html : String
-        , documenteContractIpoteca : Maybe DocumenteContractIpoteca.Model
-        , ui : Ui
-        }
+type alias Model =
+    { dataDepunere : MyDate.Model
+    , creditor : Persoana.Model
+    , html : String
+    , documenteContractIpoteca : Maybe DocumenteContractIpoteca.Model
+    , ui : Ui
+    }
 
 
 type alias Ui =
@@ -25,15 +24,14 @@ type alias Ui =
 
 initialModel : Model
 initialModel =
-    Model
-        { dataDepunere = MyDate.empty
-        , creditor = Persoana.initialModel
-        , html = ""
-        , documenteContractIpoteca = Just DocumenteContractIpoteca.initialModel
-        , ui =
-            { hasDocumenteContractIpoteca = CheckboxField.initialModel False
-            }
+    { dataDepunere = MyDate.empty
+    , creditor = Persoana.initialModel
+    , html = ""
+    , documenteContractIpoteca = Just DocumenteContractIpoteca.initialModel
+    , ui =
+        { hasDocumenteContractIpoteca = CheckboxField.initialModel False
         }
+    }
 
 
 type Msg
@@ -44,41 +42,40 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg (Model model) =
+update msg model =
     case msg of
         SetDataDepunere dateFieldMsg ->
-            Model { model | dataDepunere = DateField.update dateFieldMsg model.dataDepunere }
+            { model | dataDepunere = DateField.update dateFieldMsg model.dataDepunere }
 
         SetCreditor persoanaMsg ->
-            Model { model | creditor = Persoana.update persoanaMsg model.creditor }
+            { model | creditor = Persoana.update persoanaMsg model.creditor }
 
         ToggleDocumenteContractIpoteca checkboxFieldMsg ->
             model.ui.hasDocumenteContractIpoteca
                 |> CheckboxField.update checkboxFieldMsg
-                |> toggleDocumenteContractIpoteca (Model model)
+                |> toggleDocumenteContractIpoteca model
 
         SetDocumenteContractIpoteca documenteContractIpotecaMsg ->
             model.documenteContractIpoteca
                 |> Maybe.withDefault DocumenteContractIpoteca.initialModel
                 |> DocumenteContractIpoteca.update documenteContractIpotecaMsg
-                |> (\v -> Model { model | documenteContractIpoteca = Just v })
+                |> (\v -> { model | documenteContractIpoteca = Just v })
 
 
 toggleDocumenteContractIpoteca : Model -> CheckboxField.Model -> Model
-toggleDocumenteContractIpoteca (Model model) newCheckboxFieldModel =
-    Model
-        { model
-            | ui = (\ui -> { ui | hasDocumenteContractIpoteca = newCheckboxFieldModel }) model.ui
-            , documenteContractIpoteca =
-                if CheckboxField.isChecked newCheckboxFieldModel then
-                    Just DocumenteContractIpoteca.initialModel
-                else
-                    Nothing
-        }
+toggleDocumenteContractIpoteca model newCheckboxFieldModel =
+    { model
+        | ui = (\ui -> { ui | hasDocumenteContractIpoteca = newCheckboxFieldModel }) model.ui
+        , documenteContractIpoteca =
+            if CheckboxField.isChecked newCheckboxFieldModel then
+                Just DocumenteContractIpoteca.initialModel
+            else
+                Nothing
+    }
 
 
 view : Model -> Html Msg
-view (Model model) =
+view model =
     fieldset []
         [ DateField.view "Data depunerii:" model.dataDepunere |> map SetDataDepunere
         , Persoana.view model.creditor |> map SetCreditor
@@ -99,7 +96,7 @@ documenteContractIpotecaView maybeDocumenteContractIpoteca =
 
 
 templateCerere : Model -> List (Html msg)
-templateCerere (Model model) =
+templateCerere model =
     -- TODO: template?
     [ h1 [] [ text "Cerere de intentare" ]
     , text "TODO"

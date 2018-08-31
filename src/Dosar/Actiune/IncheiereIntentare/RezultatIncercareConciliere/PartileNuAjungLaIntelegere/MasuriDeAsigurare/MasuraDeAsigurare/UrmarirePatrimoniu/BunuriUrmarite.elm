@@ -1,8 +1,8 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunuriUrmarite exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit as BunUrmarit
-import Html.Styled exposing (Html, button, fieldset, legend, li, map, text)
-import Html.Styled.Events exposing (onClick)
+import Html exposing (Html, button, fieldset, legend, li, map, text)
+import Html.Events exposing (onClick)
 import Widgets.EditableList as EditableList
 
 

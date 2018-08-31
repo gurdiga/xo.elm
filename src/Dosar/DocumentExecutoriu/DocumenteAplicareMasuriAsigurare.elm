@@ -1,6 +1,6 @@
 module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare, empty, view)
 
-import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicareMasuriAsigurare as DocumentAplicareMasuriAsigurare exposing (DocumentAplicareMasuriAsigurare(DocumentAplicareMasuriAsigurare))
+import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicareMasuriAsigurare as DocumentAplicareMasuriAsigurare exposing (DocumentAplicareMasuriAsigurare(..))
 import Html exposing (Html, fieldset, legend, text)
 import Utils.DocumentScanat as DocumentScanat
 import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledTextField)

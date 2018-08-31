@@ -1,7 +1,7 @@
 module Utils.MyDate exposing (Model, date, empty, format, parse, string, validationMessage)
 
-import Date exposing (Date)
-import Regex exposing (regex)
+import Regex exposing (fromString)
+import Time exposing (utc)
 
 
 -- LATER: add the ability to validate
@@ -10,7 +10,7 @@ import Regex exposing (regex)
 type Model
     = Model
         { string : String
-        , date : Maybe Date
+        , date : Maybe Time.Posix
         , validationMessage : String
         }
 
@@ -29,7 +29,7 @@ validationMessage (Model model) =
     model.validationMessage
 
 
-date : Model -> Maybe Date
+date : Model -> Maybe Time.Posix
 date (Model model) =
     model.date
 
@@ -51,7 +51,15 @@ parse dateString =
     -- LATER: How do I model this as a series of transformations? Split,
     -- then look at each piece, etc. ??
     Model
-        (if not (Regex.contains (regex "^\\d{2}\\.\\d{2}\\.\\d{4}$") dateString) then
+        (if
+            not
+                (Regex.contains
+                    (Maybe.withDefault Regex.never <|
+                        fromString "^\\d{2}\\.\\d{2}\\.\\d{4}$"
+                    )
+                    dateString
+                )
+         then
             { model | validationMessage = "Data trebuie sa aiba formatul DD.LL.AAAA" }
          else
             let
@@ -90,27 +98,29 @@ parse dateString =
                         Err errorMessage ->
                             { model | validationMessage = errorMessage }
 
-                        Ok day ->
+                        Ok _ ->
                             let
-                                isoDateString =
-                                    yearString ++ "-" ++ monthString ++ "-" ++ dayString
-                            in
-                            case Date.fromString isoDateString of
-                                Ok date ->
-                                    { model | date = Just date }
+                                msPerYear =
+                                    msPerMonth * 12
 
-                                Err errorMessage ->
-                                    { model | validationMessage = errorMessage }
+                                -- TODO: Figure out how to calculate it correctly.
+                                msPerMonth =
+                                    msPerDay * 31
+
+                                msPerDay =
+                                    24 * 60 * 60 * 1000
+                            in
+                            { model | date = Just <| Time.millisToPosix <| year * msPerYear + month * msPerMonth + day * msPerMonth }
         )
 
 
 validateDayString : String -> Result String Int
 validateDayString dayString =
     case String.toInt dayString of
-        Err e ->
-            Err e
+        Nothing ->
+            Err <| "Not a valid day number " ++ dayString
 
-        Ok day ->
+        Just day ->
             if day > 31 then
                 Err dayString
             else
@@ -120,19 +130,24 @@ validateDayString dayString =
 validateMonthString : String -> Result String Int
 validateMonthString monthString =
     case String.toInt monthString of
-        Err e ->
-            Err e
+        Nothing ->
+            Err <| "Not a valid month number " ++ monthString
 
-        Ok monthNumber ->
-            if monthNumber > 13 then
+        Just m ->
+            if m > 13 then
                 Err monthString
             else
-                Ok monthNumber
+                Ok m
 
 
 validateYearString : String -> Result String Int
 validateYearString yearString =
-    String.toInt yearString
+    case String.toInt yearString of
+        Nothing ->
+            Err <| "Not a valid year number " ++ yearString
+
+        Just y ->
+            Ok y
 
 
 
@@ -154,31 +169,31 @@ validateDayForMonthAndYear day month year =
         if day < 32 then
             Ok day
         else
-            Err ("Luna " ++ toString month ++ " are 31 de zile")
+            Err ("Luna " ++ String.fromInt month ++ " are 31 de zile")
     else if List.member month monthsWith30Days then
         if day < 31 then
             Ok day
         else
-            Err ("Luna " ++ toString month ++ " are 30 de zile")
+            Err ("Luna " ++ String.fromInt month ++ " are 30 de zile")
     else if isLeapYear year then
         -- February
         if day < 30 then
             Ok day
         else
-            Err ("Luna februarie are 29 de zile in " ++ toString year)
+            Err ("Luna februarie are 29 de zile in " ++ String.fromInt year)
     else if day < 29 then
         Ok day
     else
-        Err ("Luna februarie are 28 de zile in " ++ toString year)
+        Err ("Luna februarie are 28 de zile in " ++ String.fromInt year)
 
 
 isLeapYear : Int -> Bool
 isLeapYear year =
-    if year % 400 == 0 then
+    if remainderBy 400 year == 0 then
         True
-    else if year % 100 == 0 then
+    else if remainderBy 100 year == 0 then
         False
-    else if year % 4 == 0 then
+    else if remainderBy 4 year == 0 then
         True
     else
         False
@@ -187,13 +202,13 @@ isLeapYear year =
 format : Model -> Result String String
 format (Model model) =
     case model.date of
-        Just date ->
+        Just d ->
             Ok
-                (String.padLeft 2 '0' (toString (Date.day date))
+                (String.padLeft 2 '0' (String.fromInt (Time.toDay utc d))
                     ++ "."
-                    ++ String.padLeft 2 '0' (toString (monthNumber date))
+                    ++ String.padLeft 2 '0' (String.fromInt (monthNumber d))
                     ++ "."
-                    ++ toString (Date.year date)
+                    ++ String.fromInt (Time.toYear utc d)
                 )
 
         Nothing ->
@@ -205,41 +220,41 @@ format (Model model) =
                 Err model.validationMessage
 
 
-monthNumber : Date -> Int
-monthNumber date =
-    case Date.month date of
-        Date.Jan ->
+monthNumber : Time.Posix -> Int
+monthNumber d =
+    case Time.toMonth utc d of
+        Time.Jan ->
             1
 
-        Date.Feb ->
+        Time.Feb ->
             2
 
-        Date.Mar ->
+        Time.Mar ->
             3
 
-        Date.Apr ->
+        Time.Apr ->
             4
 
-        Date.May ->
+        Time.May ->
             5
 
-        Date.Jun ->
+        Time.Jun ->
             6
 
-        Date.Jul ->
+        Time.Jul ->
             7
 
-        Date.Aug ->
+        Time.Aug ->
             8
 
-        Date.Sep ->
+        Time.Sep ->
             9
 
-        Date.Oct ->
+        Time.Oct ->
             10
 
-        Date.Nov ->
+        Time.Nov ->
             11
 
-        Date.Dec ->
+        Time.Dec ->
             12

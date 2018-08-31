@@ -1,9 +1,9 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg(..), initialModel, update, view)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
-import Html.Styled exposing (Html, button, div, fieldset, form, input, label, legend, map, p, text, textarea)
-import Html.Styled.Attributes exposing (class, for, id, type_)
-import Html.Styled.Events exposing (onClick, onInput)
+import Html exposing (Html, button, div, fieldset, form, input, label, legend, map, p, text, textarea)
+import Html.Attributes exposing (class, for, id, type_)
+import Html.Events exposing (onClick, onInput)
 
 
 type Msg
@@ -19,7 +19,8 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Set actEfectuatAnteriorMsg ->
-            Debug.crash "update doesn’t handle Set"
+            -- TODO
+            model
 
         AddItem ->
             { model | newItem = Just ActEfectuatAnterior.initialModel }
@@ -36,7 +37,7 @@ update msg model =
                     { model | newItem = Just (ActEfectuatAnterior.setFile newItem newFile) }
 
                 Nothing ->
-                    Debug.crash "SetNewItemFile cant be emitted with Nothing"
+                    Debug.todo "SetNewItemFile cant be emitted with Nothing. So why does this exist?"
 
         SetNewItemNote newNote ->
             case model.newItem of
@@ -44,7 +45,7 @@ update msg model =
                     { model | newItem = Just (ActEfectuatAnterior.setNote newItem newNote) }
 
                 Nothing ->
-                    Debug.crash "SetNewItemNote cant be emitted with Nothing"
+                    Debug.todo "SetNewItemNote cant be emitted with Nothing. So why does this exist?"
 
 
 type alias Model =

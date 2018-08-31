@@ -1,8 +1,8 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare exposing (Model, Msg, empty, update, view)
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare as MasuraDeAsigurare exposing (Model)
-import Html.Styled exposing (Html, button, fieldset, legend, li, map, text, ul)
-import Html.Styled.Events exposing (onClick)
+import Html exposing (Html, button, fieldset, legend, li, map, text, ul)
+import Html.Events exposing (onClick)
 import Utils.MyList as MyList
 
 

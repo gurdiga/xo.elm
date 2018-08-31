@@ -1,7 +1,5 @@
 module Utils.Money exposing (Currency(..), Money(..), currenciesWithLabels, format)
 
-import Utils.MyNumber as MyNumber
-
 
 type alias Amount =
     Float
@@ -27,4 +25,4 @@ currenciesWithLabels =
 
 format : Money -> String
 format (Money amount currency) =
-    MyNumber.format amount ++ " " ++ toString currency
+    String.fromFloat amount ++ " " ++ Debug.toString currency

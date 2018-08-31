@@ -1,6 +1,6 @@
 module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (Model, Msg, initialModel, update, view)
 
-import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
+import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.DocumentScanatTea as DocumentScanatTea
 import Widgets.LargeTextField as LargeTextField
 

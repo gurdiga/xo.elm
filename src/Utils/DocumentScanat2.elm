@@ -1,8 +1,8 @@
 module Utils.DocumentScanat2 exposing (Model, Msg, initialModel, update, view)
 
-import Html.Styled exposing (Html, code, div, input, label, text)
-import Html.Styled.Attributes exposing (title, type_)
-import Html.Styled.Events exposing (on)
+import Html exposing (Html, code, div, input, label, text)
+import Html.Attributes exposing (title, type_)
+import Html.Events exposing (on)
 import Json.Decode as Json
 import Utils.File as File exposing (File)
 
@@ -24,14 +24,14 @@ view labelText model =
             , input
                 [ type_ "file"
                 , onFileSelect SetFile
-                , title (toString model)
+                , title model.file.path
                 ]
                 []
             ]
         ]
 
 
-onFileSelect : (File -> Msg) -> Html.Styled.Attribute Msg
+onFileSelect : (File -> Msg) -> Html.Attribute Msg
 onFileSelect callback =
     on "change" eventDecoder
 

@@ -1,8 +1,8 @@
 module Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara as InregistrareEvidentaFinanciara
-import Html.Styled exposing (Html, button, fieldset, legend, map, p, table, text)
-import Html.Styled.Events exposing (onClick)
+import Html exposing (Html, button, fieldset, legend, map, p, table, text)
+import Html.Events exposing (onClick)
 import Utils.MyList as MyList
 
 

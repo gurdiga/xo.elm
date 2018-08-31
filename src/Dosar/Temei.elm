@@ -1,24 +1,16 @@
 module Dosar.Temei exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Temei.CerereCreditor as CerereCreditor
-import Dosar.Temei.Css as Css
 import Dosar.Temei.DemersInstanta as DemersInstanta
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat
-import Html.Styled exposing (Html, div, fromUnstyled, label, map, node, section, text, toUnstyled)
-import Html.Styled.Attributes exposing (css)
-import Widgets.Select3 as Select3
+import Html exposing (Html, div, label, map, node, section, text)
+import Widgets.Select4 as Select4
 
 
 type Model
     = Model
         { temei : Temei
-        , ui : Ui
         }
-
-
-type alias Ui =
-    { select : Select3.Model Temei
-    }
 
 
 type Temei
@@ -29,9 +21,15 @@ type Temei
 
 view : Model -> Html Msg
 view (Model model) =
-    section [ css [ Css.section ] ]
+    section []
         [ sectionTitle
-        , Select3.view "Temei:" model.ui.select |> map SetTemei
+        , Select4.view <|
+            Select4.config
+                { label = "Temei:"
+                , defaultValue = model.temei
+                , valuesWithLabels = []
+                , onInput = SetTemei
+                }
         , fields model.temei
         ]
 
@@ -39,7 +37,7 @@ view (Model model) =
 sectionTitle : Html Msg
 sectionTitle =
     node "hgroup"
-        [ css [ Css.sectionTitle ] ]
+        []
         [ text "Temeiul" ]
 
 
@@ -74,9 +72,6 @@ initialModel : Model
 initialModel =
     Model
         { temei = initialTemei
-        , ui =
-            { select = Select3.initialModel initialTemei valuesWithLabels
-            }
         }
 
 
@@ -86,7 +81,7 @@ initialTemei =
 
 
 type Msg
-    = SetTemei (Select3.Msg Temei)
+    = SetTemei Temei
     | SetCerereCreditor CerereCreditor.Msg
     | SetDemersInstanta DemersInstanta.Msg
     | SetPreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.Msg
@@ -95,8 +90,8 @@ type Msg
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        SetTemei select3Msg ->
-            receiveTemei (Model model) (Select3.update select3Msg model.ui.select)
+        SetTemei v ->
+            Model { model | temei = v }
 
         SetCerereCreditor cerereCreditorMsg ->
             case model.temei of
@@ -112,6 +107,7 @@ update msg (Model model) =
                     Model { model | temei = DemersInstanta (DemersInstanta.update demersInstantaMsg demersInstanta) }
 
                 _ ->
+                    -- TODO??
                     Model model
 
         SetPreluareDocumentExecutoriuStramutat subMsg ->
@@ -120,13 +116,5 @@ update msg (Model model) =
                     Model { model | temei = PreluareDocumentExecutoriuStramutat (PreluareDocumentExecutoriuStramutat.update subMsg v) }
 
                 _ ->
+                    -- TODO???
                     Model model
-
-
-receiveTemei : Model -> Select3.Model Temei -> Model
-receiveTemei (Model ({ ui } as model)) newSelect =
-    Model
-        { model
-            | ui = { ui | select = newSelect }
-            , temei = Select3.selectedValue newSelect
-        }

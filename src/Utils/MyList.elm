@@ -42,11 +42,11 @@ dropUntil predicate xs =
         [] ->
             []
 
-        x :: xs ->
+        x :: rest ->
             if predicate x then
-                xs
+                rest
             else
-                dropUntil predicate xs
+                dropUntil predicate rest
 
 
 last : List a -> Maybe a

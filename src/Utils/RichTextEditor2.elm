@@ -1,8 +1,8 @@
 module Utils.RichTextEditor2 exposing (Model, Msg, initialModel, update, view)
 
-import Html.Styled exposing (Html, label, map, text, textarea)
-import Html.Styled.Attributes exposing (value)
-import Html.Styled.Events exposing (onInput)
+import Html exposing (Html, label, map, text, textarea)
+import Html.Attributes exposing (value)
+import Html.Events exposing (onInput)
 
 
 type alias Model =

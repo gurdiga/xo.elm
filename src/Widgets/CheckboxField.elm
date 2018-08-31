@@ -1,8 +1,8 @@
 module Widgets.CheckboxField exposing (Model, Msg, initialModel, isChecked, update, view)
 
-import Html.Styled exposing (Html, input, label, text)
-import Html.Styled.Attributes exposing (checked, type_, value)
-import Html.Styled.Events exposing (onCheck)
+import Html exposing (Html, input, label, text)
+import Html.Attributes exposing (checked, type_, value)
+import Html.Events exposing (onCheck)
 
 
 type alias Model =

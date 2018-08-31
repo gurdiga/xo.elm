@@ -1,7 +1,7 @@
 module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicareMasuriAsigurare
     exposing
         ( Data
-        , DocumentAplicareMasuriAsigurare(DocumentAplicareMasuriAsigurare)
+        , DocumentAplicareMasuriAsigurare(..)
         , data
         , empty
         )
@@ -30,5 +30,5 @@ empty =
 
 
 data : DocumentAplicareMasuriAsigurare -> Data
-data (DocumentAplicareMasuriAsigurare data) =
-    data
+data (DocumentAplicareMasuriAsigurare d) =
+    d

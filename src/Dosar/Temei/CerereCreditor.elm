@@ -1,10 +1,8 @@
 module Dosar.Temei.CerereCreditor exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Persoana as Persoana
-import Dosar.Temei.CerereCreditor.Css as Css
 import Dosar.Temei.CerereCreditor.DocumenteContractIpoteca as DocumenteContractIpoteca
-import Html.Styled exposing (Html, div, fieldset, fromUnstyled, h1, legend, li, map, text, ul)
-import Html.Styled.Attributes exposing (css)
+import Html exposing (Html, div, fieldset, h1, legend, li, map, text, ul)
 import Utils.MyDate as MyDate
 import Widgets.CheckboxField as CheckboxField
 import Widgets.DateField as DateField
@@ -81,7 +79,7 @@ toggleDocumenteContractIpoteca (Model model) newCheckboxFieldModel =
 
 view : Model -> Html Msg
 view (Model model) =
-    fieldset [ css [ Css.fieldset ] ]
+    fieldset []
         [ DateField.view "Data depunerii:" model.dataDepunere |> map SetDataDepunere
         , Persoana.view model.creditor |> map SetCreditor
         , documenteContractIpotecaView model.documenteContractIpoteca
@@ -104,7 +102,7 @@ templateCerere : Model -> List (Html msg)
 templateCerere (Model model) =
     -- TODO: template?
     [ h1 [] [ text "Cerere de intentare" ]
-    , model |> toString |> text
+    , text "TODO"
     ]
 
 

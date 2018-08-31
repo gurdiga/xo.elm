@@ -1,7 +1,7 @@
 module Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca
-import Html.Styled exposing (Html, fieldset, legend, p, text)
+import Html exposing (Html, fieldset, legend, p, text)
 
 
 type Msg
@@ -12,7 +12,7 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Msg ->
-            Debug.crash "Not yet implemented"
+            Debug.todo "Not yet implemented"
 
 
 type Model

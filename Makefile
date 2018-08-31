@@ -4,7 +4,7 @@ SERVER_PORT=8005
 default: rich-text-editor compile test
 
 test: elm-test
-	elm-test
+	@echo "elm-test is not 0.19-compatible for now"
 
 elm-test: /usr/local/bin/elm-test
 
@@ -13,7 +13,7 @@ elm-test: /usr/local/bin/elm-test
 
 c: compile
 compile:
-	elm make --warn src/Main.elm --output dist/Main.js
+	elm make --debug src/Main.elm --output dist/Main.js
 
 clean:
 	rm -rf {,tests/}elm-stuff/build-artifacts/0.18.0/user/project
@@ -53,10 +53,10 @@ make pre-commit
 endef
 
 start:
-	elm reactor --port=$(SERVER_PORT) --address=$(SERVER_IP) & sleep 0.1
+	elm reactor --port=$(SERVER_PORT) & sleep 0.1
 
 stop:
-	pkill elm-reactor
+	pkill -f 'elm reactor'
 
 restart: stop start
 

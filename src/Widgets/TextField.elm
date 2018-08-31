@@ -1,9 +1,8 @@
 module Widgets.TextField exposing (Msg, update, view)
 
-import Html.Styled exposing (Html, input, label, text)
-import Html.Styled.Attributes exposing (css, value)
-import Html.Styled.Events exposing (onInput)
-import Widgets.TextField.Css as Css
+import Html exposing (Html, input, label, text)
+import Html.Attributes exposing (value)
+import Html.Events exposing (onInput)
 
 
 type alias Model =
@@ -17,7 +16,6 @@ view labelText model =
         , input
             [ onInput SetValue
             , value model
-            , css [ Css.input ]
             ]
             []
         ]

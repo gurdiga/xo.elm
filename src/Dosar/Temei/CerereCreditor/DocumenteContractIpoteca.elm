@@ -4,7 +4,7 @@ import Dosar.Temei.CerereCreditor.ContractCreditBancar as ContractCreditBancar
 import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca
 import Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios as DeclaratieContractNonLitigios
 import Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara as ExtraseEvidentaFinanciara
-import Html.Styled exposing (Html, fieldset, legend, li, map, pre, text, ul)
+import Html exposing (Html, fieldset, legend, li, map, pre, text, ul)
 import Utils.DocumentScanatTea as DocumentScanatTea
 
 

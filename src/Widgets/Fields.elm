@@ -12,9 +12,8 @@ module Widgets.Fields
 import Html exposing (Html, input, label, text, textarea)
 import Html.Attributes exposing (checked, type_, value)
 import Html.Events exposing (onCheck, onInput)
-import Html.Styled exposing (toUnstyled)
 import Utils.Money as Money exposing (Money(..))
-import Widgets.Select as Select
+import Widgets.Select4 as Select4
 
 
 textField : String -> String -> (String -> msg) -> Html msg
@@ -78,13 +77,15 @@ unlabeledMoneyField : Money -> (Money -> msg) -> List (Html msg)
 unlabeledMoneyField (Money amount currency) callback =
     [ input
         [ type_ "number"
-        , value (toString amount)
-        , onInput (\v -> callback (Money (Result.withDefault 0 (String.toFloat v)) currency))
+        , value (String.fromFloat amount)
+        , onInput (\v -> callback (Money (Maybe.withDefault 0 (String.toFloat v)) currency))
         ]
         []
-    , Select.unlabeledView
-        Money.currenciesWithLabels
-        currency
-        (\v -> callback (Money amount v))
-        |> toUnstyled
+    , Select4.view <|
+        Select4.config
+            { label = ""
+            , valuesWithLabels = Money.currenciesWithLabels
+            , defaultValue = currency
+            , onInput = \v -> callback (Money amount v)
+            }
     ]

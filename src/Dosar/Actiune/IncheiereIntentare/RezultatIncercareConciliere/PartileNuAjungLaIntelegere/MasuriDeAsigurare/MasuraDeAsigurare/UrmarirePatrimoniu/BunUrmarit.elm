@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu.BunUrmarit exposing (Model, Msg, initialModel, update, view, viewEditForm)
 
-import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
-import Utils.Money as Money exposing (Currency(MDL), Money(Money))
+import Html exposing (Html, fieldset, legend, li, map, text, ul)
+import Utils.Money as Money exposing (Currency(..), Money(..))
 import Widgets.LargeTextField as LargeTextField
 import Widgets.MoneyField as MoneyField
 import Widgets.TextField as TextField
@@ -28,7 +28,7 @@ view model =
         [ legend [] [ text "BunUrmarit" ]
         , ul []
             [ li [] [ text ("Denumire:" ++ model.denumire) ]
-            , li [] [ text ("Valoare:" ++ toString model.valoare) ]
+            , li [] [ text ("Valoare:" ++ Money.format model.valoare) ]
             , li [] [ text ("Note:" ++ model.note) ]
             ]
         ]

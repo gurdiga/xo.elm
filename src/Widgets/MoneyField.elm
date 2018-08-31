@@ -1,10 +1,10 @@
 module Widgets.MoneyField exposing (Msg, initialModel, update, view)
 
-import Html.Styled exposing (Html, fromUnstyled, input, label, text)
-import Html.Styled.Attributes exposing (css, type_, value)
-import Html.Styled.Events exposing (onInput)
+import Html exposing (Html, input, label, text)
+import Html.Attributes exposing (type_, value)
+import Html.Events exposing (onInput)
 import Utils.Money as Money exposing (Currency(..), Money(..))
-import Widgets.Select as Select
+import Widgets.Select4 as Select4
 
 
 -- import Widgets.TextField.Css as Css
@@ -25,7 +25,7 @@ update msg (Money amount currency) =
     case msg of
         SetAmount string ->
             String.toFloat string
-                |> Result.withDefault 0
+                |> Maybe.withDefault 0
                 |> (\newAmount -> Money newAmount currency)
 
         SetCurrency newCurrency ->
@@ -41,9 +41,15 @@ unlabeledView : Money -> List (Html Msg)
 unlabeledView (Money amount currency) =
     [ input
         [ type_ "number"
-        , value (toString amount)
+        , value (String.fromFloat amount)
         , onInput SetAmount
         ]
         []
-    , Select.unlabeledView Money.currenciesWithLabels currency SetCurrency
+    , Select4.view <|
+        Select4.config
+            { label = ""
+            , valuesWithLabels = Money.currenciesWithLabels
+            , defaultValue = currency
+            , onInput = SetCurrency
+            }
     ]

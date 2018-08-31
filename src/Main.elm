@@ -1,20 +1,29 @@
 module Main exposing (..)
 
+import Browser
 import Dosar
-import Html
-import Html.Styled exposing (Html, button, div, fromUnstyled, h1, map, node, option, section, select, text, toUnstyled)
-import Html.Styled.Events exposing (onClick)
+import Html exposing (Html, button, div, h1, map, node, option, section, select, text)
+import Html.Events exposing (onClick)
 import UI.Layout as Layout
 
 
-main : Program Never Model Msg
+type alias Flags =
+    ()
+
+
+main : Program Flags Model Msg
 main =
-    Html.program
-        { init = ( initialModel, Cmd.none )
-        , view = view >> toUnstyled
+    Browser.element
+        { init = init
+        , view = view
         , update = update
         , subscriptions = subscriptions
         }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init _ =
+    ( initialModel, Cmd.none )
 
 
 type Model

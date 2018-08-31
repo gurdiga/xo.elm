@@ -1,7 +1,7 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (Model, Msg(..), initialModel, setFile, setNote, update, view)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
-import Html.Styled exposing (Html, button, fieldset, legend, p, text)
+import Html exposing (Html, button, fieldset, legend, p, text)
 
 
 type Msg
@@ -42,5 +42,5 @@ view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "ActEfectuatAnterior" ]
-        , model |> toString |> text
+        , text "TODO"
         ]

@@ -1,8 +1,6 @@
 module Dosar.Persoana.PersoanaFizica exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Persoana.PersoanaFizica.Css as Css
-import Html.Styled exposing (Html, li, map, ul)
-import Html.Styled.Attributes exposing (css)
+import Html exposing (Html, li, map, ul)
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
 import Widgets.LargeTextField as LargeTextField
@@ -63,7 +61,7 @@ initialModel =
 
 view : Model -> Html Msg
 view model =
-    ul [ css [ Css.ul ] ]
+    ul []
         [ li [] [ TextField.view "Nume:" model.nume |> map SetNume ]
         , li [] [ TextField.view "Prenume:" model.prenume |> map SetPrenume ]
         , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map SetDataNasterii ]

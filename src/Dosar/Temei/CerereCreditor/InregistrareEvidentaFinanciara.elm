@@ -1,9 +1,7 @@
 module Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Temei.CerereCreditor.InregistrareEvidentaFinanciara.Css as Css
-import Html.Styled exposing (Html, map, td, text, tr)
-import Html.Styled.Attributes exposing (css)
-import Utils.Money as Money exposing (Currency(MDL), Money(Money))
+import Html exposing (Html, map, td, text, tr)
+import Utils.Money as Money exposing (Currency(..), Money(..))
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
 import Widgets.LargeTextField as LargeTextField
@@ -47,7 +45,7 @@ initialModel =
 view : Model -> Html Msg
 view model =
     tr []
-        [ td [ css [ Css.td ] ] <| [ DateField.view "" model.data |> map SetData ]
-        , td [ css [ Css.td ] ] <| [ MoneyField.view "" model.suma |> map SetSuma ]
-        , td [ css [ Css.td ] ] <| [ LargeTextField.view "" model.note |> map SetNote ]
+        [ td [] <| [ DateField.view "" model.data |> map SetData ]
+        , td [] <| [ MoneyField.view "" model.suma |> map SetSuma ]
+        , td [] <| [ LargeTextField.view "" model.note |> map SetNote ]
         ]

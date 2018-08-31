@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare as MasuriDeAsigurare
-import Html.Styled exposing (Html, fieldset, legend, map, p, text)
+import Html exposing (Html, fieldset, legend, map, p, text)
 import Utils.MyDate as MyDate
 import Utils.RichTextEditor2 as RichTextEditor2
 import Widgets.DateField as DateField

@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere.MasuriDeAsigurare.MasuraDeAsigurare.UrmarirePatrimoniu as UrmarirePatrimoniu
-import Html.Styled exposing (Html, button, div, fieldset, legend, li, map, text, ul)
+import Html exposing (Html, button, div, fieldset, legend, li, map, text, ul)
 
 
 type alias Model =

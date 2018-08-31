@@ -1,17 +1,15 @@
 module Dosar.Persoana exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.Persoana.Css as Css
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica
 import Dosar.Persoana.PersoanaJuridica as PersoanaJuridica
-import Html.Styled exposing (Html, fieldset, map)
-import Html.Styled.Attributes exposing (css)
-import Widgets.Select3 as Select3
+import Html exposing (Html, fieldset, map)
+import Widgets.Select4 as Select4
 
 
 type Msg
     = SetPersoanaFizica PersoanaFizica.Msg
     | SetPersoanaJuridica PersoanaJuridica.Msg
-    | SetGenPersoana (Select3.Msg Persoana)
+    | SetGenPersoana Persoana
 
 
 update : Msg -> Model -> Model
@@ -33,29 +31,14 @@ update msg (Model model) =
                 _ ->
                     Model model
 
-        SetGenPersoana select3Msg ->
-            receivePersoana (Model model) (Select3.update select3Msg model.ui.select)
-
-
-receivePersoana : Model -> Select3.Model Persoana -> Model
-receivePersoana (Model ({ ui } as model)) newSelect =
-    Model
-        { model
-            | ui = { ui | select = newSelect }
-            , persoana = Select3.selectedValue newSelect
-        }
+        SetGenPersoana v ->
+            Model { model | persoana = v }
 
 
 type Model
     = Model
         { persoana : Persoana
-        , ui : Ui
         }
-
-
-type alias Ui =
-    { select : Select3.Model Persoana
-    }
 
 
 type Persoana
@@ -67,9 +50,6 @@ initialModel : Model
 initialModel =
     Model
         { persoana = initialPersoana
-        , ui =
-            { select = Select3.initialModel initialPersoana valuesWithLabels
-            }
         }
 
 
@@ -80,8 +60,14 @@ initialPersoana =
 
 view : Model -> Html Msg
 view (Model model) =
-    fieldset [ css [ Css.fieldset ] ]
-        [ Select3.view "Gen persoană:" model.ui.select |> map SetGenPersoana
+    fieldset []
+        [ Select4.view <|
+            Select4.config
+                { label = "Gen persoană:"
+                , defaultValue = model.persoana
+                , valuesWithLabels = valuesWithLabels
+                , onInput = SetGenPersoana
+                }
         , fieldsView model.persoana
         ]
 

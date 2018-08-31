@@ -5,15 +5,15 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (Model, Msg, ini
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
-import Html.Styled exposing (Html, fieldset, h1, legend, li, map, p, text, ul)
-import Widgets.Select3 as Select3
+import Html exposing (Html, fieldset, h1, legend, li, map, p, text, ul)
+import Widgets.Select4 as Select4
 
 
 -- import Widgets.Fields exposing (largeTextField)
 
 
 type Msg
-    = SetCauzaStramutare (Select3.Msg CauzaStramutare.Model)
+    = SetCauzaStramutare CauzaStramutare.Model
     | SetCopieIncheiereStramutare DocumentScanat2.Msg
     | SetActeEfectuatAnterior ActeEfectuateAnterior.Msg
 
@@ -21,22 +21,14 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetCauzaStramutare select3Msg ->
-            receiveCauzaStramutare model (Select3.update select3Msg model.ui.cauzaStramutareSelect)
+        SetCauzaStramutare v ->
+            { model | cauzaStramutare = v }
 
         SetCopieIncheiereStramutare documentScanat2Msg ->
             { model | copieIncheiereStramutare = DocumentScanat2.update documentScanat2Msg model.ui.copieIncheiereStramutare }
 
         SetActeEfectuatAnterior acteEfectuateAnteriorMsg ->
             { model | acteEfectuateAnterior = ActeEfectuateAnterior.update acteEfectuateAnteriorMsg model.acteEfectuateAnterior }
-
-
-receiveCauzaStramutare : Model -> Select3.Model CauzaStramutare.Model -> Model
-receiveCauzaStramutare ({ ui } as model) newSelect =
-    { model
-        | ui = { ui | cauzaStramutareSelect = newSelect }
-        , cauzaStramutare = Select3.selectedValue newSelect
-    }
 
 
 type alias Model =
@@ -50,8 +42,7 @@ type alias Model =
 
 
 type alias Ui =
-    { cauzaStramutareSelect : Select3.Model CauzaStramutare.Model
-    , copieIncheiereStramutare : DocumentScanat2.Model
+    { copieIncheiereStramutare : DocumentScanat2.Model
     }
 
 
@@ -63,8 +54,7 @@ initialModel =
     , note = ""
     , actPreluare = ""
     , ui =
-        { cauzaStramutareSelect = Select3.initialModel CauzaStramutare.initialModel CauzaStramutare.valuesWithLabels
-        , copieIncheiereStramutare = DocumentScanat2.initialModel
+        { copieIncheiereStramutare = DocumentScanat2.initialModel
         }
     }
 
@@ -74,7 +64,15 @@ view model =
     fieldset []
         [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
         , ul []
-            [ li [] [ Select3.view "Cauza strămutării:" model.ui.cauzaStramutareSelect |> map SetCauzaStramutare ]
+            [ li []
+                [ Select4.view <|
+                    Select4.config
+                        { label = "Cauza strămutării:"
+                        , valuesWithLabels = CauzaStramutare.valuesWithLabels
+                        , defaultValue = model.cauzaStramutare
+                        , onInput = SetCauzaStramutare
+                        }
+                ]
             , li [] [ DocumentScanat2.view "Copia încheierii:" model.copieIncheiereStramutare |> map SetCopieIncheiereStramutare ]
             , li [] [ ActeEfectuateAnterior.view model.acteEfectuateAnterior |> map SetActeEfectuatAnterior ]
 
@@ -97,5 +95,5 @@ view model =
 templateActPreluare : Model -> List (Html msg)
 templateActPreluare model =
     [ h1 [] [ text "ActPreluare" ]
-    , p [] [ model |> toString |> text ]
+    , p [] [ text "TODO" ]
     ]

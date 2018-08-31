@@ -1,9 +1,8 @@
 module Widgets.LargeTextField exposing (Model, Msg, update, view)
 
-import Html.Styled exposing (Html, label, text, textarea)
-import Html.Styled.Attributes exposing (css, value)
-import Html.Styled.Events exposing (onInput)
-import Widgets.LargeTextField.Css as Css
+import Html exposing (Html, label, text, textarea)
+import Html.Attributes exposing (value)
+import Html.Events exposing (onInput)
 
 
 type alias Model =
@@ -17,7 +16,6 @@ view labelText model =
         , textarea
             [ onInput SetValue
             , value model
-            , css [ Css.textarea ]
             ]
             []
         ]

@@ -1,10 +1,9 @@
 module Widgets.DateField exposing (Model, Msg, update, view)
 
-import Html.Styled exposing (Html, input, label, text)
-import Html.Styled.Attributes exposing (css, value)
-import Html.Styled.Events exposing (onInput)
+import Html exposing (Html, input, label, text)
+import Html.Attributes exposing (value)
+import Html.Events exposing (onInput)
 import Utils.MyDate as MyDate
-import Widgets.DateField.Css as Css
 
 
 type alias Model =
@@ -20,7 +19,6 @@ view labelText model =
                 , input
                     [ value inputText
                     , onInput SetString
-                    , css [ Css.input ]
                     ]
                     []
                 , text validationMessage

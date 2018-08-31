@@ -2,7 +2,7 @@ module Dosar.Actiune.IncheiereRefuz exposing (Model, Msg, initialModel, update, 
 
 -- import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz exposing (CauzaRefuz)
 
-import Html.Styled exposing (Html, button, div, fieldset, h1, legend, map, p, text)
+import Html exposing (Html, button, div, fieldset, h1, legend, map, p, text)
 
 
 -- import Utils.RichTextEditor as RichTextEditor
@@ -25,7 +25,7 @@ view : Model -> Html msg
 view model =
     fieldset []
         [ legend [] [ text "IncheiereRefuz" ]
-        , text <| toString model
+        , text "TODO"
 
         -- , CauzaRefuz.view data.cauza (\v -> c { data | cauza = v })
         -- , RichTextEditor.view
@@ -41,7 +41,7 @@ template : Model -> List (Html msg)
 template model =
     -- TODO: find the real template
     [ h1 [] [ text "IncheiereRefuz" ]
-    , p [] [ text <| toString <| model ]
+    , p [] [ text "TODO" ]
     ]
 
 

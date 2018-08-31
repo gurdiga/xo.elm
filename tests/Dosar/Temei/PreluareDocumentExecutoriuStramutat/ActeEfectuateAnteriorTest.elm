@@ -3,8 +3,8 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnteriorTest
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior
 import Expect
+import Html
 import Html.Attributes exposing (for, type_)
-import Html.Styled
 import Test exposing (..)
 import Test.Html.Event as Event
 import Test.Html.Query as Query
@@ -197,5 +197,4 @@ render : ActeEfectuateAnterior.Model -> Query.Single ActeEfectuateAnterior.Msg
 render model =
     model
         |> ActeEfectuateAnterior.view
-        |> Html.Styled.toUnstyled
         |> Query.fromHtml

@@ -1,6 +1,6 @@
 module Dosar.Temei.CerereCreditor.ContractIpoteca exposing (Model, Msg, empty, update, view)
 
-import Html.Styled exposing (Html, fieldset, legend, li, map, text, ul)
+import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.Money as Money exposing (Currency(..), Money(..))
 import Widgets.LargeTextField as LargeTextField
 import Widgets.MoneyField as MoneyField

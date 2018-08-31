@@ -1,8 +1,8 @@
 module Widgets.Select4 exposing (Config, config, view)
 
-import Html.Styled exposing (Html, label, option, select, text)
-import Html.Styled.Attributes exposing (selected)
-import Html.Styled.Events exposing (onInput)
+import Html exposing (Html, label, option, select, text)
+import Html.Attributes exposing (selected)
+import Html.Events exposing (onInput)
 
 
 type alias Options a =
@@ -27,26 +27,26 @@ type alias ConfigData a msg =
 
 
 view : Config a msg -> Html msg
-view (Config config) =
+view (Config c) =
     let
         valueFromLabel label =
             case maybeValueFromLabel label of
                 Nothing ->
-                    config.defaultValue
+                    c.defaultValue
 
-                Just ( value, label ) ->
+                Just ( value, _ ) ->
                     value
 
         maybeValueFromLabel l =
-            List.filter (\( value, label ) -> label == l) config.valuesWithLabels
+            List.filter (\( value, label ) -> label == l) c.valuesWithLabels
                 |> List.head
 
         optionForTuple ( value, label ) =
-            option [ selected (config.defaultValue == value) ] [ text label ]
+            option [ selected (c.defaultValue == value) ] [ text label ]
     in
     label []
-        [ text config.label
+        [ text c.label
         , select
-            [ onInput (config.onInput << valueFromLabel) ]
-            (config.valuesWithLabels |> List.map optionForTuple)
+            [ onInput (c.onInput << valueFromLabel) ]
+            (c.valuesWithLabels |> List.map optionForTuple)
         ]

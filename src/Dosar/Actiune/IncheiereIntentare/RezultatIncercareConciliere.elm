@@ -2,7 +2,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (Mo
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere as PartileAjungLaIntelegere
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere as PartileNuAjungLaIntelegere
-import Html.Styled exposing (Html, div, fieldset, label, legend, map, text)
+import Html exposing (Html, div, fieldset, label, legend, map, text)
 import Widgets.Select4 as Select4
 
 

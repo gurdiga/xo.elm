@@ -1,7 +1,7 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare
-import Html.Styled exposing (Html, fieldset, legend, map, text)
+import Html exposing (Html, fieldset, legend, map, text)
 import Utils.DocumentScanat2 as DocumentScanat2
 import Utils.RichTextEditor2 as RichTextEditor2
 

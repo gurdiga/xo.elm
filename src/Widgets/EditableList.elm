@@ -1,6 +1,6 @@
 module Widgets.EditableList exposing (Model, Msg(..), initialModel, update, view)
 
-import Html.Styled exposing (Html, button, fieldset, legend, li, p, text, ul)
+import Html exposing (Html, button, fieldset, legend, li, p, text, ul)
 import Utils.MyList as MyList
 
 

@@ -1,8 +1,8 @@
 module Select3Test exposing (..)
 
 import Expect
+import Html
 import Html.Attributes exposing (attribute)
-import Html.Styled
 import Json.Encode as Encode exposing (Value)
 import Test exposing (Test, describe, test, todo)
 import Test.Html.Event as Event
@@ -223,7 +223,6 @@ keyboardSupport =
 renderWithModel : Select3.Model a -> Query.Single (Select3.Msg a)
 renderWithModel model =
     Select3.view "A dropdown:" model
-        |> Html.Styled.toUnstyled
         |> Query.fromHtml
 
 

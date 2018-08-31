@@ -4,12 +4,8 @@ module Dosar exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Actiune as Actiune exposing (Model)
 import Dosar.DocumentExecutoriu as DocumentExecutoriu
-import Dosar.Styles as Styles
 import Dosar.Temei as Temei
-import Html.Styled exposing (Html, button, div, fromUnstyled, h1, map, node, option, section, select, text, toUnstyled)
-
-
--- import UI.Styles as Styles
+import Html exposing (Html, button, div, h1, map, node, option, section, select, text)
 
 
 type Msg
@@ -51,7 +47,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     node "main"
-        [ Styles.formular ]
+        []
         [ h1 [] [ text "Dosar deschis" ]
         , section []
             [ Temei.view model.temei |> map SetTemei

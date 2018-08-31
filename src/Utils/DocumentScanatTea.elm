@@ -1,8 +1,8 @@
 module Utils.DocumentScanatTea exposing (Model, Msg, initialModel, update, view)
 
-import Html.Styled exposing (Html, code, div, input, label, text)
-import Html.Styled.Attributes exposing (title, type_)
-import Html.Styled.Events exposing (on)
+import Html exposing (Html, code, div, input, label, text)
+import Html.Attributes exposing (title, type_)
+import Html.Events exposing (on)
 import Json.Decode as Json
 import Utils.File as File exposing (File)
 
@@ -40,20 +40,24 @@ initialModel =
 
 view : Input -> Html Msg
 view { labelText, documentScanat } =
+    let
+        (Model d) =
+            documentScanat
+    in
     div []
         [ label []
             [ text labelText
             , input
                 [ type_ "file"
                 , onFileSelect SetFile
-                , title (toString documentScanat)
+                , title d.file.path
                 ]
                 []
             ]
         ]
 
 
-onFileSelect : (File -> msg) -> Html.Styled.Attribute msg
+onFileSelect : (File -> msg) -> Html.Attribute msg
 onFileSelect callback =
     let
         eventDecoder : Json.Decoder msg

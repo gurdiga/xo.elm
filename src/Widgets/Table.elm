@@ -1,7 +1,6 @@
 module Widgets.Table exposing (view)
 
 import Html exposing (Html, button, div, table, tbody, td, text, th, thead, tr)
-import Html.Attributes exposing (style)
 import Utils.MyHtmlEvents exposing (onClick)
 import Utils.MyList as MyList
 
@@ -41,7 +40,7 @@ view { recordList, callback, columns, emptyView, empty } =
         [ if List.isEmpty recordList then
             emptyView
           else
-            table [ tableStyle ]
+            table []
                 [ thead [] (headRows columns)
                 , tbody [] (dataRows recordList callback columns)
                 ]
@@ -58,13 +57,13 @@ headRows columns =
 
         headCell : HeaderLabel -> Html msg
         headCell headerLabel =
-            th [ cellStyle ] [ text headerLabel ]
+            th [] [ text headerLabel ]
 
         dataHeaderCells =
             List.map headCell headerLabels
 
         actionColumnCells =
-            [ th [ cellStyle ] [] ]
+            [ th [] [] ]
     in
     [ tr [] (dataHeaderCells ++ actionColumnCells) ]
 
@@ -81,7 +80,7 @@ dataRows recordList listCallback columns =
 
         dataCell : Int -> record -> DataCellRenderer record msg -> Html msg
         dataCell index record dataCellRenderer =
-            td [ cellStyle ] <| dataCellRenderer record (recordCallback index)
+            td [] <| dataCellRenderer record (recordCallback index)
 
         recordCallback : Int -> record -> msg
         recordCallback index record =
@@ -105,18 +104,3 @@ appendView list empty callback =
     button
         [ onClick (\_ -> callback <| list ++ [ empty ]) ]
         [ text "+" ]
-
-
-tableStyle : Html.Attribute msg
-tableStyle =
-    style [ borderStyle, ( "border-collapse", "collapse" ) ]
-
-
-cellStyle : Html.Attribute msg
-cellStyle =
-    style [ borderStyle ]
-
-
-borderStyle : ( String, String )
-borderStyle =
-    ( "border", "1px solid silver" )

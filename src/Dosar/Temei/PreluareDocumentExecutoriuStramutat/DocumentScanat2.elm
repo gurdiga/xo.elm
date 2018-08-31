@@ -1,8 +1,8 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 exposing (Model, Msg, initialModel, setCopie, update, view)
 
-import Html.Styled exposing (Attribute, Html, div, input, label, map, text)
-import Html.Styled.Attributes exposing (type_)
-import Html.Styled.Events exposing (on)
+import Html exposing (Attribute, Html, div, input, label, map, text)
+import Html.Attributes exposing (type_)
+import Html.Events exposing (on)
 import Json.Decode as Json
 import Utils.File as File exposing (File)
 
@@ -41,7 +41,7 @@ initialModel =
 
 
 view : String -> Model -> Html Msg
-view labelText initialModel =
+view labelText model =
     label []
         [ text labelText
         , input [ type_ "file", onFileSelect SetValue ] []

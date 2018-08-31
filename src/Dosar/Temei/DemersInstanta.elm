@@ -6,21 +6,6 @@ import Utils.DocumentScanatTea as DocumentScanatTea
 import Widgets.Select4 as Select4
 
 
-type Msg
-    = SetPricina Pricina.Model
-    | SetCopia DocumentScanatTea.Msg
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        SetPricina v ->
-            { model | pricina = v }
-
-        SetCopia documentScanatTeaMsg ->
-            { model | copia = DocumentScanatTea.update documentScanatTeaMsg model.copia }
-
-
 type alias Model =
     { pricina : Pricina.Model
     , copia : DocumentScanatTea.Model
@@ -51,3 +36,18 @@ view model =
             , li [] [ DocumentScanatTea.view { labelText = "Copia scanată:", documentScanat = model.copia } |> map SetCopia ]
             ]
         ]
+
+
+type Msg
+    = SetPricina Pricina.Model
+    | SetCopia DocumentScanatTea.Msg
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SetPricina v ->
+            { model | pricina = v }
+
+        SetCopia documentScanatTeaMsg ->
+            { model | copia = DocumentScanatTea.update documentScanatTeaMsg model.copia }

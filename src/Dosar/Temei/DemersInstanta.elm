@@ -12,32 +12,30 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg (Model model) =
+update msg model =
     case msg of
         SetPricina v ->
-            Model { model | pricina = v }
+            { model | pricina = v }
 
         SetCopia documentScanatTeaMsg ->
-            Model { model | copia = DocumentScanatTea.update documentScanatTeaMsg model.copia }
+            { model | copia = DocumentScanatTea.update documentScanatTeaMsg model.copia }
 
 
-type Model
-    = Model
-        { pricina : Pricina.Model
-        , copia : DocumentScanatTea.Model
-        }
+type alias Model =
+    { pricina : Pricina.Model
+    , copia : DocumentScanatTea.Model
+    }
 
 
 initialModel : Model
 initialModel =
-    Model
-        { pricina = Pricina.initialModel
-        , copia = DocumentScanatTea.initialModel
-        }
+    { pricina = Pricina.initialModel
+    , copia = DocumentScanatTea.initialModel
+    }
 
 
 view : Model -> Html Msg
-view (Model model) =
+view model =
     fieldset []
         [ legend [] [ text "DemersInstanta" ]
         , ul []

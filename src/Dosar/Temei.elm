@@ -8,42 +8,28 @@ import Widgets.Select4 as Select4
 
 
 type Model
-    = Model
-        { temei : Temei
-        }
-
-
-type Temei
     = CerereCreditor CerereCreditor.Model
     | DemersInstanta DemersInstanta.Model
     | PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.Model
 
 
 view : Model -> Html Msg
-view (Model model) =
+view model =
     section []
-        [ sectionTitle
-        , Select4.view <|
+        [ Select4.view <|
             Select4.config
                 { label = "Temei:"
-                , defaultValue = model.temei
-                , valuesWithLabels = []
+                , defaultValue = initialModel
+                , valuesWithLabels = valuesWithLabels
                 , onInput = SetTemei
                 }
-        , fields model.temei
+        , fields model
         ]
 
 
-sectionTitle : Html Msg
-sectionTitle =
-    node "hgroup"
-        []
-        [ text "Temeiul" ]
-
-
-fields : Temei -> Html Msg
-fields temei =
-    case temei of
+fields : Model -> Html Msg
+fields model =
+    case model of
         CerereCreditor cerereCreditor ->
             CerereCreditor.view cerereCreditor |> map SetCerereCreditor
 
@@ -54,7 +40,7 @@ fields temei =
             PreluareDocumentExecutoriuStramutat.view preluareDocumentExecutoriuStramutat |> map SetPreluareDocumentExecutoriuStramutat
 
 
-valuesWithLabels : List ( Temei, String )
+valuesWithLabels : List ( Model, String )
 valuesWithLabels =
     [ ( CerereCreditor CerereCreditor.initialModel
       , "cerere a creditorului"
@@ -70,51 +56,44 @@ valuesWithLabels =
 
 initialModel : Model
 initialModel =
-    Model
-        { temei = initialTemei
-        }
-
-
-initialTemei : Temei
-initialTemei =
     CerereCreditor CerereCreditor.initialModel
 
 
 type Msg
-    = SetTemei Temei
+    = SetTemei Model
     | SetCerereCreditor CerereCreditor.Msg
     | SetDemersInstanta DemersInstanta.Msg
     | SetPreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.Msg
 
 
 update : Msg -> Model -> Model
-update msg (Model model) =
+update msg model =
     case msg of
         SetTemei v ->
-            Model { model | temei = v }
+            v
 
         SetCerereCreditor cerereCreditorMsg ->
-            case model.temei of
+            case model of
                 CerereCreditor c ->
-                    Model { model | temei = CerereCreditor (CerereCreditor.update cerereCreditorMsg c) }
+                    CerereCreditor (CerereCreditor.update cerereCreditorMsg c)
 
                 _ ->
-                    Model model
+                    model
 
         SetDemersInstanta demersInstantaMsg ->
-            case model.temei of
+            case model of
                 DemersInstanta demersInstanta ->
-                    Model { model | temei = DemersInstanta (DemersInstanta.update demersInstantaMsg demersInstanta) }
+                    DemersInstanta (DemersInstanta.update demersInstantaMsg demersInstanta)
 
                 _ ->
                     -- TODO??
-                    Model model
+                    model
 
         SetPreluareDocumentExecutoriuStramutat subMsg ->
-            case model.temei of
+            case model of
                 PreluareDocumentExecutoriuStramutat v ->
-                    Model { model | temei = PreluareDocumentExecutoriuStramutat (PreluareDocumentExecutoriuStramutat.update subMsg v) }
+                    PreluareDocumentExecutoriuStramutat (PreluareDocumentExecutoriuStramutat.update subMsg v)
 
                 _ ->
                     -- TODO???
-                    Model model
+                    model

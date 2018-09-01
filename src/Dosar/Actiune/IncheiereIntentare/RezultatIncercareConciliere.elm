@@ -39,11 +39,21 @@ dropdown : Model -> Html Msg
 dropdown model =
     Select4.view <|
         Select4.config
-            { label = "RezultatIncercareConciliere 4:"
-            , defaultValue = model
+            { label = "RezultatIncercareConciliere:"
+            , defaultValue = initialModelFor model
             , valuesWithLabels = valuesWithLabels
             , onInput = Set
             }
+
+
+initialModelFor : Model -> Model
+initialModelFor model =
+    case model of
+        PartileAjungLaIntelegere _ ->
+            PartileAjungLaIntelegere PartileAjungLaIntelegere.initialModel
+
+        PartileNuAjungLaIntelegere _ ->
+            PartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.initialModel
 
 
 fields : Model -> Html Msg
@@ -57,9 +67,9 @@ fields model =
 
 
 type Msg
-    = SetPartileAjungLaIntelegere PartileAjungLaIntelegere.Model PartileAjungLaIntelegere.Msg
+    = Set Model
+    | SetPartileAjungLaIntelegere PartileAjungLaIntelegere.Model PartileAjungLaIntelegere.Msg
     | SetPartileNuAjungLaIntelegere PartileNuAjungLaIntelegere.Model PartileNuAjungLaIntelegere.Msg
-    | Set Model
 
 
 update : Msg -> Model -> Model

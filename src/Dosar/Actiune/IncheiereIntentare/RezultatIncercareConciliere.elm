@@ -40,14 +40,14 @@ dropdown model =
     Select4.view <|
         Select4.config
             { label = "RezultatIncercareConciliere:"
-            , defaultValue = initialModelFor model
+            , defaultValue = taggedInitialModelFor model
             , valuesWithLabels = valuesWithLabels
             , onInput = Set
             }
 
 
-initialModelFor : Model -> Model
-initialModelFor model =
+taggedInitialModelFor : Model -> Model
+taggedInitialModelFor model =
     case model of
         PartileAjungLaIntelegere _ ->
             PartileAjungLaIntelegere PartileAjungLaIntelegere.initialModel

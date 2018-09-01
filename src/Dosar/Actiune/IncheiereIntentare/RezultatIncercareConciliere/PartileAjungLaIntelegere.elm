@@ -4,10 +4,11 @@ import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
 import Html exposing (Html, fieldset, legend, map, text)
 import Utils.DocumentScanat2 as DocumentScanat2
 import Utils.RichTextEditor2 as RichTextEditor2
+import Utils.RichTextEditor3 as RichTextEditor3
 
 
 type alias Model =
-    { procesVerbalConsemnareConditiiExecutare : RichTextEditor2.Model
+    { procesVerbalConsemnareConditiiExecutare : String
     , copieProcesVerbalConsemnareConditiiExecutare : DocumentScanat2.Model
     , procesVerbalConstatareExecutare : RichTextEditor2.Model
     , copieProcesVerbalConstatareExecutare : DocumentScanat2.Model
@@ -17,7 +18,7 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { procesVerbalConsemnareConditiiExecutare = RichTextEditor2.initialModel
+    { procesVerbalConsemnareConditiiExecutare = ""
     , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat2.initialModel
     , procesVerbalConstatareExecutare = RichTextEditor2.initialModel
     , copieProcesVerbalConstatareExecutare = DocumentScanat2.initialModel
@@ -29,10 +30,10 @@ view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "PartileAjungLaIntelegere" ]
-        , RichTextEditor2.view
+        , RichTextEditor3.view
             "Formează proces-verbal de consemnare condițiilor de executare"
             model.procesVerbalConsemnareConditiiExecutare
-            |> map SetProcesVerbalConsemnareConditiiExecutare
+            SetProcesVerbalConsemnareConditiiExecutare
         , DocumentScanat2.view
             "Copia semnată a procesului-verbal de consemnare a condițiilor de executare"
             model.copieProcesVerbalConsemnareConditiiExecutare
@@ -50,7 +51,7 @@ view model =
 
 
 type Msg
-    = SetProcesVerbalConsemnareConditiiExecutare RichTextEditor2.Msg
+    = SetProcesVerbalConsemnareConditiiExecutare String
     | SetCopieProcesVerbalConsemnareConditiiExecutare DocumentScanat2.Msg
     | SetProcesVerbalConstatareExecutare RichTextEditor2.Msg
     | SetCopieProcesVerbalConstatareExecutare DocumentScanat2.Msg
@@ -60,8 +61,8 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetProcesVerbalConsemnareConditiiExecutare msgRichTextEditor2 ->
-            { model | procesVerbalConsemnareConditiiExecutare = RichTextEditor2.update msgRichTextEditor2 model.procesVerbalConsemnareConditiiExecutare }
+        SetProcesVerbalConsemnareConditiiExecutare v ->
+            { model | procesVerbalConsemnareConditiiExecutare = v }
 
         SetCopieProcesVerbalConsemnareConditiiExecutare msgDocumentScanat2 ->
             { model | copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat2.update msgDocumentScanat2 model.copieProcesVerbalConstatareExecutare }

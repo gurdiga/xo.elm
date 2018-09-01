@@ -3,14 +3,13 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare
 import Html exposing (Html, fieldset, legend, map, text)
 import Utils.DocumentScanat2 as DocumentScanat2
-import Utils.RichTextEditor2 as RichTextEditor2
 import Utils.RichTextEditor3 as RichTextEditor3
 
 
 type alias Model =
     { procesVerbalConsemnareConditiiExecutare : String
     , copieProcesVerbalConsemnareConditiiExecutare : DocumentScanat2.Model
-    , procesVerbalConstatareExecutare : RichTextEditor2.Model
+    , procesVerbalConstatareExecutare : String
     , copieProcesVerbalConstatareExecutare : DocumentScanat2.Model
     , incheiereIncetare : IncheiereIncetare.Model
     }
@@ -20,7 +19,7 @@ initialModel : Model
 initialModel =
     { procesVerbalConsemnareConditiiExecutare = ""
     , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat2.initialModel
-    , procesVerbalConstatareExecutare = RichTextEditor2.initialModel
+    , procesVerbalConstatareExecutare = ""
     , copieProcesVerbalConstatareExecutare = DocumentScanat2.initialModel
     , incheiereIncetare = IncheiereIncetare.initialModel
     }
@@ -38,10 +37,10 @@ view model =
             "Copia semnată a procesului-verbal de consemnare a condițiilor de executare"
             model.copieProcesVerbalConsemnareConditiiExecutare
             |> map SetCopieProcesVerbalConsemnareConditiiExecutare
-        , RichTextEditor2.view
+        , RichTextEditor3.view
             "Formează proces-verbal de constatare a executării"
             model.procesVerbalConstatareExecutare
-            |> map SetProcesVerbalConstatareExecutare
+            SetProcesVerbalConstatareExecutare
         , DocumentScanat2.view
             "Copia semnată a procesului-verbal de constatare a executării"
             model.copieProcesVerbalConstatareExecutare
@@ -53,7 +52,7 @@ view model =
 type Msg
     = SetProcesVerbalConsemnareConditiiExecutare String
     | SetCopieProcesVerbalConsemnareConditiiExecutare DocumentScanat2.Msg
-    | SetProcesVerbalConstatareExecutare RichTextEditor2.Msg
+    | SetProcesVerbalConstatareExecutare String
     | SetCopieProcesVerbalConstatareExecutare DocumentScanat2.Msg
     | SetIncheiereIncetare IncheiereIncetare.Msg
 
@@ -67,8 +66,8 @@ update msg model =
         SetCopieProcesVerbalConsemnareConditiiExecutare msgDocumentScanat2 ->
             { model | copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat2.update msgDocumentScanat2 model.copieProcesVerbalConstatareExecutare }
 
-        SetProcesVerbalConstatareExecutare msgRichTextEditor2 ->
-            { model | procesVerbalConstatareExecutare = RichTextEditor2.update msgRichTextEditor2 model.procesVerbalConstatareExecutare }
+        SetProcesVerbalConstatareExecutare v ->
+            { model | procesVerbalConstatareExecutare = v }
 
         SetCopieProcesVerbalConstatareExecutare msgDocumentScanat2 ->
             { model | copieProcesVerbalConstatareExecutare = DocumentScanat2.update msgDocumentScanat2 model.copieProcesVerbalConstatareExecutare }

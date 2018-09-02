@@ -20,7 +20,7 @@ valuesWithLabels =
 
 initialModel : Model
 initialModel =
-    IncheiereIntentare IncheiereIntentare.initialModel
+    IncheiereRefuz IncheiereRefuz.initialModel
 
 
 view : Model -> Html Msg
@@ -38,9 +38,19 @@ dropdown model =
         Select4.config
             { label = "Actiune:"
             , valuesWithLabels = valuesWithLabels
-            , defaultValue = model
+            , defaultValue = taggedInitialModelFor model
             , onInput = Set
             }
+
+
+taggedInitialModelFor : Model -> Model
+taggedInitialModelFor model =
+    case model of
+        IncheiereIntentare _ ->
+            IncheiereIntentare IncheiereIntentare.initialModel
+
+        IncheiereRefuz _ ->
+            IncheiereRefuz IncheiereRefuz.initialModel
 
 
 fields : Model -> Html Msg

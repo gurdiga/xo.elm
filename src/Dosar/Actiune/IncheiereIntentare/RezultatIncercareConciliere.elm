@@ -59,11 +59,11 @@ taggedInitialModelFor model =
 fields : Model -> Html Msg
 fields model =
     case model of
-        PartileAjungLaIntelegere modelPartileAjungLaIntelegere ->
-            PartileAjungLaIntelegere.view modelPartileAjungLaIntelegere |> map (SetPartileAjungLaIntelegere modelPartileAjungLaIntelegere)
+        PartileAjungLaIntelegere v ->
+            PartileAjungLaIntelegere.view v |> map (SetPartileAjungLaIntelegere v)
 
-        PartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere ->
-            PartileNuAjungLaIntelegere.view modelPartileNuAjungLaIntelegere |> map (SetPartileNuAjungLaIntelegere modelPartileNuAjungLaIntelegere)
+        PartileNuAjungLaIntelegere v ->
+            PartileNuAjungLaIntelegere.view v |> map (SetPartileNuAjungLaIntelegere v)
 
 
 type Msg

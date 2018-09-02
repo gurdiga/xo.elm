@@ -1,14 +1,10 @@
-module Dosar.Actiune.IncheiereRefuz.CauzaRefuz exposing (CauzaRefuz, empty, view)
-
-import Html exposing (Html, div, label, text)
-import Widgets.Select4 as Select4
-
+module Dosar.Actiune.IncheiereRefuz.CauzaRefuz exposing (Model, initialModel, valuesWithLabels)
 
 -- Articolul 61. Refuzul de a intenta procedura de executare
 -- (1) Executorul judecătoresc poate refuza intentarea procedurii de executare dacă:
 
 
-type CauzaRefuz
+type Model
     = -- a) documentul nu este de competenţa sa;
       NecorespondentaCompetenta
     | -- b) termenul de prezentare a documentului spre executare a expirat;
@@ -23,7 +19,7 @@ type CauzaRefuz
       DocumentExecutoriuDejaExecutat
 
 
-valuesWithLabels : List ( CauzaRefuz, String )
+valuesWithLabels : List ( Model, String )
 valuesWithLabels =
     [ ( NecorespondentaCompetenta
       , "documentul nu este de competenţa sa"
@@ -46,19 +42,6 @@ valuesWithLabels =
     ]
 
 
-empty : CauzaRefuz
-empty =
+initialModel : Model
+initialModel =
     NecorespondentaCompetenta
-
-
-view : CauzaRefuz -> (CauzaRefuz -> msg) -> Html msg
-view cauzaRefuz callback =
-    div []
-        [ Select4.view <|
-            Select4.config
-                { label = "Cauza refuzului:"
-                , valuesWithLabels = valuesWithLabels
-                , defaultValue = cauzaRefuz
-                , onInput = callback
-                }
-        ]

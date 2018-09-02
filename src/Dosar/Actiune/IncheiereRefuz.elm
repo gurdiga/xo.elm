@@ -1,56 +1,49 @@
 module Dosar.Actiune.IncheiereRefuz exposing (Model, Msg, initialModel, update, view)
 
--- import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz exposing (CauzaRefuz)
-
+import Dosar.Actiune.IncheiereRefuz.CauzaRefuz as CauzaRefuz
 import Html exposing (Html, button, div, fieldset, h1, legend, map, p, text)
-
-
--- import Utils.RichTextEditor as RichTextEditor
+import Utils.RichTextEditor3 as RichTextEditor3
+import Widgets.Select4 as Select4
 
 
 type alias Model =
-    { --  cauza : CauzaRefuz
-      -- , html : String
+    { cauza : CauzaRefuz.Model
+    , content : String
     }
 
 
 initialModel : Model
 initialModel =
-    { --  cauza = CauzaRefuz.empty
-      -- , html = ""
+    { cauza = CauzaRefuz.initialModel
+    , content = ""
     }
 
 
-view : Model -> Html msg
+view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "IncheiereRefuz" ]
-        , text "TODO"
-
-        -- , CauzaRefuz.view data.cauza (\v -> c { data | cauza = v })
-        -- , RichTextEditor.view
-        --     { buttonLabel = "Editează"
-        --     , content = template data
-        --     , onOpen = callback incheiereRefuz
-        --     , onResponse = \s -> c { data | html = s }
-        --     }
+        , Select4.view <|
+            Select4.config
+                { label = "Cauza refuzului:"
+                , valuesWithLabels = CauzaRefuz.valuesWithLabels
+                , defaultValue = model.cauza
+                , onInput = SetCauza
+                }
+        , RichTextEditor3.view "Formează borderou de calcul" model.content SetContent
         ]
 
 
-template : Model -> List (Html msg)
-template model =
-    -- TODO: find the real template
-    [ h1 [] [ text "IncheiereRefuz" ]
-    , p [] [ text "TODO" ]
-    ]
-
-
 type Msg
-    = Msg
+    = SetCauza CauzaRefuz.Model
+    | SetContent String
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Msg ->
-            model
+        SetCauza v ->
+            { model | cauza = v }
+
+        SetContent v ->
+            { model | content = v }

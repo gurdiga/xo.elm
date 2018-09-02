@@ -4,10 +4,10 @@ module Dosar.DocumentExecutoriu exposing (Model, Msg, initialModel, update, view
 -- import Utils.MyList as MyList
 -- import Widgets.Fields exposing (largeTextField)
 
+import Dosar.DocumentExecutoriu.Debitori as Debitori
 import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare)
 import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata
 import Dosar.DocumentExecutoriu.Pricina as Pricina
-import Dosar.Persoana as Persoana
 import Html exposing (Html, br, button, div, fieldset, legend, map, text)
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
@@ -21,7 +21,7 @@ type alias Model =
     , dataPronuntareHotarire : MyDate.Model
     , dispozitivul : String
     , dataRamineriiDefinitive : MyDate.Model
-    , debitori : List Persoana.Model
+    , debitori : Debitori.Model
     , dataEliberarii : MyDate.Model
     , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
     , mentiuniPrivindPatrundereaFortata : String
@@ -37,7 +37,7 @@ initialModel =
     , dataPronuntareHotarire = MyDate.empty
     , dispozitivul = ""
     , dataRamineriiDefinitive = MyDate.empty
-    , debitori = [ Persoana.initialModel ]
+    , debitori = Debitori.initialModel
     , dataEliberarii = MyDate.empty
     , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.empty
     , mentiuniPrivindPatrundereaFortata = ""
@@ -67,8 +67,7 @@ view model =
         , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> map SetDataPronuntareHotarire
         , LargeTextField.view "Dispozitivul:" model.dispozitivul |> map SetDispozitivul
         , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> map SetDataRamineriiDefinitive
-
-        -- , debitoriView model.debitori (\v -> c { model | debitori = v })
+        , Debitori.view model.debitori |> map SetDebitori
         , DateField.view "Data eliberării:" model.dataEliberarii |> map SetDataEliberarii
 
         -- , DocumenteAplicareMasuriAsigurare.view
@@ -82,30 +81,14 @@ view model =
         ]
 
 
-
--- debitoriView : List Persoana.Model -> (List Persoana.Model -> msg) -> Html msg
--- debitoriView debitori callback =
---     fieldset []
---         ([ legend [] [ text "Debitori" ] ]
---             ++ List.indexedMap
---                 (\i debitor ->
---                     Persoana.view debitor |> Html.map (SetDebitor i)
---                  -- (\v -> callback (MyList.replace debitori i v))
---                 )
---                 debitori
---             ++ [ button [ onClick (\_ -> callback (debitori ++ [ Persoana.initialModel ])) ] [ text "+" ] ]
---         )
---
-
-
 type Msg
     = SetInstantaEmitatoare InstantaDeJudecata.Model
     | SetPricina Pricina.Model
     | SetDataPronuntareHotarire DateField.Msg
     | SetDispozitivul LargeTextField.Msg
     | SetDataRamineriiDefinitive DateField.Msg
+    | SetDebitori Debitori.Msg
     | SetDataEliberarii DateField.Msg
-      -- | SetDebitor Int Persoana.Msg
     | SetMentiuniPrivindPatrundereaFortata LargeTextField.Msg
     | SetLocPastrareBunuriSechestrate LargeTextField.Msg
     | SetNote LargeTextField.Msg
@@ -128,6 +111,9 @@ update msg model =
 
         SetDataRamineriiDefinitive dateFieldMsg ->
             { model | dataRamineriiDefinitive = DateField.update dateFieldMsg model.dataRamineriiDefinitive }
+
+        SetDebitori m ->
+            { model | debitori = Debitori.update m model.debitori }
 
         SetDataEliberarii dateFieldMsg ->
             { model | dataEliberarii = DateField.update dateFieldMsg model.dataEliberarii }

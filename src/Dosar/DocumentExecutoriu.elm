@@ -1,4 +1,4 @@
-module Dosar.DocumentExecutoriu exposing (Model, Msg, empty, update, view)
+module Dosar.DocumentExecutoriu exposing (Model, Msg, initialModel, update, view)
 
 -- import Utils.MyHtmlEvents exposing (onClick)
 -- import Utils.MyList as MyList
@@ -15,41 +15,39 @@ import Widgets.LargeTextField as LargeTextField
 import Widgets.Select4 as Select4
 
 
-type Model
-    = Model
-        { instantaEmitatoare : InstantaDeJudecata.Model
-        , pricina : Pricina.Model
-        , dataPronuntareHotarire : MyDate.Model
-        , dispozitivul : String
-        , dataRamineriiDefinitive : MyDate.Model
-        , debitori : List Persoana.Model
-        , dataEliberarii : MyDate.Model
-        , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
-        , mentiuniPrivindPatrundereaFortata : String
-        , locPastrareBunuriSechestrate : String
-        , note : String
-        }
+type alias Model =
+    { instantaEmitatoare : InstantaDeJudecata.Model
+    , pricina : Pricina.Model
+    , dataPronuntareHotarire : MyDate.Model
+    , dispozitivul : String
+    , dataRamineriiDefinitive : MyDate.Model
+    , debitori : List Persoana.Model
+    , dataEliberarii : MyDate.Model
+    , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
+    , mentiuniPrivindPatrundereaFortata : String
+    , locPastrareBunuriSechestrate : String
+    , note : String
+    }
 
 
-empty : Model
-empty =
-    Model
-        { instantaEmitatoare = InstantaDeJudecata.initialModel
-        , pricina = Pricina.initialModel
-        , dataPronuntareHotarire = MyDate.empty
-        , dispozitivul = ""
-        , dataRamineriiDefinitive = MyDate.empty
-        , debitori = [ Persoana.initialModel ]
-        , dataEliberarii = MyDate.empty
-        , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.empty
-        , mentiuniPrivindPatrundereaFortata = ""
-        , locPastrareBunuriSechestrate = ""
-        , note = ""
-        }
+initialModel : Model
+initialModel =
+    { instantaEmitatoare = InstantaDeJudecata.initialModel
+    , pricina = Pricina.initialModel
+    , dataPronuntareHotarire = MyDate.empty
+    , dispozitivul = ""
+    , dataRamineriiDefinitive = MyDate.empty
+    , debitori = [ Persoana.initialModel ]
+    , dataEliberarii = MyDate.empty
+    , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.empty
+    , mentiuniPrivindPatrundereaFortata = ""
+    , locPastrareBunuriSechestrate = ""
+    , note = ""
+    }
 
 
 view : Model -> Html Msg
-view (Model model) =
+view model =
     fieldset []
         [ legend [] [ text "DocumentExecutoriu" ]
         , Select4.view <|
@@ -114,31 +112,31 @@ type Msg
 
 
 update : Msg -> Model -> Model
-update msg (Model model) =
+update msg model =
     case msg of
         SetInstantaEmitatoare v ->
-            Model { model | instantaEmitatoare = v }
+            { model | instantaEmitatoare = v }
 
         SetPricina v ->
-            Model { model | pricina = v }
+            { model | pricina = v }
 
         SetDataPronuntareHotarire dateFieldMsg ->
-            Model { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
+            { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
 
         SetDispozitivul largeTextFieldMsg ->
-            Model { model | dispozitivul = LargeTextField.update largeTextFieldMsg model.dispozitivul }
+            { model | dispozitivul = LargeTextField.update largeTextFieldMsg model.dispozitivul }
 
         SetDataRamineriiDefinitive dateFieldMsg ->
-            Model { model | dataRamineriiDefinitive = DateField.update dateFieldMsg model.dataRamineriiDefinitive }
+            { model | dataRamineriiDefinitive = DateField.update dateFieldMsg model.dataRamineriiDefinitive }
 
         SetDataEliberarii dateFieldMsg ->
-            Model { model | dataEliberarii = DateField.update dateFieldMsg model.dataEliberarii }
+            { model | dataEliberarii = DateField.update dateFieldMsg model.dataEliberarii }
 
         SetMentiuniPrivindPatrundereaFortata largeTextFieldMsg ->
-            Model { model | mentiuniPrivindPatrundereaFortata = LargeTextField.update largeTextFieldMsg model.mentiuniPrivindPatrundereaFortata }
+            { model | mentiuniPrivindPatrundereaFortata = LargeTextField.update largeTextFieldMsg model.mentiuniPrivindPatrundereaFortata }
 
         SetLocPastrareBunuriSechestrate largeTextFieldMsg ->
-            Model { model | locPastrareBunuriSechestrate = LargeTextField.update largeTextFieldMsg model.locPastrareBunuriSechestrate }
+            { model | locPastrareBunuriSechestrate = LargeTextField.update largeTextFieldMsg model.locPastrareBunuriSechestrate }
 
         SetNote largeTextFieldMsg ->
-            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
+            { model | note = LargeTextField.update largeTextFieldMsg model.note }

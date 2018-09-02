@@ -26,7 +26,7 @@ initialModel : Model
 initialModel =
     { id = "001"
     , temei = Temei.initialModel
-    , documentExecutoriu = DocumentExecutoriu.empty
+    , documentExecutoriu = DocumentExecutoriu.initialModel
     , actiune = Actiune.initialModel
     }
 

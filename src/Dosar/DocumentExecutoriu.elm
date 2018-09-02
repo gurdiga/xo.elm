@@ -15,50 +15,6 @@ import Widgets.LargeTextField as LargeTextField
 import Widgets.Select4 as Select4
 
 
-type Msg
-    = SetInstantaEmitatoare InstantaDeJudecata.Model
-    | SetPricina Pricina.Model
-    | SetDataPronuntareHotarire DateField.Msg
-    | SetDispozitivul LargeTextField.Msg
-    | SetDataRamineriiDefinitive DateField.Msg
-    | SetDataEliberarii DateField.Msg
-      -- | SetDebitor Int Persoana.Msg
-    | SetMentiuniPrivindPatrundereaFortata LargeTextField.Msg
-    | SetLocPastrareBunuriSechestrate LargeTextField.Msg
-    | SetNote LargeTextField.Msg
-
-
-update : Msg -> Model -> Model
-update msg (Model model) =
-    case msg of
-        SetInstantaEmitatoare v ->
-            Model { model | instantaEmitatoare = v }
-
-        SetPricina v ->
-            Model { model | pricina = v }
-
-        SetDataPronuntareHotarire dateFieldMsg ->
-            Model { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
-
-        SetDispozitivul largeTextFieldMsg ->
-            Model { model | dispozitivul = LargeTextField.update largeTextFieldMsg model.dispozitivul }
-
-        SetDataRamineriiDefinitive dateFieldMsg ->
-            Model { model | dataRamineriiDefinitive = DateField.update dateFieldMsg model.dataRamineriiDefinitive }
-
-        SetDataEliberarii dateFieldMsg ->
-            Model { model | dataEliberarii = DateField.update dateFieldMsg model.dataEliberarii }
-
-        SetMentiuniPrivindPatrundereaFortata largeTextFieldMsg ->
-            Model { model | mentiuniPrivindPatrundereaFortata = LargeTextField.update largeTextFieldMsg model.mentiuniPrivindPatrundereaFortata }
-
-        SetLocPastrareBunuriSechestrate largeTextFieldMsg ->
-            Model { model | locPastrareBunuriSechestrate = LargeTextField.update largeTextFieldMsg model.locPastrareBunuriSechestrate }
-
-        SetNote largeTextFieldMsg ->
-            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
-
-
 type Model
     = Model
         { instantaEmitatoare : InstantaDeJudecata.Model
@@ -141,3 +97,48 @@ view (Model model) =
 --                 debitori
 --             ++ [ button [ onClick (\_ -> callback (debitori ++ [ Persoana.initialModel ])) ] [ text "+" ] ]
 --         )
+--
+
+
+type Msg
+    = SetInstantaEmitatoare InstantaDeJudecata.Model
+    | SetPricina Pricina.Model
+    | SetDataPronuntareHotarire DateField.Msg
+    | SetDispozitivul LargeTextField.Msg
+    | SetDataRamineriiDefinitive DateField.Msg
+    | SetDataEliberarii DateField.Msg
+      -- | SetDebitor Int Persoana.Msg
+    | SetMentiuniPrivindPatrundereaFortata LargeTextField.Msg
+    | SetLocPastrareBunuriSechestrate LargeTextField.Msg
+    | SetNote LargeTextField.Msg
+
+
+update : Msg -> Model -> Model
+update msg (Model model) =
+    case msg of
+        SetInstantaEmitatoare v ->
+            Model { model | instantaEmitatoare = v }
+
+        SetPricina v ->
+            Model { model | pricina = v }
+
+        SetDataPronuntareHotarire dateFieldMsg ->
+            Model { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
+
+        SetDispozitivul largeTextFieldMsg ->
+            Model { model | dispozitivul = LargeTextField.update largeTextFieldMsg model.dispozitivul }
+
+        SetDataRamineriiDefinitive dateFieldMsg ->
+            Model { model | dataRamineriiDefinitive = DateField.update dateFieldMsg model.dataRamineriiDefinitive }
+
+        SetDataEliberarii dateFieldMsg ->
+            Model { model | dataEliberarii = DateField.update dateFieldMsg model.dataEliberarii }
+
+        SetMentiuniPrivindPatrundereaFortata largeTextFieldMsg ->
+            Model { model | mentiuniPrivindPatrundereaFortata = LargeTextField.update largeTextFieldMsg model.mentiuniPrivindPatrundereaFortata }
+
+        SetLocPastrareBunuriSechestrate largeTextFieldMsg ->
+            Model { model | locPastrareBunuriSechestrate = LargeTextField.update largeTextFieldMsg model.locPastrareBunuriSechestrate }
+
+        SetNote largeTextFieldMsg ->
+            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }

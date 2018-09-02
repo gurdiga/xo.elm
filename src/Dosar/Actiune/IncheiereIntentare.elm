@@ -3,15 +3,17 @@ module Dosar.Actiune.IncheiereIntentare exposing (Model, Msg, initialModel, upda
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere as RezultatIncercareConciliere
 import Html exposing (Html, button, div, fieldset, h1, legend, map, p, text)
 import Utils.DocumentScanat2 as DocumentScanat2
+import Utils.File as File exposing (File)
 import Utils.MyDate as MyDate
-import Utils.RichTextEditor2 as RichTextEditor2
+import Utils.RichTextEditor3 as RichTextEditor3
 import Widgets.DateField as DateField
+import Widgets.DocumentScanat3 as DocumentScanat3
 
 
 type alias Model =
-    { html : RichTextEditor2.Model
-    , borderouDeCalcul : RichTextEditor2.Model
-    , copieIncheiere : DocumentScanat2.Model
+    { html : String
+    , borderouDeCalcul : String
+    , copieIncheiere : File
     , termenConciliere : MyDate.Model
     , rezultatIncercareConciliere : RezultatIncercareConciliere.Model
     }
@@ -19,9 +21,9 @@ type alias Model =
 
 initialModel : Model
 initialModel =
-    { html = RichTextEditor2.initialModel
-    , borderouDeCalcul = RichTextEditor2.initialModel
-    , copieIncheiere = DocumentScanat2.initialModel
+    { html = ""
+    , borderouDeCalcul = ""
+    , copieIncheiere = File.empty
     , termenConciliere = MyDate.empty
     , rezultatIncercareConciliere = RezultatIncercareConciliere.initialModel
     }
@@ -31,9 +33,9 @@ view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "IncheiereIntentare" ]
-        , RichTextEditor2.view "Textul încheierii:" model.html |> map SetHtml
-        , RichTextEditor2.view "Borderou de calcul:" model.borderouDeCalcul |> map SetBorderouDeCalcul
-        , DocumentScanat2.view "Copia încheierii:" model.copieIncheiere |> map SetCopieIncheiere
+        , RichTextEditor3.view "Textul încheierii:" model.html SetHtml
+        , RichTextEditor3.view "Borderou de calcul:" model.borderouDeCalcul SetBorderouDeCalcul
+        , DocumentScanat3.view "Copia încheierii:" SetCopieIncheiere
         , -- LATER: Check that the date is reasonable? In the near future?
           DateField.view "Termen de conciliere:" model.termenConciliere |> map SetTermenConciliere
         , RezultatIncercareConciliere.view model.rezultatIncercareConciliere |> map SetRezultatIncercareConciliere
@@ -42,9 +44,9 @@ view model =
 
 type Msg
     = SetTermenConciliere DateField.Msg
-    | SetHtml RichTextEditor2.Msg
-    | SetBorderouDeCalcul RichTextEditor2.Msg
-    | SetCopieIncheiere DocumentScanat2.Msg
+    | SetHtml String
+    | SetBorderouDeCalcul String
+    | SetCopieIncheiere File
     | SetRezultatIncercareConciliere RezultatIncercareConciliere.Msg
 
 
@@ -54,14 +56,14 @@ update msg model =
         SetTermenConciliere msgDateField ->
             { model | termenConciliere = DateField.update msgDateField model.termenConciliere }
 
-        SetHtml msgRichTextEditor2 ->
-            { model | html = RichTextEditor2.update msgRichTextEditor2 model.html }
+        SetHtml v ->
+            { model | html = v }
 
-        SetBorderouDeCalcul msgRichTextEditor2 ->
-            { model | borderouDeCalcul = RichTextEditor2.update msgRichTextEditor2 model.borderouDeCalcul }
+        SetBorderouDeCalcul v ->
+            { model | borderouDeCalcul = v }
 
-        SetCopieIncheiere msgDocumentScanat2 ->
-            { model | copieIncheiere = DocumentScanat2.update msgDocumentScanat2 model.copieIncheiere }
+        SetCopieIncheiere v ->
+            { model | copieIncheiere = v }
 
         SetRezultatIncercareConciliere msgRezultatIncercareConciliere ->
             { model | rezultatIncercareConciliere = RezultatIncercareConciliere.update msgRezultatIncercareConciliere model.rezultatIncercareConciliere }

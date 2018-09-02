@@ -4,7 +4,7 @@ SERVER_PORT=8005
 default: rich-text-editor compile test
 
 test: elm-test
-	@echo "elm-test is not 0.19-compatible for now"
+	@echo "Skipping elm-test because it’s not 0.19-compatible yet"
 
 elm-test: /usr/local/bin/elm-test
 

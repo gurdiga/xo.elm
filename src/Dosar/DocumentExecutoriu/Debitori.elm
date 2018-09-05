@@ -43,7 +43,7 @@ viewItemAdd : Item -> Html Msg
 viewItemAdd x =
     fieldset []
         [ legend [] [ text "Adaugă debitor" ]
-        , text "Persoana.viewEditForm"
+        , Persoana.viewEditForm x |> map (\m -> Persoana.update m x |> EditableList.BeginAddItem)
         , button [ onClick (EditableList.AddItem x) ] [ text "Confirmă adăugarea" ]
         , button [ onClick EditableList.CancelAddItem ] [ text "Anulează adăugarea" ]
         ]
@@ -58,7 +58,7 @@ viewItemEdit : ( Int, Item ) -> Html Msg
 viewItemEdit ( i, x ) =
     fieldset []
         [ legend [] [ text "Editează debitor" ]
-        , text "Persoana.viewEditForm"
+        , Persoana.viewEditForm x |> map (\m -> Persoana.update m x |> EditableList.BeginEditItem i)
         , button [ onClick (EditableList.ReplaceItem i x) ] [ text "Confirmă editarea" ]
         , button [ onClick EditableList.CancelEditItem ] [ text "Anulează editarea" ]
         ]

@@ -5,7 +5,7 @@ module Dosar.DocumentExecutoriu exposing (Model, Msg, initialModel, update, view
 -- import Widgets.Fields exposing (largeTextField)
 
 import Dosar.DocumentExecutoriu.Debitori as Debitori
-import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare)
+import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare
 import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata
 import Dosar.DocumentExecutoriu.Pricina as Pricina
 import Html exposing (Html, br, button, div, fieldset, legend, map, text)
@@ -23,7 +23,7 @@ type alias Model =
     , dataRamineriiDefinitive : MyDate.Model
     , debitori : Debitori.Model
     , dataEliberarii : MyDate.Model
-    , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare
+    , documenteAplicareMasuriAsigurare : DocumenteAplicareMasuriAsigurare.Model
     , mentiuniPrivindPatrundereaFortata : String
     , locPastrareBunuriSechestrate : String
     , note : String
@@ -39,7 +39,7 @@ initialModel =
     , dataRamineriiDefinitive = MyDate.empty
     , debitori = Debitori.initialModel
     , dataEliberarii = MyDate.empty
-    , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.empty
+    , documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.initialModel
     , mentiuniPrivindPatrundereaFortata = ""
     , locPastrareBunuriSechestrate = ""
     , note = ""
@@ -69,10 +69,7 @@ view model =
         , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> map SetDataRamineriiDefinitive
         , Debitori.view model.debitori |> map SetDebitori
         , DateField.view "Data eliberării:" model.dataEliberarii |> map SetDataEliberarii
-
-        -- , DocumenteAplicareMasuriAsigurare.view
-        --     model.documenteAplicareMasuriAsigurare
-        --     (\v -> c { model | documenteAplicareMasuriAsigurare = v })
+        , DocumenteAplicareMasuriAsigurare.view model.documenteAplicareMasuriAsigurare |> map SetDocumenteAplicareMasuriAsigurare
         , LargeTextField.view "Mențiuni privind autorizarea pătrunderii forțate:" model.mentiuniPrivindPatrundereaFortata
             |> map SetMentiuniPrivindPatrundereaFortata
         , LargeTextField.view "Locul de păstrare a bunurilor sechestrate:" model.locPastrareBunuriSechestrate
@@ -89,6 +86,7 @@ type Msg
     | SetDataRamineriiDefinitive DateField.Msg
     | SetDebitori Debitori.Msg
     | SetDataEliberarii DateField.Msg
+    | SetDocumenteAplicareMasuriAsigurare DocumenteAplicareMasuriAsigurare.Msg
     | SetMentiuniPrivindPatrundereaFortata LargeTextField.Msg
     | SetLocPastrareBunuriSechestrate LargeTextField.Msg
     | SetNote LargeTextField.Msg
@@ -117,6 +115,9 @@ update msg model =
 
         SetDataEliberarii dateFieldMsg ->
             { model | dataEliberarii = DateField.update dateFieldMsg model.dataEliberarii }
+
+        SetDocumenteAplicareMasuriAsigurare m ->
+            { model | documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.update m model.documenteAplicareMasuriAsigurare }
 
         SetMentiuniPrivindPatrundereaFortata largeTextFieldMsg ->
             { model | mentiuniPrivindPatrundereaFortata = LargeTextField.update largeTextFieldMsg model.mentiuniPrivindPatrundereaFortata }

@@ -4,7 +4,7 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (Model, Msg, ini
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare
-import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
+import Widgets.DocumentScanat2 as DocumentScanat2
 import Html exposing (Html, fieldset, h1, legend, li, map, p, text, ul)
 import Widgets.Select4 as Select4
 

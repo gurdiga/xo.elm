@@ -1,4 +1,4 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 exposing (Model, Msg, initialModel, setCopie, update, view)
+module Widgets.DocumentScanat2 exposing (Model, Msg, initialModel, setCopie, update, view)
 
 import Html exposing (Attribute, Html, div, input, label, map, text)
 import Html.Attributes exposing (type_)

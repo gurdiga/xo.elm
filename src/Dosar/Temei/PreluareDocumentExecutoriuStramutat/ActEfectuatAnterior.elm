@@ -1,6 +1,6 @@
 module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior exposing (Model, Msg(..), initialModel, setFile, setNote, update, view)
 
-import Dosar.Temei.PreluareDocumentExecutoriuStramutat.DocumentScanat2 as DocumentScanat2
+import Widgets.DocumentScanat2 as DocumentScanat2
 import Html exposing (Html, button, fieldset, legend, p, text)
 
 

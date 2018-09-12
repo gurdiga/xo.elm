@@ -1,44 +1,79 @@
-module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare exposing (DocumenteAplicareMasuriAsigurare, empty, view)
+module Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare exposing (Model, Msg, initialModel, update, view)
 
-import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare.DocumentAplicareMasuriAsigurare as DocumentAplicareMasuriAsigurare exposing (DocumentAplicareMasuriAsigurare(..))
-import Html exposing (Html, fieldset, legend, text)
+import Dosar.DocumentExecutoriu.DocumentAplicareMasuriAsigurare as DocumentAplicareMasuriAsigurare
+import Html exposing (Html, button, fieldset, legend, li, map, text)
+import Html.Events exposing (onClick)
 import Utils.DocumentScanat as DocumentScanat
+import Widgets.EditableList as EditableList
 import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledTextField)
-import Widgets.Table as Table
 
 
-type DocumenteAplicareMasuriAsigurare
-    = DocumenteAplicareMasuriAsigurare (List DocumentAplicareMasuriAsigurare)
+type alias Item =
+    DocumentAplicareMasuriAsigurare.Model
 
 
-empty : DocumenteAplicareMasuriAsigurare
-empty =
-    DocumenteAplicareMasuriAsigurare []
+type alias Model =
+    EditableList.Model Item
 
 
-view : DocumenteAplicareMasuriAsigurare -> (DocumenteAplicareMasuriAsigurare -> msg) -> Html msg
-view documenteAplicareMasuriAsigurare callback =
+initialModel : Model
+initialModel =
+    EditableList.initialModel [ DocumentAplicareMasuriAsigurare.initialModel ]
+
+
+view : Model -> Html Msg
+view model =
     fieldset []
-        [ legend [] [ text "DocumenteAplicareMasuriAsigurare" ]
-        , Table.view
-            { recordList = data documenteAplicareMasuriAsigurare
-            , callback = callback << fromData
-            , columns =
-                [ ( "Denumire", \r c -> unlabeledTextField r.denumire (\v -> c { r | denumire = v }) )
-                , ( "Note", \r c -> unlabeledLargeTextField r.note (\v -> c { r | note = v }) )
-                , ( "Copia scanată", \r c -> [ DocumentScanat.unlabeledView r.copiaScanata (\v -> c { r | copiaScanata = v }) ] )
-                ]
-            , emptyView = text ""
-            , empty = DocumentAplicareMasuriAsigurare.data DocumentAplicareMasuriAsigurare.empty
+        [ legend [] [ text "DocumentAplicareMasuriAsigurare" ]
+        , EditableList.view
+            { viewNoItems = text "Nu sunt documente înregistrate."
+            , viewItem = viewItem
+            , viewItemAdd = viewItemAdd
+            , viewItemEdit = viewItemEdit
+            , viewAddItemButton = viewAddItemButton
             }
+            model
         ]
 
 
-data : DocumenteAplicareMasuriAsigurare -> List DocumentAplicareMasuriAsigurare.Data
-data (DocumenteAplicareMasuriAsigurare list) =
-    List.map DocumentAplicareMasuriAsigurare.data list
+viewItem : Int -> Item -> Html Msg
+viewItem i x =
+    li []
+        [ DocumentAplicareMasuriAsigurare.view x |> map (\m -> EditableList.Noop)
+        , button [ onClick (EditableList.BeginEditItem i x) ] [ text "Editează" ]
+        , button [ onClick (EditableList.DeleteItem x) ] [ text "Șterge" ]
+        ]
 
 
-fromData : List DocumentAplicareMasuriAsigurare.Data -> DocumenteAplicareMasuriAsigurare
-fromData =
-    DocumenteAplicareMasuriAsigurare << List.map DocumentAplicareMasuriAsigurare
+viewItemAdd : Item -> Html Msg
+viewItemAdd x =
+    fieldset []
+        [ legend [] [ text "Adaugă document" ]
+        , DocumentAplicareMasuriAsigurare.viewEditForm x |> map (\m -> DocumentAplicareMasuriAsigurare.update m x |> EditableList.BeginAddItem)
+        , button [ onClick (EditableList.AddItem x) ] [ text "Confirmă adăugarea" ]
+        , button [ onClick EditableList.CancelAddItem ] [ text "Anulează adăugarea" ]
+        ]
+
+
+viewAddItemButton : Html Msg
+viewAddItemButton =
+    button [ onClick (EditableList.BeginAddItem DocumentAplicareMasuriAsigurare.initialModel) ] [ text "Adaugă" ]
+
+
+viewItemEdit : ( Int, Item ) -> Html Msg
+viewItemEdit ( i, x ) =
+    fieldset []
+        [ legend [] [ text "Editează bun urmărit" ]
+        , DocumentAplicareMasuriAsigurare.viewEditForm x |> map (\m -> DocumentAplicareMasuriAsigurare.update m x |> EditableList.BeginEditItem i)
+        , button [ onClick (EditableList.ReplaceItem i x) ] [ text "Confirmă editarea" ]
+        , button [ onClick EditableList.CancelEditItem ] [ text "Anulează editarea" ]
+        ]
+
+
+type alias Msg =
+    EditableList.Msg Item
+
+
+update : Msg -> Model -> Model
+update =
+    EditableList.update

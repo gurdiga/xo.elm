@@ -23,15 +23,25 @@ view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "IncheiereRefuz" ]
-        , Select4.view <|
-            Select4.config
-                { label = "Cauza refuzului:"
-                , valuesWithLabels = CauzaRefuz.valuesWithLabels
-                , defaultValue = model.cauza
-                , onInput = SetCauza
-                }
-        , RichTextEditor3.view "Formează borderou de calcul" model.content SetContent
+        , dropdown model.cauza
+        , document model.content
         ]
+
+
+dropdown : CauzaRefuz.Model -> Html Msg
+dropdown cauza =
+    Select4.view <|
+        Select4.config
+            { label = "Cauza refuzului:"
+            , valuesWithLabels = CauzaRefuz.valuesWithLabels
+            , defaultValue = cauza
+            , onInput = SetCauza
+            }
+
+
+document : String -> Html Msg
+document content =
+    RichTextEditor3.view "Formează borderou de calcul" content SetContent
 
 
 type Msg

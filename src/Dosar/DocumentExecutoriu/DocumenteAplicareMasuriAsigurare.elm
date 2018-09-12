@@ -5,7 +5,6 @@ import Html exposing (Html, button, fieldset, legend, li, map, text)
 import Html.Events exposing (onClick)
 import Utils.DocumentScanat as DocumentScanat
 import Widgets.EditableList as EditableList
-import Widgets.Fields exposing (unlabeledLargeTextField, unlabeledTextField)
 
 
 type alias Item =

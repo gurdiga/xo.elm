@@ -11,7 +11,7 @@ import Dosar.DocumentExecutoriu.Pricina as Pricina
 import Html exposing (Html, br, button, div, fieldset, legend, map, text)
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
-import Widgets.LargeTextField as LargeTextField
+import Widgets.LargeTextField2 as LargeTextField2
 import Widgets.Select4 as Select4
 
 
@@ -65,16 +65,14 @@ view model =
                 , onInput = SetPricina
                 }
         , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> map SetDataPronuntareHotarire
-        , LargeTextField.view "Dispozitivul:" model.dispozitivul |> map SetDispozitivul
+        , LargeTextField2.view "Dispozitivul:" model.dispozitivul SetDispozitivul
         , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> map SetDataRamineriiDefinitive
         , Debitori.view model.debitori |> map SetDebitori
         , DateField.view "Data eliberării:" model.dataEliberarii |> map SetDataEliberarii
         , DocumenteAplicareMasuriAsigurare.view model.documenteAplicareMasuriAsigurare |> map SetDocumenteAplicareMasuriAsigurare
-        , LargeTextField.view "Mențiuni privind autorizarea pătrunderii forțate:" model.mentiuniPrivindPatrundereaFortata
-            |> map SetMentiuniPrivindPatrundereaFortata
-        , LargeTextField.view "Locul de păstrare a bunurilor sechestrate:" model.locPastrareBunuriSechestrate
-            |> map SetLocPastrareBunuriSechestrate
-        , LargeTextField.view "Note:" model.note |> map SetNote
+        , LargeTextField2.view "Mențiuni privind autorizarea pătrunderii forțate:" model.mentiuniPrivindPatrundereaFortata SetMentiuniPrivindPatrundereaFortata
+        , LargeTextField2.view "Locul de păstrare a bunurilor sechestrate:" model.locPastrareBunuriSechestrate SetLocPastrareBunuriSechestrate
+        , LargeTextField2.view "Note:" model.note SetNote
         ]
 
 
@@ -82,14 +80,14 @@ type Msg
     = SetInstantaEmitatoare InstantaDeJudecata.Model
     | SetPricina Pricina.Model
     | SetDataPronuntareHotarire DateField.Msg
-    | SetDispozitivul LargeTextField.Msg
+    | SetDispozitivul String
     | SetDataRamineriiDefinitive DateField.Msg
     | SetDebitori Debitori.Msg
     | SetDataEliberarii DateField.Msg
     | SetDocumenteAplicareMasuriAsigurare DocumenteAplicareMasuriAsigurare.Msg
-    | SetMentiuniPrivindPatrundereaFortata LargeTextField.Msg
-    | SetLocPastrareBunuriSechestrate LargeTextField.Msg
-    | SetNote LargeTextField.Msg
+    | SetMentiuniPrivindPatrundereaFortata String
+    | SetLocPastrareBunuriSechestrate String
+    | SetNote String
 
 
 update : Msg -> Model -> Model
@@ -104,8 +102,8 @@ update msg model =
         SetDataPronuntareHotarire dateFieldMsg ->
             { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
 
-        SetDispozitivul largeTextFieldMsg ->
-            { model | dispozitivul = LargeTextField.update largeTextFieldMsg model.dispozitivul }
+        SetDispozitivul v ->
+            { model | dispozitivul = v }
 
         SetDataRamineriiDefinitive dateFieldMsg ->
             { model | dataRamineriiDefinitive = DateField.update dateFieldMsg model.dataRamineriiDefinitive }
@@ -119,11 +117,11 @@ update msg model =
         SetDocumenteAplicareMasuriAsigurare m ->
             { model | documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.update m model.documenteAplicareMasuriAsigurare }
 
-        SetMentiuniPrivindPatrundereaFortata largeTextFieldMsg ->
-            { model | mentiuniPrivindPatrundereaFortata = LargeTextField.update largeTextFieldMsg model.mentiuniPrivindPatrundereaFortata }
+        SetMentiuniPrivindPatrundereaFortata v ->
+            { model | mentiuniPrivindPatrundereaFortata = v }
 
-        SetLocPastrareBunuriSechestrate largeTextFieldMsg ->
-            { model | locPastrareBunuriSechestrate = LargeTextField.update largeTextFieldMsg model.locPastrareBunuriSechestrate }
+        SetLocPastrareBunuriSechestrate v ->
+            { model | locPastrareBunuriSechestrate = v }
 
-        SetNote largeTextFieldMsg ->
-            { model | note = LargeTextField.update largeTextFieldMsg model.note }
+        SetNote v ->
+            { model | note = v }

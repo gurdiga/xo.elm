@@ -1,35 +1,8 @@
 module Dosar.Persoana.PersoanaJuridica exposing (Model, Msg, empty, update, view, viewEditForm)
 
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
-import Widgets.LargeTextField as LargeTextField
+import Widgets.LargeTextField2 as LargeTextField2
 import Widgets.TextField as TextField
-
-
-type Msg
-    = SetDenumire TextField.Msg
-    | SetCodFiscal TextField.Msg
-    | SetRechiziteBancare LargeTextField.Msg
-    | SetAdresa LargeTextField.Msg
-    | SetNote LargeTextField.Msg
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        SetDenumire textFieldMsg ->
-            { model | denumire = TextField.update textFieldMsg model.denumire }
-
-        SetCodFiscal textFieldMsg ->
-            { model | codFiscal = TextField.update textFieldMsg model.codFiscal }
-
-        SetRechiziteBancare largeTextFieldMsg ->
-            { model | rechiziteBancare = LargeTextField.update largeTextFieldMsg model.rechiziteBancare }
-
-        SetAdresa largeTextFieldMsg ->
-            { model | adresa = LargeTextField.update largeTextFieldMsg model.adresa }
-
-        SetNote largeTextFieldMsg ->
-            { model | note = LargeTextField.update largeTextFieldMsg model.note }
 
 
 type alias Model =
@@ -70,7 +43,34 @@ viewEditForm model =
     ul []
         [ li [] [ TextField.view "Denumire:" model.denumire |> map SetDenumire ]
         , li [] [ TextField.view "Cod fiscal:" model.codFiscal |> map SetCodFiscal ]
-        , li [] [ LargeTextField.view "Date bancare:" model.rechiziteBancare |> map SetRechiziteBancare ]
-        , li [] [ LargeTextField.view "Adresa:" model.adresa |> map SetAdresa ]
-        , li [] [ LargeTextField.view "Note:" model.note |> map SetNote ]
+        , li [] [ LargeTextField2.view "Date bancare:" model.rechiziteBancare SetRechiziteBancare ]
+        , li [] [ LargeTextField2.view "Adresa:" model.adresa SetAdresa ]
+        , li [] [ LargeTextField2.view "Note:" model.note SetNote ]
         ]
+
+
+type Msg
+    = SetDenumire TextField.Msg
+    | SetCodFiscal TextField.Msg
+    | SetRechiziteBancare String
+    | SetAdresa String
+    | SetNote String
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        SetDenumire textFieldMsg ->
+            { model | denumire = TextField.update textFieldMsg model.denumire }
+
+        SetCodFiscal textFieldMsg ->
+            { model | codFiscal = TextField.update textFieldMsg model.codFiscal }
+
+        SetRechiziteBancare v ->
+            { model | rechiziteBancare = v }
+
+        SetAdresa v ->
+            { model | adresa = v }
+
+        SetNote v ->
+            { model | note = v }

@@ -2,7 +2,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.Money as Money exposing (Currency(..), Money(..))
-import Widgets.LargeTextField as LargeTextField
+import Widgets.LargeTextField2 as LargeTextField2
 import Widgets.MoneyField as MoneyField
 
 
@@ -34,13 +34,13 @@ viewEditForm : Model -> Html Msg
 viewEditForm model =
     ul []
         [ li [] [ MoneyField.view "Valoare:" model.valoare |> map SetValoare ]
-        , li [] [ LargeTextField.view "Note:" model.note |> map SetNote ]
+        , li [] [ LargeTextField2.view "Note:" model.note SetNote ]
         ]
 
 
 type Msg
     = SetValoare MoneyField.Msg
-    | SetNote LargeTextField.Msg
+    | SetNote String
 
 
 update : Msg -> Model -> Model
@@ -49,5 +49,5 @@ update msg model =
         SetValoare msgMoneyField ->
             { model | valoare = MoneyField.update msgMoneyField model.valoare }
 
-        SetNote msgLargeTextField ->
-            { model | note = LargeTextField.update msgLargeTextField model.note }
+        SetNote v ->
+            { model | note = v }

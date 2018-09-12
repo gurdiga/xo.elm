@@ -2,22 +2,7 @@ module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (Model, Msg, ini
 
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.DocumentScanatTea as DocumentScanatTea
-import Widgets.LargeTextField as LargeTextField
-
-
-type Msg
-    = SetCopia DocumentScanatTea.Msg
-    | SetNote LargeTextField.Msg
-
-
-update : Msg -> Model -> Model
-update msg (Model model) =
-    case msg of
-        SetCopia documentScanatTeaMsg ->
-            Model { model | copia = DocumentScanatTea.update documentScanatTeaMsg model.copia }
-
-        SetNote largeTextFieldMsg ->
-            Model { model | note = LargeTextField.update largeTextFieldMsg model.note }
+import Widgets.LargeTextField2 as LargeTextField2
 
 
 type Model
@@ -44,5 +29,20 @@ view (Model model) =
             , documentScanat = model.copia
             }
             |> map SetCopia
-        , LargeTextField.view "Note:" model.note |> map SetNote
+        , LargeTextField2.view "Note:" model.note SetNote
         ]
+
+
+type Msg
+    = SetCopia DocumentScanatTea.Msg
+    | SetNote String
+
+
+update : Msg -> Model -> Model
+update msg (Model model) =
+    case msg of
+        SetCopia documentScanatTeaMsg ->
+            Model { model | copia = DocumentScanatTea.update documentScanatTeaMsg model.copia }
+
+        SetNote v ->
+            Model { model | note = v }

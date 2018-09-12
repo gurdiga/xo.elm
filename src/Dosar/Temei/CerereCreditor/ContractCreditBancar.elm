@@ -2,7 +2,7 @@ module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (Model, Msg, ini
 
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.DocumentScanatTea as DocumentScanatTea
-import Widgets.LargeTextField2 as LargeTextField2
+import Widgets.LargeTextField as LargeTextField
 
 
 type Model
@@ -29,7 +29,7 @@ view (Model model) =
             , documentScanat = model.copia
             }
             |> map SetCopia
-        , LargeTextField2.view "Note:" model.note SetNote
+        , LargeTextField.view "Note:" model.note SetNote
         ]
 
 

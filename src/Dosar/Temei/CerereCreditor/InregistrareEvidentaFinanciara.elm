@@ -4,7 +4,7 @@ import Html exposing (Html, map, td, text, tr)
 import Utils.Money as Money exposing (Currency(..), Money(..))
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
-import Widgets.LargeTextField2 as LargeTextField2
+import Widgets.LargeTextField as LargeTextField
 import Widgets.MoneyField as MoneyField
 
 
@@ -28,7 +28,7 @@ view model =
     tr []
         [ td [] <| [ DateField.view "" model.data |> map SetData ]
         , td [] <| [ MoneyField.view "" model.suma |> map SetSuma ]
-        , td [] <| [ LargeTextField2.view "" model.note SetNote ]
+        , td [] <| [ LargeTextField.view "" model.note SetNote ]
         ]
 
 

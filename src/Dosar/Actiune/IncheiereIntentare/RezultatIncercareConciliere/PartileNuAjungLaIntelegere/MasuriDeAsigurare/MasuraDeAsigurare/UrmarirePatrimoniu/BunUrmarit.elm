@@ -2,7 +2,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAju
 
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.Money as Money exposing (Currency(..), Money(..))
-import Widgets.LargeTextField2 as LargeTextField2
+import Widgets.LargeTextField as LargeTextField
 import Widgets.MoneyField as MoneyField
 import Widgets.TextField as TextField
 
@@ -39,7 +39,7 @@ viewEditForm model =
     ul []
         [ li [] [ TextField.view "Denumire:" model.denumire |> map SetDenumire ]
         , li [] [ MoneyField.view "Valoare:" model.valoare |> map SetValoare ]
-        , li [] [ LargeTextField2.view "Note:" model.note SetNote ]
+        , li [] [ LargeTextField.view "Note:" model.note SetNote ]
         ]
 
 

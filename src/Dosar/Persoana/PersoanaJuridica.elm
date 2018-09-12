@@ -1,7 +1,7 @@
 module Dosar.Persoana.PersoanaJuridica exposing (Model, Msg, empty, update, view, viewEditForm)
 
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
-import Widgets.LargeTextField2 as LargeTextField2
+import Widgets.LargeTextField as LargeTextField
 import Widgets.TextField as TextField
 
 
@@ -43,9 +43,9 @@ viewEditForm model =
     ul []
         [ li [] [ TextField.view "Denumire:" model.denumire |> map SetDenumire ]
         , li [] [ TextField.view "Cod fiscal:" model.codFiscal |> map SetCodFiscal ]
-        , li [] [ LargeTextField2.view "Date bancare:" model.rechiziteBancare SetRechiziteBancare ]
-        , li [] [ LargeTextField2.view "Adresa:" model.adresa SetAdresa ]
-        , li [] [ LargeTextField2.view "Note:" model.note SetNote ]
+        , li [] [ LargeTextField.view "Date bancare:" model.rechiziteBancare SetRechiziteBancare ]
+        , li [] [ LargeTextField.view "Adresa:" model.adresa SetAdresa ]
+        , li [] [ LargeTextField.view "Note:" model.note SetNote ]
         ]
 
 

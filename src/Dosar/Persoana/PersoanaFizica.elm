@@ -3,7 +3,7 @@ module Dosar.Persoana.PersoanaFizica exposing (Model, Msg, initialModel, update,
 import Html exposing (Html, li, map, text, ul)
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
-import Widgets.LargeTextField2 as LargeTextField2
+import Widgets.LargeTextField as LargeTextField
 import Widgets.TextField as TextField
 
 
@@ -47,8 +47,8 @@ viewEditForm model =
         , li [] [ TextField.view "Prenume:" model.prenume |> map SetPrenume ]
         , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map SetDataNasterii ]
         , li [] [ TextField.view "CNP:" model.cnp |> map SetCnp ]
-        , li [] [ LargeTextField2.view "Adresa:" model.adresa SetAdresa ]
-        , li [] [ LargeTextField2.view "Note:" model.note SetNote ]
+        , li [] [ LargeTextField.view "Adresa:" model.adresa SetAdresa ]
+        , li [] [ LargeTextField.view "Note:" model.note SetNote ]
         ]
 
 

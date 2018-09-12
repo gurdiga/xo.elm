@@ -1,4 +1,4 @@
-module Widgets.LargeTextField2 exposing (view)
+module Widgets.LargeTextField exposing (view)
 
 import Html exposing (Html, label, text, textarea)
 import Html.Attributes exposing (value)

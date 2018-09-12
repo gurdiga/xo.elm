@@ -11,7 +11,7 @@ import Dosar.DocumentExecutoriu.Pricina as Pricina
 import Html exposing (Html, br, button, div, fieldset, legend, map, text)
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
-import Widgets.LargeTextField2 as LargeTextField2
+import Widgets.LargeTextField as LargeTextField
 import Widgets.Select4 as Select4
 
 
@@ -65,14 +65,14 @@ view model =
                 , onInput = SetPricina
                 }
         , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> map SetDataPronuntareHotarire
-        , LargeTextField2.view "Dispozitivul:" model.dispozitivul SetDispozitivul
+        , LargeTextField.view "Dispozitivul:" model.dispozitivul SetDispozitivul
         , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> map SetDataRamineriiDefinitive
         , Debitori.view model.debitori |> map SetDebitori
         , DateField.view "Data eliberării:" model.dataEliberarii |> map SetDataEliberarii
         , DocumenteAplicareMasuriAsigurare.view model.documenteAplicareMasuriAsigurare |> map SetDocumenteAplicareMasuriAsigurare
-        , LargeTextField2.view "Mențiuni privind autorizarea pătrunderii forțate:" model.mentiuniPrivindPatrundereaFortata SetMentiuniPrivindPatrundereaFortata
-        , LargeTextField2.view "Locul de păstrare a bunurilor sechestrate:" model.locPastrareBunuriSechestrate SetLocPastrareBunuriSechestrate
-        , LargeTextField2.view "Note:" model.note SetNote
+        , LargeTextField.view "Mențiuni privind autorizarea pătrunderii forțate:" model.mentiuniPrivindPatrundereaFortata SetMentiuniPrivindPatrundereaFortata
+        , LargeTextField.view "Locul de păstrare a bunurilor sechestrate:" model.locPastrareBunuriSechestrate SetLocPastrareBunuriSechestrate
+        , LargeTextField.view "Note:" model.note SetNote
         ]
 
 

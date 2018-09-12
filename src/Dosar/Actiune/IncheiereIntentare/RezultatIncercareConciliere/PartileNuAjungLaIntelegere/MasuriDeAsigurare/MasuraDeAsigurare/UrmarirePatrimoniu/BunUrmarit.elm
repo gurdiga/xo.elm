@@ -4,7 +4,7 @@ import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.Money as Money exposing (Currency(..), Money(..))
 import Widgets.LargeTextField as LargeTextField
 import Widgets.MoneyField as MoneyField
-import Widgets.TextField2 as TextField2
+import Widgets.TextField as TextField
 
 
 type alias Model =
@@ -37,7 +37,7 @@ view model =
 viewEditForm : Model -> Html Msg
 viewEditForm model =
     ul []
-        [ li [] [ TextField2.view "Denumire:" model.denumire SetDenumire ]
+        [ li [] [ TextField.view "Denumire:" model.denumire SetDenumire ]
         , li [] [ MoneyField.view "Valoare:" model.valoare |> map SetValoare ]
         , li [] [ LargeTextField.view "Note:" model.note SetNote ]
         ]

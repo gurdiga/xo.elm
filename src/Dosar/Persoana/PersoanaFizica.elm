@@ -4,7 +4,7 @@ import Html exposing (Html, li, map, text, ul)
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
 import Widgets.LargeTextField as LargeTextField
-import Widgets.TextField2 as TextField2
+import Widgets.TextField as TextField
 
 
 type alias Model =
@@ -43,10 +43,10 @@ view model =
 viewEditForm : Model -> Html Msg
 viewEditForm model =
     ul []
-        [ li [] [ TextField2.view "Nume:" model.nume SetNume ]
-        , li [] [ TextField2.view "Prenume:" model.prenume SetPrenume ]
+        [ li [] [ TextField.view "Nume:" model.nume SetNume ]
+        , li [] [ TextField.view "Prenume:" model.prenume SetPrenume ]
         , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map SetDataNasterii ]
-        , li [] [ TextField2.view "CNP:" model.cnp SetCnp ]
+        , li [] [ TextField.view "CNP:" model.cnp SetCnp ]
         , li [] [ LargeTextField.view "Adresa:" model.adresa SetAdresa ]
         , li [] [ LargeTextField.view "Note:" model.note SetNote ]
         ]

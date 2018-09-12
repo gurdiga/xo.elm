@@ -1,4 +1,4 @@
-module Widgets.TextField2 exposing (view)
+module Widgets.TextField exposing (view)
 
 import Html exposing (Html, input, label, text)
 import Html.Attributes exposing (value)

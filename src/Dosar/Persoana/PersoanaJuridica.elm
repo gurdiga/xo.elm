@@ -2,7 +2,7 @@ module Dosar.Persoana.PersoanaJuridica exposing (Model, Msg, empty, update, view
 
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Widgets.LargeTextField as LargeTextField
-import Widgets.TextField as TextField
+import Widgets.TextField2 as TextField2
 
 
 type alias Model =
@@ -41,8 +41,8 @@ view model =
 viewEditForm : Model -> Html Msg
 viewEditForm model =
     ul []
-        [ li [] [ TextField.view "Denumire:" model.denumire |> map SetDenumire ]
-        , li [] [ TextField.view "Cod fiscal:" model.codFiscal |> map SetCodFiscal ]
+        [ li [] [ TextField2.view "Denumire:" model.denumire SetDenumire ]
+        , li [] [ TextField2.view "Cod fiscal:" model.codFiscal SetCodFiscal ]
         , li [] [ LargeTextField.view "Date bancare:" model.rechiziteBancare SetRechiziteBancare ]
         , li [] [ LargeTextField.view "Adresa:" model.adresa SetAdresa ]
         , li [] [ LargeTextField.view "Note:" model.note SetNote ]
@@ -50,8 +50,8 @@ viewEditForm model =
 
 
 type Msg
-    = SetDenumire TextField.Msg
-    | SetCodFiscal TextField.Msg
+    = SetDenumire String
+    | SetCodFiscal String
     | SetRechiziteBancare String
     | SetAdresa String
     | SetNote String
@@ -60,11 +60,11 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetDenumire textFieldMsg ->
-            { model | denumire = TextField.update textFieldMsg model.denumire }
+        SetDenumire v ->
+            { model | denumire = v }
 
-        SetCodFiscal textFieldMsg ->
-            { model | codFiscal = TextField.update textFieldMsg model.codFiscal }
+        SetCodFiscal v ->
+            { model | codFiscal = v }
 
         SetRechiziteBancare v ->
             { model | rechiziteBancare = v }

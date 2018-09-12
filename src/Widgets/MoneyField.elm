@@ -7,9 +7,6 @@ import Utils.Money as Money exposing (Currency(..), Money(..))
 import Widgets.Select4 as Select4
 
 
--- import Widgets.TextField.Css as Css
-
-
 initialModel : Money
 initialModel =
     Money 0 MDL

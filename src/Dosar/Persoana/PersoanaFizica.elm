@@ -4,7 +4,7 @@ import Html exposing (Html, li, map, text, ul)
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
 import Widgets.LargeTextField as LargeTextField
-import Widgets.TextField as TextField
+import Widgets.TextField2 as TextField2
 
 
 type alias Model =
@@ -43,20 +43,20 @@ view model =
 viewEditForm : Model -> Html Msg
 viewEditForm model =
     ul []
-        [ li [] [ TextField.view "Nume:" model.nume |> map SetNume ]
-        , li [] [ TextField.view "Prenume:" model.prenume |> map SetPrenume ]
+        [ li [] [ TextField2.view "Nume:" model.nume SetNume ]
+        , li [] [ TextField2.view "Prenume:" model.prenume SetPrenume ]
         , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map SetDataNasterii ]
-        , li [] [ TextField.view "CNP:" model.cnp |> map SetCnp ]
+        , li [] [ TextField2.view "CNP:" model.cnp SetCnp ]
         , li [] [ LargeTextField.view "Adresa:" model.adresa SetAdresa ]
         , li [] [ LargeTextField.view "Note:" model.note SetNote ]
         ]
 
 
 type Msg
-    = SetNume TextField.Msg
-    | SetPrenume TextField.Msg
+    = SetNume String
+    | SetPrenume String
     | SetDataNasterii DateField.Msg
-    | SetCnp TextField.Msg
+    | SetCnp String
     | SetAdresa String
     | SetNote String
 
@@ -64,17 +64,17 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetNume textFieldMsg ->
-            { model | nume = TextField.update textFieldMsg model.nume }
+        SetNume v ->
+            { model | nume = v }
 
-        SetPrenume textFieldMsg ->
-            { model | prenume = TextField.update textFieldMsg model.prenume }
+        SetPrenume v ->
+            { model | prenume = v }
 
         SetDataNasterii dateFieldMsg ->
             { model | dataNasterii = DateField.update dateFieldMsg model.dataNasterii }
 
-        SetCnp textFieldMsg ->
-            { model | cnp = TextField.update textFieldMsg model.cnp }
+        SetCnp v ->
+            { model | cnp = v }
 
         SetAdresa v ->
             { model | adresa = v }

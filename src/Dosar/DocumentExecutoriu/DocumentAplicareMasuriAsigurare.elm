@@ -3,7 +3,7 @@ module Dosar.DocumentExecutoriu.DocumentAplicareMasuriAsigurare exposing (Model,
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Widgets.DocumentScanat2 as DocumentScanat2
 import Widgets.LargeTextField as LargeTextField
-import Widgets.TextField as TextField
+import Widgets.TextField2 as TextField2
 
 
 type alias Model =
@@ -36,14 +36,14 @@ view model =
 viewEditForm : Model -> Html Msg
 viewEditForm model =
     ul []
-        [ li [] [ TextField.view "Denumire:" model.denumire |> map SetDenumire ]
+        [ li [] [ TextField2.view "Denumire:" model.denumire SetDenumire ]
         , li [] [ LargeTextField.view "Note:" model.note SetNote ]
         , li [] [ DocumentScanat2.view "Copia scanată:" model.copiaScanata |> map SetCopiaScanata ]
         ]
 
 
 type Msg
-    = SetDenumire TextField.Msg
+    = SetDenumire String
     | SetNote String
     | SetCopiaScanata DocumentScanat2.Msg
 
@@ -51,8 +51,8 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetDenumire m ->
-            { model | denumire = TextField.update m model.denumire }
+        SetDenumire v ->
+            { model | denumire = v }
 
         SetNote v ->
             { model | note = v }

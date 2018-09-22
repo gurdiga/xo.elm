@@ -56,7 +56,7 @@ valuesWithLabels =
 
 initialModel : Model
 initialModel =
-    CerereCreditor CerereCreditor.initialModel
+    PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.initialModel
 
 
 type Msg

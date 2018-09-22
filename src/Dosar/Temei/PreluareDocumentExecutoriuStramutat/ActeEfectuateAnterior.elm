@@ -1,112 +1,70 @@
-module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg(..), initialModel, update, view)
+module Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior exposing (Model, Msg, initialModel, update, view)
 
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActEfectuatAnterior as ActEfectuatAnterior
-import Html exposing (Html, button, div, fieldset, form, input, label, legend, map, p, text, textarea)
+import Html exposing (Html, button, div, fieldset, form, input, label, legend, li, map, p, text, textarea, ul)
 import Html.Attributes exposing (class, for, id, type_)
 import Html.Events exposing (onClick, onInput)
-
-
-type Msg
-    = Set ActEfectuatAnterior.Msg
-    | AddItem
-    | CancelNewItem
-    | SubmitNewItem ActEfectuatAnterior.Model
-    | SetNewItemFile String
-    | SetNewItemNote String
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        Set actEfectuatAnteriorMsg ->
-            -- TODO
-            model
-
-        AddItem ->
-            { model | newItem = Just ActEfectuatAnterior.initialModel }
-
-        CancelNewItem ->
-            { model | newItem = Nothing }
-
-        SubmitNewItem newItem ->
-            { model | items = model.items ++ [ newItem ] }
-
-        SetNewItemFile newFile ->
-            case model.newItem of
-                Just newItem ->
-                    { model | newItem = Just (ActEfectuatAnterior.setFile newItem newFile) }
-
-                Nothing ->
-                    Debug.todo "SetNewItemFile cant be emitted with Nothing. So why does this exist?"
-
-        SetNewItemNote newNote ->
-            case model.newItem of
-                Just newItem ->
-                    { model | newItem = Just (ActEfectuatAnterior.setNote newItem newNote) }
-
-                Nothing ->
-                    Debug.todo "SetNewItemNote cant be emitted with Nothing. So why does this exist?"
+import Widgets.EditableList as EditableList
 
 
 type alias Model =
-    { items : List ActEfectuatAnterior.Model
-    , newItem : Maybe ActEfectuatAnterior.Model
-    }
-
-
-type Item
-    = Initial ActEfectuatAnterior.Model
-    | Valid ActEfectuatAnterior.Model
-    | Invalid ActEfectuatAnterior.Model (List ValidationErrorMessage)
-
-
-type alias ValidationErrorMessage =
-    String
+    EditableList.Model ActEfectuatAnterior.Model
 
 
 initialModel : Model
 initialModel =
-    { items = []
-    , newItem = Nothing
-    }
+    EditableList.initialModel []
 
 
 view : Model -> Html Msg
-view model =
-    fieldset [] <|
-        [ legend [] [ text "ActeEfectuateAnterior" ] ]
-            ++ List.map itemView model.items
-            ++ [ model.newItem
-                    |> Maybe.map addForm
-                    |> Maybe.withDefault emptySlate
-               ]
+view =
+    EditableList.view
+        { viewNoItems = text "Nu sunt acte efectuate anterior."
+        , viewItem = viewItem
+        , viewItemAdd = viewItemAdd
+        , viewItemEdit = viewItemEdit
+        , viewAddItemButton = viewAddItemButton
+        }
 
 
-emptySlate : Html Msg
-emptySlate =
-    p []
-        [ text "No items."
-        , button [ id "add-item-button", onClick AddItem ] [ text "Add item" ]
+viewItem : Int -> ActEfectuatAnterior.Model -> Html Msg
+viewItem i x =
+    li []
+        [ ActEfectuatAnterior.view x |> map (\m -> EditableList.Noop)
+        , button [ onClick (EditableList.BeginEditItem i x) ] [ text "Editează" ]
+        , button [ onClick (EditableList.DeleteItem x) ] [ text "Șterge" ]
         ]
 
 
-addForm : ActEfectuatAnterior.Model -> Html Msg
-addForm newItem =
-    form [ class "add-item" ]
-        [ fieldset []
-            [ legend [] [ text "Add item" ]
-            , label [ for "add-item-file" ] [ text "Document scanat" ]
-            , input [ id "add-item-file", type_ "file", onInput SetNewItemFile ] []
-            , label [ for "add-item-note" ] [ text "Note" ]
-            , textarea [ id "add-item-note", onInput SetNewItemNote ] []
-            , div []
-                [ button [ id "add-item-submit", onClick (SubmitNewItem newItem), type_ "button" ] [ text "Submit" ]
-                , button [ id "add-item-cancel", onClick CancelNewItem, type_ "button" ] [ text "Cancel" ]
-                ]
-            ]
+viewItemAdd : ActEfectuatAnterior.Model -> Html Msg
+viewItemAdd x =
+    fieldset []
+        [ legend [] [ text "Adaugă act" ]
+        , ActEfectuatAnterior.viewEditForm x |> map (\m -> ActEfectuatAnterior.update m x |> EditableList.BeginAddItem)
+        , button [ onClick (EditableList.AddItem x) ] [ text "Confirmă adăugarea" ]
+        , button [ onClick EditableList.CancelAddItem ] [ text "Anulează adăugarea" ]
         ]
 
 
-itemView : ActEfectuatAnterior.Model -> Html Msg
-itemView actEfectuatAnterior =
-    ActEfectuatAnterior.view actEfectuatAnterior |> map Set
+viewAddItemButton : Html Msg
+viewAddItemButton =
+    button [ onClick (EditableList.BeginAddItem ActEfectuatAnterior.initialModel) ] [ text "Adaugă" ]
+
+
+viewItemEdit : ( Int, ActEfectuatAnterior.Model ) -> Html Msg
+viewItemEdit ( i, x ) =
+    fieldset []
+        [ legend [] [ text "Editează act" ]
+        , ActEfectuatAnterior.viewEditForm x |> map (\m -> ActEfectuatAnterior.update m x |> EditableList.BeginEditItem i)
+        , button [ onClick (EditableList.ReplaceItem i x) ] [ text "Confirmă editarea" ]
+        , button [ onClick EditableList.CancelEditItem ] [ text "Anulează editarea" ]
+        ]
+
+
+type alias Msg =
+    EditableList.Msg ActEfectuatAnterior.Model
+
+
+update : Msg -> Model -> Model
+update =
+    EditableList.update

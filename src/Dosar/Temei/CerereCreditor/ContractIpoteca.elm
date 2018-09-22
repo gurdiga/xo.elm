@@ -26,14 +26,14 @@ empty =
 
 
 view : Model -> Html Msg
-view contractIpoteca =
+view model =
     fieldset []
         [ legend [] [ text "ContractIpoteca" ]
-        , LargeTextField.view "Obiectul ipotecii:" contractIpoteca.obiect SetObiect
-        , MoneyField.view "Valoarea de piaţa a bunului:" contractIpoteca.valoareBunDePiata |> map SetValoareBunDePiata
-        , MoneyField.view "Valoarea de inlocuire a bunului:" contractIpoteca.valoareBunDeInlocuire |> map SetValoareBunDeInlocuire
-        , MoneyField.view "Valoarea de baza a creanţei garantate:" contractIpoteca.valoareDeBazaCreanta |> map SetValoareDeBazaCreanta
-        , LargeTextField.view "Note:" contractIpoteca.note SetNote
+        , LargeTextField.view "Obiectul ipotecii:" model.obiect SetObiect
+        , MoneyField.view "Valoarea de piaţa a bunului:" model.valoareBunDePiata |> map SetValoareBunDePiata
+        , MoneyField.view "Valoarea de inlocuire a bunului:" model.valoareBunDeInlocuire |> map SetValoareBunDeInlocuire
+        , MoneyField.view "Valoarea de baza a creanţei garantate:" model.valoareDeBazaCreanta |> map SetValoareDeBazaCreanta
+        , LargeTextField.view "Note:" model.note SetNote
         ]
 
 

@@ -56,7 +56,7 @@ valuesWithLabels =
 
 initialModel : Model
 initialModel =
-    PreluareDocumentExecutoriuStramutat PreluareDocumentExecutoriuStramutat.initialModel
+    DemersInstanta DemersInstanta.initialModel
 
 
 type Msg

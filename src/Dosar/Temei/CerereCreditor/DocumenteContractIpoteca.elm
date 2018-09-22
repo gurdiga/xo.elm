@@ -5,15 +5,15 @@ import Dosar.Temei.CerereCreditor.ContractIpoteca as ContractIpoteca
 import Dosar.Temei.CerereCreditor.DeclaratieContractNonLitigios as DeclaratieContractNonLitigios
 import Dosar.Temei.CerereCreditor.ExtraseEvidentaFinanciara as ExtraseEvidentaFinanciara
 import Html exposing (Html, fieldset, legend, li, map, pre, text, ul)
-import Utils.DocumentScanatTea as DocumentScanatTea
+import Utils.DocumentScanat2 as DocumentScanat2
 
 
 type alias Model =
     { contractIpoteca : ContractIpoteca.Model
     , contractCreditBancar : ContractCreditBancar.Model
     , extraseEvidentaFinanciara : ExtraseEvidentaFinanciara.Model
-    , notificare : DocumentScanatTea.Model
-    , preaviz : DocumentScanatTea.Model
+    , notificare : DocumentScanat2.Model
+    , preaviz : DocumentScanat2.Model
     , declaratieContractNonLitigios : DeclaratieContractNonLitigios.Model
     }
 
@@ -27,8 +27,8 @@ initialModel =
     { contractIpoteca = contractIpoteca
     , contractCreditBancar = ContractCreditBancar.initialModel
     , extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.initialModel
-    , notificare = DocumentScanatTea.initialModel
-    , preaviz = DocumentScanatTea.initialModel
+    , notificare = DocumentScanat2.initialModel
+    , preaviz = DocumentScanat2.initialModel
     , declaratieContractNonLitigios = DeclaratieContractNonLitigios.initialModel contractIpoteca
     }
 
@@ -37,8 +37,8 @@ type Msg
     = SetContractIpoteca ContractIpoteca.Msg
     | SetContractCreditBancar ContractCreditBancar.Msg
     | SetExtraseEvidentaFinanciara ExtraseEvidentaFinanciara.Msg
-    | SetNotificare DocumentScanatTea.Msg
-    | SetPreaviz DocumentScanatTea.Msg
+    | SetNotificare DocumentScanat2.Msg
+    | SetPreaviz DocumentScanat2.Msg
     | SetDeclaratieContractNonLitigios DeclaratieContractNonLitigios.Msg
 
 
@@ -55,10 +55,10 @@ update msg model =
             { model | extraseEvidentaFinanciara = ExtraseEvidentaFinanciara.update extraseEvidentaFinanciaraMsg model.extraseEvidentaFinanciara }
 
         SetNotificare documentScanatTeaMsg ->
-            { model | notificare = DocumentScanatTea.update documentScanatTeaMsg model.notificare }
+            { model | notificare = DocumentScanat2.update documentScanatTeaMsg model.notificare }
 
         SetPreaviz documentScanatTeaMsg ->
-            { model | preaviz = DocumentScanatTea.update documentScanatTeaMsg model.preaviz }
+            { model | preaviz = DocumentScanat2.update documentScanatTeaMsg model.preaviz }
 
         SetDeclaratieContractNonLitigios declaratieContractNonLitigiosMsg ->
             { model | declaratieContractNonLitigios = DeclaratieContractNonLitigios.update declaratieContractNonLitigiosMsg model.declaratieContractNonLitigios }
@@ -71,7 +71,7 @@ view model =
         , ContractIpoteca.view model.contractIpoteca |> map SetContractIpoteca
         , ContractCreditBancar.view model.contractCreditBancar |> map SetContractCreditBancar
         , ExtraseEvidentaFinanciara.view model.extraseEvidentaFinanciara |> map SetExtraseEvidentaFinanciara
-        , DocumentScanatTea.view { labelText = "Notificare:", documentScanat = model.notificare } |> map SetNotificare
-        , DocumentScanatTea.view { labelText = "Preaviz:", documentScanat = model.preaviz } |> map SetPreaviz
+        , DocumentScanat2.view "Notificare:" model.notificare |> map SetNotificare
+        , DocumentScanat2.view "Preaviz:" model.preaviz |> map SetPreaviz
         , DeclaratieContractNonLitigios.view model.declaratieContractNonLitigios |> map SetDeclaratieContractNonLitigios
         ]

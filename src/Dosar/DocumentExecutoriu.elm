@@ -50,13 +50,13 @@ view model =
             { label = "Instanța de judecată:"
             , valuesWithLabels = InstantaDeJudecata.valuesWithLabels
             , defaultValue = model.instantaEmitatoare
-            , onInput = SetInstantaEmitatoare
+            , onOptionSelected = SetInstantaEmitatoare
             }
         , Select.view
             { label = "Pricina:"
             , valuesWithLabels = Pricina.valuesWithLabels
             , defaultValue = model.pricina
-            , onInput = SetPricina
+            , onOptionSelected = SetPricina
             }
         , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire SetDataPronuntareHotarire
         , LargeTextField.view "Dispozitivul:" model.dispozitivul SetDispozitivul

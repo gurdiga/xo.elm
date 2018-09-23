@@ -38,7 +38,7 @@ dropdown model =
         { label = "Actiune:"
         , valuesWithLabels = valuesWithLabels
         , defaultValue = taggedInitialModelFor model
-        , onInput = Set
+        , onOptionSelected = Set
         }
 
 

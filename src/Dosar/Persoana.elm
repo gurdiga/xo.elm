@@ -41,7 +41,7 @@ dropdown model =
         { label = "Gen persoană:"
         , valuesWithLabels = valuesWithLabels
         , defaultValue = taggedInitialModelFor model
-        , onInput = Set
+        , onOptionSelected = Set
         }
 
 

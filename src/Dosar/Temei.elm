@@ -20,7 +20,7 @@ view model =
             { label = "Temei:"
             , defaultValue = initialModel
             , valuesWithLabels = valuesWithLabels
-            , onInput = SetTemei
+            , onOptionSelected = SetTemei
             }
         , fields model
         ]

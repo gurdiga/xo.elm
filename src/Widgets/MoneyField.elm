@@ -46,6 +46,6 @@ unlabeledView (Money amount currency) =
         { label = ""
         , valuesWithLabels = Money.currenciesWithLabels
         , defaultValue = currency
-        , onInput = SetCurrency
+        , onOptionSelected = SetCurrency
         }
     ]

@@ -29,7 +29,7 @@ view model =
                     { label = "Pricina:"
                     , defaultValue = model.pricina
                     , valuesWithLabels = Pricina.valuesWithLabels
-                    , onInput = SetPricina
+                    , onOptionSelected = SetPricina
                     }
                 ]
             , li [] [ DocumentScanat2.view "Copia scanată:" model.copia |> map SetCopia ]

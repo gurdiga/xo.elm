@@ -34,7 +34,7 @@ dropdown cauza =
         { label = "Cauza refuzului:"
         , valuesWithLabels = CauzaRefuz.valuesWithLabels
         , defaultValue = cauza
-        , onInput = SetCauza
+        , onOptionSelected = SetCauza
         }
 
 

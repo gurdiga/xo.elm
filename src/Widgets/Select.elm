@@ -13,7 +13,7 @@ type alias ConfigData a msg =
     { label : String
     , defaultValue : a
     , valuesWithLabels : Options a
-    , onInput : a -> msg
+    , onOptionSelected : a -> msg
     }
 
 
@@ -38,6 +38,6 @@ view config =
     label []
         [ text config.label
         , select
-            [ onInput (config.onInput << valueFromLabel) ]
+            [ onInput (config.onOptionSelected << valueFromLabel) ]
             (config.valuesWithLabels |> List.map optionForTuple)
         ]

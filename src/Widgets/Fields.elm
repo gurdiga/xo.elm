@@ -85,6 +85,6 @@ unlabeledMoneyField (Money amount currency) callback =
         { label = ""
         , valuesWithLabels = Money.currenciesWithLabels
         , defaultValue = currency
-        , onInput = \v -> callback (Money amount v)
+        , onOptionSelected = \v -> callback (Money amount v)
         }
     ]

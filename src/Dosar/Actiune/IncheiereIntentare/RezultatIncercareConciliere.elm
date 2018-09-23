@@ -41,7 +41,7 @@ dropdown model =
         { label = "RezultatIncercareConciliere:"
         , defaultValue = taggedInitialModelFor model
         , valuesWithLabels = valuesWithLabels
-        , onInput = Set
+        , onOptionSelected = Set
         }
 
 

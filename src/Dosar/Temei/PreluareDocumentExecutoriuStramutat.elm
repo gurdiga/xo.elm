@@ -47,7 +47,7 @@ viewCauzaStramutarii cauzaStramutare =
         { label = "Cauza strămutării:"
         , valuesWithLabels = CauzaStramutare.valuesWithLabels
         , defaultValue = cauzaStramutare
-        , onInput = SetCauzaStramutare
+        , onOptionSelected = SetCauzaStramutare
         }
 
 

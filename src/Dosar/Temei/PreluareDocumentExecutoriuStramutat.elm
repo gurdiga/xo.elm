@@ -3,14 +3,14 @@ module Dosar.Temei.PreluareDocumentExecutoriuStramutat exposing (Model, Msg, ini
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.ActeEfectuateAnterior as ActeEfectuateAnterior
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaStramutare
 import Html exposing (Html, fieldset, h1, legend, li, map, p, text, ul)
-import Widgets.DocumentScanat2 as DocumentScanat2
+import Widgets.DocumentScanat3 as DocumentScanat3
 import Widgets.LargeTextField as LargeTextField
 import Widgets.Select as Select
 
 
 type alias Model =
     { cauzaStramutare : CauzaStramutare.Model
-    , copieIncheiereStramutare : DocumentScanat2.Model
+    , copieIncheiereStramutare : DocumentScanat3.Model
     , acteEfectuateAnterior : ActeEfectuateAnterior.Model
     , note : String
     , actPreluare : String
@@ -20,7 +20,7 @@ type alias Model =
 initialModel : Model
 initialModel =
     { cauzaStramutare = CauzaStramutare.initialModel
-    , copieIncheiereStramutare = DocumentScanat2.initialModel
+    , copieIncheiereStramutare = DocumentScanat3.initialModel
     , acteEfectuateAnterior = ActeEfectuateAnterior.initialModel
     , note = ""
     , actPreluare = ""
@@ -33,7 +33,7 @@ view model =
         [ legend [] [ text "PreluareDocumentExecutoriuStramutat" ]
         , ul []
             [ li [] [ viewCauzaStramutarii model.cauzaStramutare ]
-            , li [] [ DocumentScanat2.view "Copia încheierii:" model.copieIncheiereStramutare |> map SetCopieIncheiereStramutare ]
+            , li [] [ DocumentScanat3.view "Copia încheierii:" SetCopieIncheiereStramutare ]
             , li [] [ ActeEfectuateAnterior.view model.acteEfectuateAnterior |> map SetActeEfectuatAnterior ]
             , li [] [ LargeTextField.view "Note:" model.note SetNote ]
             , li [] [ LargeTextField.view "Act preluare:" model.actPreluare SetActPreluare ]
@@ -53,7 +53,7 @@ viewCauzaStramutarii cauzaStramutare =
 
 type Msg
     = SetCauzaStramutare CauzaStramutare.Model
-    | SetCopieIncheiereStramutare DocumentScanat2.Msg
+    | SetCopieIncheiereStramutare DocumentScanat3.Model
     | SetActeEfectuatAnterior ActeEfectuateAnterior.Msg
     | SetNote String
     | SetActPreluare String
@@ -65,8 +65,8 @@ update msg model =
         SetCauzaStramutare v ->
             { model | cauzaStramutare = v }
 
-        SetCopieIncheiereStramutare documentScanat2Msg ->
-            { model | copieIncheiereStramutare = DocumentScanat2.update documentScanat2Msg model.copieIncheiereStramutare }
+        SetCopieIncheiereStramutare v ->
+            { model | copieIncheiereStramutare = v }
 
         SetActeEfectuatAnterior acteEfectuateAnteriorMsg ->
             { model | acteEfectuateAnterior = ActeEfectuateAnterior.update acteEfectuateAnteriorMsg model.acteEfectuateAnterior }

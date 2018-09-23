@@ -1,13 +1,13 @@
 module Dosar.Temei.CerereCreditor.ContractCreditBancar exposing (Model, Msg, initialModel, update, view)
 
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
-import Utils.DocumentScanat2 as DocumentScanat2
+import Widgets.DocumentScanat3 as DocumentScanat3
 import Widgets.LargeTextField as LargeTextField
 
 
 type Model
     = Model
-        { copia : DocumentScanat2.Model
+        { copia : DocumentScanat3.Model
         , note : String
         }
 
@@ -15,7 +15,7 @@ type Model
 initialModel : Model
 initialModel =
     Model
-        { copia = DocumentScanat2.initialModel
+        { copia = DocumentScanat3.initialModel
         , note = ""
         }
 
@@ -24,21 +24,21 @@ view : Model -> Html Msg
 view (Model model) =
     fieldset []
         [ legend [] [ text "ContractCreditBancar" ]
-        , DocumentScanat2.view "Copia:" model.copia |> map SetCopia
+        , DocumentScanat3.view "Copia:" SetCopia
         , LargeTextField.view "Note:" model.note SetNote
         ]
 
 
 type Msg
-    = SetCopia DocumentScanat2.Msg
+    = SetCopia DocumentScanat3.Model
     | SetNote String
 
 
 update : Msg -> Model -> Model
 update msg (Model model) =
     case msg of
-        SetCopia documentScanatTeaMsg ->
-            Model { model | copia = DocumentScanat2.update documentScanatTeaMsg model.copia }
+        SetCopia v ->
+            Model { model | copia = v }
 
         SetNote v ->
             Model { model | note = v }

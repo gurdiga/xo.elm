@@ -2,15 +2,15 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare
 import Html exposing (Html, fieldset, legend, map, text)
-import Utils.DocumentScanat2 as DocumentScanat2
+import Widgets.DocumentScanat3 as DocumentScanat3
 import Widgets.RichTextEditor3 as RichTextEditor3
 
 
 type alias Model =
     { procesVerbalConsemnareConditiiExecutare : String
-    , copieProcesVerbalConsemnareConditiiExecutare : DocumentScanat2.Model
+    , copieProcesVerbalConsemnareConditiiExecutare : DocumentScanat3.Model
     , procesVerbalConstatareExecutare : String
-    , copieProcesVerbalConstatareExecutare : DocumentScanat2.Model
+    , copieProcesVerbalConstatareExecutare : DocumentScanat3.Model
     , incheiereIncetare : IncheiereIncetare.Model
     }
 
@@ -18,9 +18,9 @@ type alias Model =
 initialModel : Model
 initialModel =
     { procesVerbalConsemnareConditiiExecutare = ""
-    , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat2.initialModel
+    , copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat3.initialModel
     , procesVerbalConstatareExecutare = ""
-    , copieProcesVerbalConstatareExecutare = DocumentScanat2.initialModel
+    , copieProcesVerbalConstatareExecutare = DocumentScanat3.initialModel
     , incheiereIncetare = IncheiereIncetare.initialModel
     }
 
@@ -33,27 +33,25 @@ view model =
             "Formează proces-verbal de consemnare condițiilor de executare"
             model.procesVerbalConsemnareConditiiExecutare
             SetProcesVerbalConsemnareConditiiExecutare
-        , DocumentScanat2.view
+        , DocumentScanat3.view
             "Copia semnată a procesului-verbal de consemnare a condițiilor de executare"
-            model.copieProcesVerbalConsemnareConditiiExecutare
-            |> map SetCopieProcesVerbalConsemnareConditiiExecutare
+            SetCopieProcesVerbalConsemnareConditiiExecutare
         , RichTextEditor3.view
             "Formează proces-verbal de constatare a executării"
             model.procesVerbalConstatareExecutare
             SetProcesVerbalConstatareExecutare
-        , DocumentScanat2.view
+        , DocumentScanat3.view
             "Copia semnată a procesului-verbal de constatare a executării"
-            model.copieProcesVerbalConstatareExecutare
-            |> map SetCopieProcesVerbalConstatareExecutare
+            SetCopieProcesVerbalConstatareExecutare
         , IncheiereIncetare.view model.incheiereIncetare |> map SetIncheiereIncetare
         ]
 
 
 type Msg
     = SetProcesVerbalConsemnareConditiiExecutare String
-    | SetCopieProcesVerbalConsemnareConditiiExecutare DocumentScanat2.Msg
+    | SetCopieProcesVerbalConsemnareConditiiExecutare DocumentScanat3.Model
     | SetProcesVerbalConstatareExecutare String
-    | SetCopieProcesVerbalConstatareExecutare DocumentScanat2.Msg
+    | SetCopieProcesVerbalConstatareExecutare DocumentScanat3.Model
     | SetIncheiereIncetare IncheiereIncetare.Msg
 
 
@@ -63,14 +61,14 @@ update msg model =
         SetProcesVerbalConsemnareConditiiExecutare v ->
             { model | procesVerbalConsemnareConditiiExecutare = v }
 
-        SetCopieProcesVerbalConsemnareConditiiExecutare msgDocumentScanat2 ->
-            { model | copieProcesVerbalConsemnareConditiiExecutare = DocumentScanat2.update msgDocumentScanat2 model.copieProcesVerbalConstatareExecutare }
+        SetCopieProcesVerbalConsemnareConditiiExecutare v ->
+            { model | copieProcesVerbalConsemnareConditiiExecutare = v }
 
         SetProcesVerbalConstatareExecutare v ->
             { model | procesVerbalConstatareExecutare = v }
 
-        SetCopieProcesVerbalConstatareExecutare msgDocumentScanat2 ->
-            { model | copieProcesVerbalConstatareExecutare = DocumentScanat2.update msgDocumentScanat2 model.copieProcesVerbalConstatareExecutare }
+        SetCopieProcesVerbalConstatareExecutare v ->
+            { model | copieProcesVerbalConstatareExecutare = v }
 
         SetIncheiereIncetare msgIncheiereIncetare ->
             { model | incheiereIncetare = IncheiereIncetare.update msgIncheiereIncetare model.incheiereIncetare }

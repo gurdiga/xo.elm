@@ -2,20 +2,20 @@ module Dosar.Temei.DemersInstanta exposing (Model, Msg, initialModel, update, vi
 
 import Dosar.DemersInstanta.Pricina as Pricina
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
-import Utils.DocumentScanat2 as DocumentScanat2
+import Widgets.DocumentScanat3 as DocumentScanat3
 import Widgets.Select as Select
 
 
 type alias Model =
     { pricina : Pricina.Model
-    , copia : DocumentScanat2.Model
+    , copia : DocumentScanat3.Model
     }
 
 
 initialModel : Model
 initialModel =
     { pricina = Pricina.initialModel
-    , copia = DocumentScanat2.initialModel
+    , copia = DocumentScanat3.initialModel
     }
 
 
@@ -32,14 +32,14 @@ view model =
                     , onOptionSelected = SetPricina
                     }
                 ]
-            , li [] [ DocumentScanat2.view "Copia scanată:" model.copia |> map SetCopia ]
+            , li [] [ DocumentScanat3.view "Copia scanată:" SetCopia ]
             ]
         ]
 
 
 type Msg
     = SetPricina Pricina.Model
-    | SetCopia DocumentScanat2.Msg
+    | SetCopia DocumentScanat3.Model
 
 
 update : Msg -> Model -> Model
@@ -48,5 +48,5 @@ update msg model =
         SetPricina v ->
             { model | pricina = v }
 
-        SetCopia documentScanatTeaMsg ->
-            { model | copia = DocumentScanat2.update documentScanatTeaMsg model.copia }
+        SetCopia v ->
+            { model | copia = v }

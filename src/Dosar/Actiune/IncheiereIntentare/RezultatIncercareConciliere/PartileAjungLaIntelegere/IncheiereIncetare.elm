@@ -1,20 +1,20 @@
 module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare exposing (Model, Msg, initialModel, update, view)
 
 import Html exposing (Html, fieldset, h1, legend, map, text)
-import Utils.DocumentScanat2 as DocumentScanat2
+import Widgets.DocumentScanat3 as DocumentScanat3
 import Widgets.RichTextEditor3 as RichTextEditor3
 
 
 type alias Model =
     { text : String
-    , copie : DocumentScanat2.Model
+    , copie : DocumentScanat3.Model
     }
 
 
 initialModel : Model
 initialModel =
     { text = ""
-    , copie = DocumentScanat2.initialModel
+    , copie = DocumentScanat3.initialModel
     }
 
 
@@ -23,13 +23,13 @@ view model =
     fieldset []
         [ legend [] [ text "IncheiereIncetare" ]
         , RichTextEditor3.view "Formează încheiere încetare:" model.text SetText
-        , DocumentScanat2.view "Copia încheierii de încetare:" model.copie |> map SetCopie
+        , DocumentScanat3.view "Copia încheierii de încetare:" SetCopie
         ]
 
 
 type Msg
     = SetText String
-    | SetCopie DocumentScanat2.Msg
+    | SetCopie DocumentScanat3.Model
 
 
 update : Msg -> Model -> Model
@@ -38,5 +38,5 @@ update msg model =
         SetText v ->
             { model | text = v }
 
-        SetCopie msgDocumentScanat2 ->
-            { model | copie = DocumentScanat2.update msgDocumentScanat2 model.copie }
+        SetCopie v ->
+            { model | copie = v }

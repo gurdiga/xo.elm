@@ -1,9 +1,14 @@
-module Utils.File exposing (File, empty, setPath)
+module Utils.File exposing (File, empty, setPath, toString)
 
 
 type alias File =
     { path : String
     }
+
+
+toString : File -> String
+toString file =
+    file.path
 
 
 empty : File

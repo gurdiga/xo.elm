@@ -2,12 +2,11 @@ module Dosar.Actiune.IncheiereIntentare exposing (Model, Msg, initialModel, upda
 
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere as RezultatIncercareConciliere
 import Html exposing (Html, button, div, fieldset, h1, legend, map, p, text)
-import Utils.DocumentScanat2 as DocumentScanat2
 import Utils.File as File exposing (File)
 import Utils.MyDate as MyDate
-import Widgets.RichTextEditor3 as RichTextEditor3
 import Widgets.DateField as DateField
 import Widgets.DocumentScanat3 as DocumentScanat3
+import Widgets.RichTextEditor3 as RichTextEditor3
 
 
 type alias Model =

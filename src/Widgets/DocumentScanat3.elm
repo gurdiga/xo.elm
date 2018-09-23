@@ -1,4 +1,4 @@
-module Widgets.DocumentScanat3 exposing (view)
+module Widgets.DocumentScanat3 exposing (Model, initialModel, toString, view)
 
 import Html exposing (Attribute, Html, div, input, label, map, text)
 import Html.Attributes exposing (type_)
@@ -7,7 +7,21 @@ import Json.Decode as Json
 import Utils.File as File exposing (File)
 
 
-view : String -> (File -> msg) -> Html msg
+type alias Model =
+    File
+
+
+initialModel : Model
+initialModel =
+    File.empty
+
+
+toString : Model -> String
+toString model =
+    File.toString model
+
+
+view : String -> (Model -> msg) -> Html msg
 view labelText toMsg =
     label []
         [ text labelText
@@ -15,7 +29,7 @@ view labelText toMsg =
         ]
 
 
-onFileSelect : (File -> msg) -> Attribute msg
+onFileSelect : (Model -> msg) -> Attribute msg
 onFileSelect toMsg =
     let
         eventDecoder : Json.Decoder msg

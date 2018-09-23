@@ -43,13 +43,12 @@ view model =
 
 viewCauzaStramutarii : CauzaStramutare.Model -> Html Msg
 viewCauzaStramutarii cauzaStramutare =
-    Select.view <|
-        Select.config
-            { label = "Cauza strămutării:"
-            , valuesWithLabels = CauzaStramutare.valuesWithLabels
-            , defaultValue = cauzaStramutare
-            , onInput = SetCauzaStramutare
-            }
+    Select.view
+        { label = "Cauza strămutării:"
+        , valuesWithLabels = CauzaStramutare.valuesWithLabels
+        , defaultValue = cauzaStramutare
+        , onInput = SetCauzaStramutare
+        }
 
 
 type Msg

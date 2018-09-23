@@ -1,9 +1,5 @@
 module Dosar.DocumentExecutoriu exposing (Model, Msg, initialModel, update, view)
 
--- import Utils.MyHtmlEvents exposing (onClick)
--- import Utils.MyList as MyList
--- import Widgets.Fields exposing (largeTextField)
-
 import Dosar.DocumentExecutoriu.Debitori as Debitori
 import Dosar.DocumentExecutoriu.DocumenteAplicareMasuriAsigurare as DocumenteAplicareMasuriAsigurare
 import Dosar.DocumentExecutoriu.InstantaDeJudecata as InstantaDeJudecata
@@ -50,20 +46,18 @@ view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "DocumentExecutoriu" ]
-        , Select.view <|
-            Select.config
-                { label = "Instanța de judecată:"
-                , valuesWithLabels = InstantaDeJudecata.valuesWithLabels
-                , defaultValue = model.instantaEmitatoare
-                , onInput = SetInstantaEmitatoare
-                }
-        , Select.view <|
-            Select.config
-                { label = "Pricina:"
-                , valuesWithLabels = Pricina.valuesWithLabels
-                , defaultValue = model.pricina
-                , onInput = SetPricina
-                }
+        , Select.view
+            { label = "Instanța de judecată:"
+            , valuesWithLabels = InstantaDeJudecata.valuesWithLabels
+            , defaultValue = model.instantaEmitatoare
+            , onInput = SetInstantaEmitatoare
+            }
+        , Select.view
+            { label = "Pricina:"
+            , valuesWithLabels = Pricina.valuesWithLabels
+            , defaultValue = model.pricina
+            , onInput = SetPricina
+            }
         , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire SetDataPronuntareHotarire
         , LargeTextField.view "Dispozitivul:" model.dispozitivul SetDispozitivul
         , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive SetDataRamineriiDefinitive

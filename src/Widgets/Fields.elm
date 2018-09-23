@@ -81,11 +81,10 @@ unlabeledMoneyField (Money amount currency) callback =
         , onInput (\v -> callback (Money (Maybe.withDefault 0 (String.toFloat v)) currency))
         ]
         []
-    , Select.view <|
-        Select.config
-            { label = ""
-            , valuesWithLabels = Money.currenciesWithLabels
-            , defaultValue = currency
-            , onInput = \v -> callback (Money amount v)
-            }
+    , Select.view
+        { label = ""
+        , valuesWithLabels = Money.currenciesWithLabels
+        , defaultValue = currency
+        , onInput = \v -> callback (Money amount v)
+        }
     ]

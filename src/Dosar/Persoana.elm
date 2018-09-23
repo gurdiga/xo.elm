@@ -37,13 +37,12 @@ viewEditForm model =
 
 dropdown : Model -> Html Msg
 dropdown model =
-    Select.view <|
-        Select.config
-            { label = "Gen persoană:"
-            , valuesWithLabels = valuesWithLabels
-            , defaultValue = taggedInitialModelFor model
-            , onInput = Set
-            }
+    Select.view
+        { label = "Gen persoană:"
+        , valuesWithLabels = valuesWithLabels
+        , defaultValue = taggedInitialModelFor model
+        , onInput = Set
+        }
 
 
 taggedInitialModelFor : Model -> Model

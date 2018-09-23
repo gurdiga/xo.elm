@@ -25,13 +25,12 @@ view model =
         [ legend [] [ text "DemersInstanta" ]
         , ul []
             [ li []
-                [ Select.view <|
-                    Select.config
-                        { label = "Pricina:"
-                        , defaultValue = model.pricina
-                        , valuesWithLabels = Pricina.valuesWithLabels
-                        , onInput = SetPricina
-                        }
+                [ Select.view
+                    { label = "Pricina:"
+                    , defaultValue = model.pricina
+                    , valuesWithLabels = Pricina.valuesWithLabels
+                    , onInput = SetPricina
+                    }
                 ]
             , li [] [ DocumentScanat2.view "Copia scanată:" model.copia |> map SetCopia ]
             ]

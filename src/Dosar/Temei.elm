@@ -16,13 +16,12 @@ type Model
 view : Model -> Html Msg
 view model =
     section []
-        [ Select.view <|
-            Select.config
-                { label = "Temei:"
-                , defaultValue = initialModel
-                , valuesWithLabels = valuesWithLabels
-                , onInput = SetTemei
-                }
+        [ Select.view
+            { label = "Temei:"
+            , defaultValue = initialModel
+            , valuesWithLabels = valuesWithLabels
+            , onInput = SetTemei
+            }
         , fields model
         ]
 

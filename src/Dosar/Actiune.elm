@@ -34,13 +34,12 @@ view model =
 
 dropdown : Model -> Html Msg
 dropdown model =
-    Select.view <|
-        Select.config
-            { label = "Actiune:"
-            , valuesWithLabels = valuesWithLabels
-            , defaultValue = taggedInitialModelFor model
-            , onInput = Set
-            }
+    Select.view
+        { label = "Actiune:"
+        , valuesWithLabels = valuesWithLabels
+        , defaultValue = taggedInitialModelFor model
+        , onInput = Set
+        }
 
 
 taggedInitialModelFor : Model -> Model

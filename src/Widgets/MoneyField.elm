@@ -42,11 +42,10 @@ unlabeledView (Money amount currency) =
         , onInput SetAmount
         ]
         []
-    , Select.view <|
-        Select.config
-            { label = ""
-            , valuesWithLabels = Money.currenciesWithLabels
-            , defaultValue = currency
-            , onInput = SetCurrency
-            }
+    , Select.view
+        { label = ""
+        , valuesWithLabels = Money.currenciesWithLabels
+        , defaultValue = currency
+        , onInput = SetCurrency
+        }
     ]

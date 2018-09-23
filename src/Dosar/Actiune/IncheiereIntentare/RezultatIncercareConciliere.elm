@@ -37,13 +37,12 @@ view model =
 
 dropdown : Model -> Html Msg
 dropdown model =
-    Select.view <|
-        Select.config
-            { label = "RezultatIncercareConciliere:"
-            , defaultValue = taggedInitialModelFor model
-            , valuesWithLabels = valuesWithLabels
-            , onInput = Set
-            }
+    Select.view
+        { label = "RezultatIncercareConciliere:"
+        , defaultValue = taggedInitialModelFor model
+        , valuesWithLabels = valuesWithLabels
+        , onInput = Set
+        }
 
 
 taggedInitialModelFor : Model -> Model

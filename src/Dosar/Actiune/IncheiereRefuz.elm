@@ -30,13 +30,12 @@ view model =
 
 dropdown : CauzaRefuz.Model -> Html Msg
 dropdown cauza =
-    Select.view <|
-        Select.config
-            { label = "Cauza refuzului:"
-            , valuesWithLabels = CauzaRefuz.valuesWithLabels
-            , defaultValue = cauza
-            , onInput = SetCauza
-            }
+    Select.view
+        { label = "Cauza refuzului:"
+        , valuesWithLabels = CauzaRefuz.valuesWithLabels
+        , defaultValue = cauza
+        , onInput = SetCauza
+        }
 
 
 document : String -> Html Msg

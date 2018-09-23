@@ -3,7 +3,7 @@ module Dosar.Temei.DemersInstanta exposing (Model, Msg, initialModel, update, vi
 import Dosar.DemersInstanta.Pricina as Pricina
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
 import Utils.DocumentScanat2 as DocumentScanat2
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 type alias Model =
@@ -25,8 +25,8 @@ view model =
         [ legend [] [ text "DemersInstanta" ]
         , ul []
             [ li []
-                [ Select4.view <|
-                    Select4.config
+                [ Select.view <|
+                    Select.config
                         { label = "Pricina:"
                         , defaultValue = model.pricina
                         , valuesWithLabels = Pricina.valuesWithLabels

@@ -4,7 +4,7 @@ import Dosar.Temei.CerereCreditor as CerereCreditor
 import Dosar.Temei.DemersInstanta as DemersInstanta
 import Dosar.Temei.PreluareDocumentExecutoriuStramutat as PreluareDocumentExecutoriuStramutat
 import Html exposing (Html, div, label, map, node, section, text)
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 type Model
@@ -16,8 +16,8 @@ type Model
 view : Model -> Html Msg
 view model =
     section []
-        [ Select4.view <|
-            Select4.config
+        [ Select.view <|
+            Select.config
                 { label = "Temei:"
                 , defaultValue = initialModel
                 , valuesWithLabels = valuesWithLabels

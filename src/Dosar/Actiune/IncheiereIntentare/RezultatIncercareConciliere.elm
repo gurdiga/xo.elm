@@ -3,7 +3,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere exposing (Mo
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere as PartileAjungLaIntelegere
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileNuAjungLaIntelegere as PartileNuAjungLaIntelegere
 import Html exposing (Html, div, fieldset, label, legend, map, text)
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 type Model
@@ -37,8 +37,8 @@ view model =
 
 dropdown : Model -> Html Msg
 dropdown model =
-    Select4.view <|
-        Select4.config
+    Select.view <|
+        Select.config
             { label = "RezultatIncercareConciliere:"
             , defaultValue = taggedInitialModelFor model
             , valuesWithLabels = valuesWithLabels

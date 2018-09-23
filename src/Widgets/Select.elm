@@ -1,4 +1,4 @@
-module Widgets.Select4 exposing (Config, config, view)
+module Widgets.Select exposing (Config, config, view)
 
 import Html exposing (Html, label, option, select, text)
 import Html.Attributes exposing (selected)

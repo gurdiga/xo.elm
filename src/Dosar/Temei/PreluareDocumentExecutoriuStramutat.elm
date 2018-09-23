@@ -5,7 +5,7 @@ import Dosar.Temei.PreluareDocumentExecutoriuStramutat.CauzaStramutare as CauzaS
 import Html exposing (Html, fieldset, h1, legend, li, map, p, text, ul)
 import Widgets.DocumentScanat2 as DocumentScanat2
 import Widgets.LargeTextField as LargeTextField
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 type alias Model =
@@ -43,8 +43,8 @@ view model =
 
 viewCauzaStramutarii : CauzaStramutare.Model -> Html Msg
 viewCauzaStramutarii cauzaStramutare =
-    Select4.view <|
-        Select4.config
+    Select.view <|
+        Select.config
             { label = "Cauza strămutării:"
             , valuesWithLabels = CauzaStramutare.valuesWithLabels
             , defaultValue = cauzaStramutare

@@ -4,7 +4,7 @@ import Html exposing (Html, input, label, text)
 import Html.Attributes exposing (type_, value)
 import Html.Events exposing (onInput)
 import Utils.Money as Money exposing (Currency(..), Money(..))
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 initialModel : Money
@@ -42,8 +42,8 @@ unlabeledView (Money amount currency) =
         , onInput SetAmount
         ]
         []
-    , Select4.view <|
-        Select4.config
+    , Select.view <|
+        Select.config
             { label = ""
             , valuesWithLabels = Money.currenciesWithLabels
             , defaultValue = currency

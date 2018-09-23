@@ -3,7 +3,7 @@ module Dosar.Persoana exposing (Model, Msg, initialModel, update, view, viewEdit
 import Dosar.Persoana.PersoanaFizica as PersoanaFizica
 import Dosar.Persoana.PersoanaJuridica as PersoanaJuridica
 import Html exposing (Html, fieldset, legend, li, map, text, ul)
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 type Model
@@ -37,8 +37,8 @@ viewEditForm model =
 
 dropdown : Model -> Html Msg
 dropdown model =
-    Select4.view <|
-        Select4.config
+    Select.view <|
+        Select.config
             { label = "Gen persoană:"
             , valuesWithLabels = valuesWithLabels
             , defaultValue = taggedInitialModelFor model

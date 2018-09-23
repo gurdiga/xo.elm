@@ -12,7 +12,7 @@ import Html exposing (Html, br, button, div, fieldset, legend, map, text)
 import Utils.MyDate as MyDate
 import Widgets.DateField as DateField
 import Widgets.LargeTextField as LargeTextField
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 type alias Model =
@@ -50,15 +50,15 @@ view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "DocumentExecutoriu" ]
-        , Select4.view <|
-            Select4.config
+        , Select.view <|
+            Select.config
                 { label = "Instanța de judecată:"
                 , valuesWithLabels = InstantaDeJudecata.valuesWithLabels
                 , defaultValue = model.instantaEmitatoare
                 , onInput = SetInstantaEmitatoare
                 }
-        , Select4.view <|
-            Select4.config
+        , Select.view <|
+            Select.config
                 { label = "Pricina:"
                 , valuesWithLabels = Pricina.valuesWithLabels
                 , defaultValue = model.pricina

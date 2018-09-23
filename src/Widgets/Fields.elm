@@ -13,7 +13,7 @@ import Html exposing (Html, input, label, text, textarea)
 import Html.Attributes exposing (checked, type_, value)
 import Html.Events exposing (onCheck, onInput)
 import Utils.Money as Money exposing (Money(..))
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 textField : String -> String -> (String -> msg) -> Html msg
@@ -81,8 +81,8 @@ unlabeledMoneyField (Money amount currency) callback =
         , onInput (\v -> callback (Money (Maybe.withDefault 0 (String.toFloat v)) currency))
         ]
         []
-    , Select4.view <|
-        Select4.config
+    , Select.view <|
+        Select.config
             { label = ""
             , valuesWithLabels = Money.currenciesWithLabels
             , defaultValue = currency

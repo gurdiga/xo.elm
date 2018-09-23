@@ -3,7 +3,7 @@ module Dosar.Actiune exposing (Model, Msg, initialModel, update, view)
 import Dosar.Actiune.IncheiereIntentare as IncheiereIntentare
 import Dosar.Actiune.IncheiereRefuz as IncheiereRefuz
 import Html exposing (Html, fieldset, label, legend, map, text)
-import Widgets.Select4 as Select4
+import Widgets.Select as Select
 
 
 type Model
@@ -34,8 +34,8 @@ view model =
 
 dropdown : Model -> Html Msg
 dropdown model =
-    Select4.view <|
-        Select4.config
+    Select.view <|
+        Select.config
             { label = "Actiune:"
             , valuesWithLabels = valuesWithLabels
             , defaultValue = taggedInitialModelFor model

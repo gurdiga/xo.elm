@@ -1,4 +1,4 @@
-module Widgets.DateField exposing (Model, Msg, update, view)
+module Widgets.DateField exposing (view)
 
 import Html exposing (Html, input, label, text)
 import Html.Attributes exposing (value)
@@ -10,20 +10,9 @@ type alias Model =
     MyDate.Model
 
 
-view : String -> Model -> Html Msg
-view labelText model =
+view : String -> Model -> (Model -> msg) -> Html msg
+view labelText model toMsg =
     let
-        this =
-            label []
-                [ text labelText
-                , input
-                    [ value inputText
-                    , onInput SetString
-                    ]
-                    []
-                , text validationMessage
-                ]
-
         ( inputText, validationMessage ) =
             case MyDate.format model of
                 Ok dateString ->
@@ -32,15 +21,12 @@ view labelText model =
                 Err errorMessage ->
                     ( MyDate.string model, errorMessage )
     in
-    this
-
-
-type Msg
-    = SetString String
-
-
-update : Msg -> Model -> Model
-update msg model =
-    case msg of
-        SetString string ->
-            MyDate.parse string
+    label []
+        [ text labelText
+        , input
+            [ value inputText
+            , onInput (toMsg << MyDate.parse)
+            ]
+            []
+        , text validationMessage
+        ]

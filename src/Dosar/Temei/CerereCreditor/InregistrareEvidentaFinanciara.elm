@@ -26,14 +26,14 @@ initialModel =
 view : Model -> Html Msg
 view model =
     tr []
-        [ td [] <| [ DateField.view "" model.data |> map SetData ]
+        [ td [] <| [ DateField.view "" model.data SetData ]
         , td [] <| [ MoneyField.view "" model.suma |> map SetSuma ]
         , td [] <| [ LargeTextField.view "" model.note SetNote ]
         ]
 
 
 type Msg
-    = SetData DateField.Msg
+    = SetData MyDate.Model
     | SetSuma MoneyField.Msg
     | SetNote String
 
@@ -41,8 +41,8 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetData dateFieldMsg ->
-            { model | data = DateField.update dateFieldMsg model.data }
+        SetData v ->
+            { model | data = v }
 
         SetSuma moneyFieldMsg ->
             { model | suma = MoneyField.update moneyFieldMsg model.suma }

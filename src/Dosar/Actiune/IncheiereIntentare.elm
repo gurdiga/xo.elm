@@ -7,7 +7,6 @@ import Utils.File as File exposing (File)
 import Utils.MyDate as MyDate
 import Utils.RichTextEditor3 as RichTextEditor3
 import Widgets.DateField as DateField
-import Widgets.DateField2 as DateField2
 import Widgets.DocumentScanat3 as DocumentScanat3
 
 
@@ -38,7 +37,7 @@ view model =
         , RichTextEditor3.view "Borderou de calcul:" model.borderouDeCalcul SetBorderouDeCalcul
         , DocumentScanat3.view "Copia încheierii:" SetCopieIncheiere
         , -- LATER: Check that the date is reasonable? In the near future?
-          DateField2.view "Termen de conciliere:" model.termenConciliere SetTermenConciliere
+          DateField.view "Termen de conciliere:" model.termenConciliere SetTermenConciliere
         , RezultatIncercareConciliere.view model.rezultatIncercareConciliere |> map SetRezultatIncercareConciliere
         ]
 

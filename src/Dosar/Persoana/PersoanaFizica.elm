@@ -45,7 +45,7 @@ viewEditForm model =
     ul []
         [ li [] [ TextField.view "Nume:" model.nume SetNume ]
         , li [] [ TextField.view "Prenume:" model.prenume SetPrenume ]
-        , li [] [ DateField.view "Data nasterii:" model.dataNasterii |> map SetDataNasterii ]
+        , li [] [ DateField.view "Data nasterii:" model.dataNasterii SetDataNasterii ]
         , li [] [ TextField.view "CNP:" model.cnp SetCnp ]
         , li [] [ LargeTextField.view "Adresa:" model.adresa SetAdresa ]
         , li [] [ LargeTextField.view "Note:" model.note SetNote ]
@@ -55,7 +55,7 @@ viewEditForm model =
 type Msg
     = SetNume String
     | SetPrenume String
-    | SetDataNasterii DateField.Msg
+    | SetDataNasterii MyDate.Model
     | SetCnp String
     | SetAdresa String
     | SetNote String
@@ -70,8 +70,8 @@ update msg model =
         SetPrenume v ->
             { model | prenume = v }
 
-        SetDataNasterii dateFieldMsg ->
-            { model | dataNasterii = DateField.update dateFieldMsg model.dataNasterii }
+        SetDataNasterii v ->
+            { model | dataNasterii = v }
 
         SetCnp v ->
             { model | cnp = v }

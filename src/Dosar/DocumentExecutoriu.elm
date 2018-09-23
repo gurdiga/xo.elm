@@ -64,11 +64,11 @@ view model =
                 , defaultValue = model.pricina
                 , onInput = SetPricina
                 }
-        , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire |> map SetDataPronuntareHotarire
+        , DateField.view "Data pronunțării hotărîrii:" model.dataPronuntareHotarire SetDataPronuntareHotarire
         , LargeTextField.view "Dispozitivul:" model.dispozitivul SetDispozitivul
-        , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive |> map SetDataRamineriiDefinitive
+        , DateField.view "Data rămînerii definitive:" model.dataRamineriiDefinitive SetDataRamineriiDefinitive
         , Debitori.view model.debitori |> map SetDebitori
-        , DateField.view "Data eliberării:" model.dataEliberarii |> map SetDataEliberarii
+        , DateField.view "Data eliberării:" model.dataEliberarii SetDataEliberarii
         , DocumenteAplicareMasuriAsigurare.view model.documenteAplicareMasuriAsigurare |> map SetDocumenteAplicareMasuriAsigurare
         , LargeTextField.view "Mențiuni privind autorizarea pătrunderii forțate:" model.mentiuniPrivindPatrundereaFortata SetMentiuniPrivindPatrundereaFortata
         , LargeTextField.view "Locul de păstrare a bunurilor sechestrate:" model.locPastrareBunuriSechestrate SetLocPastrareBunuriSechestrate
@@ -79,11 +79,11 @@ view model =
 type Msg
     = SetInstantaEmitatoare InstantaDeJudecata.Model
     | SetPricina Pricina.Model
-    | SetDataPronuntareHotarire DateField.Msg
+    | SetDataPronuntareHotarire MyDate.Model
     | SetDispozitivul String
-    | SetDataRamineriiDefinitive DateField.Msg
+    | SetDataRamineriiDefinitive MyDate.Model
     | SetDebitori Debitori.Msg
-    | SetDataEliberarii DateField.Msg
+    | SetDataEliberarii MyDate.Model
     | SetDocumenteAplicareMasuriAsigurare DocumenteAplicareMasuriAsigurare.Msg
     | SetMentiuniPrivindPatrundereaFortata String
     | SetLocPastrareBunuriSechestrate String
@@ -99,20 +99,20 @@ update msg model =
         SetPricina v ->
             { model | pricina = v }
 
-        SetDataPronuntareHotarire dateFieldMsg ->
-            { model | dataPronuntareHotarire = DateField.update dateFieldMsg model.dataPronuntareHotarire }
+        SetDataPronuntareHotarire v ->
+            { model | dataPronuntareHotarire = v }
 
         SetDispozitivul v ->
             { model | dispozitivul = v }
 
-        SetDataRamineriiDefinitive dateFieldMsg ->
-            { model | dataRamineriiDefinitive = DateField.update dateFieldMsg model.dataRamineriiDefinitive }
+        SetDataRamineriiDefinitive v ->
+            { model | dataRamineriiDefinitive = v }
 
         SetDebitori m ->
             { model | debitori = Debitori.update m model.debitori }
 
-        SetDataEliberarii dateFieldMsg ->
-            { model | dataEliberarii = DateField.update dateFieldMsg model.dataEliberarii }
+        SetDataEliberarii v ->
+            { model | dataEliberarii = v }
 
         SetDocumenteAplicareMasuriAsigurare m ->
             { model | documenteAplicareMasuriAsigurare = DocumenteAplicareMasuriAsigurare.update m model.documenteAplicareMasuriAsigurare }

@@ -30,7 +30,7 @@ view : Model -> Html Msg
 view model =
     fieldset []
         [ legend [] [ text "PartileNuAjungLaIntelegere" ]
-        , DateField.view "Termen de executare:" model.termenDeExecutare |> map SetTermenDeExecutare
+        , DateField.view "Termen de executare:" model.termenDeExecutare SetTermenDeExecutare
         , RichTextEditor2.view "Formează proces-verbal de continuare" model.procesVerbalContinuare |> map SetProcesVerbalContinuare
         , RichTextEditor2.view "Formează încheiere de continuare" model.incheiereContinuare |> map SetIncheiereContinuare
         , RichTextEditor2.view "Formează borderou de calcul" model.borderouDeCalcul |> map SetBorderouDeCalcul
@@ -39,7 +39,7 @@ view model =
 
 
 type Msg
-    = SetTermenDeExecutare DateField.Msg
+    = SetTermenDeExecutare MyDate.Model
     | SetProcesVerbalContinuare RichTextEditor2.Msg
     | SetIncheiereContinuare RichTextEditor2.Msg
     | SetBorderouDeCalcul RichTextEditor2.Msg
@@ -49,8 +49,8 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetTermenDeExecutare msgDateField ->
-            { model | termenDeExecutare = DateField.update msgDateField model.termenDeExecutare }
+        SetTermenDeExecutare v ->
+            { model | termenDeExecutare = v }
 
         SetProcesVerbalContinuare msgRichTextEditor2 ->
             { model | procesVerbalContinuare = RichTextEditor2.update msgRichTextEditor2 model.procesVerbalContinuare }

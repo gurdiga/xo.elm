@@ -35,7 +35,7 @@ initialModel =
 
 
 type Msg
-    = SetDataDepunere DateField.Msg
+    = SetDataDepunere MyDate.Model
     | SetCreditor Persoana.Msg
     | ToggleDocumenteContractIpoteca CheckboxField.Msg
     | SetDocumenteContractIpoteca DocumenteContractIpoteca.Msg
@@ -44,8 +44,8 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        SetDataDepunere dateFieldMsg ->
-            { model | dataDepunere = DateField.update dateFieldMsg model.dataDepunere }
+        SetDataDepunere v ->
+            { model | dataDepunere = v }
 
         SetCreditor persoanaMsg ->
             { model | creditor = Persoana.update persoanaMsg model.creditor }
@@ -77,7 +77,7 @@ toggleDocumenteContractIpoteca model newCheckboxFieldModel =
 view : Model -> Html Msg
 view model =
     fieldset []
-        [ DateField.view "Data depunerii:" model.dataDepunere |> map SetDataDepunere
+        [ DateField.view "Data depunerii:" model.dataDepunere SetDataDepunere
         , Persoana.view model.creditor |> map SetCreditor
         , documenteContractIpotecaView model.documenteContractIpoteca
         ]

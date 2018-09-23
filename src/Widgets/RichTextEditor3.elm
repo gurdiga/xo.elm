@@ -1,4 +1,4 @@
-module Utils.RichTextEditor3 exposing (view)
+module Widgets.RichTextEditor3 exposing (view)
 
 import Html exposing (Html, label, text, textarea)
 import Html.Attributes exposing (value)

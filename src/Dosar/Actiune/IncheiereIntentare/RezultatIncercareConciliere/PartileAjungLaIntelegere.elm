@@ -3,7 +3,7 @@ module Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjung
 import Dosar.Actiune.IncheiereIntentare.RezultatIncercareConciliere.PartileAjungLaIntelegere.IncheiereIncetare as IncheiereIncetare
 import Html exposing (Html, fieldset, legend, map, text)
 import Utils.DocumentScanat2 as DocumentScanat2
-import Utils.RichTextEditor3 as RichTextEditor3
+import Widgets.RichTextEditor3 as RichTextEditor3
 
 
 type alias Model =
